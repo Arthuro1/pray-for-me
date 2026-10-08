@@ -46,6 +46,26 @@
   --q-danger-fill: var(--q-danger);
   --q-danger-soft: color-mix(in srgb, var(--q-danger) 8%, var(--q-canvas));
 
+  /* Hues for icon tiles — muted, from the avatar family. A tile mixes its hue
+     into the ground (background) and into the text (mark), so the same values
+     read on alabaster, on ink and on violet. Each Intercession Circle has one. */
+  --q-hue-rose: #a34a6a;
+  --q-hue-clay: #a35540;
+  --q-hue-teal: #1f7d76;
+  --q-hue-plum: #60457b;
+  --q-hue-indigo: #4a4f9e;
+  --q-hue-sky: #2f6ea8;
+  --q-hue-amber: #8f6420;
+  --q-circle-self: var(--q-hue-rose);
+  --q-circle-household: var(--q-hue-clay);
+  --q-circle-people: var(--q-hue-teal);
+  --q-circle-church: var(--q-hue-plum);
+  --q-circle-authorities: var(--q-hue-indigo);
+  --q-circle-nations: var(--q-hue-sky);
+  --q-circle-kingdom: var(--q-hue-amber);
+  --q-tile-ground: 13%;
+  --q-tile-mark: 82%;
+
   /* States */
   --q-selected: color-mix(in srgb, var(--q-royal) 8%, var(--q-canvas));
   --q-selected-border: color-mix(in srgb, var(--q-royal) 26%, var(--q-border));
@@ -135,6 +155,8 @@
   --q-danger-fill: #B54A4A;
   --q-danger-soft: color-mix(in srgb, var(--q-danger) 10%, var(--q-canvas));
   --q-selected: color-mix(in srgb, var(--q-royal) 16%, var(--q-canvas));
+  --q-tile-ground: 26%;
+  --q-tile-mark: 45%;
   --q-border: #302C38;
   --q-border-strong: #423C4C;
   --q-focus: var(--q-royal-text);
@@ -176,6 +198,8 @@
   --q-danger: #F0A9A9;
   --q-selected: rgb(247 245 239 / 10%);
   --q-selected-border: rgb(247 245 239 / 30%);
+  --q-tile-ground: 30%;
+  --q-tile-mark: 40%;
   --q-hover: rgb(247 245 239 / 7%);
   --q-focus: #F7F5EF;
   --q-mark: #F7F5EF;

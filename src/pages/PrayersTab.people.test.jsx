@@ -27,6 +27,7 @@ import useLayoutStore from '../store/layoutStore';
 import useFollowUpStore from '../store/followUpStore';
 import { todayKey } from '../lib/prayedLog';
 import { t } from '../i18n';
+import { chooseView, viewOffered } from './PrayersTab.viewMenu.testkit';
 
 const lang = 'fr';
 const prayer = (id, extra = {}) => ({
@@ -56,7 +57,7 @@ const renderJournal = () =>
 
 const openPeopleView = () => {
   fireEvent.click(screen.getByRole('button', { name: t(lang, 'search') }));
-  fireEvent.click(screen.getByRole('button', { name: t(lang, 'peopleView') }));
+  chooseView('peopleView');
 };
 
 describe('Journal — counts & zero states', () => {
@@ -107,7 +108,7 @@ describe('Journal — People view', () => {
 
   it('stays hidden when insufficient person data exists', () => {
     renderJournal(); // only unnamed prayers
-    expect(screen.queryByRole('button', { name: t(lang, 'peopleView') })).toBeNull();
+    expect(viewOffered('peopleView')).toBe(false);
   });
 
   it('groups related prayers by person with accurate counts and latest update', () => {

@@ -8,11 +8,13 @@ import useAuthStore from '../store/authStore';
 import useFollowUpStore, { followUpWhenLabel } from '../store/followUpStore';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
+import { PersonMark } from '../components/shared/PrayerMark';
 import SwipeableRow from '../components/shared/SwipeableRow';
 import EmptyState from '../components/shared/EmptyState';
 import AnsweredEmpty from '../components/AnsweredEmpty';
 import JournalFilters from '../components/JournalFilters';
-import { Search, SlidersHorizontal, Plus, X, ArrowLeft, Bell, ChevronRight, Check } from 'lucide-react';
+import { Search, SlidersHorizontal, Plus, X, ArrowLeft, Bell, ChevronDown, ChevronRight, Check, CircleDot, List, Users } from 'lucide-react';
+import OverflowMenu from '../components/shared/OverflowMenu';
 import { t, tp } from '../i18n';
 import { useSuppressFab } from '../store/layoutStore';
 import { prayerPriority } from '../utils/prayer';
@@ -39,6 +41,7 @@ import {
 import { useContextualNudgeSlot } from '../components/shared/contextualNudge';
 import { circleLabelKey, circleOf, groupByCircle } from '../lib/circles';
 import CircleGlyph from '../components/shared/CircleGlyph';
+import { readJournalView, saveJournalView } from '../lib/journalView';
 import { tendCandidates } from '../lib/carried';
 import TendAltar from '../components/TendAltar';
 
@@ -105,12 +108,14 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   // By circle: the Journal's ONE circle-oriented way to find prayers — the same
   // prayers (Active or Answered), grouped inner to outer by the circle each was
   // placed in, unplaced ones last. A way to find prayers, never a tally —
-  // circles without prayers simply don't appear. A circle page's back link
-  // reopens it (`journalView`).
-  const [byCircle, setByCircle] = useState(() => location.state?.journalView === 'circles');
+  // circles without prayers simply don't appear. It is the default view; the
+  // reader's own choice is remembered on this device, and a circle page's back
+  // link reopens it (`journalView`).
+  const [initialView] = useState(() => location.state?.journalView || readJournalView());
+  const [byCircle, setByCircle] = useState(initialView !== 'list');
   // People view: an OPTIONAL lens over the same prayers, grouped by who
   // they're for. Only offered when enough person data exists.
-  const [peopleOpen, setPeopleOpen] = useState(false);
+  const [peopleOpen, setPeopleOpen] = useState(() => initialView === 'people' && peopleViewAvailable(prayers));
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [endedOpen, setEndedOpen] = useState(false);
   // Snapshot of a person-scoped session, fixed when it starts — completions
@@ -193,12 +198,14 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
   const showByCircle = byCircle && circleViewAvailable && !peopleOpen;
   // How the list is shown: offered only once a second way exists.
   const views = [
-    { value: 'list', label: t(lang, 'journalViewList') },
-    peopleAvailable && { value: 'people', label: t(lang, 'peopleView') },
-    circleViewAvailable && { value: 'circles', label: t(lang, 'journalViewCircles') },
+    { value: 'list', icon: List, label: t(lang, 'journalViewList') },
+    peopleAvailable && { value: 'people', icon: Users, label: t(lang, 'peopleView') },
+    circleViewAvailable && { value: 'circles', icon: CircleDot, label: t(lang, 'journalViewCircles') },
   ].filter(Boolean);
   const view = peopleOpen ? 'people' : showByCircle ? 'circles' : 'list';
+  const currentView = views.find((v) => v.value === view) || views[0];
   const changeView = (next) => {
+    saveJournalView(next);
     setPeopleOpen(next === 'people');
     setSelectedPerson(null);
     if (next !== 'people') setByCircle(next === 'circles');
@@ -332,9 +339,10 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
           </span>
         </div>
 
-        {/* ONE segmented control carries the counts (no separate stat cards),
-            with search, the category filter and — when useful — the People
-            lens folded behind small labelled tools. */}
+        {/* ONE row of controls: what the Journal holds — two tabs carrying
+            their counts (no stat cards) — and, at the far end, how it is shown
+            (a small view menu) and what it is narrowed to (one Filter). Each
+            tool appears only once it is useful. */}
         <div className="journal__toolbar">
           <SegmentedControl
             label={t(lang, 'journal')}
@@ -344,53 +352,30 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
               label: (
                 <span>
                   <span aria-hidden="true">{s.label}</span>
+                  {s.count > 0 && <span aria-hidden="true" className="journal__tab-count">{s.count}</span>}
                   <span className="sr-only">{`${s.label} ${s.count}`}</span>
                 </span>
               ),
             }))}
             onChange={(value) => { setSegment(value); setPeopleOpen(false); setSelectedPerson(null); }}
+            className="segmented-control--tabs"
           />
-        </div>
-
-        {/* The search field only takes space once asked for; text is preserved
-            while it (or the segment) is toggled. */}
-        {utilityPanelOpen && (
-          <div className="journal__tools">
-            {!peopleOpen && (searchOpen || !!search) && (
-              <div className="journal-search">
-                <Search size={16} aria-hidden="true" className="journal-search__icon" />
-                <input
-                  type="text"
-                  autoFocus
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder={t(lang, 'search')}
-                  aria-label={t(lang, 'search')}
-                  className="q-input"
-                />
-                {!!search && (
-                  <button
-                    type="button"
-                    onClick={() => { setSearch(''); setSearchOpen(false); }}
-                    aria-label={t(lang, 'close')}
-                    className="journal-search__clear icon-button"
-                  >
-                    <X size={16} aria-hidden="true" />
-                  </button>
-                )}
-              </div>
-            )}
-            {/* Two different jobs, two different controls: how the list is
-                shown (a small switch) and what it holds (one Filter, at the
-                far end). */}
-            <div className="journal__tool-row">
+          {utilityPanelOpen && (
+            <span className="journal__toolbar-end">
               {views.length > 1 && (
-                <SegmentedControl
-                  label={t(lang, 'journalViewLabel')}
-                  value={view}
-                  options={views}
-                  onChange={changeView}
-                  className="segmented-control--compact"
+                <OverflowMenu
+                  lang={lang}
+                  ariaLabel={`${t(lang, 'journalViewLabel')}: ${currentView.label}`}
+                  triggerIcon={currentView.icon}
+                  triggerLabel={<><span className="journal__tool-label">{currentView.label}</span><ChevronDown size={14} className="journal__tool-caret" aria-hidden="true" /></>}
+                  triggerClassName="journal__tool pressable"
+                  items={views.map((v) => ({
+                    key: v.value,
+                    icon: v.icon,
+                    label: v.label,
+                    checked: v.value === view,
+                    onClick: () => changeView(v.value),
+                  }))}
                 />
               )}
               {!peopleOpen && (hasFilterControls || toolsUseful) && (
@@ -405,13 +390,40 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                     ? `${t(lang, 'filterLabel')} — ${t(lang, 'filtersOnLabel')}`
                     : undefined}
                   aria-pressed={structuredFiltersActive}
-                  className="journal__tool journal__tool--end pressable"
+                  className="journal__tool pressable"
                 >
                   <SlidersHorizontal size={16} aria-hidden="true" />
-                  <span>{t(lang, 'filterLabel')}</span>
+                  <span className="journal__tool-label">{t(lang, 'filterLabel')}</span>
                 </button>
               )}
-            </div>
+            </span>
+          )}
+        </div>
+
+        {/* The search field only takes space once asked for; text is preserved
+            while it (or the segment) is toggled. */}
+        {!peopleOpen && (searchOpen || !!search) && (
+          <div className="journal__tools journal-search">
+            <Search size={16} aria-hidden="true" className="journal-search__icon" />
+            <input
+              type="text"
+              autoFocus
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t(lang, 'search')}
+              aria-label={t(lang, 'search')}
+              className="q-input"
+            />
+            {!!search && (
+              <button
+                type="button"
+                onClick={() => { setSearch(''); setSearchOpen(false); }}
+                aria-label={t(lang, 'close')}
+                className="journal-search__clear icon-button"
+              >
+                <X size={16} aria-hidden="true" />
+              </button>
+            )}
           </div>
         )}
         {/* One quiet introduction, once, to the tool that has just become
@@ -548,8 +560,9 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                   key={person.name.toLowerCase()}
                   type="button"
                   onClick={() => setSelectedPerson(person.name)}
-                  className="prayer-row journal-person-card pressable"
+                  className="prayer-row prayer-row--marked journal-person-card pressable"
                 >
+                  <PersonMark name={person.name} />
                   <span className="min-w-0">
                     <span className="prayer-row__title">{person.name}</span>
                     {person.latestUpdate?.text && (

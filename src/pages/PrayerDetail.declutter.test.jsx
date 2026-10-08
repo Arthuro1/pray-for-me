@@ -120,13 +120,13 @@ describe('PrayerDetail — leads with prayer', () => {
     expect(screen.queryByText(t(lang, 'answerNextTitle'))).toBeNull();
   });
 
-  it('uses the shared primary button, full width on a phone', () => {
+  it('uses the shared primary button, filling its row on a phone', () => {
     renderDetail(base());
     const prayNow = screen.getByRole('button', { name: t(lang, 'prayNow') });
     expect(prayNow.className).toContain('primary-button');
     expect(prayNow.className).toContain('prayer-detail__pray');
     const css = readFileSync('src/styles/prayer.css', 'utf8');
-    expect(css).toMatch(/@media \(max-width: 480px\)\s*\{\s*\.prayer-detail__pray \{ width: 100%; \}/);
+    expect(css).toMatch(/@media \(max-width: 560px\)\s*\{\s*\.prayer-detail__pray \{ min-width: 0; flex: 1 1 auto; \}/);
   });
 
   it('orders the hierarchy Pray now → Add update → Mark answered in the document', () => {
@@ -179,10 +179,22 @@ describe('PrayerDetail — leads with prayer', () => {
     expect(testimony.closest('.update-composer__input')?.className).toContain('update-composer__input');
   });
 
-  it('Add update is immediately reachable — it focuses the real update field, no new form', () => {
+  it('Add update unfolds the update field; it is not standing open, and no empty heading shows', () => {
     const { container } = renderDetail(base());
+    expect(container.querySelector('#pd-updates')).toBeNull();
+    expect(screen.queryByText(t(lang, 'evolutions'))).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'addUpdateBtn')) }));
     expect(container.querySelector('#pd-updates [contenteditable]')).toBeTruthy();
+    // Still no heading: it names updates that exist, not the field.
+    expect(screen.queryByText(t(lang, 'evolutions'))).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'cancel') }));
+    expect(container.querySelector('#pd-updates')).toBeNull();
+  });
+
+  it('titles the updates once there is one', () => {
+    renderDetail(base({ prayer_updates: [{ id: 'u1', text: 'Une nouvelle', created_at: '2026-07-02T00:00:00Z' }] }));
+    expect(screen.getByText(t(lang, 'evolutions'))).toBeTruthy();
+    expect(screen.getByText('Une nouvelle')).toBeTruthy();
   });
 
   it('an answered prayer offers Resume, never Mark answered', () => {

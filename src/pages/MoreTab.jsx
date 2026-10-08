@@ -13,10 +13,10 @@ export default function MoreTab() {
   const lang = settings.language || 'fr';
 
   const items = [
-    { key: 'guidance', icon: Compass, label: t(lang, 'guidance'), description: t(lang, 'moreGuidanceDesc'), to: '/guidance' },
-    { key: 'calendar', icon: CalendarDays, label: t(lang, 'calendar'), description: t(lang, 'moreCalendarDesc'), to: '/calendar' },
-    { key: 'settings', icon: Settings, label: t(lang, 'settingsAndHelp'), description: t(lang, 'moreSettingsHelpDesc'), to: '/settings' },
-    { key: 'about', icon: Feather, label: t(lang, 'aboutTitle'), description: t(lang, 'moreAboutDesc'), to: '/about' },
+    { key: 'guidance', icon: Compass, tone: 'teal', label: t(lang, 'guidance'), description: t(lang, 'moreGuidanceDesc'), to: '/guidance' },
+    { key: 'calendar', icon: CalendarDays, tone: 'sky', label: t(lang, 'calendar'), description: t(lang, 'moreCalendarDesc'), to: '/calendar' },
+    { key: 'settings', icon: Settings, tone: 'plum', label: t(lang, 'settingsAndHelp'), description: t(lang, 'moreSettingsHelpDesc'), to: '/settings' },
+    { key: 'about', icon: Feather, tone: 'amber', label: t(lang, 'aboutTitle'), description: t(lang, 'moreAboutDesc'), to: '/about' },
   ];
 
   const go = (to) => {
@@ -33,9 +33,9 @@ export default function MoreTab() {
         <PageHeader title={t(lang, 'moreTab')} />
       </div>
 
-      <div className="phase-content max-w-2xl">
+      <div className="phase-content">
         <ul className="menu-list">
-          {items.map(({ key, icon: Icon, label, description, to }) => (
+          {items.map(({ key, icon: Icon, tone, label, description, to }) => (
             <li key={key}>
               <button
                 type="button"
@@ -45,7 +45,9 @@ export default function MoreTab() {
                 aria-label={`${label} — ${description}`}
                 className="menu-row"
               >
-                <Icon size={20} strokeWidth={1.85} aria-hidden="true" />
+                <span className={`icon-tile tone-${tone}`} aria-hidden="true">
+                  <Icon size={19} strokeWidth={1.85} />
+                </span>
                 <span className="menu-row__body">
                   <span className="menu-row__title">{label}</span>
                   {/* What you'll find there — one quiet line, never a second label. */}

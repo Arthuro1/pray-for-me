@@ -149,22 +149,22 @@
 .today-fold + .today-verse { margin-block-start: calc(-1 * var(--q-space-6)); border-block-start: 0; }
 .today-verse__head { display: flex; align-items: center; justify-content: space-between; margin-block-end: var(--q-space-3); }
 
-/* The reference closes the quotation at its end; the way to the whole chapter
-   stays quiet on the other side — there when wanted, never competing. */
-.today-verse__foot { display: flex; flex-direction: row-reverse; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--q-space-4); margin-block-start: var(--q-space-2); }
+/* The reference closes the quotation at its end, and is itself the way into
+   the whole chapter: gold like every reference, underlined on hover. */
+.today-verse__foot { display: flex; justify-content: flex-end; margin-block-start: var(--q-space-2); }
 .today-verse__foot .scripture-block__reference { margin: 0; text-align: end; }
-.today-verse__link {
+.today-verse__ref {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  gap: 6px;
-  color: var(--q-text-tertiary);
-  font-size: var(--q-type-meta);
-  font-weight: 500;
+  gap: 5px;
+  color: inherit;
   text-decoration: none;
-  transition: color var(--q-motion-micro) var(--q-ease);
+  text-underline-offset: 3px;
 }
-.today-verse__link:hover { color: var(--q-text-secondary); text-decoration: underline; }
+.today-verse__ref > svg { opacity: 0.7; transition: opacity var(--q-motion-micro) var(--q-ease); }
+.today-verse__ref:hover { text-decoration: underline; }
+.today-verse__ref:hover > svg { opacity: 1; }
 
 /* ── Prayer session: the flagship space ────────────────────────────────── */
 .prayer-session {
@@ -384,21 +384,22 @@
 .journal__header { padding-block: clamp(var(--q-space-8), 6vw, var(--q-space-12)) 0; }
 .journal__title-row { display: flex; align-items: center; justify-content: space-between; gap: var(--q-space-3); margin-block-end: var(--q-space-5); }
 .journal__actions { display: flex; gap: var(--q-space-1); margin-inline-end: -10px; }
-.journal__toolbar .segmented-control button { min-height: 40px; padding-inline: var(--q-space-6); }
-/* Phones: the two segments share the width, thumb-sized. */
-@media (max-width: 639px) {
-  .journal__toolbar .segmented-control { display: flex; width: 100%; }
-  .journal__toolbar .segmented-control button { flex: 1 1 0; min-height: 44px; }
+/* One row: the two tabs, then the view menu and Filter at the far end, on
+   one hairline. On a phone the tools drop their words and keep their icons. */
+.journal__toolbar { display: flex; align-items: center; gap: var(--q-space-3); border-block-end: 1px solid var(--q-border); }
+.journal__toolbar-end { display: flex; align-items: center; gap: var(--q-space-1); margin-inline-start: auto; margin-inline-end: calc(-1 * var(--q-space-3)); }
+.journal__tab-count { margin-inline-start: 6px; color: var(--q-text-tertiary); font-weight: 500; font-variant-numeric: tabular-nums; }
+@media (max-width: 420px) {
+  .journal__tool-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 .journal__tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); margin-block-start: var(--q-space-3); }
+
+.journal__tool-row { display: flex; width: 100%; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); }
 
 .journal-search { position: relative; flex: 1 1 16rem; }
 .journal-search .q-input { padding-inline: 42px; }
 .journal-search__icon { position: absolute; inset-block-start: 50%; inset-inline-start: 14px; color: var(--q-text-tertiary); pointer-events: none; transform: translateY(-50%); }
 .journal-search__clear { position: absolute; inset-block-start: 50%; inset-inline-end: 2px; transform: translateY(-50%); }
-
-.journal__tool-row { display: flex; width: 100%; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); }
-.journal__tool--end { margin-inline-start: auto; }
 
 .journal__tool {
   display: inline-flex;
@@ -414,6 +415,18 @@
 
 .journal__tool:hover { background: var(--q-hover); color: var(--q-text); }
 .journal__tool[aria-pressed="true"] { background: var(--q-selected); color: var(--q-royal-text); }
+/* The view menu's label and its caret stay on one line. The caret only shows
+   where a pointer can hover (and while the menu is open or keyboard-focused);
+   it keeps its room so nothing shifts when it fades in. On touch screens the
+   icon alone opens the menu. */
+.journal__tool > span { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.journal__tool-caret { opacity: 0; transition: opacity var(--q-motion-micro) var(--q-ease); }
+.journal__tool:hover .journal__tool-caret,
+.journal__tool:focus-visible .journal__tool-caret,
+.journal__tool[aria-expanded="true"] .journal__tool-caret { opacity: 1; }
+@media (hover: none) {
+  .journal__tool-caret { display: none; }
+}
 
 .journal__hint { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-2); margin-block-start: var(--q-space-3); }
 .journal__hint > p { flex: 1 1 100%; margin: 0; }
@@ -458,13 +471,17 @@
 .prayer-detail__hero { width: min(100%, 48rem); margin-inline: auto; padding: var(--q-space-4) clamp(var(--q-space-4), 4vw, var(--q-space-8)) var(--q-space-8); }
 /* Who it is for, and where it came from, above the title. */
 .prayer-detail__context { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-3); margin-block-end: var(--q-space-3); }
-/* The circle: one quiet row under the prayer, opening the picker. */
-.prayer-detail__circle { display: inline-flex; min-height: 44px; align-items: center; gap: var(--q-space-2); margin: var(--q-space-2) 0 0; color: var(--q-text-secondary); font-size: var(--q-type-meta); font-weight: 600; }
-.prayer-detail__circle--button { padding: 0; border: 0; background: none; text-align: start; }
-.prayer-detail__circle--button:hover > span:first-of-type { text-decoration: underline; text-underline-offset: 3px; }
-.prayer-detail__circle--button > svg:last-child { color: var(--q-text-tertiary); }
-.prayer-detail__circle-unset { color: var(--q-text-tertiary); font-weight: 400; }
-.prayer-detail__labels { margin: var(--q-space-3) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
+/* The facts line: circle, rhythm, audience — each a small icon and a word.
+   Tappable facts keep a 44px target with the look of plain text. */
+.prayer-detail__facts { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-5); margin-block-start: var(--q-space-4); }
+.prayer-detail__fact { display: inline-flex; min-height: 36px; align-items: center; gap: 6px; color: var(--q-text-secondary); font-size: 0.875rem; font-weight: 500; }
+.prayer-detail__fact > svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
+.prayer-detail__fact--button { position: relative; padding: 0; border: 0; background: none; text-align: start; }
+.prayer-detail__fact--button::after { position: absolute; inset: -4px -6px; content: ''; }
+.prayer-detail__fact--button:hover { color: var(--q-text); }
+.prayer-detail__fact--unset { color: var(--q-text-tertiary); font-weight: 400; }
+.prayer-detail__fact > .prayer-detail__shield { color: var(--q-royal-text); }
+.prayer-detail__fact-note { flex-basis: 100%; max-width: 36rem; margin: var(--q-space-1) 0 var(--q-space-2); color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
 
 .prayer-detail__title,
 .prayer-detail__title-input {
@@ -494,39 +511,70 @@
 
 .prayer-detail__description { max-width: 40rem; margin-block-start: var(--q-space-4); color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.7; }
 
+/* Memory, one quiet line: labels · carried since · days prayed. */
 .prayer-detail__meta {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--q-space-1) var(--q-space-4);
-  margin-block-start: var(--q-space-4);
+  gap: var(--q-space-1) 0;
+  margin-block-start: var(--q-space-2);
   color: var(--q-text-tertiary);
   font-size: var(--q-type-meta);
 }
+.prayer-detail__meta > * + *::before { padding-inline: 6px; color: var(--q-text-tertiary); content: '·'; }
 
 .prayer-detail__praying { color: var(--q-text-secondary); }
-.prayer-detail__pray { min-width: 11rem; margin-block-start: var(--q-space-8); }
 
-@media (max-width: 480px) {
-  .prayer-detail__pray { width: 100%; }
-}
-
-.detail-page__content { width: min(100%, 48rem); margin-inline: auto; padding: 0 clamp(var(--q-space-4), 4vw, var(--q-space-8)) var(--q-space-12); }
-.prayer-detail__secondary-actions { display: flex; flex-wrap: wrap; gap: var(--q-space-2); }
-.prayer-detail__secondary-actions > * { min-width: 0; flex: 1 1 12rem; }
+/* Pray now leads; the two tools beside it are labelled where there is room
+   and become 44px icons on a phone, Pray now taking the rest of the row. */
+.prayer-detail__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); margin-block-start: var(--q-space-6); }
+.prayer-detail__pray { min-width: 11rem; }
+.prayer-detail__secondary-actions { display: flex; min-width: 0; gap: var(--q-space-2); }
+.prayer-detail__secondary-actions > * { min-width: 0; padding-inline: var(--q-space-4); }
 
 /* A long translated label truncates inside its button; it never overflows. */
 .prayer-detail__secondary-actions > * > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.prayer-detail__rhythm { display: flex; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text-secondary); font-size: 0.875rem; }
+
+@media (max-width: 560px) {
+  .prayer-detail__pray { min-width: 0; flex: 1 1 auto; }
+  .prayer-detail__secondary-actions > * { width: 44px; padding-inline: 0; }
+  .prayer-detail__secondary-actions > * > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
+
+.detail-page__content { width: min(100%, 48rem); margin-inline: auto; padding: 0 clamp(var(--q-space-4), 4vw, var(--q-space-8)) var(--q-space-12); }
 .prayer-detail__section { padding-block-start: var(--q-space-6); border-block-start: 1px solid var(--q-border); }
 
-/* Ways to pray — a section, each point a line. */
+/* Ways to pray — a numbered list, each point one compact entry: a gold
+   numeral, its words, its passages as small chips, and a ⋯ at the end. */
 .prayer-points-panel { padding-block-start: var(--q-space-6); border-block-start: 1px solid var(--q-border); }
 .prayer-points-panel__header { min-height: 44px; margin-block-end: var(--q-space-1); }
-.prayer-points-panel__list { display: grid; }
-.prayer-point-card { padding-block: var(--q-space-4); border-block-end: 1px solid var(--q-border); color: var(--q-text); }
-.prayer-point-card__verses { margin-block-start: var(--q-space-2); }
-.prayer-point-card__add-verse { min-height: 44px; margin-block-start: var(--q-space-1); }
+.prayer-points-panel__list { display: grid; margin: 0; padding: 0; list-style: none; counter-reset: prayer-point; }
+.prayer-point {
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+  align-items: start;
+  padding-block: var(--q-space-3);
+  border-block-end: 1px solid var(--q-border);
+  color: var(--q-text);
+  counter-increment: prayer-point;
+}
+.prayer-point:last-child { border-block-end: 0; }
+.prayer-point::before {
+  content: counter(prayer-point);
+  color: var(--q-gold-text);
+  font-family: var(--q-font-editorial);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+.prayer-point__text { margin: 0; font-size: 0.9375rem; line-height: 1.5; }
+.prayer-point__text--locked { color: var(--q-text-tertiary); }
+.prayer-point__verses { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px; margin-block-start: 6px; }
+/* An opened passage takes the whole line under the chips. */
+.prayer-point__verse:has(.scripture-panel) { flex-basis: 100%; }
+/* The ⋯ keeps its 44px target without making the entry taller. */
+.prayer-point__menu { margin-block: -10px; margin-inline-end: -12px; }
+.prayer-point__form { display: grid; gap: var(--q-space-2); margin-block-start: var(--q-space-2); }
+.prayer-point__form-actions { display: flex; justify-content: flex-end; gap: var(--q-space-1); }
 
 /* Updates and testimonies — sections; entries separated by hairlines. A
    testimony carries the gold line: it is remembrance, kept with honour. */

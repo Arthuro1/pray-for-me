@@ -1,28 +1,31 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { MoreVertical } from 'lucide-react';
+import { Check, MoreVertical } from 'lucide-react';
 import { t } from '../../i18n';
 import { useEscapeKey } from '../../hooks/useEscapeKey';
 
 // A reusable "⋮" overflow menu. Pass `items` as
-//   [{ key, icon, label, onClick, danger?, hidden? }]
+//   [{ key, icon, label, onClick, danger?, hidden?, checked? }]
 // Hidden items are dropped; a divider is inserted before the first `danger` item
 // so destructive actions sit apart. Labelled rows (icon + text) are far more
-// discoverable on touch than icon-only buttons with tooltips.
+// discoverable on touch than icon-only buttons with tooltips. Items that carry
+// `checked` are a choice of one (menuitemradio) — a view picker, say.
 //
 // The dropdown is rendered through a portal with `position: fixed`, anchored to
 // the trigger's on-screen rect, so it is never clipped by a scrollable/overflow
 // ancestor (e.g. a modal's `max-h … overflow-y-auto` member list) — the reason
 // the last row's actions used to be cut off. It flips above the trigger when
 // there isn't room below.
-function MenuItem({ icon: Icon, label, onClick, danger }) {
+function MenuItem({ icon: Icon, label, onClick, danger, checked }) {
+  const choice = checked === undefined ? { role: 'menuitem' } : { role: 'menuitemradio', 'aria-checked': checked };
   return (
     <button
-      role="menuitem"
+      {...choice}
       onClick={onClick}
       className={`q-menu__item ${danger ? 'q-menu__item--danger' : ''}`}
     >
       <Icon size={16} aria-hidden="true" /> {label}
+      {checked && <Check size={16} className="q-menu__check" aria-hidden="true" />}
     </button>
   );
 }
@@ -124,7 +127,7 @@ export default function OverflowMenu({
                 {it.danger && i === firstDanger && i > 0 && (
                   <div className="q-menu__divider" />
                 )}
-                <MenuItem icon={it.icon} label={it.label} danger={it.danger} onClick={() => { setOpen(false); it.onClick(); }} />
+                <MenuItem icon={it.icon} label={it.label} danger={it.danger} checked={it.checked} onClick={() => { setOpen(false); it.onClick(); }} />
               </div>
             ))}
           </div>

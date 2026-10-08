@@ -18,6 +18,7 @@ import useLayoutStore from '../store/layoutStore';
 import useCommunityStore from '../store/communityStore';
 import { JOURNAL_HINTS, JOURNAL_HINTS_STORAGE_KEY } from '../lib/journalHints';
 import { t } from '../i18n';
+import { viewOffered } from './PrayersTab.viewMenu.testkit';
 
 const lang = 'fr';
 const prayer = (id, extra = {}) => ({
@@ -73,7 +74,7 @@ describe('Journal tools — findable, and named', () => {
   it('offers the People lens by name only when there are people to group', () => {
     hintsSeen();
     renderJournal();
-    expect(screen.queryByRole('button', { name: t(lang, 'peopleView') })).toBeNull();
+    expect(viewOffered('peopleView')).toBe(false);
 
     cleanup();
     usePrayerStore.setState({
@@ -84,7 +85,7 @@ describe('Journal tools — findable, and named', () => {
       ],
     });
     renderJournal();
-    expect(screen.getByRole('button', { name: t(lang, 'peopleView') })).toBeTruthy();
+    expect(viewOffered('peopleView')).toBe(true);
   });
 });
 

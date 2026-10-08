@@ -42,6 +42,8 @@
 .about__section > .q-section-title { margin-block-end: var(--q-space-3); color: var(--q-text); }
 .about__body { margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
 .about__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-4); margin: var(--q-space-2) 0 0; padding: 0; list-style: none; }
+/* The open reference stays marked while its passage shows below the row. */
+.about__refs .scripture-ref[aria-expanded="true"] { text-decoration: underline; text-underline-offset: 3px; }
 
 .about__list { display: grid; margin: var(--q-space-2) 0 0; padding: 0; list-style: none; }
 
@@ -60,17 +62,61 @@
 .about__list--circles { margin-block-start: var(--q-space-4); }
 
 /* ── Settings ───────────────────────────────────────────────────────────── */
-.settings-profile { display: flex; align-items: center; gap: var(--q-space-4); margin-block-end: var(--q-space-8); }
+/* Who you are, once: a quiet card washed with the royal hue, the image on a
+   thin ring, the name in the serif, and when you joined as a small note. */
+.settings-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--q-space-4);
+  margin-block-end: var(--q-space-8);
+  padding: var(--q-space-5);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-dialog);
+  background:
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--q-royal) 14%, transparent), transparent 62%),
+    var(--q-surface);
+}
+
+.settings-profile__avatar {
+  display: inline-flex;
+  flex: 0 0 auto;
+  padding: 3px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--q-royal) 45%, transparent);
+}
 
 .settings-profile__name {
   overflow: hidden;
   margin: 0;
   color: var(--q-text);
   font-family: var(--q-font-editorial);
-  font-size: 1.25rem;
+  font-size: 1.375rem;
   font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.settings-profile__since {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-block-start: var(--q-space-2);
+  padding: 3px 10px;
+  /* A soft tag rather than a pill: a long month name may wrap on a phone. */
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--q-royal) 10%, transparent);
+  color: var(--q-royal-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.settings-profile__edit { align-self: flex-start; }
+
+@media (max-width: 420px) {
+  .settings-profile { padding: var(--q-space-4); }
+  .settings-profile__edit > span { display: none; }
 }
 
 .settings-sections { border-block-start: 1px solid var(--q-border); }
@@ -87,7 +133,9 @@
   text-align: start;
 }
 
-.settings-section__trigger > span {
+/* Only the title grows: the icon tile beside it is a span too, and must keep
+   its 36px square. */
+.settings-section__title {
   flex: 1 1 auto;
   font-family: var(--q-font-editorial);
   font-size: 1.1875rem;
@@ -96,10 +144,14 @@
 }
 
 .settings-section__trigger > svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
-.settings-section__trigger > svg:first-child { color: var(--q-royal-text); }
 .settings-section__trigger > svg:last-child { transition: transform var(--q-motion-standard) var(--q-ease); }
 .settings-section__trigger[aria-expanded="true"] > svg:last-child { transform: rotate(180deg); }
-.settings-section__panel { padding-block: 0 var(--q-space-8); padding-inline-start: calc(20px + var(--q-space-3)); }
+/* The panel lines up under the section's title, past its icon tile. */
+.settings-section__panel { padding-block: 0 var(--q-space-8); padding-inline-start: calc(36px + var(--q-space-3)); }
+
+/* The image's editor, unfolded under the profile by its Edit button. */
+.settings-avatar { margin-block: calc(-1 * var(--q-space-4)) var(--q-space-8); padding: var(--q-space-4); border: 1px solid var(--q-border); border-radius: var(--q-radius-surface); }
+.settings-avatar > .settings-group__sub { margin-block-start: 0; }
 
 /* A group inside a section: a quiet heading and its controls, set apart by a
    hairline from the group before it. */
@@ -113,40 +165,49 @@
 .settings-row { padding-block: var(--q-space-3); border-block-end: 1px solid var(--q-border); }
 .settings-row:last-of-type { border-block-end: 0; }
 .settings-row__main { display: flex; align-items: center; justify-content: space-between; gap: var(--q-space-4); }
+.settings-row__main--wrap { flex-wrap: wrap; }
+.settings-row__text { min-width: 0; flex: 1 1 auto; }
 .settings-row__label { margin: 0; color: var(--q-text); font-size: 0.9375rem; }
 .settings-row__sub { margin: 2px 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.45; }
 .settings-row__extra { margin-block-start: var(--q-space-3); }
+/* A row led by an icon tile: its tile, its words, its control; whatever it
+   opens lines up under the words, past the tile. */
+.settings-row--icon > .settings-row__main { gap: var(--q-space-3); }
+.settings-row--icon > .settings-row__main > .icon-tile { align-self: flex-start; }
+.settings-row--icon > .settings-row__extra { padding-inline-start: calc(36px + var(--q-space-3)); }
+
+/* A few related settings held together on one raised surface, rows divided
+   by hairlines — the reminders, the community notifications, the account. */
+.settings-card {
+  margin-block-start: var(--q-space-3);
+  padding-inline: var(--q-space-4);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+}
+.settings-card > .settings-row { padding-block: var(--q-space-4); }
+.settings-card > .settings-row:last-child { border-block-end: 0; }
+.settings-group__title + .settings-card,
+.settings-group__sub + .settings-card { margin-block-start: var(--q-space-3); }
+.settings-group__sub:has(+ .settings-card) { margin-block-end: 0; }
+
+/* A field and the line that explains it, side by side while there is room. */
+.settings-inline-fields { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-3); }
+.settings-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--q-text-tertiary);
+  font-size: var(--q-type-meta);
+}
+.settings-next > svg { flex: 0 0 auto; color: var(--q-royal-text); }
 
 .settings-actions { display: flex; flex-wrap: wrap; gap: var(--q-space-2); }
 
-.settings-subgroup { margin-block-start: var(--q-space-4); padding-block-start: var(--q-space-4); border-block-start: 1px solid var(--q-border); }
-.settings-subgroup > .settings-row__label { font-weight: 600; }
 
 .settings-times { display: flex; flex-wrap: wrap; gap: var(--q-space-3) var(--q-space-5); }
 .settings-times > label { display: flex; align-items: center; gap: var(--q-space-2); color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
 
-.settings-types { margin: var(--q-space-2) 0 0; padding: 0; list-style: none; }
-
-.settings-types > li {
-  display: flex;
-  min-height: 52px;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--q-space-3);
-  border-block-end: 1px solid var(--q-border);
-  color: var(--q-text-secondary);
-  font-size: 0.875rem;
-}
-
-.settings-types > li:last-child { border-block-end: 0; }
-.settings-types > li > span { min-width: 0; flex: 1 1 auto; }
-.settings-types select { width: auto; flex: 0 0 auto; }
-
-.settings-facts { display: grid; gap: var(--q-space-2); margin: 0; }
-.settings-facts > div { display: flex; align-items: center; gap: var(--q-space-3); color: var(--q-text-secondary); font-size: 0.9375rem; }
-.settings-facts dt { display: flex; color: var(--q-text-tertiary); }
-.settings-facts dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
-.settings-facts strong { color: var(--q-text); font-weight: 600; }
 
 /* Privacy & Security: a short list of rows that open in place. */
 .settings-disclosure { border-block-end: 1px solid var(--q-border); }
@@ -201,8 +262,94 @@
 
 @media (max-width: 520px) {
   .settings-section__panel,
-  .settings-disclosure__body { padding-inline-start: 0; }
+  .settings-disclosure__body,
+  .settings-row--icon > .settings-row__extra { padding-inline-start: 0; }
 }
+
+/* ── Support dialogs: feedback, the gift, reviewing wording reports ──────── */
+.q-dialog__lead { display: flex; min-width: 0; align-items: center; gap: var(--q-space-3); }
+.q-dialog__intro { margin: calc(-1 * var(--q-space-2)) 0 var(--q-space-5); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+.q-dialog__intro--tight { margin: var(--q-space-3) 0 0; }
+
+/* Feedback: the kind of note, the note, and whether it carries your name. */
+.feedback-types button > span { display: inline-flex; align-items: center; gap: 6px; }
+.feedback-anon {
+  padding: var(--q-space-3) var(--q-space-4);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface-muted);
+}
+
+/* The gift: each way to give on its own row, led by a tile. */
+.donate-methods .menu-row { gap: var(--q-space-3); }
+.donate-methods .menu-row--unavailable .icon-tile { opacity: 0.55; }
+.donate-thanks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--q-space-2);
+  margin-block-start: var(--q-space-5);
+  color: var(--q-text-tertiary);
+  font-size: var(--q-type-meta);
+  text-align: center;
+}
+.donate-thanks > svg { flex: 0 0 auto; color: var(--q-hue-rose); }
+
+/* Reviewing wording reports: a status filter, then one card per report. */
+.wording-review__list { display: grid; gap: var(--q-space-3); margin-block-start: var(--q-space-5); }
+.wording-review__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding: var(--q-space-8) var(--q-space-4);
+  border: 1px dashed var(--q-border-strong);
+  border-radius: var(--q-radius-surface);
+  color: var(--q-text-tertiary);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+.wording-review__empty > p { margin: 0; }
+.wording-review__error { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--q-space-2); margin-block-start: var(--q-space-4); }
+.wording-review__error .quiet-button { color: inherit; }
+.wording-review__pager { display: flex; justify-content: space-between; gap: var(--q-space-3); margin-block-start: var(--q-space-5); }
+
+.wording-report {
+  display: grid;
+  justify-items: start;
+  gap: var(--q-space-3);
+  padding: var(--q-space-4);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-canvas);
+  overflow-wrap: anywhere;
+}
+.wording-report__meta { display: flex; width: 100%; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); color: var(--q-text-tertiary); font-size: 0.75rem; }
+.wording-report__locale {
+  padding: 2px 8px;
+  border-radius: var(--q-radius-pill);
+  background: var(--q-selected);
+  color: var(--q-royal-text);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.wording-report__key { min-width: 0; color: var(--q-text-secondary); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.wording-report__date { margin-inline-start: auto; }
+.wording-report__quote {
+  width: 100%;
+  margin: 0;
+  padding-inline-start: var(--q-space-4);
+  border-inline-start: 2px solid var(--q-border-strong);
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+.wording-report__suggestion { width: 100%; padding: var(--q-space-3); border-radius: var(--q-radius-control); background: var(--q-selected); }
+.wording-report__suggestion > .section-label { margin: 0 0 var(--q-space-1); }
+.wording-report__suggestion > p:last-child { margin: 0; color: var(--q-text); font-size: 0.9375rem; line-height: 1.55; white-space: pre-wrap; }
+.wording-report__status { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: var(--q-space-3); padding-block-start: var(--q-space-3); border-block-start: 1px solid var(--q-border); color: var(--q-text-secondary); font-size: var(--q-type-meta); }
 
 /* ── Notifications: reminders to return, not alerts ─────────────────────── */
 .notif-list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }

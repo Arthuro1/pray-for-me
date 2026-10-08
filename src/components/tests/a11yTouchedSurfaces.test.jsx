@@ -82,8 +82,9 @@ describe('icon-only controls carry a real accessible name', () => {
 
   it('names the update-submit control (not only via a tooltip)', () => {
     const { container } = renderDetail();
-    // Chat-style composer: an empty field shows a mic; the send button appears
-    // once there is text to send.
+    // The field unfolds from "Add an update". Chat-style composer: an empty
+    // field shows a mic; the send button appears once there is text to send.
+    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'addUpdateBtn')) }));
     const field = container.querySelector('#pd-updates [contenteditable]');
     field.textContent = 'God is good';
     fireEvent.input(field);
@@ -194,15 +195,17 @@ describe('RTL and long translated labels', () => {
     expect(css).toMatch(/\.prayer-detail__secondary-actions > \* > span \{[^}]*text-overflow: ellipsis;/);
   });
 
-  it('stacks the secondary actions on the narrowest phones instead of squeezing them', () => {
+  it('turns the secondary actions into named 44px icons on a phone instead of squeezing them', () => {
     const { container } = renderDetail();
-    const row = screen.getByText(t(lang, 'addUpdateBtn')).closest('button').parentElement;
-    expect(row.className).toContain('prayer-detail__secondary-actions');
-    // Each action claims at least 12rem and the row wraps, so two stack on a
-    // narrow phone and sit side by side once there is room.
+    const button = screen.getByText(t(lang, 'addUpdateBtn')).closest('button');
+    expect(button.parentElement.className).toContain('prayer-detail__secondary-actions');
+    // Beside Pray now in one row: on a phone the label is hidden visually but
+    // stays the button's name, and the button keeps a 44px square target.
+    expect(button.getAttribute('title')).toBe(t(lang, 'addUpdateBtn'));
     const css = readFileSync('src/styles/prayer.css', 'utf8');
-    expect(css).toMatch(/\.prayer-detail__secondary-actions \{ display: flex; flex-wrap: wrap;/);
-    expect(css).toMatch(/\.prayer-detail__secondary-actions > \* \{ min-width: 0; flex: 1 1 12rem; \}/);
+    expect(css).toMatch(/\.prayer-detail__actions \{ display: flex; flex-wrap: wrap;/);
+    expect(css).toMatch(/@media \(max-width: 560px\) \{[^@]*\.prayer-detail__secondary-actions > \* \{ width: 44px;/);
+    expect(css).toMatch(/@media \(max-width: 560px\) \{[^@]*\.prayer-detail__secondary-actions > \* > span \{ position: absolute; width: 1px;/);
     expect(container.querySelector('[dir]')).toBeNull(); // dir is owned by <html>, not duplicated here
   });
 });

@@ -16,6 +16,7 @@ import useAuthStore from '../store/authStore';
 import useLayoutStore from '../store/layoutStore';
 import useCommunityStore from '../store/communityStore';
 import { t, tp } from '../i18n';
+import { chooseView, viewMenuNames, viewOffered } from './PrayersTab.viewMenu.testkit';
 
 const lang = 'fr';
 const prayer = (id, extra = {}) => ({
@@ -25,6 +26,7 @@ const prayer = (id, extra = {}) => ({
 
 afterEach(cleanup);
 beforeEach(() => {
+  localStorage.clear();
   useLayoutStore.setState({ fabSuppressed: false });
   useCommunityStore.setState({ prayerShares: {} });
   useAuthStore.setState({ user: null });
@@ -46,7 +48,8 @@ beforeEach(() => {
 const renderJournal = (props = {}) => render(
   <MemoryRouter><PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} {...props} /></MemoryRouter>,
 );
-const byCircle = () => screen.getByRole('button', { name: t(lang, 'journalViewCircles') });
+const byCircle = () => chooseView('journalViewCircles');
+const showsByCircle = () => viewMenuNames('journalViewCircles');
 function LandedOnCircle() {
   const location = useLocation();
   return <p data-testid="circle-page">{`${location.pathname} ${JSON.stringify(location.state)}`}</p>;
@@ -57,13 +60,35 @@ describe('PrayersTab — By circle', () => {
   it('is not offered before any prayer has a circle', () => {
     usePrayerStore.setState({ prayers: [prayer('a'), prayer('b')] });
     renderJournal();
-    expect(screen.queryByRole('button', { name: t(lang, 'journalViewCircles') })).toBeNull();
+    expect(viewOffered('journalViewCircles')).toBe(false);
+  });
+
+  it('is the view the Journal opens on', () => {
+    renderJournal();
+    expect(showsByCircle()).toBe(true);
+    expect(groupTitles()[0]).toBe(t(lang, 'circle_self'));
+  });
+
+  it('remembers another view chosen on this device', () => {
+    renderJournal();
+    chooseView('journalViewList');
+    expect(groupTitles()).toEqual([]);
+    cleanup();
+
+    renderJournal();
+    expect(viewMenuNames('journalViewList')).toBe(true);
+    expect(groupTitles()).toEqual([]);
+    chooseView('journalViewCircles');
+    cleanup();
+
+    renderJournal();
+    expect(showsByCircle()).toBe(true);
   });
 
   it('groups active prayers inner to outer, with unplaced prayers last', () => {
     renderJournal();
-    fireEvent.click(byCircle());
-    expect(byCircle().getAttribute('aria-pressed')).toBe('true');
+    byCircle();
+    expect(showsByCircle()).toBe(true);
     expect(groupTitles()).toEqual([
       t(lang, 'circle_self'), t(lang, 'circle_household'), t(lang, 'circle_nations'), t(lang, 'circleUnplaced'),
     ]);
@@ -82,7 +107,7 @@ describe('PrayersTab — By circle', () => {
   it('brings a new prayer straight into a circle', () => {
     const onAddInCircle = vi.fn();
     renderJournal({ onAddInCircle });
-    fireEvent.click(byCircle());
+    byCircle();
     const name = t(lang, 'circle_household');
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'addToCircle', { circle: name }) }));
     expect(onAddInCircle).toHaveBeenCalledWith('household');
@@ -92,7 +117,7 @@ describe('PrayersTab — By circle', () => {
 
   it('moves a prayer when its circle changes', () => {
     renderJournal();
-    fireEvent.click(byCircle());
+    byCircle();
     act(() => {
       usePrayerStore.setState((s) => ({ prayers: s.prayers.map((p) => (p.id === 'loose' ? { ...p, circle: 'kingdom' } : p)) }));
     });
@@ -103,7 +128,7 @@ describe('PrayersTab — By circle', () => {
   it('groups answered prayers too, without offering to add to an answered circle', () => {
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
-    fireEvent.click(byCircle());
+    byCircle();
     expect(groupTitles()).toEqual([t(lang, 'circle_church')]);
     const church = screen.getByRole('region', { name: t(lang, 'circle_church') });
     expect(within(church).getByText('Prière done')).toBeTruthy();
@@ -116,7 +141,7 @@ describe('PrayersTab — By circle', () => {
         <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
       </MemoryRouter>,
     );
-    expect(byCircle().getAttribute('aria-pressed')).toBe('true');
+    expect(showsByCircle()).toBe(true);
     expect(groupTitles()).toEqual([t(lang, 'circle_church')]);
   });
 
@@ -124,7 +149,7 @@ describe('PrayersTab — By circle', () => {
     usePrayerStore.setState((s) => ({ prayers: s.prayers.map((p) => (p.id === 'done' ? { ...p, circle: undefined } : p)) }));
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 1` }));
-    expect(screen.queryByRole('button', { name: t(lang, 'journalViewCircles') })).toBeNull();
+    expect(viewOffered('journalViewCircles')).toBe(false);
     expect(screen.getByText('Prière done')).toBeTruthy();
   });
 
@@ -141,6 +166,8 @@ describe('PrayersTab — By circle', () => {
     }));
     renderJournal();
     fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 2` }));
+    // In the list, each row names its own circle (by circle, the heading does).
+    chooseView('journalViewList');
     const row = (title) => screen.getByText(title).closest('button');
     expect(within(row('Prière done')).getByText(t(lang, 'circle_church'))).toBeTruthy();
     // A carried request keeps the carrier's own circle beside its testimony.
@@ -157,7 +184,7 @@ describe('PrayersTab — By circle', () => {
         </Routes>
       </MemoryRouter>,
     );
-    fireEvent.click(byCircle());
+    byCircle();
     fireEvent.click(within(screen.getByRole('region', { name: t(lang, 'circle_household') })).getByRole('link', { name: t(lang, 'circle_household') }));
     expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/prayers","fromState":{"journalView":"circles","filter":"active"}}');
     cleanup();
@@ -167,7 +194,7 @@ describe('PrayersTab — By circle', () => {
         <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
       </MemoryRouter>,
     );
-    expect(byCircle().getAttribute('aria-pressed')).toBe('true');
+    expect(showsByCircle()).toBe(true);
     expect(groupTitles()[0]).toBe(t(lang, 'circle_self'));
     // The unplaced group has no circle page to open.
     expect(within(screen.getByRole('region', { name: t(lang, 'circleUnplaced') })).queryByRole('link', { name: t(lang, 'circleUnplaced') })).toBeNull();

@@ -154,12 +154,16 @@ describe('a plan run is walked, not updated and answered', () => {
     expect(screen.getAllByText(t(lang, 'markAnswered')).length).toBe(1);
   });
 
-  it('keeps the history and its composer — that is where a prayed note lands', () => {
+  it('keeps the history — that is where a prayed note lands', () => {
     // PlanDayTrace reads those notes back when the reader pages to a past day,
-    // so removing the timeline with the buttons would break both.
-    const { container } = renderDetail(planRun());
+    // so removing the timeline with the buttons would break both. The field
+    // itself is not standing open: it unfolds when a note is asked for.
+    const { container } = renderDetail(planRun({
+      prayer_updates: [{ id: 'u1', text: 'Note du jour', created_at: '2026-07-02T00:00:00Z' }],
+    }));
     expect(screen.getByText(t(lang, 'evolutions'))).toBeTruthy();
-    expect(container.querySelector('#pd-updates [contenteditable]')).toBeTruthy();
+    expect(screen.getByText('Note du jour')).toBeTruthy();
+    expect(container.querySelector('#pd-updates')).toBeNull();
   });
 });
 

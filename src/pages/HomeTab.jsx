@@ -425,19 +425,23 @@ export default function HomeTab({ onAdd, onEdit }) {
                     </p>
                   )
                   : null}
+              {/* The reference itself opens the chapter in the reader's Bible
+                  (the Bible App on a phone, Bible.com elsewhere). */}
               <div className="today-verse__foot">
                 <p className="scripture-block__reference">
-                  {verse.ref}
+                  <a
+                    href={bibleLink(verse.ref, lang)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${verse.ref} — ${t(lang, 'readWholeChapter')}`}
+                    title={t(lang, 'readWholeChapter')}
+                    className="today-verse__ref"
+                  >
+                    {verse.ref}
+                    <ExternalLink size={11} aria-hidden="true" />
+                  </a>
                   {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
                 </p>
-                <a
-                  href={bibleLink(verse.ref, lang)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="today-verse__link"
-                >
-                  <ExternalLink size={12} aria-hidden="true" /> {t(lang, 'readWholeChapter')}
-                </a>
               </div>
             </div>
           ) : (

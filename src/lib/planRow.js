@@ -6,7 +6,7 @@
 // calendar's day agenda already read a plan day properly ("Day 12 of 30 ·
 // <theme>"); this is that same reading, shared so Journal and Today agree with
 // the agenda, the detail page and the session on what a plan row is called.
-import { getPlan, planDayContent } from '../content/prayerPlans';
+import { DEFAULT_PLAN_CATEGORY, getPlan, planDayContent } from '../content/prayerPlans';
 import { pick } from '../content/teaching';
 import { t } from '../i18n';
 import { planPrayerText } from './guidedPlan';
@@ -17,9 +17,10 @@ import { restingPlanDay } from './schedule';
 
 // What a plan run says on `dayKey`:
 //
-//   { name, theme, dayLabel, dayNo, total, paused }
+//   { name, theme, dayLabel, dayNo, total, paused, category }
 //
-// `dayNo` / `total` (numbers, or null) draw the row's thin progress line.
+// `dayNo` / `total` (numbers, or null) draw the row's thin progress line;
+// `category` picks the plan's emblem for the row's leading mark.
 //
 // null when the prayer is not a plan run whose content can be read — no plan,
 // or content that is unknown or still awaiting its review sign-off. Callers
@@ -56,6 +57,7 @@ export function planRowSummary(prayer, lang, dayKey = todayKey()) {
     // in the Journal reading exactly like a running one — silently never coming
     // up again. The row says so instead.
     paused: resting?.state === 'paused',
+    category: plan.category || DEFAULT_PLAN_CATEGORY,
   };
 }
 

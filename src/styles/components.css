@@ -238,6 +238,50 @@ a.prayer-row:hover { background: var(--q-hover); }
 
 .prayer-row__aside { display: flex; align-items: center; gap: var(--q-space-2); color: var(--q-text-tertiary); }
 
+/* A list row led by its mark: the tile, then the words. */
+.prayer-row--marked { grid-template-columns: auto minmax(0, 1fr); gap: var(--q-space-3); }
+.prayer-row--marked.journal-person-card { grid-template-columns: auto minmax(0, 1fr) auto; }
+
+/* ── Icon tile: a small icon on a soft ground of one hue ──────────────────
+   The hue (`--tone`) is mixed into the ground and the ink, so it reads in
+   every theme. Prayer rows (PrayerMark), the More page and Settings share it.
+   Tones: one per circle (`tone-self` …), or a hue by name (`tone-teal` …). */
+.icon-tile {
+  --tone: var(--q-text-tertiary);
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--tone) var(--q-tile-ground), var(--q-canvas));
+  color: color-mix(in srgb, var(--tone) var(--q-tile-mark), var(--q-text));
+}
+.icon-tile--sm { width: 22px; height: 22px; border-radius: 6px; }
+.icon-tile--round { border-radius: 50%; }
+.tone-self { --tone: var(--q-circle-self); }
+.tone-household { --tone: var(--q-circle-household); }
+.tone-people { --tone: var(--q-circle-people); }
+.tone-church { --tone: var(--q-circle-church); }
+.tone-authorities { --tone: var(--q-circle-authorities); }
+.tone-nations { --tone: var(--q-circle-nations); }
+.tone-kingdom { --tone: var(--q-circle-kingdom); }
+.tone-rose { --tone: var(--q-hue-rose); }
+.tone-clay { --tone: var(--q-hue-clay); }
+.tone-teal { --tone: var(--q-hue-teal); }
+.tone-plum { --tone: var(--q-hue-plum); }
+.tone-indigo { --tone: var(--q-hue-indigo); }
+.tone-sky { --tone: var(--q-hue-sky); }
+.tone-amber { --tone: var(--q-hue-amber); }
+
+/* A prayer row's mark (PrayerMark): initials sit in it as letters; a prayer
+   with no circle yet stays neutral; a plan is outlined in gold. */
+.prayer-mark { font-size: 0.8125rem; font-weight: 650; letter-spacing: 0.02em; line-height: 1; }
+.prayer-mark--unplaced { background: var(--q-surface-muted); color: var(--q-text-tertiary); }
+.prayer-mark--plan { border: 1px solid color-mix(in srgb, var(--q-gold) 45%, var(--q-border)); background: transparent; color: var(--q-gold-text); }
+.plan-emblem.plan-emblem--bare { width: auto; height: auto; border: 0; border-radius: 0; color: inherit; }
+
 /* ── Status label: quiet text with a small mark, not a badge ─────────────── */
 .status-label {
   display: inline-flex;
@@ -347,6 +391,12 @@ a.prayer-row:hover { background: var(--q-hover); }
 }
 
 /* A small switch for HOW something is shown (not what it holds). */
+/* Tabs: the same choice drawn as words on a hairline, the current one
+   underlined in gold — for a page's top-level "which list" switch. */
+.segmented-control--tabs { gap: var(--q-space-5); padding: 0; border-radius: 0; background: none; }
+.segmented-control--tabs button { min-height: 44px; margin-block-end: -1px; padding-inline: 0; border-block-end: 2px solid transparent; border-radius: 0; color: var(--q-text-tertiary); font-size: 0.9375rem; }
+.segmented-control--tabs button:hover { color: var(--q-text); }
+.segmented-control--tabs button[aria-pressed="true"] { border-block-end-color: var(--q-gold); background: none; box-shadow: none; color: var(--q-text); }
 .segmented-control--compact button { min-height: 34px; padding-inline: var(--q-space-3); font-size: 0.8125rem; }
 @media (pointer: coarse) { .segmented-control--compact button { min-height: 44px; } }
 
@@ -521,7 +571,9 @@ a.prayer-row:hover { background: var(--q-hover); }
 }
 
 .q-menu__item:hover { background: var(--q-hover); }
-.q-menu__item[aria-current="true"] { background: var(--q-selected); color: var(--q-royal-text); }
+.q-menu__item[aria-current="true"],
+.q-menu__item[aria-checked="true"] { background: var(--q-selected); color: var(--q-royal-text); }
+.q-menu__item > .q-menu__check { margin-inline-start: auto; color: var(--q-royal-text); }
 .q-menu__item svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
 .q-menu__item--danger,
 .q-menu__item--danger svg { color: var(--q-danger); }
@@ -924,6 +976,29 @@ label.circle-option { cursor: pointer; }
 
 .scripture-ref:hover { text-decoration: underline; text-underline-offset: 3px; }
 .scripture-ref svg { flex: 0 0 auto; }
+
+/* A passage in a dense list (a prayer point's verses): a small gold chip. It
+   looks 28px tall, but an invisible band keeps the 44px tap target. */
+.scripture-chip {
+  position: relative;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 5px;
+  padding-inline: 10px;
+  border-radius: var(--q-radius-pill);
+  background: color-mix(in srgb, var(--q-gold) 12%, transparent);
+  color: var(--q-gold-text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+.scripture-chip::after { position: absolute; inset: -8px 0; content: ''; }
+.scripture-chip:hover,
+.scripture-chip[aria-expanded="true"] { background: color-mix(in srgb, var(--q-gold) 22%, transparent); }
+.scripture-chip--add { background: transparent; box-shadow: inset 0 0 0 1px var(--q-border-strong); color: var(--q-text-tertiary); font-weight: 500; }
+.scripture-chip--add:hover { background: var(--q-hover); color: var(--q-text-secondary); }
 
 /* A passage to open, as its own line: reference in the serif on a gold rule. */
 .scripture-passage {

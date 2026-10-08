@@ -6,19 +6,20 @@ import { todayKey } from '../lib/prayedLog';
 import { scheduleSummary } from '../lib/scheduleDraft';
 import { carriedSinceLabel, showsCarriedSince } from '../lib/carried';
 import { circleLabelKey, circleOf } from '../lib/circles';
-import CircleGlyph from './shared/CircleGlyph';
+import PrayerMark from './shared/PrayerMark';
 import { StatusLabel } from './shared/Primitives';
 
-// One prayer in a list, read like a line in a prayer book: a serif title and
-// ONE quiet detail line beneath it. A small mark says what each detail is — a
-// person, a group, a circle — so "Prayer Buddies" (a group) and "Pour Anatole"
-// (a person) can never be confused. No card, no chips — the list scans by its
-// titles.
+// One prayer in a list, read like a line in a prayer book: a leading mark (the
+// person, group, circle or plan it is about — see PrayerMark), a serif title
+// and ONE quiet detail line beneath it. A small icon says what each detail is,
+// so "Prayer Buddies" (a group) and "Pour Anatole" (a person) can never be
+// confused. No card, no chips.
 //
 // variant 'today'   — what to pray now: the plan day's theme, or who it is for.
 // variant 'journal' — the record: its rhythm or how long it has been carried.
-// `showCircle={false}` where the circle is already the heading the row sits
-// under (the Journal's By circle view), so it is never said twice.
+// The circle shows as the mark's tone and icon; its name is spoken to screen
+// readers only, and not at all where the circle is already the heading the
+// row sits under (`showCircle={false}`, the Journal's By circle view).
 const ICON = { size: 13, strokeWidth: 1.9, 'aria-hidden': true };
 
 export default function PrayerListItem({ prayer, lang, tr, shares, onClick, variant = 'journal', searchMatch = null, showCircle = true }) {
@@ -63,11 +64,6 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
 
   const details = [
     ...context,
-    showCircle && circle && {
-      key: 'circle',
-      icon: <CircleGlyph circle={circle} size={14} />,
-      text: t(lang, circleLabelKey(circle)),
-    },
     variant === 'journal' && isAnswered && {
       key: 'answered',
       node: (
@@ -84,10 +80,12 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
     <button
       type="button"
       onClick={onClick}
-      className={`journal-row prayer-row pressable ${isAnswered ? 'prayer-row--answered' : ''}`}
+      className={`journal-row prayer-row prayer-row--marked pressable ${isAnswered ? 'prayer-row--answered' : ''}`}
     >
+      <PrayerMark prayer={prayer} planCategory={planRow?.category} />
       <span className="min-w-0">
         <span className="prayer-row__title journal-row__title">{heading}</span>
+        {showCircle && circle && <span className="sr-only">{t(lang, circleLabelKey(circle))}</span>}
         {details.length > 0 && (
           <span className="prayer-row__details">
             {details.map((d) => d.node ? <span key={d.key}>{d.node}</span> : (

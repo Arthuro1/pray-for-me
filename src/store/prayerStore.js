@@ -914,8 +914,8 @@ const usePrayerStore = create((set, get) => ({
 
   // All planned entries ({ prayer, source, slot }) for a local day, sorted.
   getEntriesForDay: (dayKey) => {
-    const { prayers, categories, settings } = get();
-    return sortEntries(prayersForDay(prayers, categories, dayKey, { cap: settings.maxPerDay || 0 }), categories);
+    const { prayers, categories } = get();
+    return sortEntries(prayersForDay(prayers, categories, dayKey), categories);
   },
 
   // ─── Day completion (single source of truth: per-prayer completions) ──
@@ -945,8 +945,8 @@ const usePrayerStore = create((set, get) => ({
 
   // Missed prayers from the last few days (not prayed since, not on today's list).
   getCatchUp: (windowDays = 3) => {
-    const { prayers, categories, settings } = get();
-    return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays, settings.maxPerDay || 0);
+    const { prayers, categories } = get();
+    return catchUpPrayers(prayers, categories, get().completedDaysMap(), todayKey(), windowDays);
   },
 
   // Pin/unpin a prayer so it floats to the top of the lists (personal organisation).
@@ -1313,8 +1313,8 @@ const usePrayerStore = create((set, get) => ({
   // Planner-backed: per-prayer schedules (one-time/recurring/slots/rotation)
   // and the legacy weekly category plan, merged and sorted.
   getTodaysPrayers: () => {
-    const { prayers, categories, settings } = get();
-    return sortEntries(prayersForDay(prayers, categories, todayKey(), { cap: settings.maxPerDay || 0 }), categories).map((e) => e.prayer);
+    const { prayers, categories } = get();
+    return sortEntries(prayersForDay(prayers, categories, todayKey()), categories).map((e) => e.prayer);
   },
 
   // Persist a new category order (array of ids → sort_order = index).

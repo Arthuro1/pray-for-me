@@ -65,7 +65,7 @@ beforeEach(() => {
 describe('SettingsTab — grouped sections', () => {
   it('renders all five section headers (reminders titled "Prayer reminders")', () => {
     renderSettings();
-    for (const key of ['settingsSecAccount', 'privacySecurity', 'prayerReminders', 'settingsSecAppearance', 'settingsSecSupport']) {
+    for (const key of ['account', 'privacySecurity', 'prayerReminders', 'settingsSecAppearance', 'settingsSecSupport']) {
       expect(screen.getAllByText(t(lang, key)).length).toBeGreaterThan(0);
     }
   });

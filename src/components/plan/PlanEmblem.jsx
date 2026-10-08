@@ -54,11 +54,11 @@ const MARKS = {
   ),
 };
 
-export default function PlanEmblem({ category, className = '' }) {
+export default function PlanEmblem({ category, size = 22, className = '' }) {
   const mark = MARKS[category] || MARKS[DEFAULT_PLAN_CATEGORY];
   return (
     <span className={`plan-emblem ${className}`} aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" focusable="false">
+      <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" focusable="false">
         {mark}
       </svg>
     </span>

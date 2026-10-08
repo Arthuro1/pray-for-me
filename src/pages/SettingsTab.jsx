@@ -2,9 +2,8 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, BookOpen, ChevronDown, Download, Heart, KeyRound, Lock, LogOut, Mail, MessageSquare, MessageSquareText, RefreshCw, Shield, ShieldCheck, Sun, Trash2, Unlock, UserRound, WifiOff } from 'lucide-react';
+import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, ClipboardCheck, Download, Flag, Heart, KeyRound, Lock, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Pencil, RefreshCw, Shield, ShieldCheck, Sun, Sunrise, Trash2, Unlock, UserRound, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
-import ResourceLanguagePref from '../components/ResourceLanguagePref';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
 import { dailyReminderStartDay, enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
@@ -22,6 +21,7 @@ import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
 import Switch from '../components/shared/Switch';
+import SettingsRow from '../components/shared/SettingsRow';
 import { revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 import { Input, PageHeader, QuietButton, SecondaryButton, SegmentedControl, StatusLabel } from '../components/shared/Primitives';
@@ -41,19 +41,12 @@ const APP_VERSION = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '
 // The verse the app was named under ("the prayer of a righteous person").
 const MOTTO_REF = 'James 5:16';
 
-// A setting with an optional switch, and whatever it opens underneath.
-function Row({ label, sub, enabled, onToggle, children }) {
+// When a reminder comes next, said beside the field that sets it.
+function NextReminder({ lang, when }) {
   return (
-    <div className="settings-row">
-      <div className="settings-row__main">
-        <div className="min-w-0">
-          <p className="settings-row__label">{label}</p>
-          {sub && <p className="settings-row__sub">{sub}</p>}
-        </div>
-        {onToggle !== undefined && <Switch checked={!!enabled} onChange={onToggle} label={label} />}
-      </div>
-      {children}
-    </div>
+    <span className="settings-next">
+      <CalendarClock size={14} aria-hidden="true" /> {t(lang, 'nextReminder')} · {when}
+    </span>
   );
 }
 
@@ -82,6 +75,36 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
   );
 }
 
+// A setting and its control on one line: the label at the start, the control
+// at the end.
+function InlineRow({ label, children }) {
+  return (
+    <div className="settings-row">
+      <div className="settings-row__main">
+        <p className="settings-row__label">{label}</p>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// One destination in a short list (Support): an icon tile, a title, an
+// optional line of what it is, and a chevron — the More page's row.
+function LinkRow({ icon: Icon, tone, title, description, onClick }) {
+  return (
+    <li>
+      <button type="button" onClick={onClick} className="menu-row menu-row--compact">
+        <span className={`icon-tile tone-${tone}`} aria-hidden="true"><Icon size={18} strokeWidth={1.85} /></span>
+        <span className="menu-row__body">
+          <span className="menu-row__title">{title}</span>
+          {description && <span className="menu-row__description">{description}</span>}
+        </span>
+        <ChevronRight className="rtl-mirror" size={16} aria-hidden="true" />
+      </button>
+    </li>
+  );
+}
+
 // A labelled group of settings inside a section, set off by a hairline.
 function Group({ title, sub, tone, children }) {
   return (
@@ -93,16 +116,12 @@ function Group({ title, sub, tone, children }) {
   );
 }
 
-// The "a few per day" options: off, or a small cap on how many prayers Today
-// asks for. Off is first because it is the default — nothing is hidden unless
-// the reader asks for it.
-const CAP_OPTIONS = [null, 3, 5, 10];
-
 // A collapsible, labelled group of settings. Progressive disclosure: the
 // heading stays visible so nothing is hidden from discovery, and the panel is
 // `hidden` when collapsed so its controls drop out of the tab order too. The
-// `id` doubles as the deep-link anchor (e.g. /settings#notifications).
-function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
+// `id` doubles as the deep-link anchor (e.g. /settings#notifications). Each
+// section's icon sits on a tile of its own hue, so the list scans by colour.
+function SettingsSection({ id, title, icon: Icon, tone, open, onToggle, children }) {
   return (
     <section id={id} className="settings-section">
       <h2 className="settings-section__heading">
@@ -113,8 +132,8 @@ function SettingsSection({ id, title, icon: Icon, open, onToggle, children }) {
           aria-controls={`${id}-panel`}
           className="settings-section__trigger"
         >
-          <Icon size={20} strokeWidth={1.85} aria-hidden="true" />
-          <span>{title}</span>
+          <span className={`icon-tile tone-${tone}`} aria-hidden="true"><Icon size={19} strokeWidth={1.85} /></span>
+          <span className="settings-section__title">{title}</span>
           <ChevronDown size={18} aria-hidden="true" />
         </button>
       </h2>
@@ -182,6 +201,7 @@ export default function SettingsTab() {
   // The user's own avatar preset. Read through the same relationship-scoped RPC
   // as everyone else's (the caller is always allowed to see their own).
   const [myAvatar, setMyAvatar] = useState(null);
+  const [editingAvatar, setEditingAvatar] = useState(false);
   // Settings reads as a short list of destinations: every section starts
   // collapsed and opens on demand. A deep-link (below) force-opens its target.
   // Privacy & Security is ONE consolidated section (visibility, vault,
@@ -384,6 +404,15 @@ export default function SettingsTab() {
   const memberSince = user?.created_at
     ? new Date(user.created_at).toLocaleDateString(lang, { month: 'long', year: 'numeric' })
     : null;
+  const nextDaily = nextReminder(settings.dailyReminderTime);
+  const dailyNextLabel = `${t(lang, nextDaily.tomorrow ? 'tomorrow' : 'today')} ${nextDaily.time}`;
+  const nextFollow = nextFollowUp(followUpLastSent, settings.followUpDays, settings.followUpTime);
+  const followUpDay = nextFollow.daysAhead === 0
+    ? t(lang, 'today')
+    : nextFollow.daysAhead === 1
+      ? t(lang, 'tomorrow')
+      : nextFollow.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
+  const followUpNextLabel = `${followUpDay} ${nextFollow.time}`;
 
   return (
     <div className="phase-page">
@@ -397,46 +426,74 @@ export default function SettingsTab() {
       </div>
 
       <div className="phase-content max-w-3xl">
+        {/* Who you are, once: the image, the name, the email. The image's
+            three controls stay folded behind Edit — deliberately not a profile
+            screen. */}
         <div className="settings-profile">
-          <Avatar name={displayName || ''} avatar={myAvatar} size={56} />
-          <div className="min-w-0">
+          <span className="settings-profile__avatar">
+            <Avatar name={displayName || ''} avatar={myAvatar} size={60} />
+          </span>
+          <div className="min-w-0 flex-1">
             <p className="settings-profile__name">{displayName}</p>
             <p className="q-meta truncate">{user?.email}</p>
-            {memberSince && <p className="q-meta">{t(lang, 'memberSince')} {memberSince}</p>}
+            {memberSince && (
+              <p className="settings-profile__since">
+                <CalendarDays size={12} aria-hidden="true" /> {t(lang, 'memberSince')} {memberSince}
+              </p>
+            )}
           </div>
+          <QuietButton
+            icon={Pencil}
+            iconSize={15}
+            onClick={() => setEditingAvatar((v) => !v)}
+            aria-expanded={editingAvatar}
+            aria-controls="settings-avatar"
+            aria-label={`${t(lang, 'edit')} — ${t(lang, 'profileAvatar')}`}
+            className="settings-profile__edit shrink-0"
+          >
+            {t(lang, 'edit')}
+          </QuietButton>
         </div>
+        {editingAvatar && (
+          <div id="settings-avatar" className="settings-avatar">
+            <p className="settings-group__sub">{t(lang, 'profileAvatarHint')}</p>
+            <AvatarEditor
+              lang={lang}
+              kind="user"
+              name={displayName || ''}
+              avatar={myAvatar}
+              ownerId={user?.id}
+              identityPhotoUrl={identityPhotoUrlFrom(user)}
+              onSave={handleSaveAvatar}
+            />
+          </div>
+        )}
 
         <div className="settings-sections">
           {/* ── Account ── */}
-          <SettingsSection id="account" title={t(lang, 'settingsSecAccount')} icon={UserRound} open={openSections.account} onToggle={() => toggleSection('account')}>
-            {/* Avatar — three controls, deliberately not a profile screen. */}
-            <Group title={t(lang, 'profileAvatar')} sub={t(lang, 'profileAvatarHint')}>
-              <AvatarEditor
-                lang={lang}
-                kind="user"
-                name={displayName || ''}
-                avatar={myAvatar}
-                ownerId={user?.id}
-                identityPhotoUrl={identityPhotoUrlFrom(user)}
-                onSave={handleSaveAvatar}
-              />
-            </Group>
-
-            <Group title={t(lang, 'account')}>
-              <dl className="settings-facts">
-                <div><dt><Mail size={16} aria-hidden="true" /></dt><dd>{user?.email}</dd></div>
-                <div><dt><Shield size={16} aria-hidden="true" /></dt><dd>{t(lang, 'via')} <strong>{providerLabel}</strong></dd></div>
-              </dl>
-              <SecondaryButton icon={LogOut} iconSize={16} onClick={signOut} title={t(lang, 'tipSignOut')} className="mt-4">
-                {t(lang, 'signOut')}
-              </SecondaryButton>
-            </Group>
+          {/* Titled "Account" alone: privacy has its own section right below. */}
+          <SettingsSection id="account" title={t(lang, 'account')} icon={UserRound} tone="plum" open={openSections.account} onToggle={() => toggleSection('account')}>
+            {/* How you sign in, and the way out — one card, one row. */}
+            <div className="settings-card">
+              <div className="settings-row settings-row--icon">
+                <div className="settings-row__main settings-row__main--wrap">
+                  <span className="icon-tile tone-plum" aria-hidden="true"><KeyRound size={18} strokeWidth={1.85} /></span>
+                  <div className="settings-row__text">
+                    <p className="settings-row__label">{t(lang, 'via')} <strong>{providerLabel}</strong></p>
+                    <p className="settings-row__sub truncate">{user?.email}</p>
+                  </div>
+                  <SecondaryButton icon={LogOut} iconSize={16} onClick={signOut} title={t(lang, 'tipSignOut')}>
+                    {t(lang, 'signOut')}
+                  </SecondaryButton>
+                </div>
+              </div>
+            </div>
           </SettingsSection>
 
           {/* ── Privacy & Security — the ONE consolidated destination. Inside, a
               compact list of disclosure ROWS instead of a long card stack; only
               Delete account stays apart, at the bottom. ── */}
-          <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
+          <SettingsSection id="privacy" title={t(lang, 'privacySecurity')} icon={ShieldCheck} tone="teal" open={openSections.privacy} onToggle={() => toggleSection('privacy')}>
             <div className="settings-disclosures">
               {/* Privacy Center — plain-language explanation of storage & sharing.
                   Basic privacy is free for everyone; this is never gated. */}
@@ -519,8 +576,8 @@ export default function SettingsTab() {
 
                 {/* Outgoing-data preferences (mirrored from the per-request preview).
                     The title is always sent; description is opt-in. */}
-                <Row label={t(lang, 'aiDataPrefsTitle')} sub={t(lang, 'aiDataPrefsSub')} />
-                <Row
+                <SettingsRow label={t(lang, 'aiDataPrefsTitle')} sub={t(lang, 'aiDataPrefsSub')} />
+                <SettingsRow
                   label={t(lang, 'aiPreviewIncludeDescription')}
                   enabled={settings.aiSendDescription}
                   onToggle={() => updateSettings({ aiSendDescription: !settings.aiSendDescription })}
@@ -549,49 +606,29 @@ export default function SettingsTab() {
           </SettingsSection>
 
           {/* ── Prayer reminders (deep-link id stays `notifications`) ── */}
-          <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
-            {/* A few per day — one calm global cap on how many prayers Today asks
-                for, so a long list stays coverable. Off = show everything. It used
-                to sit on the Plan tab between the day agenda and the plan
-                catalogue, which is a content surface, not a place for a standing
-                preference. */}
-            <Group title={t(lang, 'perDayTitle')} sub={t(lang, 'perDaySub')}>
-              <SegmentedControl
-                label={t(lang, 'perDayTitle')}
-                value={settings.maxPerDay || 'off'}
-                onChange={(n) => updateSettings({ maxPerDay: n === 'off' ? null : n })}
-                options={CAP_OPTIONS.map((n) => ({ value: n ?? 'off', label: n ?? t(lang, 'perDayOff') }))}
-              />
-            </Group>
-
-            {/* Daily + follow-up reminders */}
+          <SettingsSection id="notifications" title={t(lang, 'prayerReminders')} icon={Bell} tone="amber" open={openSections.notifications} onToggle={() => toggleSection('notifications')}>
+            {/* Daily + follow-up reminders: one card, each reminder a row with
+                its switch, and — once on — its time beside when it comes next. */}
             <Group title={t(lang, 'remindersTitle')}>
-              <Row label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
-                {settings.dailyReminderEnabled && (
-                  <div className="settings-row__extra">
-                    <Input
-                      type="time"
-                      aria-label={t(lang, 'dailyReminder')}
-                      value={settings.dailyReminderTime}
-                      onChange={(e) => handleReminderTimeChange(e.target.value)}
-                      className="w-auto"
-                    />
-                    {(() => {
-                      const r = nextReminder(settings.dailyReminderTime);
-                      return (
-                        <p className="q-meta mt-2">
-                          {t(lang, 'nextReminder')} · {r.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {r.time}
-                        </p>
-                      );
-                    })()}
-                  </div>
-                )}
-              </Row>
+              <div className="settings-card">
+                <SettingsRow icon={Sunrise} tone="amber" label={t(lang, 'dailyReminder')} sub={t(lang, 'dailyReminderSub')} enabled={settings.dailyReminderEnabled} onToggle={handleToggleNotifications}>
+                  {settings.dailyReminderEnabled && (
+                    <div className="settings-row__extra settings-inline-fields">
+                      <Input
+                        type="time"
+                        aria-label={t(lang, 'dailyReminder')}
+                        value={settings.dailyReminderTime}
+                        onChange={(e) => handleReminderTimeChange(e.target.value)}
+                        className="w-auto"
+                      />
+                      <NextReminder lang={lang} when={dailyNextLabel} />
+                    </div>
+                  )}
+                </SettingsRow>
 
-              <Row label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
-                {settings.followUpEnabled && (
-                  <div className="settings-row__extra">
-                    <div className="flex flex-wrap items-center gap-2">
+                <SettingsRow icon={MessageCircleHeart} tone="teal" label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
+                  {settings.followUpEnabled && (
+                    <div className="settings-row__extra settings-inline-fields">
                       <select
                         aria-label={t(lang, 'followUp')}
                         value={settings.followUpDays}
@@ -610,26 +647,16 @@ export default function SettingsTab() {
                         onChange={(e) => handleFollowUpTimeChange(e.target.value)}
                         className="w-auto"
                       />
+                      <NextReminder lang={lang} when={followUpNextLabel} />
                     </div>
-                    {(() => {
-                      const nf = nextFollowUp(followUpLastSent, settings.followUpDays, settings.followUpTime);
-                      const dayLabel = nf.daysAhead === 0
-                        ? t(lang, 'today')
-                        : nf.daysAhead === 1
-                          ? t(lang, 'tomorrow')
-                          : nf.date.toLocaleDateString(lang, { month: 'short', day: 'numeric' });
-                      return (
-                        <p className="q-meta mt-2">
-                          {t(lang, 'nextReminder')} · {dayLabel} {nf.time}
-                        </p>
-                      );
-                    })()}
-                  </div>
-                )}
-              </Row>
+                  )}
+                </SettingsRow>
+              </div>
 
               {settings.notificationsGranted && (
                 <QuietButton
+                  icon={BellRing}
+                  iconSize={15}
                   onClick={() => new Notification(APP_NAME, { body: t(lang, 'testNotifBody'), icon: '/favicon.ico' })}
                   title={t(lang, 'tipTestNotif')}
                   className="-ms-3 mt-2"
@@ -639,15 +666,15 @@ export default function SettingsTab() {
               )}
             </Group>
 
-            {/* Community notification preferences (in-app inbox + push per type) */}
+            {/* Community notification preferences (in-app inbox, push, quiet hours) */}
             <Group title={t(lang, 'notifPrefsTitle')} sub={t(lang, 'notifPrefsSub')}>
               <NotificationPreferences />
             </Group>
           </SettingsSection>
 
           {/* ── Appearance & language ── */}
-          <SettingsSection id="appearance" title={t(lang, 'settingsSecAppearance')} icon={Sun} open={openSections.appearance} onToggle={() => toggleSection('appearance')}>
-            <Group title={t(lang, 'appearance')}>
+          <SettingsSection id="appearance" title={t(lang, 'settingsSecAppearance')} icon={Sun} tone="sky" open={openSections.appearance} onToggle={() => toggleSection('appearance')}>
+            <InlineRow label={t(lang, 'appearance')}>
               <SegmentedControl
                 label={t(lang, 'appearance')}
                 value={settings.theme === 'dark' ? 'dark' : 'light'}
@@ -657,45 +684,30 @@ export default function SettingsTab() {
                   { value: 'dark', label: t(lang, 'themeDark') },
                 ]}
               />
-            </Group>
+            </InlineRow>
 
-            <Group>
-              <div className="settings-row__main">
-                <h3 className="settings-group__title">{t(lang, 'language')}</h3>
-                <LanguageDropdown
-                  lang={lang}
-                  onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
-                />
-              </div>
-            </Group>
-
-            {/* Which languages recommended resources may be offered in. The app
-                language is always included, so this needs no setup to work. */}
-            <Group>
-              <ResourceLanguagePref lang={lang} />
-            </Group>
+            <InlineRow label={t(lang, 'language')}>
+              <LanguageDropdown
+                lang={lang}
+                onChange={(code) => { updateSettings({ language: code }); updatePushPrefs(user?.id, { lang: code }); }}
+              />
+            </InlineRow>
           </SettingsSection>
 
-          {/* ── Support & feedback ── */}
-          <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} open={openSections.support} onToggle={() => toggleSection('support')}>
-            {user?.id && !user.is_anonymous && (
-              <Group>
-                <div className="settings-actions">
-                  <SecondaryButton onClick={() => setWordingMode('report')}>{t(lang, 'wordingReport')}</SecondaryButton>
-                  {canReviewWording(user) && <SecondaryButton onClick={() => setWordingMode('review')}>{t(lang, 'wordingReview')}</SecondaryButton>}
-                </div>
-              </Group>
-            )}
-
-            <Group title={t(lang, 'feedbackTitle')} sub={t(lang, 'feedbackSub')}>
-              <SecondaryButton icon={MessageSquare} iconSize={16} onClick={() => setShowFeedback(true)}>{t(lang, 'feedbackBtn')}</SecondaryButton>
-            </Group>
-
-            {/* Donate — a true, optional one-time gift. Purely voluntary: a donation
-                never unlocks features and the whole app works without it. */}
-            <Group title={t(lang, 'donateTitle')} sub={t(lang, 'donateSub')}>
-              <SecondaryButton icon={Heart} iconSize={16} onClick={() => setShowDonate(true)}>{t(lang, 'donateBtn')}</SecondaryButton>
-            </Group>
+          {/* ── Support & feedback — a short list of places to go. The donation
+              is a true, optional one-time gift: it never unlocks features and
+              the whole app works without it. ── */}
+          <SettingsSection id="support" title={t(lang, 'settingsSecSupport')} icon={Heart} tone="rose" open={openSections.support} onToggle={() => toggleSection('support')}>
+            <ul className="menu-list">
+              {user?.id && !user.is_anonymous && (
+                <LinkRow icon={Flag} tone="indigo" title={t(lang, 'wordingReport')} onClick={() => setWordingMode('report')} />
+              )}
+              {user?.id && !user.is_anonymous && canReviewWording(user) && (
+                <LinkRow icon={ClipboardCheck} tone="plum" title={t(lang, 'wordingReview')} onClick={() => setWordingMode('review')} />
+              )}
+              <LinkRow icon={MessageSquare} tone="teal" title={t(lang, 'feedbackTitle')} description={t(lang, 'feedbackSub')} onClick={() => setShowFeedback(true)} />
+              <LinkRow icon={Heart} tone="rose" title={t(lang, 'donateTitle')} description={t(lang, 'donateSub')} onClick={() => setShowDonate(true)} />
+            </ul>
           </SettingsSection>
         </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, ChevronRight, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, CalendarClock, Flag, UserX, Pencil } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, CalendarClock, Flag, UserX, Pencil, Lock, ShieldCheck } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -65,90 +65,100 @@ import MessageEditor from '../components/rich/MessageEditor';
 import AnonymousToggle from '../components/AnonymousToggle';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
-import AudienceBadge from '../components/shared/AudienceBadge';
 import PrayerSession from '../components/PrayerSession';
 import { PrimaryButton, QuietButton, SecondaryButton, StatusLabel } from '../components/shared/Primitives';
 import CircleGlyph from '../components/shared/CircleGlyph';
+import { CIRCLE_ICONS } from '../components/shared/circleIcons';
 import PlaceCircleModal from '../components/circles/PlaceCircleModal';
 import { canHoldPrivateMetadata } from '../lib/crypto/prayerCrypto';
 import { circleLabelKey, circleOf } from '../lib/circles';
 import FollowUpField from '../components/FollowUpField';
 import useFollowUpStore from '../store/followUpStore';
-import { audienceOf, protectionOf } from '../lib/audience';
+import { audienceLabel, audienceOf, protectionLabel, protectionOf } from '../lib/audience';
 import { needsTranslationControl } from '../lib/langHint';
 import { getTranslationPref, setTranslationPref, prayerScope } from '../lib/translationPrefs';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
-import { useLocalizedVerse } from '../hooks/useLocalizedVerse';
 import OverflowMenu from '../components/shared/OverflowMenu';
+import PrayerPointItem from '../components/PrayerPointItem';
 import useCommunityPrayerUpdates from './prayerDetail/useCommunityPrayerUpdates';
 import useCommunityPrayerActions from './prayerDetail/useCommunityPrayerActions';
 import usePrayerSharing from './prayerDetail/usePrayerSharing';
 import { safetyText } from '../lib/communitySafety';
 
-// One verse pill in the point list. Verses are stored in the prayer's creation
-// language; useLocalizedVerse swaps in authoritative text + a localized reference
-// for the current language when one exists (offline bundle / YouVersion, never
-// AI-translated). Otherwise the STORED reference and wording stay together as
-// one consistent pair — Scripture is never routed through the AI translation
-// toggle, so the citation always matches authoritative text.
-function PrayerDetailVerse({ verse, lang, canRemove, onRemove }) {
-  const resolved = useLocalizedVerse(verse.ref, lang);
-  const ref = resolved?.ref ?? verse.ref;
-  const text = resolved?.text ?? verse.text;
+// The facts line under a prayer's title — circle, rhythm, audience — is read
+// at a glance: each fact a small icon and a word, the prayer itself the hero.
 
-  return (
-    <div className="group/verse inline-flex items-start gap-1">
-      <VerseAccordion reference={ref} lang={lang} initialText={text}>
-        {({ toggle }) => (
-          <button type="button" onClick={toggle} title={t(lang, 'tipVerseToggle')} className="scripture-ref">
-            <BookOpen size={13} aria-hidden="true" /> {ref}
-          </button>
-        )}
-      </VerseAccordion>
-      {/* Hover-revealed, but also revealed on keyboard focus — otherwise a
-          keyboard user tabs onto a control they cannot see. */}
-      {canRemove && (
-        <button
-          onClick={onRemove}
-          aria-label={t(lang, 'tipRemoveVerse')}
-          title={t(lang, 'tipRemoveVerse')}
-          className="icon-button opacity-0 group-hover/verse:opacity-100 focus-visible:opacity-100 transition-opacity shrink-0"
-          style={{ color: 'var(--q-danger)' }}
-        >
-          <Trash2 size={14} aria-hidden="true" />
-        </button>
-      )}
-    </div>
-  );
-}
-
-// The prayer's Intercession Circle as ONE quiet metadata row under the prayer —
-// the prayer itself stays the hero. Where the circle can be kept encrypted
-// (`onChange`), the row opens the picker, which also leads to the circle's
-// teaching; elsewhere a placed circle is plain text.
-function CircleRow({ circle, lang, onChange }) {
+// The Intercession Circle, in its own tone. Where the circle can be kept
+// encrypted (`onChange`) it opens the picker, which also leads to the circle's
+// teaching; elsewhere a placed circle is plain text and an unplaced one absent.
+function CircleFact({ circle, lang, onChange }) {
   const name = circle ? t(lang, circleLabelKey(circle)) : null;
+  const Icon = circle ? CIRCLE_ICONS[circle] : null;
   const content = (
     <>
-      <CircleGlyph circle={circle || 'nations'} size={16} selected={!!circle} />
+      {Icon
+        ? <span className={`icon-tile icon-tile--sm tone-${circle}`} aria-hidden="true"><Icon size={13} strokeWidth={2} /></span>
+        : <CircleGlyph circle="nations" size={16} />}
       <span>{name || t(lang, 'circleFieldLabel')}</span>
-      {!circle && <span className="prayer-detail__circle-unset">· {t(lang, 'circleNotSet')}</span>}
     </>
   );
-  if (!onChange) return circle ? <p className="prayer-detail__circle">{content}</p> : null;
+  if (!onChange) return circle ? <span className="prayer-detail__fact">{content}</span> : null;
   return (
     <button
       type="button"
       onClick={onChange}
       aria-haspopup="dialog"
       aria-label={`${t(lang, 'circleFieldLabel')}: ${name || t(lang, 'circleNotSet')}`}
-      className="prayer-detail__circle prayer-detail__circle--button pressable"
+      className={`prayer-detail__fact prayer-detail__fact--button ${circle ? '' : 'prayer-detail__fact--unset'} pressable`}
     >
       {content}
-      <ChevronRight size={14} className="rtl-mirror shrink-0" aria-hidden="true" />
     </button>
+  );
+}
+
+// How often it comes back — a tap opens the scheduler, as the ⋯ menu does.
+function RhythmFact({ label, open, onToggle }) {
+  const content = <><Repeat size={14} aria-hidden="true" />{label}</>;
+  if (!onToggle) return <span className="prayer-detail__fact">{content}</span>;
+  return (
+    <button type="button" onClick={onToggle} aria-expanded={open} className="prayer-detail__fact prayer-detail__fact--button pressable">
+      {content}
+    </button>
+  );
+}
+
+// Who can read it — Private / Shared with … / From [group]. Encryption is
+// never a different audience: it is a small shield beside it, and a tap says
+// what it means. A plaintext prayer gets no shield, and no claim.
+function AudienceFact({ audience, protection, lang }) {
+  const [open, setOpen] = useState(false);
+  const { key, vars } = audienceLabel(audience);
+  const shared = audience.kind !== 'private';
+  const Icon = shared ? Users : Lock;
+  const prot = protectionLabel(protection);
+  const label = <><Icon size={14} aria-hidden="true" />{t(lang, key, vars)}</>;
+  if (!prot) return <span className="prayer-detail__fact">{label}</span>;
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-controls="pd-protection"
+        className="prayer-detail__fact prayer-detail__fact--button pressable"
+      >
+        {label}
+        <ShieldCheck size={13} className="prayer-detail__shield" aria-hidden="true" />
+        <span className="sr-only">{t(lang, prot.key)}</span>
+      </button>
+      {open && (
+        <p id="pd-protection" className="prayer-detail__fact-note">
+          {t(lang, shared ? 'pcSharedBody' : 'pcPrivateBody')}
+        </p>
+      )}
+    </>
   );
 }
 
@@ -177,6 +187,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const [addingNextStep, setAddingNextStep] = useState(false);
   // Adding a word of thanks to an already-answered prayer (remembrance).
   const [showThanks, setShowThanks] = useState(false);
+  const [updateComposerOpen, setUpdateComposerOpen] = useState(false);
   const [updateRecs, setUpdateRecs] = useState([]);
   const [loadingRecs, setLoadingRecs] = useState(false);
   const [recsError, setRecsError] = useState(null);
@@ -191,8 +202,6 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // one at a time — the same WhatsApp "edit message" gesture as the community).
   const [editingUpdateId, setEditingUpdateId] = useState(null);
   const [editingTestimonyId, setEditingTestimonyId] = useState(null);
-  const [addingVerseTo, setAddingVerseTo] = useState(null);
-  const [newVerse, setNewVerse] = useState({ ref: '', text: '' });
   const [showAiConsent, setShowAiConsent] = useState(false);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -557,6 +566,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // You can post updates/testimonies and mark answered only on prayers you own —
   // a saved-from-community copy is read-only (you follow the author's prayer).
   const canManage = !savedCopy;
+  const showUpdateComposer = updateComposerOpen && !isAnswered && canManage;
   const sessionNoteIds = useSessionNoteIds();
 
   // The translation control appears only on a KNOWN or probable language
@@ -632,6 +642,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const handleAddUpdate = async (text, attachments) => {
     await addUpdate(livePrayer.id, text, authorName, attachments);
     setUpdateRecs([]);
+    setUpdateComposerOpen(false);
   };
 
   // Author-only text edits of a posted update / testimony (the store re-encrypts
@@ -739,7 +750,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     setJustAnswered(true);
   };
 
-  const focusUpdateField = () => revealAndFocus('pd-updates', '[contenteditable]');
+  // The update field is not standing open on every prayer: it unfolds when
+  // asked for ("Add an update", a plan day's note, a follow-up nudge) and
+  // folds away again once sent or cancelled.
+  const focusUpdateField = () => {
+    setUpdateComposerOpen(true);
+    requestAnimationFrame(() => revealAndFocus('pd-updates', '[contenteditable]'));
+  };
 
   // Arriving from "Tend your altar" with a purpose: open that part once.
   const initialFocusDone = useRef(false);
@@ -765,6 +782,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   };
 
   const [confirmRemovePoint, setConfirmRemovePoint] = useState(null);
+  const [confirmRemoveVerse, setConfirmRemoveVerse] = useState(null);
 
   // The recurrence editor, declared once and placed twice: on a plan run it sits
   // inside the plan's own card (where the pace question used to be), otherwise
@@ -816,6 +834,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           cancelLabel={t(lang, 'cancel')}
           onConfirm={() => { handleRemovePoint(confirmRemovePoint.id); setConfirmRemovePoint(null); }}
           onCancel={() => setConfirmRemovePoint(null)}
+        />
+      )}
+      {confirmRemoveVerse && (
+        <ConfirmDialog
+          title={t(lang, 'tipRemoveVerse')}
+          message={`${localizeRef(confirmRemoveVerse.ref, lang)} — ${t(lang, 'deleteWarning')}`}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          onConfirm={() => { handleRemoveVerse(confirmRemoveVerse.pointId, confirmRemoveVerse.ref); setConfirmRemoveVerse(null); }}
+          onCancel={() => setConfirmRemoveVerse(null)}
         />
       )}
       {showAiConsent && (
@@ -1016,14 +1044,31 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           <RichText text={planText?.description || loc(livePrayer.description)} className="prayer-detail__description" />
         ) : null}
 
-        {/* Labels — one quiet line ("Marriage · Healing"), except on a saved
-            copy where you can file it under your own categories (personal
-            organisation, further down). */}
-        {!savedCopy && prayerCategories.length > 0 && (
-          <p className="prayer-detail__labels">{prayerCategories.map((c) => tr(c.name, lang)).join(' · ')}</p>
+        {/* One line of facts — its circle, its rhythm, who can read it — each
+            a small icon and a word, never a pill. */}
+        {!isCommunity && (
+          <div className="prayer-detail__facts">
+            <CircleFact circle={heroCircle} lang={lang} onChange={canPlaceCircle ? () => setShowCirclePicker(true) : null} />
+            {livePrayer.schedule && !planScheduleRow && (
+              <RhythmFact
+                label={seriesEnded ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
+                open={showScheduleEdit}
+                onToggle={isAnswered ? null : () => setShowScheduleEdit((v) => !v)}
+              />
+            )}
+            {!isPlanRun && (
+              <AudienceFact audience={audienceOf(livePrayer, sharedGroups)} protection={protectionOf(livePrayer)} lang={lang} />
+            )}
+          </div>
         )}
 
+        {/* Then one quiet line of memory: its labels ("Marriage · Healing"),
+            how long it has been carried and how often prayed. A saved copy
+            files its labels further down, under your own categories. */}
         <div className="prayer-detail__meta">
+          {!savedCopy && prayerCategories.length > 0 && (
+            <span>{prayerCategories.map((c) => tr(c.name, lang)).join(' · ')}</span>
+          )}
           <span>
             {isCommunity
               ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
@@ -1044,17 +1089,36 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           )}
         </div>
 
-        {!isCommunity && (
-          <CircleRow circle={heroCircle} lang={lang} onChange={canPlaceCircle ? () => setShowCirclePicker(true) : null} />
-        )}
-
+        {/* Pray now leads. Adding news and marking answered sit beside it as
+            two compact tools — labelled where there is room, icons on a phone —
+            and a plan run has neither: a plan is walked, not updated and
+            answered. Anything written while praying still lands below. */}
         {!isCommunity && !isAnswered && !livePrayer._locked && (
-          <PrimaryButton
-            onClick={() => setShowPraySession(true)}
-            className="prayer-detail__pray"
-          >
-            {t(lang, 'prayNow')}
-          </PrimaryButton>
+          <div className="prayer-detail__actions">
+            <PrimaryButton
+              onClick={() => setShowPraySession(true)}
+              className="prayer-detail__pray"
+            >
+              {t(lang, 'prayNow')}
+            </PrimaryButton>
+            {canManage && !isPlanRun && (
+              <div className="prayer-detail__secondary-actions">
+                <SecondaryButton onClick={focusUpdateField} icon={Plus} iconSize={18} title={t(lang, 'addUpdateBtn')}>
+                  {t(lang, 'addUpdateBtn')}
+                </SecondaryButton>
+                <SecondaryButton
+                  onClick={showTestimony ? closeAnswerFlow : openAnswerFlow}
+                  aria-expanded={showTestimony}
+                  aria-controls="pd-answer"
+                  title={t(lang, 'markAnswered')}
+                  icon={CheckCircle}
+                  iconSize={18}
+                >
+                  {t(lang, 'markAnswered')}
+                </SecondaryButton>
+              </div>
+            )}
+          </div>
         )}
       </section>
 
@@ -1078,56 +1142,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </div>
         )}
 
-        {/* Audience at a glance — Private / Shared with … / From [group] — on
-            every personal prayer, saved-from-community copies included, always
-            visible (never buried in a menu). Encryption renders as a smaller
-            separate protection status, never as a different audience. */}
-        {!isCommunity && !isPlanRun && (
-          <AudienceBadge
-            audience={audienceOf(livePrayer, sharedGroups)}
-            protection={protectionOf(livePrayer)}
-            lang={lang}
-          />
-        )}
-
-        {/* The hero leads with prayer. Management stays secondary here — and a
-            plan run has none of it: a plan is walked, not updated and answered.
-            Anything written while praying still lands in the history below. */}
-        {!isCommunity && !isAnswered && !livePrayer._locked && !isPlanRun && (
-          canManage && (
-              // Beside Pray now on any width that fits, stacked when the
-              // translated labels need the room — so the hierarchy stays
-              // readable instead of the labels overflowing.
-              <div className="prayer-detail__secondary-actions">
-                <SecondaryButton onClick={focusUpdateField} icon={Plus} iconSize={16}>
-                  {t(lang, 'addUpdateBtn')}
-                </SecondaryButton>
-                <SecondaryButton
-                  onClick={showTestimony ? closeAnswerFlow : openAnswerFlow}
-                  aria-expanded={showTestimony}
-                  aria-controls="pd-answer"
-                  icon={CheckCircle}
-                  iconSize={16}
-                >
-                  {t(lang, 'markAnswered')}
-                </SecondaryButton>
-              </div>
-          )
-        )}
-
         {/* Scheduling stays OUT of the main flow: the ⋯ menu's Schedule action
-            opens the planner here as a contextual disclosure; otherwise a set
-            schedule reads as one quiet summary line. A plan run asks the same
-            question on its own card instead, so this whole block stands down. */}
-        {!isCommunity && !isAnswered && !planScheduleRow && showScheduleEdit ? (
-          schedulePlanner
-        ) : (
-          livePrayer.schedule && !planScheduleRow && (
-            <p className="prayer-detail__rhythm">
-              <Repeat size={14} className="shrink-0" aria-hidden="true" /> {seriesEnded ? t(lang, 'seriesEnded') : scheduleSummary(livePrayer.schedule, lang)}
-            </p>
-          )
-        )}
+            (or a tap on the rhythm under the title) opens the planner here as a
+            contextual disclosure. A plan run asks the same question on its own
+            card instead, so this stands down. */}
+        {!isCommunity && !isAnswered && !planScheduleRow && showScheduleEdit && schedulePlanner}
 
         {/* Guided plan: this day's theme + passage, and — for a rich plan — its
             reflection, prompts, practice and "Go deeper". Arrows and a swipe
@@ -1307,100 +1326,21 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <p className="text-sm" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'needHelpFindingWords')}</p>
           )}
 
-          <div className="prayer-points-panel__list">
-            {(displayPrayer.prayer_points || []).map(pp => {
-              // Support both new `verses` array and legacy `verse`/`verse_text` fields
-              const verses = pp.verses?.length
-                ? pp.verses
-                : pp.verse ? [{ ref: pp.verse, text: pp.verse_text || '' }] : [];
-              const pointReadOnly = !!(pp._locked || pp._communityFallback);
-              return (
-                <div key={pp.id} className="prayer-point-card group">
-                  <div className="flex items-start gap-2">
-                    <p className="flex-1 text-sm leading-snug" style={{ color: pp._locked ? 'var(--q-text-tertiary)' : 'var(--q-text)' }}>
-                      {pp._locked ? t(lang, 'contentLocked') : loc(pp.title)}
-                    </p>
-                    {canRemoveContent && !pointReadOnly && (
-                      <button
-                        onClick={() => setConfirmRemovePoint(pp)}
-                        aria-label={t(lang, 'tipRemovePoint')}
-                        title={t(lang, 'tipRemovePoint')}
-                        className="shrink-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
-                        style={{ color: 'var(--q-gold-text)' }}
-                      >
-                        <Trash2 size={13} aria-hidden="true" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Verse pills */}
-                  {verses.length > 0 && (
-                    <div className="prayer-point-card__verses flex flex-wrap gap-1.5">
-                      {verses.map((v, i) => (
-                        <PrayerDetailVerse
-                          key={i}
-                          verse={v}
-                          lang={lang}
-                          canRemove={canRemoveContent && !pointReadOnly}
-                          onRemove={() => handleRemoveVerse(pp.id, v.ref)}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Add verse inline form */}
-                  {canAddContent && !pointReadOnly && (
-                    addingVerseTo === pp.id ? (
-                      <div className="mt-2 space-y-1.5">
-                        <input
-                          type="text"
-                          value={newVerse.ref}
-                          onChange={e => setNewVerse(v => ({ ...v, ref: e.target.value }))}
-                          placeholder={t(lang, 'verseRefPlaceholder')}
-                          className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
-                          style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text)' }}
-                          autoFocus
-                        />
-                        <input
-                          type="text"
-                          value={newVerse.text}
-                          onChange={e => setNewVerse(v => ({ ...v, text: e.target.value }))}
-                          placeholder={t(lang, 'verseTextPlaceholder')}
-                          className="w-full text-xs rounded-lg px-2.5 py-1.5 focus:outline-none"
-                          style={{ background: 'var(--q-field)', border: '1px solid var(--q-field-border)', color: 'var(--q-text)' }}
-                        />
-                        <div className="flex gap-1.5">
-                          <button onClick={() => { setAddingVerseTo(null); setNewVerse({ ref: '', text: '' }); }} className="flex-1 text-xs rounded-lg py-1.5" style={{ background: 'var(--q-gold-soft)', color: 'var(--q-gold-text)' }}>{t(lang, 'cancel')}</button>
-                          <button
-                            onClick={() => {
-                              if (!newVerse.ref.trim()) return;
-                              handleAddVerse(pp.id, { ref: newVerse.ref.trim(), text: newVerse.text.trim() });
-                              setAddingVerseTo(null);
-                              setNewVerse({ ref: '', text: '' });
-                            }}
-                            title={t(lang, 'tipSaveVerse')}
-                            className="flex-1 text-xs rounded-lg py-1.5 font-medium"
-                            style={{ background: 'var(--q-gold)', color: 'var(--q-surface)' }}
-                          >
-                            {t(lang, 'addVerse')}
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => { setAddingVerseTo(pp.id); setNewVerse({ ref: '', text: '' }); }}
-                        title={t(lang, 'tipAddVerse')}
-                        className="prayer-point-card__add-verse flex items-center gap-1 text-xs"
-                        style={{ color: 'var(--q-gold-text)' }}
-                      >
-                        <Plus size={11} /> {t(lang, 'addVerse')}
-                      </button>
-                    )
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <ol className="prayer-points-panel__list">
+            {(displayPrayer.prayer_points || []).map((pp) => (
+              <PrayerPointItem
+                key={pp.id}
+                point={pp}
+                title={pp._locked ? t(lang, 'contentLocked') : loc(pp.title)}
+                lang={lang}
+                canAdd={canAddContent}
+                canRemove={canRemoveContent}
+                onAddVerse={(verse) => handleAddVerse(pp.id, verse)}
+                onRemoveVerse={(ref) => setConfirmRemoveVerse({ pointId: pp.id, ref })}
+                onRemove={() => setConfirmRemovePoint(pp)}
+              />
+            ))}
+          </ol>
 
           {recsError && <p className="text-xs rounded-xl px-3 py-2 mt-2" style={{ color: 'var(--q-gold-text)', background: 'var(--q-gold-soft)' }}>{recsError}</p>}
 
@@ -1417,6 +1357,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                       setUpdateRecs(prev => prev.filter(r => r.title !== rec.title));
                     }}
                     title={t(lang, 'tipAddPoint')}
+                    aria-label={t(lang, 'tipAddPoint')}
                     className="shrink-0 rounded-xl p-1.5 text-white"
                     style={{ background: 'var(--q-action-primary)' }}
                   >
@@ -1427,12 +1368,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                   <p className="text-xs leading-relaxed mt-1" style={{ color: 'var(--q-text-tertiary)' }}>{recWhy}</p>
                 )}
                 {(rec.verses || []).length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-2">
+                  <div className="prayer-point__verses">
                     {rec.verses.map((v, i) => (
-                      <VerseAccordion key={i} reference={v.ref} lang={lang}>
-                        {({ toggle }) => (
-                          <button type="button" onClick={toggle} title={t(lang, 'tipVerseToggle')} className="scripture-ref">
-                            <BookOpen size={13} aria-hidden="true" /> {v.ref}
+                      <VerseAccordion key={i} reference={v.ref} lang={lang} className="prayer-point__verse">
+                        {({ toggle, expanded }) => (
+                          <button type="button" onClick={toggle} aria-expanded={expanded} title={t(lang, 'tipVerseToggle')} className="scripture-chip">
+                            <BookOpen size={12} aria-hidden="true" /> {v.ref}
                           </button>
                         )}
                       </VerseAccordion>
@@ -1639,11 +1580,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             (recurrence) is edited via SchedulePlanner near the top; the old
             "prayer days" toggle here was redundant with it and has been removed. */}
         {!isCommunity && <>
+        {/* Updates: titled only once there is one, and the field only while
+            the reader is writing one — no empty heading, no standing input. */}
+        {(allUpdates.length > 0 || showUpdateComposer) && (
         <div className="prayer-activity-panel">
-          <p className="prayer-activity-panel__title">{t(lang, 'evolutions')}</p>
-
-          {allUpdates.length === 0 && (
-            <p className="text-sm italic mb-3" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'noUpdate')}</p>
+          {allUpdates.length > 0 && (
+            <p className="prayer-activity-panel__title">{t(lang, 'evolutions')}</p>
           )}
 
           <div className="prayer-activity-list">
@@ -1710,7 +1652,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             ))}
           </div>
 
-          {!isAnswered && canManage && (
+          {showUpdateComposer && (
             <div className="prayer-activity-composer">
               <UpdateComposer
                 inputId="pd-updates"
@@ -1719,9 +1661,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 placeholder={t(lang, 'newUpdate')}
                 onSend={handleAddUpdate}
               />
+              <QuietButton onClick={() => setUpdateComposerOpen(false)} className="-ms-3 mt-1">
+                {t(lang, 'cancel')}
+              </QuietButton>
             </div>
           )}
         </div>
+        )}
 
 
         {/* Testimonies — the prayer's own (preserved across resume) plus any posted

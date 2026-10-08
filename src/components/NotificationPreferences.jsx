@@ -1,40 +1,17 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Inbox, Loader2, MoonStar, Smartphone } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { fetchNotificationPrefs, savePref, currentTimezone, NOTIF_TYPES, defaultMode } from '../lib/notificationPrefs';
+import { fetchNotificationPrefs, savePref, currentTimezone } from '../lib/notificationPrefs';
 import { subscribeDeviceForPush } from '../push';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
-import Switch from './shared/Switch';
 import { Input } from './shared/Primitives';
+import SettingsRow from './shared/SettingsRow';
 
-const TYPE_LABEL = {
-  friend_request: 'notifFriendRequest',
-  group_invitation: 'notifGroupInvitation',
-  community_update: 'notifCommunityUpdate',
-  answered: 'notifAnswered',
-  reaction_bucket: 'notifReaction',
-  group_prayer_added: 'notifGroupPrayerAdded',
-  testimony: 'notifTestimony',
-};
-
-function Toggle({ enabled, onToggle, label, sub }) {
-  return (
-    <div className="settings-row">
-      <div className="settings-row__main">
-        <div className="min-w-0">
-          <p className="settings-row__label">{label}</p>
-          {sub && <p className="settings-row__sub">{sub}</p>}
-        </div>
-        <Switch checked={enabled} onChange={onToggle} label={label} />
-      </div>
-    </div>
-  );
-}
-
-// Account-level notification preferences: master in-app / push toggles, quiet
-// hours (in the device's IANA timezone), and a per-type delivery mode.
+// Account-level notification preferences: master in-app / push toggles and
+// quiet hours (in the device's IANA timezone). Per-type delivery choices are
+// no longer offered here; any a user saved earlier still apply on the server.
 export default function NotificationPreferences() {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const { user } = useAuthStore();
@@ -61,8 +38,6 @@ export default function NotificationPreferences() {
     const { error } = await savePref(user.id, type, patch);
     if (error) { toast.error(t(lang, 'errorGeneric')); load(); }
   };
-
-  const modeFor = (type) => prefs[type]?.delivery_mode || defaultMode(type);
 
   // The push master switch does two things: persist the account-level preference
   // AND make sure this device actually holds a Web Push subscription. Writing the
@@ -93,68 +68,50 @@ export default function NotificationPreferences() {
   }
 
   return (
-    <div>
-      <Toggle
+    <div className="settings-card">
+      <SettingsRow
+        icon={Inbox}
+        tone="plum"
         enabled={inAppOn}
         onToggle={() => persist('_account', { in_app_enabled: !inAppOn }, { in_app_enabled: !inAppOn })}
         label={t(lang, 'notifInApp')}
         sub={t(lang, 'notifInAppSub')}
       />
-      <Toggle
+      <SettingsRow
+        icon={Smartphone}
+        tone="indigo"
         enabled={pushOn}
         onToggle={togglePush}
         label={t(lang, 'notifPush')}
         sub={t(lang, 'notifPushSub')}
       />
 
-      {/* Quiet hours */}
-      <div className="settings-subgroup">
-        <h4 className="settings-row__label">{t(lang, 'quietHours')}</h4>
-        <p className="settings-group__sub">{t(lang, 'quietHoursSub')}</p>
-        <div className="settings-times">
-          <label>
-            <span>{t(lang, 'quietFrom')}</span>
-            <Input
-              type="time"
-              value={acct.quiet_hours_start || ''}
-              onChange={(e) => persist('_account', { quiet_hours_start: e.target.value || null, timezone: tz }, { quiet_hours_start: e.target.value })}
-              className="w-auto"
-            />
-          </label>
-          <label>
-            <span>{t(lang, 'quietTo')}</span>
-            <Input
-              type="time"
-              value={acct.quiet_hours_end || ''}
-              onChange={(e) => persist('_account', { quiet_hours_end: e.target.value || null, timezone: tz }, { quiet_hours_end: e.target.value })}
-              className="w-auto"
-            />
-          </label>
+      {/* Quiet hours: push waits until morning; the inbox still fills. */}
+      <SettingsRow icon={MoonStar} tone="sky" label={t(lang, 'quietHours')} sub={t(lang, 'quietHoursSub')}>
+        <div className="settings-row__extra">
+          <div className="settings-times">
+            <label>
+              <span>{t(lang, 'quietFrom')}</span>
+              <Input
+                type="time"
+                value={acct.quiet_hours_start || ''}
+                onChange={(e) => persist('_account', { quiet_hours_start: e.target.value || null, timezone: tz }, { quiet_hours_start: e.target.value })}
+                className="w-auto"
+              />
+            </label>
+            <label>
+              <span>{t(lang, 'quietTo')}</span>
+              <Input
+                type="time"
+                value={acct.quiet_hours_end || ''}
+                onChange={(e) => persist('_account', { quiet_hours_end: e.target.value || null, timezone: tz }, { quiet_hours_end: e.target.value })}
+                className="w-auto"
+              />
+            </label>
+          </div>
+          {tz && <p className="q-meta mt-2">{t(lang, 'timezone')}: {tz}</p>}
         </div>
-        {tz && <p className="q-meta mt-2">{t(lang, 'timezone')}: {tz}</p>}
-      </div>
-
-      {/* Per-type delivery mode */}
-      <div className="settings-subgroup">
-        <h4 className="settings-row__label">{t(lang, 'notifByType')}</h4>
-        <ul className="settings-types">
-          {NOTIF_TYPES.map((type) => (
-            <li key={type}>
-              <span>{t(lang, TYPE_LABEL[type])}</span>
-              <select
-                value={modeFor(type)}
-                onChange={(e) => persist(type, { delivery_mode: e.target.value }, { delivery_mode: e.target.value })}
-                aria-label={t(lang, TYPE_LABEL[type])}
-                className="q-input q-input--compact"
-              >
-                <option value="immediate">{t(lang, 'modeImmediate')}</option>
-                <option value="digest">{t(lang, 'modeDigest')}</option>
-                <option value="off">{t(lang, 'modeOff')}</option>
-              </select>
-            </li>
-          ))}
-        </ul>
-      </div>
+      </SettingsRow>
     </div>
   );
 }

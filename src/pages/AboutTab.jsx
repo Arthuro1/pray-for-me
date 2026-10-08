@@ -1,19 +1,20 @@
+import { useId, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 import { CIRCLES, circleLabelKey } from '../lib/circles';
 import { localizeRef } from '../content/teaching';
-import { bibleLink } from '../utils/bibleLink';
 import CircleGlyph from '../components/shared/CircleGlyph';
 import { PageHeader } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
+import VerseAccordion from '../components/VerseAccordion';
 
 // "About Qetoret": the name, the access it rests on, the story behind it, the
 // movements, the circles and the promises the app keeps — a short biblical
 // foundation (docs/QETORET_IDENTITY.md), never a substitute for Scripture.
-// Scripture is cited by reference only and opens in the reader's own Bible;
-// no verse text is authored here.
+// Scripture is cited by reference only; tapping one unfolds the passage from
+// the reader's Bible sources in place. No verse text is authored here.
 const MOVEMENTS = ['come', 'bring', 'carry', 'return', 'listen', 'respond', 'remember'];
 
 const SECTIONS = [
@@ -22,17 +23,40 @@ const SECTIONS = [
   { id: 'story', titleKey: 'aboutStoryTitle', bodyKey: 'aboutStoryBody', refs: ['Luke 1:5-25', 'Luke 1:57-80'] },
 ];
 
+// A section's references in one row; the one tapped opens beneath the row (a
+// second tap, or another reference, closes it). One passage open at a time
+// keeps the page a page, not a stack of quotations.
 function References({ refs, lang }) {
+  const [openRef, setOpenRef] = useState(null);
+  const panelId = useId();
   return (
-    <ul className="about__refs">
-      {refs.map((ref) => (
-        <li key={ref}>
-          <a href={bibleLink(ref, lang)} target="_blank" rel="noopener noreferrer" className="scripture-ref">
-            <BookOpen size={13} aria-hidden="true" /> {localizeRef(ref, lang)}
-          </a>
-        </li>
-      ))}
-    </ul>
+    <div className="about__refs-block">
+      <ul className="about__refs">
+        {refs.map((ref) => {
+          const open = openRef === ref;
+          return (
+            <li key={ref}>
+              <button
+                type="button"
+                onClick={() => setOpenRef(open ? null : ref)}
+                aria-expanded={open}
+                aria-controls={open ? panelId : undefined}
+                className="scripture-ref"
+              >
+                <BookOpen size={13} aria-hidden="true" /> {localizeRef(ref, lang)}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+      {openRef && (
+        <div id={panelId}>
+          <VerseAccordion key={openRef} reference={localizeRef(openRef, lang)} lang={lang} defaultExpanded>
+            {() => null}
+          </VerseAccordion>
+        </div>
+      )}
+    </div>
   );
 }
 

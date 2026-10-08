@@ -9,12 +9,9 @@ import { prayerPriority } from '../utils/prayer';
 //   { prayer, source: 'once'|'recurring'|'days'|'category', slot: string|null }
 // A prayer with its own `schedule` is governed ONLY by that schedule; legacy
 // week_days / category logic applies to the rest (full backward compat).
-//
-// `cap` (settings.maxPerDay, "show a few per day"): when the day's list is
-// longer than the cap, keep everything pinned or dated-once, and round-robin the
-// rest so a big list stays coverable without one overwhelming day. Uncapped by
-// default — Home and catch-up pass it, the month calendar shows the full plan.
-export function prayersForDay(prayers, categories, dayKey, { cap = 0 } = {}) {
+// There is no global per-day cap: every prayer planned for the day is listed,
+// exactly as the reminder Edge Function counts them (_shared/planner.ts).
+export function prayersForDay(prayers, categories, dayKey) {
   const weekday = ((d) => d.getDay())(new Date(
     parseInt(dayKey.slice(0, 4), 10), parseInt(dayKey.slice(5, 7), 10) - 1, parseInt(dayKey.slice(8, 10), 10)
   ));
@@ -63,20 +60,6 @@ export function prayersForDay(prayers, categories, dayKey, { cap = 0 } = {}) {
       return !picks || picks.has(p.id);
     });
     if (visible) entries.push({ prayer: p, source: 'category', slot: null });
-  }
-
-  // Global "a few per day" cap. Pinned and one-time-dated prayers are always
-  // kept (they're deliberate for today); the rest round-robin by creation order
-  // so coverage is fair and identical on every device for a given day.
-  if (cap > 0 && entries.length > cap) {
-    const keep = entries.filter((e) => e.source === 'once' || e.prayer.pinned);
-    const rest = entries.filter((e) => !(e.source === 'once' || e.prayer.pinned));
-    const slots = Math.max(0, cap - keep.length);
-    const orderedIds = [...rest]
-      .sort((a, b) => new Date(a.prayer.created_at || 0) - new Date(b.prayer.created_at || 0))
-      .map((e) => e.prayer.id);
-    const picked = new Set(rotationForDay(orderedIds, slots, dayKey));
-    return [...keep, ...rest.filter((e) => picked.has(e.prayer.id))];
   }
   return entries;
 }
@@ -207,8 +190,8 @@ export function groupBySlot(entries) {
 // on today's list (those are simply prayed today).
 // completedDays: Map(prayerId -> Set('YYYY-MM-DD')).
 // Returns [{ prayer, day }] oldest-first, one entry per prayer (earliest miss).
-export function catchUpPrayers(prayers, categories, completedDays, todayKey, windowDays = 3, cap = 0) {
-  const todayIds = new Set(prayersForDay(prayers, categories, todayKey, { cap }).map((e) => e.prayer.id));
+export function catchUpPrayers(prayers, categories, completedDays, todayKey, windowDays = 3) {
+  const todayIds = new Set(prayersForDay(prayers, categories, todayKey).map((e) => e.prayer.id));
   // ISO day keys compare lexicographically, so `d >= day` is a date comparison.
   const prayedSince = (id, day) => {
     for (const d of completedDays.get(id) || []) if (d >= day) return true;
@@ -218,7 +201,7 @@ export function catchUpPrayers(prayers, categories, completedDays, todayKey, win
   const missed = [];
   for (let i = windowDays; i >= 1; i--) {
     const day = addDays(todayKey, -i);
-    for (const { prayer } of prayersForDay(prayers, categories, day, { cap })) {
+    for (const { prayer } of prayersForDay(prayers, categories, day)) {
       if (seen.has(prayer.id) || todayIds.has(prayer.id)) continue;
       if (prayedSince(prayer.id, day)) continue;
       seen.add(prayer.id);
