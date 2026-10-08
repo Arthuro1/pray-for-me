@@ -15,7 +15,14 @@ beforeEach(() => {
   getSession.mockResolvedValue({ data: { session: { access_token: 'test-token', user: { id: 'account-a' } } } });
   vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ data: {} }), { status: 200 })));
 });
-afterEach(() => { vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
+afterEach(() => { vi.useRealTimers(); vi.unstubAllEnvs(); vi.unstubAllGlobals(); });
+
+function limitResponse(code = 'daily_limit', retryAfterSeconds = 60) {
+  return new Response(JSON.stringify({ error: 'private prayer diagnostic', code, retryAfterSeconds }), {
+    status: 429,
+    headers: { 'Content-Type': 'application/json', 'Retry-After': String(retryAfterSeconds) },
+  });
+}
 
 describe('AI provider request boundary', () => {
   it('blocks automatic translation before fetch when the account has not acknowledged Claude', async () => {
@@ -87,5 +94,142 @@ describe('AI provider request boundary', () => {
     await aiFetch('translate_texts', { texts: ['Please pray'], lang: 'fr' });
     expect(fetch.mock.calls[0][0]).toBe('/api/ai');
     expect(fetch.mock.calls[0][1].headers['X-Qetoret-AI-Provider']).toBe('anthropic');
+  });
+
+  it('forwards an optional abort signal to the network request', async () => {
+    acknowledgeAiProvider('account-a');
+    const controller = new AbortController();
+    const { aiFetch } = await import('./aiClient');
+    await aiFetch('translate_texts', { texts: ['Please pray'], lang: 'fr' }, { signal: controller.signal });
+    expect(fetch.mock.calls[0][1].signal).toBe(controller.signal);
+  });
+
+  it('does not send a request whose signal is already aborted', async () => {
+    acknowledgeAiProvider('account-a');
+    const controller = new AbortController();
+    controller.abort();
+    const { aiFetch } = await import('./aiClient');
+    await expect(aiFetch('translate_texts', { texts: ['Please pray'], lang: 'fr' }, { signal: controller.signal }))
+      .rejects.toMatchObject({ name: 'AbortError' });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('does not send content when cancelled while authentication is still resolving', async () => {
+    acknowledgeAiProvider('account-a');
+    let resolveSession;
+    getSession.mockImplementationOnce(() => new Promise((resolve) => { resolveSession = resolve; }));
+    const controller = new AbortController();
+    const { aiFetch } = await import('./aiClient');
+    const pending = aiFetch('translate_texts', { texts: ['Please pray'], lang: 'fr' }, { signal: controller.signal });
+    controller.abort();
+    resolveSession({ data: { session: { access_token: 'test-token', user: { id: 'account-a' } } } });
+    await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+});
+
+describe('AI limit backoff across features', () => {
+  it.each(['daily_limit', 'rate_limit', 'provider_rate_limit'])('shares a %s response with other features without another network request', async (code) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-08T12:00:00Z'));
+    acknowledgeAiProvider('account-a');
+    fetch.mockResolvedValueOnce(limitResponse(code, 30));
+    const { aiFetch } = await import('./aiClient');
+    const first = await aiFetch('translate_texts', { texts: ['Please pray'], lang: 'fr' });
+    expect(first.status).toBe(429);
+    expect((await first.json()).code).toBe(code);
+
+    vi.setSystemTime(new Date('2026-10-08T12:00:07Z'));
+    const otherFeature = await aiFetch('scripture_guidance', { title: 'Wisdom', lang: 'en' });
+    expect(otherFeature.status).toBe(429);
+    expect(otherFeature.headers.get('Retry-After')).toBe('23');
+    expect(await otherFeature.json()).toEqual({ code, retryAfterSeconds: 23 });
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it('resumes network requests at the retry deadline', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-08T12:00:00Z'));
+    acknowledgeAiProvider('account-a');
+    fetch.mockResolvedValueOnce(limitResponse('provider_rate_limit', 5));
+    const { aiFetch } = await import('./aiClient');
+    await aiFetch('translate_texts', { texts: ['Please pray'], lang: 'fr' });
+    vi.setSystemTime(new Date('2026-10-08T12:00:05Z'));
+    expect((await aiFetch('prayer_recommendations', { title: 'Wisdom', lang: 'en' })).status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps backoff separate for authenticated accounts', async () => {
+    acknowledgeAiProvider('account-a');
+    acknowledgeAiProvider('account-b');
+    fetch.mockResolvedValueOnce(limitResponse());
+    const { aiFetch } = await import('./aiClient');
+    const input = { texts: ['Please pray'], lang: 'fr' };
+    await aiFetch('translate_texts', input);
+    prayerState.current.userId = 'account-b';
+    getSession.mockResolvedValue({ data: { session: { access_token: 'other-token', user: { id: 'account-b' } } } });
+    expect((await aiFetch('translate_texts', input)).status).toBe(200);
+
+    prayerState.current.userId = 'account-a';
+    getSession.mockResolvedValue({ data: { session: { access_token: 'test-token', user: { id: 'account-a' } } } });
+    expect((await aiFetch('translate_texts', input)).status).toBe(429);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps backoff separate for providers', async () => {
+    acknowledgeAiProvider('account-a');
+    fetch.mockResolvedValueOnce(limitResponse('provider_rate_limit'));
+    const { aiFetch } = await import('./aiClient');
+    const input = { texts: ['Please pray'], lang: 'fr' };
+    await aiFetch('translate_texts', input);
+    vi.stubEnv('VITE_AI_PROVIDER', 'ollama');
+    expect((await aiFetch('translate_texts', input)).status).toBe(200);
+    vi.stubEnv('VITE_AI_PROVIDER', 'anthropic');
+    expect((await aiFetch('translate_texts', input)).status).toBe(429);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('clears known limits when consent or account request state resets', async () => {
+    acknowledgeAiProvider('account-a');
+    fetch.mockResolvedValueOnce(limitResponse());
+    const { aiFetch } = await import('./aiClient');
+    const { resetAiRequestState } = await import('./aiCore');
+    const input = { texts: ['Please pray'], lang: 'fr' };
+    await aiFetch('translate_texts', input);
+    resetAiRequestState();
+    expect((await aiFetch('translate_texts', input)).status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not restore a cleared limit from an older in-flight response', async () => {
+    acknowledgeAiProvider('account-a');
+    let resolveRequest;
+    let signalStarted;
+    const started = new Promise((resolve) => { signalStarted = resolve; });
+    fetch.mockImplementationOnce(() => {
+      signalStarted();
+      return new Promise((resolve) => { resolveRequest = resolve; });
+    });
+    const { aiFetch } = await import('./aiClient');
+    const { resetAiRequestState } = await import('./aiCore');
+    const input = { texts: ['Please pray'], lang: 'fr' };
+    const pending = aiFetch('translate_texts', input);
+    await started;
+    resetAiRequestState();
+    resolveRequest(limitResponse());
+    expect((await pending).status).toBe(429);
+    expect((await aiFetch('translate_texts', input)).status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('falls back to a bounded generic backoff for unknown error metadata', async () => {
+    acknowledgeAiProvider('account-a');
+    fetch.mockResolvedValueOnce(limitResponse('private prayer diagnostic', 999_999));
+    const { aiFetch } = await import('./aiClient');
+    const input = { texts: ['Please pray'], lang: 'fr' };
+    await aiFetch('translate_texts', input);
+    const blocked = await aiFetch('translate_texts', input);
+    expect(await blocked.json()).toEqual({ code: 'busy', retryAfterSeconds: 86_400 });
+    expect(fetch).toHaveBeenCalledTimes(1);
   });
 });

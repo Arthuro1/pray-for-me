@@ -42,6 +42,7 @@ beforeEach(() => { calls.requests.length = 0; });
 describe('translateContent — Scripture exclusion', () => {
   it('sends prayer wording but never verse text to the AI', async () => {
     const prayers = [{
+      user_id: 'user-1',
       title: 'Pour la paix de Marc',
       description: 'Une situation difficile au travail',
       prayer_updates: [{ text: 'Des nouvelles encourageantes' }],

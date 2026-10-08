@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { getAiProvider, hasAiProviderAcknowledgement } from './aiProvider';
+import { aiLimitGeneration, getAiLimitResponse, readAiLimit, rememberAiLimit } from './aiLimits';
 
 // Browser client for Qetoret's authenticated AI tasks.
 //
@@ -26,7 +27,8 @@ export const AI_MODEL_HINT = import.meta.env.VITE_AI_MODEL || 'server';
 
 // Request one server-defined task. Returns the raw fetch Response so callers can
 // branch on status; the server replies with a normalized { data, usage } body.
-export async function aiFetch(task, input) {
+export async function aiFetch(task, input, { signal } = {}) {
+  if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
   const headers = { 'Content-Type': 'application/json' };
   // Same-origin deployments use this to reject an outdated client disclosure
   // after the server switches providers. Direct gateway deployments retain their
@@ -57,5 +59,17 @@ export async function aiFetch(task, input) {
   }
   if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
 
-  return fetch(ENDPOINT, { method: 'POST', headers, body: JSON.stringify({ task, input }) });
+  const account = `${getAiProvider()}:${session?.user?.id || ''}`;
+  const limited = getAiLimitResponse(account);
+  if (limited) return limited;
+  // Consent can be withdrawn or the vault locked while session lookup/imports
+  // are pending. A cancelled translation must never dispatch its captured text.
+  if (signal?.aborted) throw new DOMException('Aborted', 'AbortError');
+  const generation = aiLimitGeneration();
+  const response = await fetch(ENDPOINT, { method: 'POST', headers, body: JSON.stringify({ task, input }), ...(signal ? { signal } : {}) });
+  if (response.status === 429 && !signal?.aborted) {
+    const limit = await readAiLimit(response.clone());
+    rememberAiLimit(account, limit, generation);
+  }
+  return response;
 }

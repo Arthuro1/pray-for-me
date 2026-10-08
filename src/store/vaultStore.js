@@ -3,6 +3,9 @@ import * as vault from '../lib/crypto/keyManager';
 import { lockAccountKey, rememberAccountKey } from '../lib/crypto/accountKey';
 import { pushVaultRecord } from '../lib/vaultSync';
 import { track, EVENTS } from '../lib/analytics';
+import { clearTranslationCache } from './translationStore';
+import { clearAllAiResultCaches } from '../lib/aiResultCache';
+import { resetAiRequestState } from '../lib/aiCore';
 
 // Reactive wrapper around the keyManager singleton so React can render the
 // vault's locked/unlocked state. The keyManager owns the crypto + the in-memory
@@ -98,7 +101,16 @@ const useVaultStore = create((set) => ({
 }));
 
 // Mirror auto-lock / external lock transitions back into the store.
-vault.onLockChange((unlocked) => useVaultStore.setState({ unlocked }));
+vault.onLockChange((unlocked) => {
+  if (!unlocked) {
+    // Includes automatic/external locks, not just the store's lock action.
+    // Abort queued translations before any captured plaintext can be sent.
+    clearTranslationCache();
+    clearAllAiResultCaches();
+    resetAiRequestState();
+  }
+  useVaultStore.setState({ unlocked });
+});
 
 // Keep the vault open while the user is active; the idle timer in keyManager
 // locks it after inactivity. resetAutoLock is a no-op while locked.

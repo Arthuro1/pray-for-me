@@ -407,7 +407,7 @@ export default function AuthenticatedApp({
   // common monolingual case), and never sends private prayer content — including
   // decrypted E2EE testimonies — to the AI translator without explicit consent.
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !vaultUnlocked) return;
     const target = settings.language;
     const contentLang = getContentLang() || target;
     if (target === contentLang) return;
@@ -415,7 +415,7 @@ export default function AuthenticatedApp({
     if (prayers.length > 0 || categories.length > 0) {
       translateContent(prayers, categories, target, user.id);
     }
-  }, [settings.language, prayers, categories, user?.id, translateContent]);
+  }, [settings.language, prayers, categories, user?.id, vaultUnlocked, translateContent]);
 
   if (authLoading || !localeReady || (user && !vaultChecked)) {
     return (

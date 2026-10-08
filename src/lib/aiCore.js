@@ -5,6 +5,7 @@
 import { aiFetch } from './aiClient';
 import { devError } from './logger';
 import { t } from '../i18n';
+import { readAiLimit, resetAiLimits } from './aiLimits';
 
 const COOLDOWN_MS = 5000;
 
@@ -40,6 +41,7 @@ export function markOutgoingReviewed(prayerId) {
 // Clear all in-memory AI request state (cooldown timers, outgoing-text reviews).
 // Consent withdrawal and sign-out call this so a withdrawn user starts clean.
 export function resetAiRequestState() {
+  resetAiLimits();
   lastCallByFeature.clear();
   previewedPrayers.clear();
 }
@@ -50,6 +52,9 @@ export function localizeAiError(error, lang) {
   if (!error) return null;
   if (error.type === 'cooldown') return t(lang, 'aiCooldown', { s: error.seconds });
   if (error.type === 'busy') return t(lang, 'aiBusy');
+  if (error.type === 'daily_limit') return t(lang, 'aiDailyLimit');
+  if (error.type === 'rate_limit') return t(lang, 'aiRateLimit', { s: error.seconds });
+  if (error.type === 'provider_rate_limit') return t(lang, 'aiProviderBusy', { s: error.seconds });
   // Dev-only, and only the typed token — never the prompt/prayer content.
   devError('AI request failed', error.type);
   return t(lang, 'aiError');
@@ -68,7 +73,10 @@ export async function callAiForJson({ task, input, feature = 'default' }) {
   try {
     const res = await aiFetch(task, input);
 
-    if (res.status === 429) return { data: null, error: { type: 'busy' } };
+    if (res.status === 429) {
+      const limit = await readAiLimit(res);
+      return { data: null, error: { type: limit.code, seconds: limit.retryAfterSeconds } };
+    }
     if (!res.ok) {
       // Log only the status — never the body, which can echo the prompt
       // (and therefore the user's prayer content).

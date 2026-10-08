@@ -46,6 +46,10 @@ function aiApiPlugin(env) {
         }
 
         const apiRes = {
+          setHeader(name, value) {
+            res.setHeader(name, value)
+            return apiRes
+          },
           status(code) {
             res.statusCode = code
             return apiRes

@@ -128,3 +128,10 @@ Set `AI_USER_DAILY_LIMIT` and `AI_GLOBAL_DAILY_LIMIT` to approved budgets. The
 database reservation is atomic and fails closed. Use `AI_PROXY_DISABLED=true`
 as the emergency breaker. Review aggregate task/status/cost metrics; never log
 the structured input, constructed prompts, or provider response body.
+
+Limits reset at midnight UTC. A temporary allowance can use
+`AI_USER_DAILY_LIMIT_TEMPORARY` with an ISO expiration in
+`AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL`; after expiration the regular daily limit
+applies automatically. Keep local exceptions in ignored `.env.development.local`.
+The client distinguishes daily exhaustion from minute/provider limits and pauses
+further requests for the reported `Retry-After` period.

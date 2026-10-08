@@ -44,13 +44,15 @@ function response() {
   return {
     statusCode: 200,
     body: undefined,
+    headers: {},
+    setHeader(name, value) { this.headers[name.toLowerCase()] = value; },
     status(code) { this.statusCode = code; return this; },
     json(body) { this.body = body; return this; },
   };
 }
 
-function jsonResponse(body, status = 200) {
-  return { ok: status >= 200 && status < 300, status, json: async () => body };
+function jsonResponse(body, status = 200, headers = {}) {
+  return { ok: status >= 200 && status < 300, status, headers: new Headers(headers), json: async () => body };
 }
 
 function installFetch(overrides = {}) {
@@ -69,6 +71,7 @@ function installFetch(overrides = {}) {
       return jsonResponse(overrides.dailyBody ?? { allowed: true }, overrides.dailyStatus ?? 200);
     }
     if (address === 'https://api.anthropic.com/v1/messages') {
+      if (overrides.providerResponse) return overrides.providerResponse;
       if (overrides.providerThrows) throw new Error('Anthropic private request detail');
       if (overrides.providerPending) {
         return new Promise((_, reject) => {
@@ -82,7 +85,7 @@ function installFetch(overrides = {}) {
         stop_reason: 'end_turn',
         content: [{ type: 'text', text: overrides.text ?? JSON.stringify(overrides.data ?? guidance()) }],
         usage: { input_tokens: 42, output_tokens: 91 },
-      }, overrides.providerStatus ?? 200);
+      }, overrides.providerStatus ?? 200, overrides.providerHeaders);
     }
     throw new Error(`Unexpected test network target: ${address}`);
   });
@@ -246,6 +249,44 @@ describe('direct Claude authentication and request boundaries', () => {
 });
 
 describe('direct Claude shared spending limits', () => {
+  it('identifies the minute limit and tells clients when to retry', async () => {
+    const { res, fetchImpl } = await run({ fetchImpl: installFetch({ minuteBody: false }) });
+    expect(res.statusCode).toBe(429);
+    expect(res.body).toEqual({ error: 'AI request limit reached', code: 'rate_limit', retryAfterSeconds: 60 });
+    expect(res.headers['retry-after']).toBe('60');
+    expect(fetchImpl.mock.calls.some(([url]) => String(url).endsWith('/check_ai_usage_quota'))).toBe(false);
+    expect(providerCalls(fetchImpl)).toHaveLength(0);
+  });
+
+  it.each(['user_daily', 'global_daily'])('identifies the exhausted %s quota with the next UTC reset', async (reason) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-08T23:59:30.500Z'));
+    const { res, fetchImpl } = await run({ fetchImpl: installFetch({ dailyBody: { allowed: false, reason } }) });
+    expect(res.statusCode).toBe(429);
+    expect(res.body).toEqual({ error: 'AI request limit reached', code: 'daily_limit', retryAfterSeconds: 30 });
+    expect(res.headers['retry-after']).toBe('30');
+    expect(providerCalls(fetchImpl)).toHaveLength(0);
+  });
+
+  it.each([
+    { label: 'unconfigured', overrides: {}, expected: 100 },
+    { label: 'regular configured limit', overrides: { AI_USER_DAILY_LIMIT: '150' }, expected: 150 },
+    { label: 'live temporary increase', overrides: { AI_USER_DAILY_LIMIT_TEMPORARY: '200', AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL: '2026-10-09T00:00:00Z' }, expected: 200 },
+    { label: 'expired temporary increase', overrides: { AI_USER_DAILY_LIMIT_TEMPORARY: '200', AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL: '2026-10-08T00:00:00Z' }, expected: 100 },
+    { label: 'expiry boundary', overrides: { AI_USER_DAILY_LIMIT: '150', AI_USER_DAILY_LIMIT_TEMPORARY: '200', AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL: '2026-10-08T12:00:00Z' }, expected: 150 },
+    { label: 'invalid deadline', overrides: { AI_USER_DAILY_LIMIT_TEMPORARY: '200', AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL: 'invalid' }, expected: 100 },
+    { label: 'missing deadline', overrides: { AI_USER_DAILY_LIMIT_TEMPORARY: '200' }, expected: 100 },
+    { label: 'invalid temporary count', overrides: { AI_USER_DAILY_LIMIT: '150', AI_USER_DAILY_LIMIT_TEMPORARY: '-1', AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL: '2026-10-09T00:00:00Z' }, expected: 150 },
+    { label: 'bounded temporary count', overrides: { AI_USER_DAILY_LIMIT_TEMPORARY: '999999', AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL: '2026-10-09T00:00:00Z' }, expected: 10_000 },
+  ])('uses the $label for the authenticated shared quota', async ({ overrides, expected }) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-08T12:00:00Z'));
+    const { res, fetchImpl } = await run({ config: { ...env(), ...overrides } });
+    expect(res.statusCode).toBe(200);
+    const quota = fetchImpl.mock.calls.find(([url]) => String(url).endsWith('/check_ai_usage_quota'));
+    expect(JSON.parse(quota[1].body)).toEqual({ p_user_daily_max: expected, p_global_daily_max: 5000 });
+  });
+
   it.each([
     { minuteStatus: 500 },
     { minuteThrows: true },
@@ -317,6 +358,30 @@ describe('direct Claude output and error boundaries', () => {
     const { res } = await run({ fetchImpl: installFetch({ providerStatus: 429, providerBody: { error: { message: 'private Anthropic quota diagnostic' } } }) });
     expect(res.statusCode).toBe(429);
     expect(JSON.stringify(res.body)).not.toMatch(/private|diagnostic/);
+  });
+
+  it.each([
+    { header: '12', expected: 12 },
+    { header: '1.2', expected: 2 },
+    { header: '0.1', expected: 1 },
+    { header: 'Fri, 09 Oct 2026 00:00:12 GMT', expected: 12 },
+    { header: '999999', expected: 86_400 },
+    { header: '0', expected: 60 },
+    { header: '-3', expected: 60 },
+    { header: 'Thu, 08 Oct 2026 23:59:59 GMT', expected: 60 },
+    { header: 'private prayer diagnostic', expected: 60 },
+    { header: undefined, expected: 60 },
+  ])('bounds provider retry metadata ($header) without reading an error body', async ({ header, expected }) => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-09T00:00:00Z'));
+    const json = vi.fn(async () => ({ error: { message: 'private prayer diagnostic and server-only-anthropic-key' } }));
+    const providerResponse = { ok: false, status: 429, headers: new Headers(header === undefined ? {} : { 'retry-after': header }), json };
+    const { res } = await run({ fetchImpl: installFetch({ providerResponse }) });
+    expect(res.statusCode).toBe(429);
+    expect(res.body).toEqual({ error: 'AI request limit reached', code: 'provider_rate_limit', retryAfterSeconds: expected });
+    expect(res.headers['retry-after']).toBe(String(expected));
+    expect(json).not.toHaveBeenCalled();
+    expect(JSON.stringify(res.body)).not.toMatch(/private|prayer|diagnostic|server-only/);
   });
 
   it('returns only the allowed usage fields', async () => {

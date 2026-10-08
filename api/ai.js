@@ -12,6 +12,27 @@ function boundedInt(value, fallback, min, max) {
   return Number.isInteger(number) && number >= min ? Math.min(number, max) : fallback;
 }
 
+function userDailyLimit(env) {
+  const regular = boundedInt(env.AI_USER_DAILY_LIMIT, 100, 1, 10_000);
+  const until = Date.parse(env.AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL || '');
+  return Number.isFinite(until) && Date.now() < until
+    ? boundedInt(env.AI_USER_DAILY_LIMIT_TEMPORARY, regular, 1, 10_000)
+    : regular;
+}
+
+function rateLimit(res, code, retryAfterSeconds) {
+  res.setHeader?.('Retry-After', String(retryAfterSeconds));
+  return res.status(429).json({ error: 'AI request limit reached', code, retryAfterSeconds });
+}
+
+function providerRetryAfter(response) {
+  const raw = response.headers?.get?.('retry-after');
+  if (!raw) return 60;
+  const seconds = /^\d+(?:\.\d+)?$/.test(raw.trim())
+    ? Number(raw) : (Date.parse(raw) - Date.now()) / 1000;
+  return Number.isFinite(seconds) && seconds > 0 ? Math.min(86_400, Math.ceil(seconds)) : 60;
+}
+
 async function callClaude(req, res, { env, fetchImpl, request, signal }) {
   const supabaseBase = (env.SUPABASE_URL || env.VITE_SUPABASE_URL || '')
     .replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
@@ -47,13 +68,17 @@ async function callClaude(req, res, { env, fetchImpl, request, signal }) {
     // serverless instances. Both checks use the shared Postgres counters.
     const minute = await rpc('check_ai_rate_limit', { p_max: 20, p_window_seconds: 60 });
     if (typeof minute !== 'boolean') return res.status(503).json({ error: 'AI quota service unavailable' });
-    if (!minute) return res.status(429).json({ error: 'Rate limit exceeded' });
+    if (!minute) return rateLimit(res, 'rate_limit', 60);
     const daily = await rpc('check_ai_usage_quota', {
-      p_user_daily_max: boundedInt(env.AI_USER_DAILY_LIMIT, 100, 1, 10_000),
+      p_user_daily_max: userDailyLimit(env),
       p_global_daily_max: boundedInt(env.AI_GLOBAL_DAILY_LIMIT, 5_000, 1, 1_000_000),
     });
     if (typeof daily?.allowed !== 'boolean') return res.status(503).json({ error: 'AI quota service unavailable' });
-    if (!daily.allowed) return res.status(429).json({ error: 'Daily AI quota exceeded' });
+    if (!daily.allowed) {
+      const now = Date.now();
+      const nextUtcDay = Math.floor(now / 86_400_000) * 86_400_000 + 86_400_000;
+      return rateLimit(res, 'daily_limit', Math.ceil((nextUtcDay - now) / 1000));
+    }
 
     stage = 'provider';
     const model = env.ANTHROPIC_MODEL || DEFAULT_MODEL;
@@ -71,7 +96,8 @@ async function callClaude(req, res, { env, fetchImpl, request, signal }) {
       }),
     });
     // Provider errors can echo the input. Do not read or return their bodies.
-    if (!response.ok) return res.status(response.status === 429 ? 429 : 502).json({ error: 'AI provider unavailable' });
+    if (response.status === 429) return rateLimit(res, 'provider_rate_limit', providerRetryAfter(response));
+    if (!response.ok) return res.status(502).json({ error: 'AI provider unavailable' });
     stage = 'output';
     const payload = await response.json();
     // Truncation, refusals and unfinished turns never become partial success.

@@ -42,7 +42,12 @@ const useAuthStore = create((set, get) => ({
 
     supabase.auth.onAuthStateChange((_event, session) => {
       const nextUser = session?.user ?? null;
-      if (get().user?.id !== nextUser?.id) clearSessionCryptoCaches();
+      if (get().user?.id !== nextUser?.id) {
+        // Auth changes can arrive from another tab, without our signOut action.
+        // Cancel captured AI work before the new account/session is exposed.
+        clearAiEphemeralState();
+        clearSessionCryptoCaches();
+      }
       setAuthSessionHint(!!session);
       setIdentityUser(nextUser);
       set({ user: nextUser });
