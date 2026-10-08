@@ -129,8 +129,10 @@ account. Legacy synced `aiConsentPrayer` / `aiConsentHome` booleans alone cannot
 authorize Claude requests: the user must accept the current disclosure on that
 device. Switching from private processing to Claude, or changing the Anthropic
 disclosure revision, requires renewed consent. Existing private/Ollama consent
-remains valid for private processing. Withdrawal clears AI result caches and
-request state; it does not recall text already processed by a provider.
+remains valid for private processing. Users can withdraw consent at any time in
+Settings. Withdrawal blocks future requests until they consent again and clears
+AI result caches and request state; it does not recall text already processed by
+a provider.
 
 For Claude, keep `AI_PROVIDER=anthropic` and `VITE_AI_PROVIDER=anthropic` aligned.
 The browser sends `X-Qetoret-AI-Provider: anthropic`; the server rejects an absent
@@ -139,12 +141,16 @@ older app bundle with only the private-processing disclosure from being silently
 sent to Claude. It is not cryptographic proof of consent. Deploy matching public
 disclosure and server configuration together.
 
-The outgoing prayer preview shows redacted text. By default the title is
-included; prayer details and the latest update require their respective opt-ins.
-Translation sends the selected text needed for that task. Requests also include
-task metadata such as language and selected guidance options. Encryption at rest
-and HTTPS do not prevent the app server or Anthropic from reading the selected
-plaintext during inference.
+Before each explicit prayer AI request, the outgoing preview shows the redacted
+prayer text. The title is always included; prayer details and the latest update
+are excluded by default and require their respective opt-ins where available.
+The request also sends the language and, for prayer points, whether new or further
+suggestions were requested. Prayer categories and the rest of the journal are not
+part of these requests. Translation sends the text selected for that task and
+the target language. Both go through Qetoret's authenticated app server to the
+configured provider: Anthropic for Claude, or the operator's private gateway and
+Ollama model. Encryption at rest and HTTPS do not prevent those processors from
+reading selected plaintext during inference.
 
 ## Private Ollama alternative
 

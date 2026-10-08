@@ -1,15 +1,20 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { get as idbGet, set as idbSet } from 'idb-keyval';
 import {
+  autoInitAccountKey,
   changePassphrase,
   createVault,
   destroyVault,
   exportVaultRecord,
+  getMasterKey,
   importVaultRecord,
   isUnlocked,
   lock,
+  resetPassphrase,
+  setUpRecovery,
   unlock,
 } from './crypto/keyManager';
+import { decryptJson, encryptJson } from './crypto/e2ee';
 import {
   CRYPTO_STATUS,
   ensureAccountCryptoReady,
@@ -72,4 +77,40 @@ describe('vault lifecycle in a real browser', () => {
     expect(localStorage.getItem(`pfm_ak_locked_${USER_ID}`)).toBeTruthy();
     expect(await idbGet(`pfm_ak_${USER_ID}`)).toBeUndefined();
   });
+
+  // Exercise the recovery boundary with real IndexedDB and Web Crypto. Removing
+  // the disposable account's local state models the new origin's empty storage;
+  // only the wrapped record (as returned by the server) survives the boundary.
+  // This does not substitute for a deployed, two-origin sign-in/TWA smoke test.
+  for (const method of ['passphrase', 'recovery code']) {
+    it(`reads existing ciphertext on a fresh device using the ${method}`, async () => {
+      await autoInitAccountKey();
+      await rememberAccountKey(USER_ID);
+      const context = {
+        entityType: 'personal-prayer', ownerOrGroupId: USER_ID,
+        recordId: 'migration-prayer', keyVersion: 1,
+      };
+      const content = { title: 'Synthetic migration prayer', description: 'Saved before recovery setup' };
+      const ciphertext = await encryptJson(getMasterKey(), content, context);
+      const code = await setUpRecovery('migration recovery passphrase');
+      const serverRecord = exportVaultRecord();
+      expect(await decryptJson(getMasterKey(), ciphertext, context)).toEqual(content);
+
+      await forgetAccountKey(USER_ID);
+      await destroyVault();
+      expect(await idbGet(`pfm_ak_${USER_ID}`)).toBeUndefined();
+      expect(isUnlocked()).toBe(false);
+
+      expect(await importVaultRecord(serverRecord)).toBe(true);
+      expect(await ensureAccountCryptoReady(USER_ID, VAULT_SYNC.PRESENT)).toBe(CRYPTO_STATUS.LOCKED);
+      if (method === 'passphrase') {
+        expect(await unlock('migration recovery passphrase')).toBe(true);
+      } else {
+        expect(await resetPassphrase(code, 'replacement recovery passphrase')).toBe(true);
+      }
+      expect(await decryptJson(getMasterKey(), ciphertext, context)).toEqual(content);
+      expect(await rememberAccountKey(USER_ID)).toBe(true);
+      expect(await idbGet(`pfm_ak_${USER_ID}`)).toBeTruthy();
+    });
+  }
 });

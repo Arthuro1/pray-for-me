@@ -12,6 +12,7 @@ import SyncIndicator from './components/shared/SyncIndicator';
 import Onboarding from './components/Onboarding';
 import FirstPrayerFlow from './components/FirstPrayerFlow';
 import RecoveryPromptBanner from './components/RecoveryPromptBanner';
+import OriginMigrationBanner from './components/OriginMigrationBanner';
 import { ContextualNudgeProvider } from './components/shared/ContextualNudgeCoordinator';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
@@ -493,6 +494,7 @@ export default function AuthenticatedApp({
       <CommunityTermsGate key={user.id} userId={user.id} lang={lang} onSignOut={() => useAuthStore.getState().signOut()}>
       <ContextualNudgeProvider key={location.pathname}>
         <Layout onAddPrayer={openAdd}>
+          <OriginMigrationBanner key={user.id} lang={lang} />
           <RecoveryPromptBanner lang={lang} />
           <ErrorBoundary lang={lang} resetKey={location.pathname}>
             <Suspense fallback={<PageLoader />}>

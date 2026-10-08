@@ -6,6 +6,8 @@ import { toast } from '../store/toastStore';
 import { t } from '../i18n';
 import AccountGate from './AccountGate';
 import { SecondaryButton } from './shared/Primitives';
+import { isNewAppOrigin, ORIGINAL_APP_URL, ORIGINAL_WWW_APP_URL } from '../lib/originMigration';
+import { originMigrationCopy } from '../lib/originMigrationCopy';
 
 // Full-screen gate for the ORPHANED crypto state: the server holds prayers
 // encrypted with a key that isn't on this device, and there's no recovery record
@@ -17,6 +19,7 @@ export default function AccountKeyRecoveryScreen({ lang = 'fr', onResolved }) {
   const { user, signOut } = useAuthStore();
   const [confirming, setConfirming] = useState(false);
   const [working, setWorking] = useState(false);
+  const { copy, lang: copyLang } = originMigrationCopy(lang);
 
   const handleStartFresh = async () => {
     setWorking(true);
@@ -36,6 +39,13 @@ export default function AccountKeyRecoveryScreen({ lang = 'fr', onResolved }) {
       exitLabel={t(lang, 'keyMissingRetry')}
       onExit={signOut}
     >
+      {isNewAppOrigin() && (
+        <div lang={copyLang} dir="ltr" className="mb-4">
+          <p className="q-body-sm">{copy.returnBody}</p>
+          <a className="secondary-button no-underline" href={ORIGINAL_APP_URL} target="_blank" rel="noopener noreferrer">{copy.return}</a>
+          <p className="q-body-sm mt-3"><a href={ORIGINAL_WWW_APP_URL} target="_blank" rel="noopener noreferrer">{copy.returnWww}</a></p>
+        </div>
+      )}
       <SecondaryButton danger onClick={() => setConfirming(true)} className="w-full">
         {t(lang, 'keyMissingStartFresh')}
       </SecondaryButton>

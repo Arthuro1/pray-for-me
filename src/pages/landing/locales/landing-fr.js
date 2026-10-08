@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "Comment fonctionnent les suggestions de versets ?",
-        "a": "Quand vous demandez des suggestions, le titre et les détails de la prière sont envoyés à un service d'IA, qui propose des passages bibliques. Vous lisez chaque passage et discernez ce qui s'applique."
+        "a": "Avec votre consentement, le titre de la prière est envoyé via le serveur de Qetoret à {provider} pour proposer des passages bibliques. Les détails et la dernière mise à jour ne sont envoyés que si vous les incluez. Vous vérifiez le texte avant chaque demande liée à une prière. Le texte que vous choisissez de traduire est aussi envoyé à ce service. Votre langue et, le cas échéant, le type de suggestion choisi sont aussi inclus. Vous pouvez retirer votre consentement à tout moment dans les Paramètres pour arrêter les futurs envois ; cela ne peut pas rappeler le texte déjà envoyé. Lisez chaque passage proposé et discernez ce qui s'applique."
       },
       {
         "q": "Qetoret est-il un réseau social ?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Pour quelles Églises Qetoret est-il fait ?",
-        "a": "Pour les chrétiens de toutes les traditions d'Église. Qetoret vous aide à prier ; il ne remplace jamais votre Église locale, ses pasteurs ni sa communion fraternelle."
+        "a": "Enraciné dans les Écritures et nourri par une foi vivante en Jésus-Christ, Qetoret accueille les chrétiens de différentes traditions d'Église qui souhaitent grandir dans la prière. Il ne remplace jamais votre Église locale, ses pasteurs ni sa communion fraternelle."
       },
       {
         "q": "Quelles langues sont supportées ?",
-        "a": "16 langues : français, anglais, allemand, portugais, chinois, espagnol, hindi, japonais, swahili, amharique, indonésien, tagalog, coréen, russe, arabe et persan."
+        "a": "La navigation est disponible en 16 langues. La couverture des contenus spirituels varie : certains enseignements longs et parcours de prière peuvent s'afficher en anglais ou en français. Les traductions de la page de présentation sont encore en cours de réalisation et de révision linguistique ; le menu des langues signale les traductions partielles."
       },
       {
         "q": "Est-ce gratuit ?",
@@ -187,8 +187,8 @@ export default {
         "desc": "L'application Android sur Google Play, ou installez-la depuis votre navigateur, sur téléphone ou ordinateur."
       },
       {
-        "title": "16 langues",
-        "desc": "Changez de langue à tout moment."
+        "title": "Navigation en 16 langues",
+        "desc": "La couverture des contenus spirituels varie ; la révision des traductions continue."
       },
       {
         "title": "Rappels discrets",

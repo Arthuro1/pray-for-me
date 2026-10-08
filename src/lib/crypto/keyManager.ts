@@ -446,6 +446,28 @@ export async function unlock(passphrase: string): Promise<boolean> {
   }
 }
 
+// Prove that a recovery record opens THIS running device's content key without
+// replacing it. Origin migration uses the server's wrapped record so a stale
+// local wrapper cannot silently overwrite newer recovery settings. The random
+// challenge stays in memory; neither raw keys nor the passphrase leave here.
+export async function verifyRecoveryPassphrase(passphrase: string, recordJson?: unknown): Promise<boolean> {
+  const currentKey = masterKey;
+  const record = recordJson === undefined ? loadRecord() : parseVaultRecord(recordJson);
+  if (!currentKey || !record) return false;
+  try {
+    const passKey = await deriveWrappingKey(passphrase, fromB64(record.passSalt));
+    const recoveredKey = await unwrapMasterKey(record.passWrapped, passKey);
+    const iv = crypto.getRandomValues(new Uint8Array(IV_BYTES));
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, currentKey, challenge);
+    const plaintext = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, recoveredKey, ciphertext));
+    return masterKey === currentKey && plaintext.length === challenge.length
+      && plaintext.every((byte, index) => byte === challenge[index]);
+  } catch {
+    return false;
+  }
+}
+
 // Recover access with the recovery code and set a new passphrase (re-wrapping
 // the same master key, so existing ciphertext stays readable).
 export async function resetPassphrase(recoveryCode: string, newPassphrase: string): Promise<boolean> {

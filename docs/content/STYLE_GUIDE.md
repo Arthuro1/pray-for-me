@@ -1,4 +1,4 @@
-# Praystead content style
+# Qetoret content style
 
 English is the semantic source of truth. French remains the app's bundled
 fallback and canonical UI key set. Keep the runtime fallback behavior intact.
@@ -38,12 +38,39 @@ fallback and canonical UI key set. Keep the runtime fallback behavior intact.
 
 ## Vocabulary
 
+Public positioning: "Rooted in Scripture and shaped by a living faith in Jesus
+Christ, Qetoret welcomes Christians from different church traditions who desire
+to grow in prayer." Preserve the place of the reader's local church, its pastors
+and fellowship. This welcome does not imply that every tradition has the same
+theological vocabulary or endorses every teaching in the app.
+
 Write for Pentecostal and charismatic Christians first, in words other
 evangelicals also recognise: the Holy Spirit's present work, prayer and
-fasting, testimony, deliverance and renunciation. The locale glossaries hold
+fasting, testimony, deliverance and renunciation. This is the editorial
+perspective for devotional material; do not describe it as denominationally
+neutral or require readers to identify with that tradition. The locale glossaries hold
 the agreed terms; the AI proxy receives the same list through the generated
 `api/_aiGlossary.js` (`npx vitest run api/aiGlossary.test.js -u` after editing
 a glossary). Redeploy the API after regenerating it.
+
+## Privacy and language claims
+
+- For prayer AI suggestions, explain the same choice in public help and consent:
+  the prayer title is sent after consent; details and the latest update are
+  optional. The request also includes the reader's language and, for prayer
+  recommendations, their selected guidance option. The reader reviews the
+  outgoing text before each prayer request.
+  Name the configured recipient (Claude by Anthropic, or Qetoret's private
+  service) and the Qetoret server that handles the request. Text explicitly
+  chosen for translation also goes to that service. Consent can be withdrawn
+  at any time in Settings, preventing future requests; it cannot recall text
+  already sent.
+- Describe navigation as available in 16 languages, without implying equal
+  devotional coverage or completed native review. Longer teaching and prayer
+  plan content may fall back to English or French. Marketing translations in
+  Swahili, Amharic, Indonesian, Tagalog, Korean, Russian, Arabic and Persian
+  are marked as in progress in the language menu. Translation completion and
+  human linguistic approval are separate facts; do not present one as the other.
 
 ## Signed plans
 

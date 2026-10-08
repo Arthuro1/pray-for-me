@@ -11,6 +11,7 @@ import { render, screen, fireEvent, cleanup, within } from '@testing-library/rea
 import LandingPage from './LandingPage';
 
 afterEach(cleanup);
+afterEach(() => vi.unstubAllEnvs());
 beforeEach(() => {
   localStorage.setItem('pfm_language', 'en');
   localStorage.removeItem('pfm_theme');
@@ -115,10 +116,43 @@ describe('LandingPage — the story', () => {
     renderLanding();
     const facts = await sectionOf('Private, simple and free');
     expect(within(facts).getAllByRole('listitem')).toHaveLength(6);
-    for (const fact of ['Private by default', 'Works offline', '16 languages', 'Free and open source']) {
+    for (const fact of ['Private by default', 'Works offline', 'Navigation in 16 languages', 'Free and open source']) {
       expect(within(facts).getByRole('heading', { name: fact })).toBeTruthy();
     }
     expect(screen.queryByText('Explore all features')).toBeNull();
+  });
+
+  it.each([
+    ['anthropic', 'Claude (Anthropic)'],
+    ['ollama', 'Qetoret'],
+  ])('discloses the configured %s recipient and optional prayer fields publicly', async (provider, label) => {
+    vi.stubEnv('VITE_AI_PROVIDER', provider);
+    renderLanding();
+    const faq = await sectionOf('Questions');
+    fireEvent.click(within(faq).getByRole('button', { name: 'How do Scripture suggestions work?' }));
+    const answer = within(faq).getByText(/With your consent, the prayer title/).textContent;
+    expect(answer).toContain(`through Qetoret's server to ${label}`);
+    expect(answer).toContain('Details and the latest update are sent only if you include them.');
+    expect(answer).toContain('before each prayer request');
+    expect(answer).toContain('Text you choose to translate');
+    expect(answer).toContain('Your language and the guidance option you select, when applicable');
+    expect(answer).toContain('at any time in Settings to stop future requests');
+    expect(answer).toContain('cannot recall text already sent');
+    expect(answer).not.toContain('{provider}');
+  });
+
+  it('explains the Christian welcome and the limits of language coverage', async () => {
+    renderLanding();
+    const faq = await sectionOf('Questions');
+    fireEvent.click(within(faq).getByRole('button', { name: 'Which churches is Qetoret for?' }));
+    expect(within(faq).getByText(/Rooted in Scripture and shaped by a living faith in Jesus Christ/).textContent)
+      .toContain('It never replaces your local church, its pastors or its fellowship.');
+    fireEvent.click(within(faq).getByRole('button', { name: 'What languages are supported?' }));
+    const answer = within(faq).getByText(/Navigation is available in 16 languages/).textContent;
+    expect(answer).toContain('Devotional coverage varies');
+    expect(answer).toContain('English or French');
+    expect(answer).toContain('linguistically reviewed');
+    expect(answer).toContain('partial landing translations');
   });
 });
 

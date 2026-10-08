@@ -18,6 +18,9 @@ const WordingReviewModal = lazy(() => import('../components/WordingReviewModal')
 import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
+import OriginMigrationGuide from '../components/OriginMigrationGuide';
+import { isOriginalAppOrigin } from '../lib/originMigration';
+import { originMigrationCopy } from '../lib/originMigrationCopy';
 import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
@@ -197,6 +200,7 @@ export default function SettingsTab() {
   const [wordingMode, setWordingMode] = useState(null);
   const [showDonate, setShowDonate] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
+  const [showMigration, setShowMigration] = useState(false);
   const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
   // The user's own avatar preset. Read through the same relationship-scoped RPC
@@ -494,6 +498,11 @@ export default function SettingsTab() {
               <PrivacyRow id="privacy-overview" icon={ShieldCheck} label={t(lang, 'privacyRowOverview')} open={!!openPrivacyRows.overview} onToggle={() => togglePrivacyRow('overview')}>
                 <p className="settings-group__sub">{t(lang, 'privacyCenterSub')}</p>
                 <SecondaryButton icon={ShieldCheck} iconSize={16} onClick={() => setShowPrivacy(true)}>{t(lang, 'privacyCenterBtn')}</SecondaryButton>
+                {isOriginalAppOrigin() && (
+                  <div lang={originMigrationCopy(lang).lang} dir="ltr" className="mt-3">
+                    <SecondaryButton onClick={() => setShowMigration(true)}>{originMigrationCopy(lang).copy.open}</SecondaryButton>
+                  </div>
+                )}
               </PrivacyRow>
 
               {/* Prayer Vault */}
@@ -727,6 +736,7 @@ export default function SettingsTab() {
       </Suspense>}
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
       {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
+      {showMigration && <OriginMigrationGuide lang={lang} onClose={() => setShowMigration(false)} />}
       {vaultMode && (
         <VaultModal lang={lang} initialMode={vaultMode} userId={user?.id} onClose={() => setVaultMode(null)} />
       )}

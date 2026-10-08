@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   createVault,
   unlock,
+  verifyRecoveryPassphrase,
   lock,
   isUnlocked,
   isVaultInitialized,
@@ -77,6 +78,43 @@ describe('vault lifecycle', () => {
     const mkB64 = Buffer.from(mkRaw).toString('base64');
     expect(stored).not.toContain(mkB64);
     expect(stored).not.toContain('zebra-lantern-velvet'); // passphrase isn't stored either
+  });
+});
+
+describe('read-only migration recovery verification', () => {
+  it('checks the server wrapper while preserving the running key, local wrapper and existing ciphertext', async () => {
+    await createVault('old recovery passphrase');
+    const originalRecord = exportVaultRecord();
+    const ciphertext = await encryptJsonLegacy(getMasterKey(), { prayer: 'still readable' });
+    await changePassphrase('old recovery passphrase', 'new recovery passphrase');
+    const serverRecord = exportVaultRecord();
+    await importVaultRecord(originalRecord, true); // stale local wrapper, same content key
+    const runningKey = getMasterKey();
+
+    expect(await verifyRecoveryPassphrase('new recovery passphrase', serverRecord)).toBe(true);
+    expect(await verifyRecoveryPassphrase('old recovery passphrase', serverRecord)).toBe(false);
+    expect(getMasterKey()).toBe(runningKey);
+    expect(exportVaultRecord()).toBe(originalRecord);
+    expect(await decryptJson(getMasterKey(), ciphertext)).toEqual({ prayer: 'still readable' });
+  });
+
+  it('rejects an unrelated wrapped key even when the passphrase is valid, without replacing the current key', async () => {
+    await createVault('same passphrase');
+    const unrelatedRecord = exportVaultRecord();
+    await destroyVault();
+    await createVault('same passphrase');
+    const runningKey = getMasterKey();
+    const currentRecord = exportVaultRecord();
+    const ciphertext = await encryptJsonLegacy(runningKey, { prayer: 'my current prayer' });
+
+    expect(await verifyRecoveryPassphrase('same passphrase', unrelatedRecord)).toBe(false);
+    expect(await verifyRecoveryPassphrase('same passphrase', { invalid: true })).toBe(false);
+    expect(getMasterKey()).toBe(runningKey);
+    expect(exportVaultRecord()).toBe(currentRecord);
+    expect(await decryptJson(getMasterKey(), ciphertext)).toEqual({ prayer: 'my current prayer' });
+    lock();
+    expect(await verifyRecoveryPassphrase('same passphrase', currentRecord)).toBe(false);
+    expect(isUnlocked()).toBe(false);
   });
 });
 

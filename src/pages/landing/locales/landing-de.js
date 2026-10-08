@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "Wie funktionieren die Bibelvers-Vorschläge?",
-        "a": "Wenn du Vorschläge anforderst, werden Titel und Details des Gebets an einen KI-Dienst geschickt, der Bibelstellen vorschlägt. Du liest jede Stelle und prüfst, was passt."
+        "a": "Mit deiner Zustimmung wird der Gebetstitel über den Server von Qetoret an {provider} gesendet, um Bibelstellen vorzuschlagen. Details und das letzte Update werden nur gesendet, wenn du sie einbeziehst. Vor jeder Anfrage zu einem Gebetsanliegen prüfst du den ausgehenden Text. Text, den du zur Übersetzung auswählst, geht ebenfalls an diesen Dienst. Deine Sprache und gegebenenfalls die gewählte Art der Anregung werden ebenfalls übermittelt. Du kannst deine Zustimmung jederzeit in den Einstellungen widerrufen, um künftige Anfragen zu stoppen; bereits gesendeter Text lässt sich dadurch nicht zurückholen. Lies jede vorgeschlagene Stelle und prüfe, was passt."
       },
       {
         "q": "Ist Qetoret ein soziales Netzwerk?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Für welche Kirchen ist Qetoret gedacht?",
-        "a": "Für Christen aller kirchlichen Traditionen. Qetoret hilft dir beim Beten; es ersetzt nie deine Ortsgemeinde, ihre Pastoren oder ihre Gemeinschaft."
+        "a": "In der Schrift verwurzelt und von einem lebendigen Glauben an Jesus Christus geprägt, heißt Qetoret Christen verschiedener kirchlicher Traditionen willkommen, die im Gebet wachsen möchten. Es ersetzt nie deine Ortsgemeinde, ihre Pastoren oder ihre Gemeinschaft."
       },
       {
         "q": "Welche Sprachen werden unterstützt?",
-        "a": "16 Sprachen: Französisch, Englisch, Deutsch, Portugiesisch, Chinesisch, Spanisch, Hindi, Japanisch, Swahili, Amharisch, Indonesisch, Tagalog, Koreanisch, Russisch, Arabisch und Persisch."
+        "a": "Die Navigation ist in 16 Sprachen verfügbar. Der Umfang der geistlichen Inhalte ist unterschiedlich: Längere Lehreinheiten und Gebetspläne können auf Englisch oder Französisch erscheinen. Die Übersetzungen der Vorstellungsseite werden noch vervollständigt und sprachlich geprüft; das Sprachmenü kennzeichnet unvollständige Übersetzungen."
       },
       {
         "q": "Ist es kostenlos?",
@@ -187,8 +187,8 @@ export default {
         "desc": "Die Android-App bei Google Play, oder installiere sie über deinen Browser auf Handy oder Computer."
       },
       {
-        "title": "16 Sprachen",
-        "desc": "Wechsle die Sprache jederzeit."
+        "title": "Navigation in 16 Sprachen",
+        "desc": "Geistliche Inhalte sind unterschiedlich weit übersetzt; die sprachliche Prüfung läuft weiter."
       },
       {
         "title": "Sanfte Erinnerungen",

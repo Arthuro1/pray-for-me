@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "Mapendekezo ya mistari hufanyaje kazi?",
-        "a": "Unapoomba mapendekezo, kichwa na maelezo ya ombi hutumwa kwa huduma ya AI, inayopendekeza vifungu vya Biblia. Wewe unasoma kila kifungu na kupambanua kinachofaa."
+        "a": "Kwa idhini yako, kichwa cha ombi hutumwa kupitia seva ya Qetoret kwa {provider} ili kupendekeza vifungu vya Biblia. Maelezo na sasisho la hivi karibuni hutumwa tu ukichagua kuyajumuisha. Unakagua maandishi kabla ya kila ombi la mapendekezo ya sala. Maandishi unayochagua kutafsiri pia hutumwa kwa huduma hii. Lugha yako na aina ya mapendekezo unayochagua, inapohusika, pia hujumuishwa. Unaweza kuondoa idhini wakati wowote katika Mipangilio ili kusimamisha maombi yajayo; hili haliwezi kurejesha maandishi yaliyokwisha kutumwa. Soma kila kifungu kilichopendekezwa na upambanue kinachofaa."
       },
       {
         "q": "Je, Qetoret ni mtandao wa kijamii?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Qetoret ni kwa ajili ya makanisa gani?",
-        "a": "Kwa Wakristo wa mapokeo yote ya kanisa. Qetoret inakusaidia kuomba; haichukui kamwe nafasi ya kanisa lako la mahali, wachungaji wake au ushirika wake."
+        "a": "Ikiwa imejikita katika Maandiko na kuongozwa na imani hai katika Yesu Kristo, Qetoret inawakaribisha Wakristo wa mapokeo mbalimbali ya kanisa wanaotamani kukua katika maombi. Haichukui kamwe nafasi ya kanisa lako la mahali, wachungaji wake au ushirika wake."
       },
       {
         "q": "Ni lugha zipi zinazotumika?",
-        "a": "Kiolesura kizima kinapatikana katika lugha 16."
+        "a": "Menyu za programu zinapatikana katika lugha 16. Maudhui ya kujenga imani yanatofautiana kwa lugha: baadhi ya mafundisho marefu na mipango ya maombi yanaweza kuonekana kwa Kiingereza au Kifaransa. Tafsiri za ukurasa wa utangulizi bado zinakamilishwa na kukaguliwa kiisimu; menyu ya lugha inaonyesha tafsiri ambazo hazijakamilika."
       },
       {
         "q": "Je, ni bure?",
@@ -187,8 +187,8 @@ export default {
         "desc": "Programu ya Android kwenye Google Play, au isakinishe kupitia kivinjari kwenye simu au kompyuta."
       },
       {
-        "title": "Lugha 16",
-        "desc": "Badilisha lugha wakati wowote."
+        "title": "Menyu katika lugha 16",
+        "desc": "Maudhui ya kujenga imani yanatofautiana; uhakiki wa tafsiri unaendelea."
       },
       {
         "title": "Vikumbusho vya upole",

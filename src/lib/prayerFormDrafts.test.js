@@ -50,6 +50,13 @@ beforeEach(() => {
 });
 
 describe('prayerFormDrafts — privacy at rest', () => {
+  it('can inspect an expired unfinished prayer during a domain move without deleting it', async () => {
+    await saveFormDraft(SLOT, FIELDS);
+    const record = idbStore.get(STORAGE_KEY);
+    record.updatedAt = Date.now() - 49 * 60 * 60 * 1000;
+    expect(await loadFormDraft(SLOT, { clearInvalid: false })).toBeNull();
+    expect(idbStore.get(STORAGE_KEY)).toBe(record);
+  });
   it('never writes the prayer in plaintext', async () => {
     await saveFormDraft(SLOT, FIELDS);
     const blob = persistedBlob();

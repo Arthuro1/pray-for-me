@@ -175,13 +175,13 @@ async function writeNoteDraft({ prayerId, text, voice, savedUpdateId, status }) 
 }
 
 // Decrypt and return one prayer's draft, or null. Expired / malformed /
-// undecryptable drafts are deleted as a side effect (fail closed).
-export async function loadNoteDraft(prayerId) {
+// undecryptable drafts are deleted by default. Migration inspections opt out.
+export async function loadNoteDraft(prayerId, { clearInvalid = true } = {}) {
   const entry = await readRecord(prayerId);
   if (!entry) return null;
   const { record, key } = entry;
   if (record.v !== DRAFT_VERSION || !Number.isFinite(record.updatedAt) || Date.now() - record.updatedAt > MAX_AGE_MS) {
-    await clearNoteDraft(prayerId);
+    if (clearInvalid) await clearNoteDraft(prayerId);
     return null;
   }
   let text = '';
@@ -189,7 +189,7 @@ export async function loadNoteDraft(prayerId) {
     const data = await decryptJson(key, record.payload, draftContext(prayerId, 'note-text'));
     text = typeof data?.text === 'string' ? data.text : '';
   } catch {
-    await clearNoteDraft(prayerId); // corrupt / wrong key — delete rather than trust
+    if (clearInvalid) await clearNoteDraft(prayerId); // migration inspections preserve storage
     return null;
   }
   let voice = null;

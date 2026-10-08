@@ -44,6 +44,7 @@ describe('landing locale chunks', () => {
       expect(copy.content.ctaVerse, `${code}: no quoted verse`).toBeUndefined();
       expect(copy.scriptureReferences, `${code}: no per-locale references`).toBeUndefined();
       expect(copy.content.faqs[0].a, `${code}: privacy promise`).toEqual(expect.any(String));
+      expect(copy.content.faqs[3].a, `${code}: configured AI recipient`).toContain('{provider}');
       expect(copy.todayLabel, `${code}: today label`).toEqual(expect.any(String));
       expect(copy.prayNowLabel, `${code}: pray-now label`).toEqual(expect.any(String));
       expect(copy.languageMenuLabel, `${code}: language menu label`).toEqual(expect.any(String));
