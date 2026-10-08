@@ -46,8 +46,10 @@ attached name/email. General feedback can still be submitted without attribution
 such unlinked messages cannot be automatically located by account deletion.
 The public policy explains its retention/request handling. Apply and verify
 `20261008160000_feedback_report_ownership.sql` before deploying this client;
-its pgTAP checks require an available isolated/local database and remain unrun in
-this environment (Docker unavailable).
+its isolated database checks now pass, including all 15 feedback assertions in
+the full 138-assertion pgTAP run. Read-only production inspection confirms the
+migration remains pending there. See
+[database-verification.md](database-verification.md) before the production apply.
 
 ## AI topology must be verified
 

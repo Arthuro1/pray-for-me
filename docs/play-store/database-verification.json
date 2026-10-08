@@ -1,0 +1,331 @@
+{
+  "checkedAt": "2026-10-08 15:04:42 UTC",
+  "scope": "Isolated local rebuild and transactional tests; production metadata/advisors read only",
+  "local": {
+    "projectId": "qetoret_db_verify_20261008",
+    "port": 55322,
+    "cliVersion": "2.111.0",
+    "postgresVersion": "17.6",
+    "migrationsApplied": 20,
+    "cleanReset": "PASS",
+    "pgtap": {
+      "files": 8,
+      "assertions": 138,
+      "result": "PASS",
+      "feedbackAssertions": 15
+    },
+    "advisorErrorGate": "PASS",
+    "anonymousFeedbackInsert": false,
+    "authenticatedFeedbackInsert": true,
+    "ownershipGuardPresent": true,
+    "remainingFixtureUsers": 0,
+    "remainingFixtureFeedback": 0,
+    "cleanup": "Removed only the isolated test project's container and volumes"
+  },
+  "production": {
+    "projectId": "pfybdjcapexqmffojuie",
+    "projectName": "Pray for me",
+    "postgresVersion": "17.6.1.127",
+    "changesMade": false,
+    "migrations": [
+      {
+        "version": "20260731000000",
+        "name": "legacy_schema_baseline"
+      },
+      {
+        "version": "20260731190247",
+        "name": "transactional_group_keys"
+      },
+      {
+        "version": "20260731190400",
+        "name": "explicit_data_api_grants"
+      },
+      {
+        "version": "20260731190702",
+        "name": "ai_usage_quotas"
+      },
+      {
+        "version": "20260731191758",
+        "name": "community_safety_controls"
+      },
+      {
+        "version": "20260801050047",
+        "name": "harden_profiles_policy"
+      },
+      {
+        "version": "20260826120000",
+        "name": "group_and_profile_avatars"
+      },
+      {
+        "version": "20260826160000",
+        "name": "avatar_photo_uploads"
+      },
+      {
+        "version": "20260826180000",
+        "name": "restore_group_helper_grants"
+      },
+      {
+        "version": "20260831160000",
+        "name": "repair_friend_request_names"
+      },
+      {
+        "version": "20260831215355",
+        "name": "fix_account_deletion_foreign_keys"
+      },
+      {
+        "version": "20260831215412",
+        "name": "make_daily_reminders_precise"
+      },
+      {
+        "version": "20260831221707",
+        "name": "queue_avatar_cleanup_without_storage_sql"
+      },
+      {
+        "version": "20260831222232",
+        "name": "correct_daily_reminder_backfill"
+      },
+      {
+        "version": "20260831222535",
+        "name": "guard_past_time_reminder_activation"
+      },
+      {
+        "version": "20260902171050",
+        "name": "refresh_stale_group_key_envelopes"
+      },
+      {
+        "version": "20260903134321",
+        "name": "restore_personal_translation_cache"
+      },
+      {
+        "version": "20260922120000",
+        "name": "plan_share_links"
+      },
+      {
+        "version": "20260922230622",
+        "name": "wording_reports"
+      }
+    ],
+    "metadata": {
+      "critical_rpc_access": [
+        {
+          "name": "delete_account",
+          "settings": [
+            "search_path=\"\""
+          ],
+          "anon_execute": false,
+          "security_definer": true,
+          "authenticated_execute": true
+        },
+        {
+          "name": "set_user_block",
+          "settings": [
+            "search_path=\"\""
+          ],
+          "anon_execute": false,
+          "security_definer": true,
+          "authenticated_execute": true
+        },
+        {
+          "name": "submit_community_report",
+          "settings": [
+            "search_path=\"\""
+          ],
+          "anon_execute": false,
+          "security_definer": true,
+          "authenticated_execute": true
+        }
+      ],
+      "ownership_guard_present": false,
+      "public_tables_without_rls": []
+    },
+    "accountDeletionErasesAttributedFeedback": true,
+    "securityAdvisors": [
+      {
+        "name": "rls_enabled_no_policy",
+        "level": "INFO",
+        "count": 8,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+      },
+      {
+        "name": "function_search_path_mutable",
+        "level": "WARN",
+        "count": 1,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable"
+      },
+      {
+        "name": "anon_security_definer_function_executable",
+        "level": "WARN",
+        "count": 1,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable"
+      },
+      {
+        "name": "authenticated_security_definer_function_executable",
+        "level": "WARN",
+        "count": 35,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+      },
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "count": 1,
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+      }
+    ],
+    "performanceAdvisors": [
+      {
+        "name": "unindexed_foreign_keys",
+        "level": "INFO",
+        "count": 32,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys"
+      },
+      {
+        "name": "auth_rls_initplan",
+        "level": "WARN",
+        "count": 61,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0003_auth_rls_initplan"
+      },
+      {
+        "name": "unused_index",
+        "level": "INFO",
+        "count": 7,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+      },
+      {
+        "name": "multiple_permissive_policies",
+        "level": "WARN",
+        "count": 19,
+        "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies"
+      }
+    ],
+    "pendingMigration": "20261008160000_feedback_report_ownership.sql"
+  },
+  "evidenceDirectory": "android-twa/releases/1.0.3/db-verification",
+  "logs": [
+    "migration-reset.log",
+    "pgtap-results-final.log",
+    "advisors-error-gate.log",
+    "migration-history.log",
+    "local-metadata.log",
+    "cleanup.log"
+  ],
+  "limits": [
+    "No production migration was applied",
+    "No physical-device or production account-deletion smoke test was performed",
+    "Existing advisory warnings require review; zero ERROR findings does not mean no risk",
+    "No full production schema diff or live authorization mutation tests were performed"
+  ],
+  "sourceFiles": [
+    {
+      "path": "supabase/migrations/20260731000000_legacy_schema_baseline.sql",
+      "sha256": "35256d611d56dc9a760d45c1e4248f38b1133a7ab1d788768051ce260bce6255"
+    },
+    {
+      "path": "supabase/migrations/20260731190247_transactional_group_keys.sql",
+      "sha256": "48d7469667b44f2d4d2205fba11dfea970f9a5b40fce0b41a51c167f8fa7c11e"
+    },
+    {
+      "path": "supabase/migrations/20260731190400_explicit_data_api_grants.sql",
+      "sha256": "38f85de96fa7c9312fd3354932e87d98126c84417dfdd08c8d4327e70c98bb0c"
+    },
+    {
+      "path": "supabase/migrations/20260731190702_ai_usage_quotas.sql",
+      "sha256": "8158e3b1eab34ba249af8ace438465639b16a4d1506d16688920cba54aa59c46"
+    },
+    {
+      "path": "supabase/migrations/20260731191758_community_safety_controls.sql",
+      "sha256": "f6bfdd0b3077666f1e947c5db35e163ebc4fb673abeb1c473b0714f34573538a"
+    },
+    {
+      "path": "supabase/migrations/20260801050047_harden_profiles_policy.sql",
+      "sha256": "40357b30760d38c88d00bff65ae0399cf7473f52cc0a5be2cdebc455e749b1c4"
+    },
+    {
+      "path": "supabase/migrations/20260826120000_group_and_profile_avatars.sql",
+      "sha256": "c3a35b334bb2870a791944e35285b6edd13a2cdfd6e9bee9c13de0536f61d3bb"
+    },
+    {
+      "path": "supabase/migrations/20260826160000_avatar_photo_uploads.sql",
+      "sha256": "80aded905545ec12d8b9ebc61e7b5b0b44ac0731bc26501c4e329970ae067f01"
+    },
+    {
+      "path": "supabase/migrations/20260826180000_restore_group_helper_grants.sql",
+      "sha256": "0fcc9ed37152f19cf9def6f33b5d3dd2f7c81123ac4ddd921b09700a39df697f"
+    },
+    {
+      "path": "supabase/migrations/20260831160000_repair_friend_request_names.sql",
+      "sha256": "174386ebd68608ffcc1bd533561972edafbd80bd91b59dd61484dd153bfe9c20"
+    },
+    {
+      "path": "supabase/migrations/20260831215355_fix_account_deletion_foreign_keys.sql",
+      "sha256": "adb139eaff0f8de3b36c586d331281981be6471367269b36d1abb23ea1026ce2"
+    },
+    {
+      "path": "supabase/migrations/20260831215412_make_daily_reminders_precise.sql",
+      "sha256": "bc362f4df4978ccd9a7b3cb42c1b53a10f25135a27ddfc6621059a877a4c217f"
+    },
+    {
+      "path": "supabase/migrations/20260831221707_queue_avatar_cleanup_without_storage_sql.sql",
+      "sha256": "896643e09fbd08c08ce6e419067599cabad226e676281630abd9bf548214d2ef"
+    },
+    {
+      "path": "supabase/migrations/20260831222232_correct_daily_reminder_backfill.sql",
+      "sha256": "7ab01306ef6fe22a4bf981e73fd26073d535a28bc3f911d6e79ff2b87f2575fc"
+    },
+    {
+      "path": "supabase/migrations/20260831222535_guard_past_time_reminder_activation.sql",
+      "sha256": "489714b6ec8adae933166c2868f53c755225e41856aa941fccdbdc88d6c6f6d8"
+    },
+    {
+      "path": "supabase/migrations/20260902171050_refresh_stale_group_key_envelopes.sql",
+      "sha256": "95cf840b97dbe15913e623b9c4618f0e5eb724cb12e39ec61bf10434f6ab97da"
+    },
+    {
+      "path": "supabase/migrations/20260903134321_restore_personal_translation_cache.sql",
+      "sha256": "b2768ae41cef29531fbf7c0a2d2c1ed708f7043a8587755c3062088d4adf04fc"
+    },
+    {
+      "path": "supabase/migrations/20260922120000_plan_share_links.sql",
+      "sha256": "5cd4f0bc0116e456245bd77b2d2caad97a8e2c58262a0b7af8271dad5bd9e8b4"
+    },
+    {
+      "path": "supabase/migrations/20260922230622_wording_reports.sql",
+      "sha256": "6961fe8ed6bd19e5678b6c50d48b725b9bd662c97c6a1854f5312ce539778f5a"
+    },
+    {
+      "path": "supabase/migrations/20261008160000_feedback_report_ownership.sql",
+      "sha256": "13ffe68f12c4723b0d6ff973069caad945c3d7cf4578f4a1a078124a29746475"
+    },
+    {
+      "path": "supabase/tests/account_deletion.test.sql",
+      "sha256": "657332775d2b5e55f77710f99e40048a3772d79459fc8134b01e2de7a63c91be"
+    },
+    {
+      "path": "supabase/tests/avatar_policies.test.sql",
+      "sha256": "f4095e891b415abe54d43fbd0d21a99c1f9a086be26a7cdf32027199f36fecef"
+    },
+    {
+      "path": "supabase/tests/daily_reminder_scheduling.test.sql",
+      "sha256": "d5685a567092196ed90c03bc47e90094b78fe12eedb84d4b3208d412bde8b24d"
+    },
+    {
+      "path": "supabase/tests/feedback_report_ownership.test.sql",
+      "sha256": "d4a9d510a5922c763e0b136dd2ba82a7c7a7faa9aedc638bea35d4c0ad7e9455"
+    },
+    {
+      "path": "supabase/tests/plan_share_links.test.sql",
+      "sha256": "415f35e07d4d13a60c1b0a346715ddeece0545e92d32f21ab10135eeb76c84ab"
+    },
+    {
+      "path": "supabase/tests/security_schema.test.sql",
+      "sha256": "ef330083e987f9331f2a3c703856fc769008490b6dcad3678ed83234d936c333"
+    },
+    {
+      "path": "supabase/tests/translations.test.sql",
+      "sha256": "39a120f7f245a26b42d568487aac5bdb9025f08ec18a86f6cf9e3ce835efcd60"
+    },
+    {
+      "path": "supabase/tests/wording_reports.test.sql",
+      "sha256": "9bac5342cd67c4151a79d6aace46eeb68542e083431cf975122ce8e4d6fd44c9"
+    }
+  ]
+}

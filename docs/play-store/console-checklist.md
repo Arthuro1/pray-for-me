@@ -46,6 +46,11 @@ listing text; it does not certify production readiness.
   account-erasure process. Verify avatar cleanup and attachment deletion through
   the Storage API, provider/log/backup retention, and the external email request
   workflow. Do not promise immediate deletion from all backups.
+- [ ] **Apply the verified feedback ownership migration:** local database reset,
+  all 20 migrations, 138 pgTAP assertions and the advisor error gate passed.
+  Read-only production inspection found only 19 migrations; the new guard is
+  still pending. Apply it before the new client, then verify access and attributed
+  report erasure. See [database-verification.md](database-verification.md).
 - [ ] **Analytics audit:** automatic Vercel Analytics/SpeedInsights mounting and
   custom-event transmission are disabled for this release in source. Verify the
   deployed network trace and older active Play versions. Hosting/provider request
@@ -57,17 +62,18 @@ listing text; it does not certify production readiness.
   [test-plan.md](test-plan.md), review the Play pre-launch report and capture the
   real installed app for the final listing.
 
-These are findings from a source review, not a claim that a production account or
-database has been inspected. Recheck the final source and deployment after fixes.
+The source review is supplemented by isolated database tests and read-only
+production metadata/advisor inspection; no production changes were made. Recheck
+the final source and deployment after fixes.
 The focused terms/UGC/edit/delete regression run passed 46 tests in five files;
 narrow ESLint checks passed. These results do not test actual moderator staffing,
 production RPC migrations or Play-installed behavior.
 Strict repository lint, type checking, locales, content baseline, production build
 and the 13-file/44-test browser suite also passed. The initial full unit run still
-had 10 failing tests across 9 files; see the follow-up result below. The database
-ownership migration remains unrun. Do not treat the combined verification as all
-green. See [validation.md](validation.md) for the exact record and final follow-up
-status.
+had 10 failing tests across 9 files; see the follow-up result below. Database
+verification now passes locally, but the ownership migration remains unapplied
+on production. Do not treat the combined verification as all green. See
+[validation.md](validation.md) for the exact record and final follow-up status.
 
 The final focused release follow-up passed 67 tests in nine files; the key-manager
 timeout did not recur. Strict lint and local release preflight passed again.
@@ -106,8 +112,11 @@ engagement, feedback and fixes. [Official testing requirements](https://support.
    This release includes `20261008160000_feedback_report_ownership.sql`: apply it
    before the reporter-enabled client, verify authenticated feedback cannot forge
    another user's ID and anonymous-role inserts are revoked. Run its pgTAP checks
-   on an isolated/local Supabase database before production. Local database tests
-   were not run in this preparation environment because the Docker daemon was not running and a usable local Supabase CLI was unavailable.
+   on an isolated/local Supabase database before production. This local gate is
+   complete: all 20 migrations and all 138 pgTAP assertions passed, including 15
+   feedback assertions. Production still has 19 migrations and needs this guard.
+   Retain the apply/verification record; see
+   [database-verification.md](database-verification.md).
 2. Deploy and verify the web release and legal URLs on `qetoret.com`. Finish DNS,
    auth callbacks, recovery and Digital Asset Links first.
 3. Build the wrapper, sign using the existing upload key, verify the signature
@@ -165,7 +174,8 @@ engagement, feedback and fixes. [Official testing requirements](https://support.
 | --- | --- | --- |
 | Final signed AAB + package/version/SDK | VERIFIED LOCALLY; Console version history/signing association pending | |
 | Full unit follow-up / resource content guard failures | OPEN; see validation.md | |
-| Ownership migration and database tests | NOT APPLIED / NOT RUN in this task | |
+| Isolated ownership migration and database tests | PASS: 20 migrations, 8 files / 138 assertions; local advisor error gate passed | |
+| Production ownership migration and smoke test | PENDING: production has 19 migrations; no production writes made | |
 | Live site, auth and old-origin recovery | PENDING | |
 | Play-installed trust + Android 15/16 layout | PENDING | |
 | Privacy/deletion/Data safety | PENDING | |

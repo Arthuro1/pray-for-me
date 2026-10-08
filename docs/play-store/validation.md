@@ -1,7 +1,8 @@
 # Validation record — 8 October 2026
 
-This records local release preparation and a read-only live preflight. No
-production deployment, database migration or Play submission was performed.
+This records local release preparation, isolated database tests and read-only
+production checks. No production deployment, production database migration or
+Play submission was performed.
 Passing a local check does not confirm production configuration or device behavior.
 
 ## Completed local checks
@@ -20,6 +21,9 @@ Passing a local check does not confirm production configuration or device behavi
 | Final focused release follow-up | PASS: 9 files, 67 tests | Single worker, 33.97 seconds; detailed scope below |
 | Android artifact identity/signing | PASS | Signed AAB and APK metadata/signatures; final paths and SHA-256 in [release-artifacts.md](release-artifacts.md) |
 | Android release lint | PASS: 0 errors, 10 warnings | Read `android-twa/releases/1.0.3/lint-results-release.txt`; warnings remain documented |
+| Isolated database reset and migrations | PASS: all 20 migrations | Independent local project; no production reset or migration |
+| Full database pgTAP suite | PASS: 8 files, 138 assertions | Includes 15 feedback ownership/account-erasure assertions |
+| Local database advisor error gate | PASS: 0 error-level issues | Error gate only; see production warning triage in [database-verification.md](database-verification.md) |
 
 The focused rows overlap; do not add their counts together as distinct coverage.
 Strict lint and the six-check local release preflight were also rerun successfully
@@ -82,22 +86,28 @@ Deploy the reviewed frontend/legal release, then rerun
 recovery and safety smoke tests. Keep old-origin recovery access available during
 the cutover, as described in [domain-migration.md](domain-migration.md).
 
-## Database verification not performed
+## Database verification passed locally; production application pending
 
-`20261008160000_feedback_report_ownership.sql` was prepared but **not applied or
-database-tested** during this task. The Docker daemon was stopped and a usable
-local Supabase CLI was unavailable. No successful pgTAP run is claimed.
+The initial CLI/Docker limitation was resolved. With pinned Supabase CLI 2.111.0,
+the isolated `qetoret_db_verify_20261008` database started and reset successfully,
+applying all 20 repository migrations. All **138 pgTAP assertions in 8 files**
+passed, including **15 feedback ownership assertions**. The local advisor error
+gate reported no error-level issues. Metadata confirms the restrictive guard,
+denied `anon` INSERT and allowed authenticated INSERT; synthetic rows rolled back.
 
-Before deploying the reporter-enabled client, apply the additive migration to an
-isolated/staging database and run its ownership/security pgTAP checks. Verify
-forged `user_id` insertion is rejected, anonymous-role inserts are revoked,
-legitimate authenticated reporting works, and deleting the account handles its
-attributed reports. Record the actual migration/test result before production.
+Read-only production inspection found a healthy project with 19 migrations
+through `20260922230622`; **the feedback guard remains unapplied there**. Its
+existing feedback INSERT policy/grants still require the new restriction. No
+production changes were made. Apply the verified additive migration and verify
+production access/account-erasure behavior before deploying the reporter-enabled
+client. [database-verification.md](database-verification.md) records evidence,
+production metadata, advisor warnings and the remaining operational gate.
 
 ## Owner release gates still open
 
 - Deploy the intended Qetoret site and legal pages; resolve all five live checks.
-- Verify migration application and database tests before the new client deploys.
+- Apply the locally verified ownership migration to production and verify its
+  access/account-erasure behavior before the new client deploys.
 - Resolve or disposition the remaining unit/content failures with actual evidence.
 - Confirm versionCode `4` is unused in Console and publish its real Play
   app-signing fingerprint; install the internal-track release from Play.

@@ -32,9 +32,11 @@ findings), production build and the browser suite (13 files, 44 tests) passed.
 The initial full unit run had **10 failing tests across 9 files**; follow-up
 verification passed **67 tests across 9 files**, including the key-manager rerun.
 Four resource guard suites remain under review, so no clean complete unit run is
-claimed. The ownership migration is prepared but was
-not applied or database-tested. Read [validation.md](validation.md) for exact
-counts, live failures and the remaining release limits.
+claimed. Isolated database verification passed all 20 migrations and 138 pgTAP
+assertions across 8 files. Read-only production inspection confirms the ownership
+migration remains pending there. Read [validation.md](validation.md) and
+[database-verification.md](database-verification.md) for exact evidence, live
+failures and the remaining release limits.
 
 | File | Use |
 | --- | --- |
@@ -47,7 +49,9 @@ counts, live failures and the remaining release limits.
 | [domain-migration.md](domain-migration.md) | DNS, hosting, Supabase auth, device keys, old-origin support and push migration |
 | [policy-sources.md](policy-sources.md) | Official policies checked on 8 October 2026 |
 | [release-artifacts.md](release-artifacts.md) | Final signed AAB/APK paths, hashes, verified identity and remaining release limits |
-| [validation.md](validation.md) | Actual local/browser/Android results, full-unit failures, live preflight and unrun database tests |
+| [validation.md](validation.md) | Actual local/browser/Android/database results, full-unit failures and live preflight |
+| [database-verification.md](database-verification.md) | Passing isolated database tests, read-only production findings and the pending production migration |
+| [database-verification.json](database-verification.json) | Machine-readable database evidence and recorded production migration/advisor metadata |
 
 Listing artwork is in `assets/`: the 512px store icon, 1024 × 500 feature
 graphic and phone screenshot drafts in `assets/screenshots/en-US/`. Check the
@@ -85,7 +89,7 @@ prove they are live.
 | Source commit and deployment ID | OWNER REQUIRED |
 | Live domain/TLS/auth/deletion smoke tests | Live preflight has 5 identity/content failures; auth/deletion smoke checks remain pending |
 | AAB path, SHA-256 and signature verification | Verified locally; see release-artifacts.md and release-verification.json |
-| Unit/browser/static/database verification | See validation.md; full-unit follow-up and database tests remain open |
+| Unit/browser/static/database verification | Local database tests passed; production migration and full-unit follow-up remain open. See validation.md and database-verification.md |
 | Play app-signing SHA-256 certificate in live assetlinks | OWNER REQUIRED |
 | Internal-track installed-app test results | NOT RECORDED |
 | Final store screenshots checked against installed release | NOT RECORDED |
