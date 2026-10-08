@@ -12,7 +12,8 @@ describe('PWA manifest retention surfaces', () => {
 
   it('provides install screenshots and the two useful shortcuts', () => {
     expect(manifest.screenshots).toEqual(expect.arrayContaining([
-      expect.objectContaining({ form_factor: 'narrow', type: 'image/jpeg' }),
+      expect.objectContaining({ src: '/store/screenshots/today.png', sizes: '1080x1920', form_factor: 'narrow', type: 'image/png' }),
+      expect.objectContaining({ src: '/store/screenshots/plans.png', sizes: '1080x1920', form_factor: 'narrow', type: 'image/png' }),
     ]));
     expect(manifest.shortcuts.map((shortcut) => shortcut.name)).toEqual([
       'Pray today',

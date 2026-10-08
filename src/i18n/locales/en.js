@@ -365,7 +365,7 @@ export default {
   "newUpdate": "New update...",
   "evolutions": "Updates",
   "aiConsentTitle": "AI suggestions",
-  "aiConsentBodyPrayer": "To suggest Bible passages and prayer points, this prayer’s title is sent to Claude, an AI service by Anthropic. Its details and latest update are sent only if you include them. Before the first request, you see exactly what will be sent.",
+  "aiConsentBodyPrayer": "To suggest Bible passages and prayer points, this prayer’s title is sent to Qetoret’s self-hosted AI service. Its details and latest update are sent only if you include them. Before the first request, you see exactly what will be sent.",
   "aiConsentAccept": "I agree",
   "aiConsentDecline": "No thanks",
   "aiConsentFooter": "You can withdraw this anytime in Settings.",

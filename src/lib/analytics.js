@@ -16,6 +16,12 @@
 import { track as vercelTrack } from '@vercel/analytics';
 import { devError } from './logger';
 
+// Release privacy gate. The SDK's automatic payload can include current URL
+// context and referrers beyond this helper's property allowlist. Do not mount
+// Analytics/SpeedInsights or transmit custom events until the entire outgoing
+// payload has been audited. Keep the event schema below for that future audit.
+export const ANALYTICS_COLLECTION_ENABLED = false;
+
 // Canonical event names. Reference these constants at call sites.
 export const EVENTS = Object.freeze({
   FIRST_PRAYER_CREATED: 'first_prayer_created',
@@ -138,9 +144,10 @@ export function sanitizeProps(props, eventName) {
   return Object.keys(out).length ? out : undefined;
 }
 
-// Analytics can be globally disabled (e.g. a future "no analytics" preference or
-// a Do-Not-Track signal). Defaults to enabled; never throws.
+// Collection stays off for this release. Preserve the preference and
+// Do-Not-Track checks for any future audited collection; never throws.
 export function isAnalyticsEnabled() {
+  if (!ANALYTICS_COLLECTION_ENABLED) return false;
   try {
     if (typeof navigator !== 'undefined' && navigator.doNotTrack === '1') return false;
     if (typeof localStorage !== 'undefined' && localStorage.getItem('pfm_analytics_off') === '1') return false;

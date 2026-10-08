@@ -1,9 +1,8 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, useParams, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { useShallow } from 'zustand/react/shallow';
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/react';
 import Layout from './components/Layout';
+import CommunityTermsGate from './components/CommunityTermsGate';
 import PrayerForm from './components/PrayerForm';
 import Toaster from './components/shared/Toaster';
 import ConfirmHost from './components/shared/ConfirmHost';
@@ -491,6 +490,7 @@ export default function AuthenticatedApp({
 
   return (
     <>
+      <CommunityTermsGate key={user.id} userId={user.id} lang={lang} onSignOut={() => useAuthStore.getState().signOut()}>
       <ContextualNudgeProvider key={location.pathname}>
         <Layout onAddPrayer={openAdd}>
           <RecoveryPromptBanner lang={lang} />
@@ -554,8 +554,9 @@ export default function AuthenticatedApp({
       <Toaster />
       <ConfirmHost />
       <CarryPlacementHost />
-      <Analytics />
-      <SpeedInsights />
+      </CommunityTermsGate>
+      {/* Automatic URL telemetry stays disabled: prayer, group, invite and auth
+          routes can contain private identifiers or tokens. See lib/analytics.js. */}
     </>
   );
 }

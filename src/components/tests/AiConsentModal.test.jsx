@@ -61,7 +61,8 @@ describe('AI consent', () => {
     expect(text).toContain(t(lang, 'aiConsentFooter'));
     expect(text).toMatch(/pas l’Écriture/);
     expect(text).toMatch(/connaître la volonté de Dieu/);
-    expect(text).toMatch(/Anthropic/);
+    expect(text).toMatch(/service d’IA auto-hébergé de Qetoret/);
+    expect(text).not.toMatch(/Anthropic|Claude/);
     expect(text).toMatch(/que si vous les incluez/);
     expect(text).toMatch(/Paramètres/);
     // What is sent is said once, not in two paragraphs.

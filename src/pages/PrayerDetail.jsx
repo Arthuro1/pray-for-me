@@ -18,6 +18,7 @@ import AiOutgoingPreview from '../components/AiOutgoingPreview';
 import { hasAiConsent } from '../lib/aiConsent';
 import { hasReviewedOutgoing, markOutgoingReviewed } from '../lib/aiCore';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
+import AiOutputReport from '../components/AiOutputReport';
 import PrayerForm from '../components/PrayerForm';
 import PrayerShareModal from '../components/PrayerShareModal';
 import FollowUpBanner from '../components/FollowUpBanner';
@@ -1201,7 +1202,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             plausibly differs from the interface's. Translated content is
             labelled, and the original always stays one tap away. */}
         {translationRelevant && !isPlanRun && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <QuietButton
               onClick={handleToggleTranslate}
               disabled={translating}
@@ -1212,6 +1213,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
               {showTranslated ? t(lang, 'showOriginal') : t(lang, 'seeTranslation')}
             </QuietButton>
             {showTranslated && <StatusLabel plain>{t(lang, 'translatedLabel')}</StatusLabel>}
+            {showTranslated && <AiOutputReport lang={lang} />}
           </div>
         )}
 

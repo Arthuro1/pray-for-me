@@ -5,7 +5,7 @@ The public brand is **Qetoret**. Many internal identifiers still say `pfm`
 identifier without a migration makes an existing installation look like a new one
 and can strand local data. Brand and identifier do not have to match.
 
-Audit date: 2026-10-06. Classes:
+Audit date: 2026-10-06. Domain/release update: 2026-10-08. Classes:
 
 - **USER_VISIBLE_REBRAND** — text a person can read. Changed to Qetoret.
 - **SAFE_INTERNAL_KEEP** — internal name with no visible effect. Kept.
@@ -39,10 +39,11 @@ Audit date: 2026-10-06. Classes:
 | `pfm_mutation_queue` and the IndexedDB stores | NEEDS_MIGRATION | Holds unsent writes; renaming could drop them |
 | Crypto context labels, key ids, `encryption_version` | NEEDS_MIGRATION | Bound into existing ciphertext |
 | Supabase tables, columns, RPCs, buckets | NEEDS_MIGRATION | Server schema; the brand is not in it |
-| `praystead.com` (canonical URL, OG URLs, ICS `UID` domain, `CARD_MARK` on share cards, plan share links, `assetlinks.json`) | EXTERNAL_INTEGRATION | The domain has not changed. A domain change is a separate project (origin change = fresh IndexedDB = vault unlock on every web device) |
+| Public website origin | EXTERNAL_INTEGRATION | Updated to `https://qetoret.com` for canonical/OG URLs, share links, share-card credit and Android launch. Keep `praystead.com` available during recovery preparation; origin change means fresh browser storage and may require passphrase/recovery code. Follow `docs/play-store/README.md` before cutover |
+| ICS `UID` domain `praystead.com` | NEEDS_MIGRATION | Kept so an exported event retains its identity and calendar re-import does not create duplicates |
 | Android `applicationId` / `namespace` `space.praystead.twa`, Java package `space.praystead.twa`, keystore alias `pray4me` | EXTERNAL_INTEGRATION | A new application id would publish a **new app**, not an update. Existing installs would never receive Qetoret. Brand and package id do not have to match |
 | Google Play URL `details?id=space.praystead.twa` | EXTERNAL_INTEGRATION | Follows the application id |
-| `package.json` `name` (`praystead`) | SAFE_INTERNAL_KEEP | Private package, never published, no visible effect |
+| `package.json` / lockfile `name` | USER_VISIBLE_REBRAND | Updated to `qetoret`; private package, no persisted-data effect |
 | Code comments that say "Praystead" | SAFE_INTERNAL_KEEP | Updated where they describe product behaviour; historical notes left alone |
 | `docs/` history (changelogs, reviews, handoffs) | SAFE_INTERNAL_KEEP | Historical record |
 

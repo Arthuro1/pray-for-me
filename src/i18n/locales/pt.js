@@ -397,7 +397,7 @@ export default {
   "newUpdate": "Nova atualização...",
   "evolutions": "Atualizações",
   "aiConsentTitle": "Sugestões de IA",
-  "aiConsentBodyPrayer": "Para sugerir passagens bíblicas e pontos de oração, o título desta oração é enviado ao Claude, um serviço de IA da Anthropic. Os detalhes e a última atualização só são enviados se você os incluir. Antes do primeiro pedido, você vê exatamente o que será enviado.",
+  "aiConsentBodyPrayer": "Para sugerir passagens bíblicas e pontos de oração, o título desta oração é enviado ao serviço de IA hospedado pela Qetoret. Os detalhes e a última atualização só são enviados se você os incluir. Antes do primeiro pedido, você vê exatamente o que será enviado.",
   "aiConsentAccept": "Concordo",
   "aiConsentDecline": "Não, obrigado",
   "aiConsentFooter": "Você pode retirar esta permissão a qualquer momento em Configurações.",

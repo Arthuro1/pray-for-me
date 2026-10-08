@@ -54,7 +54,7 @@ describe('LandingCircles', () => {
     expect(option(1).getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByRole('heading', { name: heading('household') })).toBeTruthy();
     expect(screen.getByText(circleContent('household').formation.en)).toBeTruthy();
-    expect(track).toHaveBeenCalledWith('circle_teaching_opened', { source: 'landing' });
+    expect(track).not.toHaveBeenCalled();
   });
 
   it('switches circles without leaving the previous circle’s words behind', async () => {
@@ -97,7 +97,7 @@ describe('LandingCircles', () => {
     fireEvent.click(option(3));
     fireEvent.click(screen.getByRole('button', { name: circleContent('church').cta.en }));
     expect(onBeginPrayer).toHaveBeenCalledWith({ circle: 'church', prompt: undefined });
-    expect(track).toHaveBeenCalledWith('circle_prayer_started', { source: 'landing' });
+    expect(track).not.toHaveBeenCalled();
   });
 
   it('begins from a "Pray this" prompt without writing it for the person', async () => {

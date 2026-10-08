@@ -397,7 +397,7 @@ export default {
   "newUpdate": "新しい更新...",
   "evolutions": "更新",
   "aiConsentTitle": "AIによる提案",
-  "aiConsentBodyPrayer": "聖書の箇所と祈りのポイントを提案するため、この祈りのタイトルを Anthropic の AI サービス Claude に送信します。詳細と最新の近況は、含めることを選んだ場合にのみ送信されます。最初のリクエストの前に、送信される内容を正確に確認できます。",
+  "aiConsentBodyPrayer": "聖書の箇所と祈りのポイントを提案するため、この祈りのタイトルを Qetoret が自己ホストする AI サービスに送信します。詳細と最新の近況は、含めることを選んだ場合にのみ送信されます。最初のリクエストの前に、送信される内容を正確に確認できます。",
   "aiConsentAccept": "同意する",
   "aiConsentDecline": "いいえ、結構です",
   "aiConsentFooter": "この同意は「設定」からいつでも取り消せます。",

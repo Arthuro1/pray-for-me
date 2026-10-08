@@ -16,7 +16,7 @@ import PLAN_PREVIEW from './_planPreviewData.js';
 
 const APP_NAME = 'Qetoret';
 
-const SITE = 'https://praystead.com';
+const SITE = 'https://qetoret.com';
 const PLAN_ID = /^[A-Za-z0-9_-]{1,64}$/;
 const TOKEN = /^[A-Za-z0-9_-]{16,32}$/;
 

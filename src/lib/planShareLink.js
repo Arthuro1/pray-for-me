@@ -1,7 +1,7 @@
 // The public link to a guided plan, and the one intent it has to carry across
 // sign-up.
 //
-//   https://praystead.com/plans/<planId>/<token>?lang=<sharer's language>
+//   https://qetoret.com/plans/<planId>/<token>?lang=<sharer's language>
 //
 // The plan id sits in the PATH so the link-preview function can name the plan
 // without a database round trip (api/plan-preview.js), and so the token

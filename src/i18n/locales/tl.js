@@ -397,7 +397,7 @@ export default {
   "newUpdate": "Bagong update...",
   "evolutions": "Mga update",
   "aiConsentTitle": "Mga mungkahi ng AI",
-  "aiConsentBodyPrayer": "Para makapagmungkahi ng mga talata sa Biblia at mga punto ng panalangin, ipinapadala ang pamagat ng panalanging ito kay Claude, isang AI service ng Anthropic. Ipinapadala lang ang detalye at pinakabagong update kung isasama mo. Bago ang unang kahilingan, makikita mo kung ano mismo ang ipapadala.",
+  "aiConsentBodyPrayer": "Para makapagmungkahi ng mga talata sa Biblia at mga punto ng panalangin, ipinapadala ang pamagat ng panalanging ito sa sariling naka-host na AI service ng Qetoret. Ipinapadala lang ang detalye at pinakabagong update kung isasama mo. Bago ang unang kahilingan, makikita mo kung ano mismo ang ipapadala.",
   "aiConsentAccept": "Sumasang-ayon ako",
   "aiConsentDecline": "Hindi, salamat",
   "aiConsentFooter": "Maaari mo itong bawiin anumang oras sa Mga Setting.",

@@ -397,7 +397,7 @@ export default {
   "newUpdate": "Pembaruan baru...",
   "evolutions": "Pembaruan",
   "aiConsentTitle": "Saran AI",
-  "aiConsentBodyPrayer": "Untuk menyarankan bagian Alkitab dan poin doa, judul doa ini dikirim ke Claude, layanan AI dari Anthropic. Detail dan kabar terbarunya hanya dikirim jika Anda menyertakannya. Sebelum permintaan pertama, Anda melihat persis apa yang akan dikirim.",
+  "aiConsentBodyPrayer": "Untuk menyarankan bagian Alkitab dan poin doa, judul doa ini dikirim ke layanan AI yang dihosting sendiri oleh Qetoret. Detail dan kabar terbarunya hanya dikirim jika Anda menyertakannya. Sebelum permintaan pertama, Anda melihat persis apa yang akan dikirim.",
   "aiConsentAccept": "Saya setuju",
   "aiConsentDecline": "Tidak, terima kasih",
   "aiConsentFooter": "Anda dapat menarik persetujuan ini kapan saja di Pengaturan.",

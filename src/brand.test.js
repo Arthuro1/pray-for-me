@@ -25,7 +25,7 @@ const withoutComments = (source) => source
 
 describe('the public brand is Qetoret', () => {
   it('names Qetoret in the page head, the PWA manifest and the notification fallback', () => {
-    for (const path of ['index.html', 'public/manifest.json', 'public/push-sw.js', 'public/privacy.html', 'public/terms.html']) {
+    for (const path of ['index.html', 'public/manifest.json', 'public/push-sw.js', 'public/privacy.html', 'public/terms.html', 'public/delete-account.html']) {
       const text = read(path);
       expect(text, path).toContain('Qetoret');
       expect(text, path).not.toMatch(/Praystead/);

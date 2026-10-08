@@ -8,6 +8,8 @@ import { removeAttachmentFiles } from '../lib/attachments';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';
+import useCommunityStore from '../store/communityStore';
+import CommunitySafetyActions from './CommunitySafetyActions';
 
 // List of testimonies posted for a community prayer. `loc` localizes each
 // testimony on demand via the parent's "See translation" toggle. A testimony's
@@ -17,6 +19,7 @@ import { t } from '../i18n';
 // points. Attachments render read-only.
 export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin = false, onDelete, onEdit }) {
   const [editingId, setEditingId] = useState(null);
+  const blockedAuthors = useCommunityStore((state) => state.blockedAuthorsByViewer?.[userId]);
 
   if (!items.length) return null;
 
@@ -42,13 +45,13 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
     <div className="prayer-activity-panel">
       <p className="prayer-activity-panel__title">{t(lang, 'testimonies')}</p>
       <div className="prayer-activity-list">
-        {items.map((tm) => (
+        {items.filter((tm) => !blockedAuthors?.includes(tm.user_id)).map((tm) => (
           <div key={tm.id} className="prayer-activity-item prayer-activity-item--testimony group">
             <div className="prayer-activity-item__header">
               <p className="prayer-activity-item__meta">
                 {communityAuthor(tm, userId, lang)} · {timeAgo(tm.created_at, lang)}
               </p>
-              {editingId !== tm.id && (canEdit(tm) || canDelete(tm)) && (
+              {editingId !== tm.id && (
                 <div className="prayer-activity-item__actions flex items-start gap-1.5 mt-0.5">
                   {canEdit(tm) && (
                     <EditButton onEdit={() => setEditingId(tm.id)} label={t(lang, 'editTestimony')} />
@@ -56,6 +59,7 @@ export default function CommunityTestimonies({ items, loc, lang, userId, isAdmin
                   {canDelete(tm) && (
                     <DeleteButton onDelete={() => handleDelete(tm)} lang={lang} label={t(lang, 'deleteTestimony')} />
                   )}
+                  <CommunitySafetyActions contentType="testimony" contentId={tm.id} authorId={tm.user_id} userId={userId} lang={lang} />
                 </div>
               )}
             </div>

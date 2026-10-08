@@ -7,7 +7,7 @@
 // and it never contacts an external AI provider. All authentication, quotas,
 // prompt construction, model selection, and output validation happen in the
 // gateway. Keeping this same-origin means the browser only ever talks to
-// Pray4Me's own domain (no CORS, no CSP connect-src change).
+// Qetoret's own domain (no CORS, no CSP connect-src change).
 //
 // It never logs the request or response body — those can carry prayer content.
 

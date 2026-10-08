@@ -113,6 +113,7 @@ const useCommunityStore = create((set, get) => ({
   activeGroupId: null,
   prayers: [],
   testimonies: [],
+  blockedAuthorsByViewer: {},
   communityEncryptionMigration: { groupId: null, status: 'idle', total: 0, completed: 0, failed: 0 },
   userReactions: new Set(),
   loading: false,
@@ -1279,12 +1280,21 @@ const useCommunityStore = create((set, get) => ({
     return error ? toError(error) : { reportId: data };
   },
 
-  setUserBlocked: async (blockedUserId, blocked = true) => {
+  setUserBlocked: async (blockedUserId, blocked = true, viewerId) => {
     const { error } = await supabase.rpc('set_user_block', {
       p_blocked_user_id: blockedUserId,
       p_blocked: blocked,
     });
     if (error) return toError(error);
+    if (viewerId) {
+      set((state) => {
+        const authors = state.blockedAuthorsByViewer[viewerId] || [];
+        return { blockedAuthorsByViewer: {
+          ...state.blockedAuthorsByViewer,
+          [viewerId]: blocked ? [...new Set([...authors, blockedUserId])] : authors.filter((id) => id !== blockedUserId),
+        } };
+      });
+    }
     if (blocked) {
       set((state) => ({
         prayers: state.prayers.filter((prayer) => prayer.user_id !== blockedUserId),

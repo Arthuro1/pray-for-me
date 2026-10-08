@@ -398,7 +398,7 @@ export default {
   "newUpdate": "Neuigkeit hinzufügen…",
   "evolutions": "Neuigkeiten",
   "aiConsentTitle": "KI-Vorschläge",
-  "aiConsentBodyPrayer": "Um Bibelstellen und Gebetsimpulse vorzuschlagen, wird der Titel dieses Gebets an Claude gesendet, einen KI-Dienst von Anthropic. Details und die letzte Neuigkeit werden nur gesendet, wenn du sie einbeziehst. Vor der ersten Anfrage siehst du genau, was gesendet wird.",
+  "aiConsentBodyPrayer": "Um Bibelstellen und Gebetsimpulse vorzuschlagen, wird der Titel dieses Gebets an den selbst gehosteten KI-Dienst von Qetoret gesendet. Details und die letzte Neuigkeit werden nur gesendet, wenn du sie einbeziehst. Vor der ersten Anfrage siehst du genau, was gesendet wird.",
   "aiConsentAccept": "Ich stimme zu",
   "aiConsentDecline": "Nein danke",
   "aiConsentFooter": "Du kannst diese Zustimmung jederzeit in den Einstellungen zurückziehen.",

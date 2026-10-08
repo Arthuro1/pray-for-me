@@ -20,9 +20,27 @@ plugins {
     id 'com.android.application'
 }
 
+// Keep release credentials outside source control. Environment variables take
+// precedence so CI can provide secrets without writing them to disk.
+def signingProperties = new Properties()
+def signingPropertiesFile = rootProject.file('signing.properties')
+if (signingPropertiesFile.exists()) {
+    signingPropertiesFile.withInputStream { signingProperties.load(it) }
+}
+def signingValue = { name, environmentName ->
+    System.getenv(environmentName) ?: signingProperties.getProperty(name)
+}
+def releaseSigning = [
+    storeFile: signingValue('storeFile', 'QETORET_KEYSTORE_PATH'),
+    storePassword: signingValue('storePassword', 'QETORET_KEYSTORE_PASSWORD'),
+    keyAlias: signingValue('keyAlias', 'QETORET_KEY_ALIAS'),
+    keyPassword: signingValue('keyPassword', 'QETORET_KEY_PASSWORD'),
+]
+def hasReleaseSigning = releaseSigning.values().every { it }
+
 def twaManifest = [
     applicationId: 'space.praystead.twa',
-    hostName: 'praystead.com', // The domain being opened in the TWA.
+    hostName: 'qetoret.com', // The domain being opened in the TWA.
     launchUrl: '/', // The start path for the TWA. Must be relative to the domain.
     name: 'Qetoret', // The application name. (Package id stays space.praystead.twa — see docs/QETORET_MIGRATION.md)
     launcherName: 'Qetoret', // The name shown on the Android Launcher.
@@ -57,8 +75,8 @@ android {
         applicationId "space.praystead.twa"
         minSdkVersion 21
         targetSdkVersion 36
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -76,12 +94,12 @@ android {
             // The URL the Web Manifest for the Progressive Web App that the TWA points to. This
             // is used by Chrome OS and Meta Quest to open the Web version of the PWA instead of
             // the TWA, as it will probably give a better user experience for non-mobile devices.
-            resValue "string", "webManifestUrl", 'https://praystead.com/manifest.json'
+            resValue "string", "webManifestUrl", 'https://qetoret.com/manifest.json'
         
 
         
             // This is used by Meta Quest.
-            resValue "string", "fullScopeUrl", 'https://praystead.com/'
+            resValue "string", "fullScopeUrl", 'https://qetoret.com/'
         
 
         
@@ -150,17 +168,41 @@ android {
 
         
     }
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile rootProject.file(releaseSigning.storeFile)
+                storePassword releaseSigning.storePassword
+                keyAlias releaseSigning.keyAlias
+                keyPassword releaseSigning.keyPassword
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    lintOptions {
-        checkReleaseBuilds false
+    lint {
+        checkReleaseBuilds true
+    }
+}
+
+def validateReleaseSigning = tasks.register('validateReleaseSigning') {
+    doLast {
+        if (!hasReleaseSigning) {
+            throw new GradleException('Release signing is missing. Configure signing.properties from signing.properties.example or the QETORET_KEYSTORE_* / QETORET_KEY_* environment variables.')
+        }
+    }
+}
+tasks.configureEach {
+    if (name in ['validateSigningRelease', 'packageRelease', 'packageReleaseBundle']) {
+        dependsOn(validateReleaseSigning)
     }
 }
 

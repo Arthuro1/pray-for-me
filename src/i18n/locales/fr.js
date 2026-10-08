@@ -365,7 +365,7 @@ export default {
   "newUpdate": "Donner des nouvelles…",
   "evolutions": "Nouvelles",
   "aiConsentTitle": "Suggestions de l’IA",
-  "aiConsentBodyPrayer": "Pour suggérer des passages bibliques et des pistes de prière, le titre de cette prière est envoyé à Claude, un service d’IA d’Anthropic. Ses détails et sa dernière nouvelle ne sont envoyés que si vous les incluez. Avant la première demande, vous voyez exactement ce qui sera envoyé.",
+  "aiConsentBodyPrayer": "Pour suggérer des passages bibliques et des pistes de prière, le titre de cette prière est envoyé au service d’IA auto-hébergé de Qetoret. Ses détails et sa dernière nouvelle ne sont envoyés que si vous les incluez. Avant la première demande, vous voyez exactement ce qui sera envoyé.",
   "aiConsentAccept": "J'accepte",
   "aiConsentDecline": "Non merci",
   "aiConsentFooter": "Vous pouvez retirer cet accord à tout moment dans les Paramètres.",

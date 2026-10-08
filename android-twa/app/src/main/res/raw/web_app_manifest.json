@@ -1,1 +1,80 @@
-{"name":"Qetoret","short_name":"Qetoret","description":"A Scripture-first prayer companion for building a faithful life of prayer and intercession.","start_url":"/","display":"standalone","background_color":"#6d28d9","theme_color":"#6d28d9","orientation":"portrait","scope":"/","lang":"en","icons":[{"src":"/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any"},{"src":"/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any"},{"src":"/icons/icon-maskable-512.png","sizes":"512x512","type":"image/png","purpose":"maskable"}],"screenshots":[],"categories":["lifestyle","religion"]}
+{
+  "name": "Qetoret",
+  "short_name": "Qetoret",
+  "id": "/",
+  "description": "A Scripture-first prayer companion for building a faithful life of prayer and intercession.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#3A2D5C",
+  "theme_color": "#29213F",
+  "scope": "/",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/store/screenshots/today.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Come before God with today's prayers"
+    },
+    {
+      "src": "/store/screenshots/plans.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Open a Scripture-grounded prayer plan"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Pray today",
+      "short_name": "Pray today",
+      "description": "Come before God with today's prayers",
+      "url": "/?source=pwa-shortcut",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Bring a prayer",
+      "short_name": "Bring a prayer",
+      "description": "Add something to carry before God",
+      "url": "/?action=add-prayer",
+      "icons": [
+        {
+          "src": "/icons/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "categories": [
+    "lifestyle",
+    "religion"
+  ]
+}

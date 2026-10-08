@@ -117,7 +117,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
             {description && <RichText text={description} className="mt-1 text-sm leading-relaxed" style={{ color: 'var(--q-text-secondary)' }} />}
           </div>
           <SecondaryButton icon={BookOpen} onClick={fetchGuidance}>{t(lang, 'findScripture')}</SecondaryButton>
-          <AiDisclaimer lang={lang} className="justify-center" />
+          <AiDisclaimer lang={lang} className="justify-center" reportable={false} />
         </div>
       );
     }

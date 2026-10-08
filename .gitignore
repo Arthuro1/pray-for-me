@@ -29,6 +29,9 @@ android-twa/local.properties
 android-twa/*.apk
 android-twa/*.aab
 android-twa/KEYSTORE_CREDENTIALS.txt
+android-twa/signing.properties
+android-twa/releases/
+android-twa/*.idsig
 
 # Editor directories and files
 .vscode/*

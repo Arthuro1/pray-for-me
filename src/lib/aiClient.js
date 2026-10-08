@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-// Browser client for the private, self-hosted Pray4Me AI gateway.
+// Browser client for the private, self-hosted Qetoret AI gateway.
 //
 // No external AI provider is ever contacted from the browser. Requests go to the
 // app's OWN origin (`/api/ai`, a thin reverse proxy to the gateway) by default,
@@ -13,7 +13,7 @@ import { supabase } from './supabase';
 // gateway is the single gatekeeper for whether inference is actually available.
 export const aiEnabled = true;
 
-// Same-origin by default (keeps the browser talking only to Pray4Me's domain and
+// Same-origin by default (keeps the browser talking only to Qetoret's domain and
 // avoids a CSP connect-src change). An operator may point at a dedicated gateway
 // host via VITE_AI_GATEWAY_URL (that public URL is not a secret, but then its
 // origin must be added to the CSP connect-src).

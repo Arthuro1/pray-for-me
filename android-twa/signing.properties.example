@@ -1,0 +1,9 @@
+# Copy to signing.properties (ignored by Git) and supply the existing upload key.
+# Paths are relative to android-twa; keep the existing alias for app updates.
+storeFile=android.keystore
+storePassword=REPLACE_WITH_EXISTING_STORE_PASSWORD
+keyAlias=pray4me
+keyPassword=REPLACE_WITH_EXISTING_KEY_PASSWORD
+
+# CI can instead set QETORET_KEYSTORE_PATH, QETORET_KEYSTORE_PASSWORD,
+# QETORET_KEY_ALIAS and QETORET_KEY_PASSWORD. Never commit real credentials.

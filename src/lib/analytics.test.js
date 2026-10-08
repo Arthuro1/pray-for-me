@@ -1,6 +1,17 @@
-import { describe, it, expect } from 'vitest';
-import { EVENTS, isEventAllowed, sanitizeProps } from './analytics';
+import { describe, it, expect, vi } from 'vitest';
+import { track as vercelTrack } from '@vercel/analytics';
+import { EVENTS, isEventAllowed, sanitizeProps, track } from './analytics';
 import { PLANS } from '../content/prayerPlans';
+
+vi.mock('@vercel/analytics', () => ({ track: vi.fn() }));
+
+describe('release analytics privacy', () => {
+  it('does not transmit even allowlisted product events with otherwise-safe properties', () => {
+    track(EVENTS.PRAYER_PRAYED, { source: 'settings', count: 1 });
+    track(EVENTS.GUEST_PRAYER_STARTED);
+    expect(vercelTrack).not.toHaveBeenCalled();
+  });
+});
 
 describe('isEventAllowed', () => {
   it('accepts declared events and rejects anything else', () => {

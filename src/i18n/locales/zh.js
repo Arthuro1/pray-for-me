@@ -397,7 +397,7 @@ export default {
   "newUpdate": "新进展...",
   "evolutions": "更新",
   "aiConsentTitle": "AI 建议",
-  "aiConsentBodyPrayer": "为了推荐经文和祷告要点，这条祷告的标题会发送给 Anthropic 的 AI 服务 Claude。只有在你选择包含时，才会发送详情和最新近况。第一次请求前，你会看到将要发送的确切内容。",
+  "aiConsentBodyPrayer": "为了推荐经文和祷告要点，这条祷告的标题会发送给 Qetoret 自行托管的 AI 服务。只有在你选择包含时，才会发送详情和最新近况。第一次请求前，你会看到将要发送的确切内容。",
   "aiConsentAccept": "我同意",
   "aiConsentDecline": "不，谢谢",
   "aiConsentFooter": "你可以随时在“设置”中撤回此同意。",

@@ -55,8 +55,8 @@ describe('planPreviewPage', () => {
     const plan = PLAN_PREVIEW.plans.altar7;
     expect(html).toContain(`<meta property="og:title" content="${esc(plan.title.fr)} · Qetoret" />`);
     expect(html).toContain(`content="${esc(`${plan.sub.fr} · ${plan.days.fr}`)}"`);
-    expect(html).toContain('<meta property="og:image" content="https://praystead.com/og/plans/altar7.png" />');
-    expect(html).toContain(`<meta property="og:url" content="https://praystead.com/plans/altar7/${TOKEN}" />`);
+    expect(html).toContain('<meta property="og:image" content="https://qetoret.com/og/plans/altar7.png" />');
+    expect(html).toContain(`<meta property="og:url" content="https://qetoret.com/plans/altar7/${TOKEN}" />`);
     expect(html).toContain('<html lang="fr">');
   });
 
@@ -68,15 +68,15 @@ describe('planPreviewPage', () => {
   it('shows the generic preview for an unknown or malformed plan', () => {
     for (const planId of ['nope', '"><script>', undefined]) {
       const html = planPreviewPage({ planId, token: TOKEN, lang: 'en' });
-      expect(html).toContain('content="https://praystead.com/og.png"');
-      expect(html).toContain('<meta property="og:url" content="https://praystead.com/" />');
+      expect(html).toContain('content="https://qetoret.com/og.png"');
+      expect(html).toContain('<meta property="og:url" content="https://qetoret.com/" />');
       expect(html).not.toContain('<script>');
     }
   });
 
   it('drops a malformed token instead of echoing it', () => {
     const html = planPreviewPage({ planId: 'altar7', token: '"><img src=x>', lang: 'en' });
-    expect(html).toContain('<meta property="og:url" content="https://praystead.com/plans/altar7" />');
+    expect(html).toContain('<meta property="og:url" content="https://qetoret.com/plans/altar7" />');
     expect(html).not.toContain('<img');
   });
 

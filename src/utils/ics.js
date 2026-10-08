@@ -5,6 +5,8 @@ import { APP_NAME } from '../lib/brand';
 // can live inside Google/Apple/Outlook calendars too. Pure (no I/O): the
 // caller turns the string into a download. All-day events by design — the app
 // thinks in days and soft slots, not clock times.
+// Keep historical @praystead.com event UIDs across the domain migration: calendar
+// clients use them as stable identities, and changing them duplicates old events.
 
 function esc(text) {
   return String(text || '')

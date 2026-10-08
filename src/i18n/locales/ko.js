@@ -397,7 +397,7 @@ export default {
   "newUpdate": "새 업데이트...",
   "evolutions": "업데이트",
   "aiConsentTitle": "AI 제안",
-  "aiConsentBodyPrayer": "성경 본문과 기도 포인트를 제안하기 위해 이 기도의 제목을 Anthropic의 AI 서비스인 Claude로 보냅니다. 세부 내용과 최근 소식은 포함하기로 선택한 경우에만 보냅니다. 첫 요청 전에 보낼 내용을 정확히 확인할 수 있습니다.",
+  "aiConsentBodyPrayer": "성경 본문과 기도 포인트를 제안하기 위해 이 기도의 제목을 Qetoret에서 자체 호스팅하는 AI 서비스로 보냅니다. 세부 내용과 최근 소식은 포함하기로 선택한 경우에만 보냅니다. 첫 요청 전에 보낼 내용을 정확히 확인할 수 있습니다.",
   "aiConsentAccept": "동의합니다",
   "aiConsentDecline": "아니요, 괜찮습니다",
   "aiConsentFooter": "이 동의는 설정에서 언제든지 철회할 수 있습니다.",

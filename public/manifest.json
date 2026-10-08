@@ -31,16 +31,16 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/1.jpg",
-      "sizes": "694x1280",
-      "type": "image/jpeg",
+      "src": "/store/screenshots/today.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Come before God with today's prayers"
     },
     {
-      "src": "/screenshots/4_2_2.jpg",
-      "sizes": "717x1280",
-      "type": "image/jpeg",
+      "src": "/store/screenshots/plans.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
       "form_factor": "narrow",
       "label": "Open a Scripture-grounded prayer plan"
     }

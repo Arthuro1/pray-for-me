@@ -397,7 +397,7 @@ export default {
   "newUpdate": "Mabadiliko mapya...",
   "evolutions": "Mabadiliko",
   "aiConsentTitle": "Mapendekezo ya AI",
-  "aiConsentBodyPrayer": "Ili kupendekeza vifungu vya Biblia na pointi za maombi, kichwa cha ombi hili hutumwa kwa Claude, huduma ya AI ya Anthropic. Maelezo yake na habari yake ya karibuni hutumwa tu ukiyajumuisha. Kabla ya ombi la kwanza, unaona hasa kitakachotumwa.",
+  "aiConsentBodyPrayer": "Ili kupendekeza vifungu vya Biblia na pointi za maombi, kichwa cha ombi hili hutumwa kwa huduma ya AI inayoendeshwa kwenye seva za Qetoret. Maelezo yake na habari yake ya karibuni hutumwa tu ukiyajumuisha. Kabla ya ombi la kwanza, unaona hasa kitakachotumwa.",
   "aiConsentAccept": "Nakubali",
   "aiConsentDecline": "Hapana, asante",
   "aiConsentFooter": "Unaweza kuondoa ruhusa hii wakati wowote kwenye Mipangilio.",

@@ -37,16 +37,16 @@ describe('parsePlanSharePath', () => {
 
 describe('planShareUrl', () => {
   it('puts plan and token in the path and the preview language in the query', () => {
-    expect(planShareUrl({ origin: 'https://praystead.com', planId: 'altar7', token: TOKEN, lang: 'fr' }))
-      .toBe(`https://praystead.com/plans/altar7/${TOKEN}?lang=fr`);
+    expect(planShareUrl({ origin: 'https://qetoret.com', planId: 'altar7', token: TOKEN, lang: 'fr' }))
+      .toBe(`https://qetoret.com/plans/altar7/${TOKEN}?lang=fr`);
   });
 
   it('falls back to a plain plan link', () => {
-    expect(planShareUrl({ origin: 'https://praystead.com', planId: 'altar7' })).toBe('https://praystead.com/plans/altar7');
+    expect(planShareUrl({ origin: 'https://qetoret.com', planId: 'altar7' })).toBe('https://qetoret.com/plans/altar7');
   });
 
   it('round-trips through the parser', () => {
-    const url = new URL(planShareUrl({ origin: 'https://praystead.com', planId: 'fast3', token: TOKEN, lang: 'ar' }));
+    const url = new URL(planShareUrl({ origin: 'https://qetoret.com', planId: 'fast3', token: TOKEN, lang: 'ar' }));
     expect(parsePlanSharePath(url.pathname)).toEqual({ planId: 'fast3', token: TOKEN });
   });
 });

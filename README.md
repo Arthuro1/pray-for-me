@@ -12,12 +12,12 @@
 
 <br/>
 
-[![Live](https://img.shields.io/badge/Live-praystead.com-4a2c68?style=for-the-badge&logo=vercel&logoColor=white)](https://praystead.com)
+[![Live](https://img.shields.io/badge/Live-qetoret.com-4a2c68?style=for-the-badge&logo=vercel&logoColor=white)](https://qetoret.com)
 [![React](https://img.shields.io/badge/React_18-61dafb?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite-646cff?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38bdf8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Supabase](https://img.shields.io/badge/Supabase-3ecf8e?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
-[![PWA](https://img.shields.io/badge/PWA-ready-5a0fc8?style=for-the-badge&logo=pwa&logoColor=white)](https://praystead.com)
+[![PWA](https://img.shields.io/badge/PWA-ready-5a0fc8?style=for-the-badge&logo=pwa&logoColor=white)](https://qetoret.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-a78bfa?style=for-the-badge)](LICENSE)
 
 <br/>
@@ -37,7 +37,7 @@ Qetoret helps believers **come** before God through Christ, **bring** what is on
 - Product constitution: [docs/QETORET_IDENTITY.md](docs/QETORET_IDENTITY.md)
 - Rename map (what changed, what deliberately did not): [docs/QETORET_MIGRATION.md](docs/QETORET_MIGRATION.md)
 
-> **Formerly Praystead / Pray for Me.** Internal identifiers (`pfm_*` storage keys, the `praystead.com` domain, the Android package `space.praystead.twa`) keep their historical names on purpose so existing installations keep their data and receive updates.
+> **Formerly Praystead / Pray for Me.** The public website is now **qetoret.com**. Internal `pfm_*` storage keys and the Android package `space.praystead.twa` retain their historical names so persisted records and Android updates remain compatible. Web storage and encryption keys are origin-specific: keep the old domain available until existing users have prepared recovery. See the [Google Play release pack](docs/play-store/README.md).
 
 ---
 
@@ -232,7 +232,7 @@ React 18 · Tailwind CSS 3 · React Router 7 · Zustand 5 · Vite + vite-plugin-
 
 ## 🌐 Deployment
 
-Deployed at **[praystead.com](https://praystead.com)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the serverless proxies for Anthropic and YouVersion.
+The production origin is **[qetoret.com](https://qetoret.com)** on Vercel. Set the same env vars in your Vercel project; the `api/` folder contains the session-gated AI gateway and YouVersion proxies. Deploy the prepared Qetoret release and pass the live checks in [the release pack](docs/play-store/README.md) before Play review.
 
 ---
 
@@ -252,7 +252,7 @@ MIT — see `LICENSE`.
 
 <br/>
 
-Built with ❤️ and faith · [praystead.com](https://praystead.com)
+Built with ❤️ and faith · [qetoret.com](https://qetoret.com)
 
 *"I can do all things through him who strengthens me." — Philippians 4:13*
 

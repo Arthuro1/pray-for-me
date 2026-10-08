@@ -1,6 +1,6 @@
 {
   "packageId": "space.praystead.twa",
-  "host": "praystead.com",
+  "host": "qetoret.com",
   "name": "Qetoret",
   "launcherName": "Qetoret",
   "display": "standalone",
@@ -13,18 +13,18 @@
   "backgroundColor": "#3A2D5C",
   "enableNotifications": true,
   "startUrl": "/",
-  "iconUrl": "https://praystead.com/icons/icon-512.png",
-  "maskableIconUrl": "https://praystead.com/icons/icon-maskable-512.png",
+  "iconUrl": "https://qetoret.com/icons/icon-512.png",
+  "maskableIconUrl": "https://qetoret.com/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\android-twa\\android.keystore",
+    "path": "./android.keystore",
     "alias": "pray4me"
   },
-  "appVersionName": "1.0.2",
-  "appVersionCode": 3,
+  "appVersionName": "1.0.3",
+  "appVersionCode": 4,
   "shortcuts": [],
   "generatorApp": "unknown",
-  "webManifestUrl": "https://praystead.com/manifest.json",
+  "webManifestUrl": "https://qetoret.com/manifest.json",
   "fallbackType": "customtabs",
   "features": {},
   "alphaDependencies": {
@@ -33,7 +33,7 @@
   "enableSiteSettingsShortcut": true,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://praystead.com/",
+  "fullScopeUrl": "https://qetoret.com/",
   "minSdkVersion": 21,
   "orientation": "portrait",
   "fingerprints": [
@@ -48,5 +48,5 @@
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "1.0.2"
+  "appVersion": "1.0.3"
 }

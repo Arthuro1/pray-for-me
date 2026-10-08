@@ -1,11 +1,13 @@
 const COPY = {
   en: {
+    reportAuthor: 'Report author',
     report: 'Report', reportConfirm: 'Send this request to the group moderators? Prayer support is not emergency help.', reported: 'Report sent',
     block: 'Block author', blockConfirm: 'Hide future community content from this person?', blocked: 'Author blocked',
     sensitive: 'This appears to include contact details. Remove unnecessary phone numbers, email addresses, medical details, or information about children before sharing.',
     acknowledge: 'I checked the details and still want to share them with the selected group.',
   },
   fr: {
+    reportAuthor: 'Signaler l’auteur',
     report: 'Signaler', reportConfirm: "Envoyer cette demande aux modérateurs du groupe ? Le soutien par la prière ne remplace pas les secours.", reported: 'Signalement envoyé',
     block: "Bloquer l’auteur", blockConfirm: 'Masquer les prochains contenus de cette personne ?', blocked: 'Auteur bloqué',
     sensitive: 'Ce texte semble contenir des coordonnées. Retire les numéros, adresses e-mail, détails médicaux ou informations sur des enfants qui ne sont pas nécessaires.',

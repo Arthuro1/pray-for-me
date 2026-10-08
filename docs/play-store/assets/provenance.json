@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-10-08T13:07:32.726Z",
+  "source": "Local /__design routes rendering actual app components with synthetic fixtures; no real account or remote services",
+  "viewport": {
+    "width": 432,
+    "height": 768,
+    "deviceScaleFactor": 2.5
+  },
+  "screenshots": [
+    {
+      "file": "screenshots/en-US/01-today.png",
+      "route": "/__design/today",
+      "label": "Come before God with today’s prayers"
+    },
+    {
+      "file": "screenshots/en-US/02-journal.png",
+      "route": "/__design/journal",
+      "label": "Keep your prayer journal"
+    },
+    {
+      "file": "screenshots/en-US/03-circles.png",
+      "route": "/__design/circles",
+      "label": "Carry people and nations in prayer"
+    },
+    {
+      "file": "screenshots/en-US/04-plans.png",
+      "route": "/__design/plans",
+      "label": "Build a faithful rhythm with prayer plans"
+    },
+    {
+      "file": "screenshots/en-US/05-together.png",
+      "route": "/__design/together",
+      "label": "Pray together in private groups"
+    },
+    {
+      "file": "screenshots/en-US/06-prayer.png",
+      "route": "/__design/first-prayer",
+      "label": "Bring what is on your heart"
+    }
+  ],
+  "graphics": "Composed from existing Qetoret vector brand; no AI-generated images",
+  "review": "Confirm each screenshot still represents the submitted production app; on-device Play-signed smoke testing is separate."
+}

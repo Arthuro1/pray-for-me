@@ -149,7 +149,11 @@ export default defineConfig(({ mode }) => {
       },
     },
   },
+  // Android reports and editorial HTML are not browser entry points. Scanning
+  // the whole release workspace can stall the preview while Gradle is building.
+  optimizeDeps: { entries: ['index.html'] },
   server: {
+    watch: { ignored: ['**/android-twa/**', '**/docs/play-store/assets/**', '**/reports/**'] },
     // Honour the PORT the dev-preview tooling assigns (it falls back to a free
     // port when 5173 is taken by another running dev server).
     port: Number(process.env.PORT) || 5173,

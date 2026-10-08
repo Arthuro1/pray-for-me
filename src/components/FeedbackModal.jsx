@@ -7,6 +7,7 @@ import { t } from '../i18n';
 import { Modal, PrimaryButton, SegmentedControl, Textarea } from './shared/Primitives';
 import Switch from './shared/Switch';
 import RiseMark from './shared/RiseMark';
+import { aiOutputReportText } from '../lib/aiOutputReport';
 
 const TYPES = [
   { key: 'general', labelKey: 'feedbackTypeGeneral', icon: MessageSquare },
@@ -14,7 +15,7 @@ const TYPES = [
   { key: 'bug', labelKey: 'feedbackTypeBug', icon: Bug },
 ];
 
-export default function FeedbackModal({ onClose }) {
+export default function FeedbackModal({ onClose, aiReport = false }) {
   const { user } = useAuthStore();
   const settings = usePrayerStore((s) => s.settings);
   const lang = settings?.language || 'fr';
@@ -22,7 +23,7 @@ export default function FeedbackModal({ onClose }) {
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || '';
   const email = user?.email || '';
 
-  const [type, setType] = useState('general');
+  const [type, setType] = useState(aiReport ? 'bug' : 'general');
   const [message, setMessage] = useState('');
   const [anonymous, setAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,16 +32,17 @@ export default function FeedbackModal({ onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (loading || !message.trim()) return;
+    if (aiReport && !user?.id) { setError(t(lang, 'feedbackError')); return; }
     setLoading(true);
     setError(null);
 
     const payload = {
-      type,
-      message: message.trim(),
-      user_id: anonymous ? null : user?.id ?? null,
-      name: anonymous ? null : displayName || null,
-      email: anonymous ? null : email || null,
+      type: aiReport ? 'bug' : type,
+      message: aiReport ? `[AI output report]\n${message.trim()}` : message.trim(),
+      user_id: aiReport ? user.id : anonymous ? null : user?.id ?? null,
+      name: aiReport || anonymous ? null : displayName || null,
+      email: aiReport || anonymous ? null : email || null,
       lang,
     };
 
@@ -54,7 +56,7 @@ export default function FeedbackModal({ onClose }) {
   };
 
   return (
-    <Modal label={t(lang, 'feedbackTitle')} onClose={onClose}>
+    <Modal label={aiReport ? aiOutputReportText(lang).title : t(lang, 'feedbackTitle')} onClose={onClose}>
       {done ? (
         <div className="dialog-done">
           <RiseMark motion="still" size={32} />
@@ -68,16 +70,16 @@ export default function FeedbackModal({ onClose }) {
             <div className="q-dialog__header mb-0">
               <div className="q-dialog__lead">
                 <span className="icon-tile tone-teal" aria-hidden="true"><MessageSquare size={18} strokeWidth={1.85} /></span>
-                <h2 className="q-dialog__title">{t(lang, 'feedbackTitle')}</h2>
+                <h2 className="q-dialog__title">{aiReport ? aiOutputReportText(lang).title : t(lang, 'feedbackTitle')}</h2>
               </div>
               <button type="button" onClick={onClose} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0">
                 <X size={18} aria-hidden="true" />
               </button>
             </div>
-            <p className="q-dialog__intro q-dialog__intro--tight">{t(lang, 'feedbackSub')}</p>
+            <p className="q-dialog__intro q-dialog__intro--tight">{aiReport ? aiOutputReportText(lang).explanation : t(lang, 'feedbackSub')}</p>
           </div>
 
-          <SegmentedControl
+          {!aiReport && <SegmentedControl
             className="segmented-control--fill feedback-types"
             label={t(lang, 'feedbackTitle')}
             value={type}
@@ -86,7 +88,7 @@ export default function FeedbackModal({ onClose }) {
               value: key,
               label: <span><Icon size={15} strokeWidth={1.85} aria-hidden="true" />{t(lang, labelKey)}</span>,
             }))}
-          />
+          />}
 
           <Textarea
             required
@@ -97,13 +99,13 @@ export default function FeedbackModal({ onClose }) {
             rows={5}
           />
 
-          <div className="settings-row__main feedback-anon">
+          {aiReport ? <p className="q-meta">{aiOutputReportText(lang).ownership}</p> : <div className="settings-row__main feedback-anon">
             <div className="min-w-0">
               <p className="settings-row__label">{t(lang, 'feedbackAnon')}</p>
               <p className="settings-row__sub">{anonymous ? t(lang, 'anonymousAuthor') : displayName || email}</p>
             </div>
             <Switch checked={anonymous} onChange={() => setAnonymous((a) => !a)} label={t(lang, 'feedbackAnon')} />
-          </div>
+          </div>}
 
           {error && <p role="alert" className="q-notice q-notice--error">{error}</p>}
 

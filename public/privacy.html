@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Privacy Policy — Qetoret</title>
 <meta name="description" content="Privacy Policy for the Qetoret prayer companion app." />
+<link rel="canonical" href="https://qetoret.com/privacy.html" />
 <link rel="icon" href="/icons/icon-192.png" />
 <style>
   :root {
-    --accent: #6d28d9;
-    --bg: #faf9fc;
+    --accent: #493a6d;
+    --bg: #f6f2eb;
     --surface: #ffffff;
     --border: #e5e0ee;
     --text: #1f1a2b;
@@ -73,12 +74,13 @@
     <p>Your personal prayer companion</p>
   </header>
   <main>
-    <p class="updated">Last updated: July 31, 2026</p>
+    <p class="updated">Last updated: October 8, 2026</p>
 
     <section>
       <h2>Overview</h2>
       <p>
-        Qetoret is a prayer journal and discipleship companion. This page explains what data
+        Qetoret, available at <a href="https://qetoret.com">qetoret.com</a> and as an Android app,
+        is a prayer journal and discipleship companion. This page explains what data
         the app collects, how it is used, and who it is shared with. We collect the minimum
         data needed to run the app and never sell your data to third parties.
       </p>
@@ -114,12 +116,12 @@
     <section>
       <h2>AI-assisted features (optional)</h2>
       <p>
-        Qetoret can offer AI-generated guidance and scripture suggestions using Anthropic's
-        Claude API. This feature is <strong>opt-in</strong>: we ask for your explicit consent
+        Qetoret can offer AI-generated guidance and scripture suggestions through a
+        self-hosted AI service. This feature is <strong>opt-in</strong>: we ask for your explicit consent
         before ever sending anything to the AI. When you consent, only the specific
         information needed for the selected task is decrypted in your browser and sent through
-        our authenticated proxy to Anthropic. The proxy accepts only approved structured tasks,
-        applies size and usage limits, and does not log prayer text. AI use is never automatic,
+        our authenticated proxy to the configured AI service. The app sends structured tasks
+        and limits request size. AI use is never automatic,
         and you can withdraw consent at any time in Settings.
       </p>
     </section>
@@ -148,14 +150,16 @@
         stored so we can read and act on it. Only submit information you're comfortable
         sharing with the Qetoret team.
       </p>
+      <p>AI output reports include your account ID so they can be removed with your account; your name and email are not attached. We do not automatically attach your prayer, AI prompt or generated answer. If you choose anonymous general feedback, it has no account link and cannot be found automatically during account deletion. Contact us to request help removing an anonymous submission.</p>
     </section>
 
     <section>
       <h2>Analytics</h2>
       <p>
-        We use Vercel Analytics and Speed Insights to understand aggregate usage and
-        performance (e.g. which pages are used, load times). This data is anonymized and not
-        used for advertising or cross-app tracking.
+        Automatic Vercel Analytics, Speed Insights, and custom product-event transmission
+        are disabled in this release. Our hosting and database providers may process ordinary
+        request metadata, such as IP addresses and request times, to operate and secure the
+        service. We do not use this information for advertising or cross-app tracking.
       </p>
     </section>
 
@@ -172,8 +176,8 @@
       <p>We do not sell your data. We use the following service providers (sub-processors) to run the app:</p>
       <ul>
         <li><strong>Supabase</strong> — database, authentication, storage</li>
-        <li><strong>Anthropic</strong> — AI guidance, only for content you consent to send</li>
-        <li><strong>Vercel</strong> — hosting and aggregate analytics</li>
+        <li><strong>Our self-hosted AI service</strong> — AI guidance, only for content you consent to send</li>
+        <li><strong>Vercel</strong> — website hosting</li>
         <li><strong>YouVersion</strong> — scripture text, where enabled</li>
       </ul>
     </section>
@@ -195,7 +199,8 @@
       </p>
       <ul>
         <li>
-          <strong>In the app:</strong> go to Settings → Account and tap "Delete account". This
+          <strong>In the app or website:</strong> go to Settings → Privacy &amp; Security,
+          scroll to the danger zone, tap "Delete my account", and confirm. This
           immediately and permanently deletes your account, your prayers and testimonies
           (including encrypted private content), and any group memberships.
         </li>
@@ -207,11 +212,15 @@
         </li>
       </ul>
       <p>
-        Deleting your account removes your profile, private and shared prayers, testimonies,
-        notification subscriptions, and any other personal data associated with your account
-        from our systems. Content you previously shared with a community or group may remain
-        visible to that group unless you request its removal separately.
+        Account deletion removes your sign-in account, profile, private and authored shared
+        prayers, updates, testimonies, group memberships, recovery records, feedback,
+        translations, and notification subscriptions from the live app database. Groups used
+        by other members remain, with your creator references removed. Copies that other
+        people have already downloaded or saved on their devices cannot be recalled.
+        Provider backups and operational logs follow the providers' retention schedules;
+        contact us for questions about retained records.
       </p>
+      <p><a href="/delete-account.html">Request deletion without installing or opening the app</a>.</p>
     </section>
 
     <section>
@@ -229,7 +238,7 @@
 
     <p class="updated">
       See also our <a href="/terms.html">Terms of Use</a> —
-      <a href="#delete-account">request account deletion</a>.
+      <a href="/delete-account.html">request account deletion</a>.
     </p>
   </main>
 </body>

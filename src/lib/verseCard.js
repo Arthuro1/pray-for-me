@@ -30,7 +30,7 @@ export const CARD_SIZES = Object.freeze({
   story: Object.freeze({ width: 1080, height: 1920, margin: 76 }),
 });
 
-export const CARD_MARK = 'praystead.com';
+export const CARD_MARK = 'qetoret.com';
 
 // [max weighted length, px]. The step is picked before layout so the verse never
 // shrinks below a readable size; past the last step it is too long to set as

@@ -10,6 +10,8 @@ import { removeAttachmentFiles } from '../lib/attachments';
 import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';
+import useCommunityStore from '../store/communityStore';
+import CommunitySafetyActions from './CommunitySafetyActions';
 
 // Member updates on a community prayer — encouragements, verses, words, with
 // light formatting and media (photos / voice notes / video / links). The list
@@ -21,6 +23,7 @@ import { t } from '../i18n';
 // trash affordance used on prayer points. Attachments render read-only.
 export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, avatarFor, onDelete, onEdit }) {
   const [editingId, setEditingId] = useState(null);
+  const blockedAuthors = useCommunityStore((state) => state.blockedAuthorsByViewer?.[userId]);
 
   if (!loading && updates.length === 0) return null;
 
@@ -50,7 +53,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
         <div className="flex justify-center py-6"><Loader2 size={18} className="animate-spin" style={{ color: 'var(--q-text-tertiary)' }} /></div>
       ) : (
         <div className="prayer-activity-list">
-          {updates.map((u) => (
+          {updates.filter((u) => !blockedAuthors?.includes(u.user_id)).map((u) => (
             <div key={u.id} className="prayer-activity-item prayer-activity-item--community group flex gap-2.5">
               <Avatar name={u.is_anonymous ? '?' : u.author_name} avatar={u.is_anonymous ? null : avatarFor?.(u.user_id)} size={28} anonymous={u.is_anonymous} />
               <div className="prayer-activity-item__body min-w-0 flex-1">
@@ -82,7 +85,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                   </>
                 )}
               </div>
-              {editingId !== u.id && (canEdit(u) || canDelete(u)) && (
+              {editingId !== u.id && (
                 <div className="prayer-activity-item__actions flex items-start gap-1.5 self-start mt-0.5">
                   {canEdit(u) && (
                     <EditButton onEdit={() => setEditingId(u.id)} label={t(lang, 'editWord')} />
@@ -90,6 +93,7 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
                   {canDelete(u) && (
                     <DeleteButton onDelete={() => handleDelete(u)} lang={lang} label={t(lang, 'deleteWord')} />
                   )}
+                  <CommunitySafetyActions contentType="update" contentId={u.id} authorId={u.user_id} userId={userId} lang={lang} />
                 </div>
               )}
             </div>
