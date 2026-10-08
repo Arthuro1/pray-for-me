@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "作者からのことばを読む",
   "aiPreviewTitle": "送信内容を確認",
   "aiPreviewBody": "これが AI に送信される正確な内容です。それ以外は端末から出ません。",
+  "aiPreviewShortened": "長いテキストは短くしました。以下に表示されているテキストのみ送信されます。",
   "aiPreviewIncludeDescription": "説明を含める",
   "aiPreviewIncludeUpdate": "最新の更新を含める",
   "aiPreviewSend": "送信",

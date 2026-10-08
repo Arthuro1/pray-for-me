@@ -1,91 +1,85 @@
-import { Send, X } from 'lucide-react';
+import { useId } from 'react';
+import { Send, ShieldCheck, X } from 'lucide-react';
 import { t } from '../i18n';
 import usePrayerStore from '../store/prayerStore';
-import { redactMany } from '../lib/aiRedaction';
+import { preparePrayerAiInput, selectPrayerAiInput } from '../lib/aiPrayerInput';
 import Switch from './shared/Switch';
 import { Modal, PrimaryButton, SecondaryButton } from './shared/Primitives';
+import './AiOutgoingPreview.css';
 
-// Shows the EXACT text that will be sent to the AI before the first AI request
-// for a prayer, so nothing leaves the device unseen. The provider (self-hosted or
-// Anthropic) is chosen server-side, so the copy stays provider-neutral. Enforces
-// the minimum-data default (title always; description and latest update each
-// opt-in). The preview is post-redaction — it
-// renders precisely what will be transmitted (sensitive tokens already replaced
-// by placeholders). Each field is labelled separately so "Description" never
-// shows the title or an update by mistake.
+// Review each explicit prayer AI request. Send captures the selected fields so
+// settings changed during an async request cannot alter the approved text.
 export default function AiOutgoingPreview({ lang = 'en', title, description = '', update = '', onSend, onCancel }) {
   const settings = usePrayerStore((s) => s.settings);
   const updateSettings = usePrayerStore((s) => s.updateSettings);
-
+  const headingId = useId();
   const sendDescription = !!settings.aiSendDescription;
   const sendUpdate = !!settings.aiSendUpdate;
-  const hasDescription = !!(description && description.trim());
-  const hasUpdate = !!(update && update.trim());
-
-  // Exactly what will be transmitted (title always; description and update only if
-  // opted in), after sensitive-token redaction.
-  const { texts } = redactMany(
-    [title, sendDescription ? description : '', sendUpdate ? update : ''],
-  );
-  const outTitle = texts[0];
-  const outDescription = texts[1];
-  const outUpdate = texts[2];
-
+  const hasDescription = typeof description === 'string' && !!description.trim();
+  const hasUpdate = typeof update === 'string' && !!update.trim();
+  const selectedInput = selectPrayerAiInput({ title, description, update }, settings);
+  const outgoing = preparePrayerAiInput(selectedInput);
   const includeDescriptionLabel = t(lang, 'aiPreviewIncludeDescription');
   const includeUpdateLabel = t(lang, 'aiPreviewIncludeUpdate');
 
   return (
-    <Modal label={t(lang, 'aiPreviewTitle')} onClose={onCancel} size="sm">
-      <div className="q-dialog__header">
-        <div className="min-w-0">
-          <h2 className="q-dialog__title">{t(lang, 'aiPreviewTitle')}</h2>
-          <p className="q-meta mt-2">{t(lang, 'aiPreviewBody')}</p>
+    <Modal labelledBy={headingId} onClose={onCancel} className="ai-preview" size="lg">
+      <div className="ai-preview__content" lang={lang} dir={lang === 'ar' || lang === 'fa' ? 'rtl' : 'ltr'}>
+        <div className="q-dialog__header ai-preview__header">
+          <span className="ai-preview__emblem" aria-hidden="true"><ShieldCheck size={23} strokeWidth={1.65} /></span>
+          <h2 id={headingId} className="q-dialog__title">{t(lang, 'aiPreviewTitle')}</h2>
+          <button type="button" onClick={onCancel} aria-label={t(lang, 'close')} className="icon-button pressable ai-preview__close">
+            <X size={18} aria-hidden="true" />
+          </button>
         </div>
-        <button type="button" onClick={onCancel} aria-label={t(lang, 'close')} className="icon-button pressable -me-2 -mt-2 shrink-0">
-          <X size={18} aria-hidden="true" />
-        </button>
-      </div>
 
-      {/* Exactly what leaves the device, redacted, before anything is sent. */}
-      <dl className="ai-outgoing">
-        <div>
-          <dt className="section-label">{t(lang, 'aiPreviewFieldTitle')}</dt>
-          <dd className="ai-outgoing__value">{outTitle}</dd>
-        </div>
-        {sendDescription && hasDescription && (
-          <div>
-            <dt className="section-label">{t(lang, 'aiPreviewFieldDescription')}</dt>
-            <dd className="ai-outgoing__value ai-outgoing__value--long">{outDescription}</dd>
-          </div>
-        )}
-        {sendUpdate && hasUpdate && (
-          <div>
-            <dt className="section-label">{t(lang, 'aiPreviewFieldUpdate')}</dt>
-            <dd className="ai-outgoing__value ai-outgoing__value--long">{outUpdate}</dd>
-          </div>
-        )}
-      </dl>
+        <div className="ai-preview__body" role="region" aria-label={t(lang, 'aiPreviewTitle')} tabIndex={0}>
+          <p className="ai-preview__intro">{t(lang, 'aiPreviewBody')}</p>
+          {(hasDescription || hasUpdate) && (
+            <div className="ai-preview__options">
+              {hasDescription && (
+                <div className="ai-preview__option" data-included={sendDescription}>
+                  <p>{includeDescriptionLabel}</p>
+                  <Switch checked={sendDescription} onChange={(v) => updateSettings({ aiSendDescription: v })} label={includeDescriptionLabel} />
+                </div>
+              )}
+              {hasUpdate && (
+                <div className="ai-preview__option" data-included={sendUpdate}>
+                  <p>{includeUpdateLabel}</p>
+                  <Switch checked={sendUpdate} onChange={(v) => updateSettings({ aiSendUpdate: v })} label={includeUpdateLabel} />
+                </div>
+              )}
+            </div>
+          )}
 
-      {hasDescription && (
-        <div className="settings-row">
-          <div className="settings-row__main">
-            <p className="settings-row__label">{includeDescriptionLabel}</p>
-            <Switch checked={sendDescription} onChange={(v) => updateSettings({ aiSendDescription: v })} label={includeDescriptionLabel} />
-          </div>
-        </div>
-      )}
-      {hasUpdate && (
-        <div className="settings-row">
-          <div className="settings-row__main">
-            <p className="settings-row__label">{includeUpdateLabel}</p>
-            <Switch checked={sendUpdate} onChange={(v) => updateSettings({ aiSendUpdate: v })} label={includeUpdateLabel} />
-          </div>
-        </div>
-      )}
+          {outgoing.shortened && <p className="ai-preview__notice" role="status">{t(lang, 'aiPreviewShortened')}</p>}
 
-      <div className="q-dialog__actions">
-        <SecondaryButton onClick={onCancel}>{t(lang, 'cancel')}</SecondaryButton>
-        <PrimaryButton icon={Send} iconSize={16} onClick={onSend}>{t(lang, 'aiPreviewSend')}</PrimaryButton>
+          {/* Literal outgoing text preserves formatting without interpreting
+              Markdown or HTML, which could conceal part of the sent input. */}
+          <dl className="ai-preview__fields">
+            <div className="ai-preview__field ai-preview__field--title">
+              <dt className="section-label">{t(lang, 'aiPreviewFieldTitle')}</dt>
+              <dd>{outgoing.title}</dd>
+            </div>
+            {outgoing.description && (
+              <div className="ai-preview__field">
+                <dt className="section-label">{t(lang, 'aiPreviewFieldDescription')}</dt>
+                <dd>{outgoing.description}</dd>
+              </div>
+            )}
+            {outgoing.update && (
+              <div className="ai-preview__field">
+                <dt className="section-label">{t(lang, 'aiPreviewFieldUpdate')}</dt>
+                <dd>{outgoing.update}</dd>
+              </div>
+            )}
+          </dl>
+        </div>
+
+        <div className="q-dialog__actions ai-preview__actions">
+          <SecondaryButton onClick={onCancel}>{t(lang, 'cancel')}</SecondaryButton>
+          <PrimaryButton icon={Send} iconSize={16} onClick={() => onSend(selectedInput)}>{t(lang, 'aiPreviewSend')}</PrimaryButton>
+        </div>
       </div>
     </Modal>
   );

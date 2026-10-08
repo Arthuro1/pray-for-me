@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "የግል ቃሉን ያንብቡ",
   "aiPreviewTitle": "የሚላከውን ይመልከቱ",
   "aiPreviewBody": "ይህ በትክክል ወደ AI የሚላከው ነው። ሌላ ምንም ከመሣሪያዎ አይወጣም።",
+  "aiPreviewShortened": "ረጅም ጽሑፍ አጥሮ ቀርቧል። ከታች የሚታየው ጽሑፍ ብቻ ይላካል።",
   "aiPreviewIncludeDescription": "መግለጫ አካትት",
   "aiPreviewIncludeUpdate": "የቅርብ ጊዜ ዝማኔን አካትት",
   "aiPreviewSend": "ላክ",

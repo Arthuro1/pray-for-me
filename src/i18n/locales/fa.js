@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "سخن نویسنده را بخوانید",
   "aiPreviewTitle": "آنچه ارسال می‌شود را بررسی کنید",
   "aiPreviewBody": "این دقیقاً همان چیزی است که به هوش مصنوعی ارسال می‌شود. چیز دیگری از دستگاه شما خارج نمی‌شود.",
+  "aiPreviewShortened": "متن طولانی کوتاه شده است. فقط متنی که در زیر می‌بینید ارسال می‌شود.",
   "aiPreviewIncludeDescription": "گنجاندن توضیحات",
   "aiPreviewIncludeUpdate": "گنجاندن آخرین به‌روزرسانی",
   "aiPreviewSend": "ارسال",

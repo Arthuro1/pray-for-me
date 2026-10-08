@@ -7,7 +7,6 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import AiConsentModal from './AiConsentModal';
 import AiOutgoingPreview from './AiOutgoingPreview';
 import { hasAiConsent } from '../lib/aiConsent';
-import { hasReviewedOutgoing, markOutgoingReviewed } from '../lib/aiCore';
 import AiDisclaimer from './shared/AiDisclaimer';
 import { getScriptureGuidance } from '../scriptureGuidance';
 import VerseAccordion from './VerseAccordion';
@@ -55,29 +54,27 @@ function Passage({ p, lang, added, onAdd }) {
 export default function ScriptureFirstStep({ prayerId, title, description, lang, initialGuidance = null, onClose }) {
   const addPrayerPoint = usePrayerStore((s) => s.addPrayerPoint);
   const setScriptureGuidance = usePrayerStore((s) => s.setScriptureGuidance);
-  const trapRef = useFocusTrap(true);
-  useEscapeKey(onClose);
-
   const [status, setStatus] = useState(initialGuidance ? 'done' : 'intro'); // intro | loading | done | offline
   const [guidance, setGuidance] = useState(initialGuidance);
   const [error, setError] = useState(null);
   const [showConsent, setShowConsent] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [added, setAdded] = useState({}); // passage ref -> true
+  const hasOverlay = showConsent || showPreview;
+  const trapRef = useFocusTrap(!hasOverlay);
+  useEscapeKey(hasOverlay ? null : onClose);
 
-  // Gate: require consent, then a one-time review of the exact outgoing text for
-  // this prayer, before the first AI request.
+  // Consent comes first, then review the current fields for each explicit request.
   const fetchGuidance = () => {
     if (!hasAiConsent('prayer')) { setShowConsent(true); return; }
-    if (!hasReviewedOutgoing(prayerId)) { setShowPreview(true); return; }
-    runGuidance();
+    setShowPreview(true);
   };
 
-  const runGuidance = async () => {
+  const runGuidance = async (reviewedInput) => {
     if (typeof navigator !== 'undefined' && !navigator.onLine) { setStatus('offline'); return; }
     setStatus('loading');
     setError(null);
-    const { guidance: g, error: e } = await getScriptureGuidance({ title, description, lang });
+    const { guidance: g, error: e } = await getScriptureGuidance({ title, description, lang, reviewedInput });
     setGuidance(g);
     setError(e);
     setStatus('done');
@@ -169,7 +166,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
   };
 
   return (
-    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end justify-center md:items-center md:p-6" onClick={onClose}>
+    <div className="dialog-backdrop fixed inset-0 z-50 flex items-end justify-center md:items-center md:p-6" onClick={hasOverlay ? undefined : onClose}>
       <div
         ref={trapRef}
         tabIndex={-1}
@@ -210,7 +207,7 @@ export default function ScriptureFirstStep({ prayerId, title, description, lang,
           lang={lang}
           title={title}
           description={description}
-          onSend={() => { setShowPreview(false); markOutgoingReviewed(prayerId); runGuidance(); }}
+          onSend={(reviewedInput) => { setShowPreview(false); runGuidance(reviewedInput); }}
           onCancel={() => setShowPreview(false)}
         />
       )}

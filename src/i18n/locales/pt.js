@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "Ler a palavra pessoal",
   "aiPreviewTitle": "Revise o que é enviado",
   "aiPreviewBody": "Isto é exatamente o que será enviado à IA. Nada mais sai do seu dispositivo.",
+  "aiPreviewShortened": "O texto longo foi encurtado. Apenas o texto apresentado abaixo será enviado.",
   "aiPreviewIncludeDescription": "Incluir a descrição",
   "aiPreviewIncludeUpdate": "Incluir a última atualização",
   "aiPreviewSend": "Enviar",

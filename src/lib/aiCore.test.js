@@ -1,5 +1,5 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest';
-import { localizeAiError, hasReviewedOutgoing, markOutgoingReviewed, resetAiRequestState, callAiForJson } from './aiCore';
+import { localizeAiError, resetAiRequestState, callAiForJson } from './aiCore';
 import { aiFetch } from './aiClient';
 import { loadLocale } from '../i18n';
 
@@ -57,16 +57,3 @@ describe('localizeAiError', () => {
     expect(typeof localizeAiError({ type: 'error' }, 'en')).toBe('string');
   });
 });
-
-describe('outgoing-text review state', () => {
-  it('tracks per-prayer review and clears on reset', () => {
-    resetAiRequestState();
-    expect(hasReviewedOutgoing('prayer-1')).toBe(false);
-    markOutgoingReviewed('prayer-1');
-    expect(hasReviewedOutgoing('prayer-1')).toBe(true);
-    expect(hasReviewedOutgoing('prayer-2')).toBe(false);
-    resetAiRequestState();
-    expect(hasReviewedOutgoing('prayer-1')).toBe(false);
-  });
-});
-

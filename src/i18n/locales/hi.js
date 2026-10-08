@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "निजी संदेश पढ़ें",
   "aiPreviewTitle": "जो भेजा जाएगा उसे देखें",
   "aiPreviewBody": "यह ठीक वही है जो AI को भेजा जाएगा। इसके अलावा कुछ भी आपके डिवाइस से बाहर नहीं जाता।",
+  "aiPreviewShortened": "लंबा पाठ छोटा किया गया है। केवल नीचे दिखाया गया पाठ ही भेजा जाएगा।",
   "aiPreviewIncludeDescription": "विवरण शामिल करें",
   "aiPreviewIncludeUpdate": "नवीनतम अपडेट शामिल करें",
   "aiPreviewSend": "भेजें",

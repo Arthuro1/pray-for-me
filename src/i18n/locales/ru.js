@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "Прочитать личное слово",
   "aiPreviewTitle": "Проверьте, что отправляется",
   "aiPreviewBody": "Именно это будет отправлено ИИ. Ничего другого не покидает ваше устройство.",
+  "aiPreviewShortened": "Длинный текст был сокращён. Будет отправлен только текст, показанный ниже.",
   "aiPreviewIncludeDescription": "Включить описание",
   "aiPreviewIncludeUpdate": "Включить последнее обновление",
   "aiPreviewSend": "Отправить",

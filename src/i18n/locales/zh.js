@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "阅读作者的话",
   "aiPreviewTitle": "查看将要发送的内容",
   "aiPreviewBody": "这正是将发送给 AI 的内容。没有其他任何内容离开您的设备。",
+  "aiPreviewShortened": "较长的文本已缩短。只会发送下方显示的文本。",
   "aiPreviewIncludeDescription": "包含描述",
   "aiPreviewIncludeUpdate": "包含最新更新",
   "aiPreviewSend": "发送",

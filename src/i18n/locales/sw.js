@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "Soma neno la mwandishi",
   "aiPreviewTitle": "Kagua kinachotumwa",
   "aiPreviewBody": "Hiki ndicho hasa kitakachotumwa kwa AI. Hakuna kingine kinachoondoka kwenye kifaa chako.",
+  "aiPreviewShortened": "Maandishi marefu yamefupishwa. Maandishi yanayoonyeshwa hapa chini pekee ndiyo yatatumwa.",
   "aiPreviewIncludeDescription": "Jumuisha maelezo",
   "aiPreviewIncludeUpdate": "Jumuisha sasisho la hivi punde",
   "aiPreviewSend": "Tuma",

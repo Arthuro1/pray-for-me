@@ -33,6 +33,23 @@ function providerRetryAfter(response) {
   return Number.isFinite(seconds) && seconds > 0 ? Math.min(86_400, Math.ceil(seconds)) : 60;
 }
 
+// The receipt stays on this server. The database checks ownership and releases
+// it at most once; browser clients cannot refund an unrelated server request.
+async function releaseReservation({ supabaseBase, supabaseHeaders, reservationId, fetchImpl }) {
+  if (typeof reservationId !== 'string' || !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(reservationId)) return;
+  try {
+    await fetchImpl(`${supabaseBase}/rest/v1/rpc/release_ai_usage_reservation`, {
+      method: 'POST',
+      signal: AbortSignal.timeout(3000),
+      headers: { ...supabaseHeaders, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_reservation_id: reservationId }),
+    });
+  } catch {
+    // A failed release retains the charge. Never weaken the shared spending
+    // limit or expose credentials, content, or quota receipts in diagnostics.
+  }
+}
+
 async function callClaude(req, res, { env, fetchImpl, request, signal }) {
   const supabaseBase = (env.SUPABASE_URL || env.VITE_SUPABASE_URL || '')
     .replace(/\/rest\/v1\/?$/, '').replace(/\/+$/, '');
@@ -55,6 +72,10 @@ async function callClaude(req, res, { env, fetchImpl, request, signal }) {
     const user = await auth.json();
     if (typeof user?.id !== 'string' || !user.id) return res.status(401).json({ error: 'Unauthorized' });
 
+    // Build before reserving usage: a local task-construction failure does not
+    // represent a provider request.
+    stage = 'task';
+    const built = buildTask(request);
     stage = 'quota';
     const rpc = async (name, body) => {
       const response = await fetchImpl(`${supabaseBase}/rest/v1/rpc/${name}`, {
@@ -82,7 +103,6 @@ async function callClaude(req, res, { env, fetchImpl, request, signal }) {
 
     stage = 'provider';
     const model = env.ANTHROPIC_MODEL || DEFAULT_MODEL;
-    const built = buildTask(request);
     const response = await fetchImpl('https://api.anthropic.com/v1/messages', {
       method: 'POST', signal,
       headers: {
@@ -95,9 +115,15 @@ async function callClaude(req, res, { env, fetchImpl, request, signal }) {
         system: [{ type: 'text', text: built.system, cache_control: { type: 'ephemeral' } }],
       }),
     });
+    // An explicit rejection never produced inference output. Release only that
+    // reservation. Timeouts/network failures are ambiguous; successful but
+    // invalid/truncated output still used inference, so those remain counted.
     // Provider errors can echo the input. Do not read or return their bodies.
-    if (response.status === 429) return rateLimit(res, 'provider_rate_limit', providerRetryAfter(response));
-    if (!response.ok) return res.status(502).json({ error: 'AI provider unavailable' });
+    if (!response.ok) {
+      await releaseReservation({ supabaseBase, supabaseHeaders, reservationId: daily.reservation_id, fetchImpl });
+      if (response.status === 429) return rateLimit(res, 'provider_rate_limit', providerRetryAfter(response));
+      return res.status(502).json({ error: 'AI provider unavailable' });
+    }
     stage = 'output';
     const payload = await response.json();
     // Truncation, refusals and unfinished turns never become partial success.

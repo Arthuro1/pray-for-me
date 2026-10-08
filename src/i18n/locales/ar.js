@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "اقرأ الكلمة الشخصية",
   "aiPreviewTitle": "راجع ما سيُرسَل",
   "aiPreviewBody": "هذا بالضبط ما سيُرسَل إلى الذكاء الاصطناعي. لا شيء آخر يغادر جهازك.",
+  "aiPreviewShortened": "تم اختصار النص الطويل. سيُرسَل النص المعروض أدناه فقط.",
   "aiPreviewIncludeDescription": "تضمين الوصف",
   "aiPreviewIncludeUpdate": "تضمين آخر تحديث",
   "aiPreviewSend": "إرسال",

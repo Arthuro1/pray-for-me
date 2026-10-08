@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "Baca kata dari penulis",
   "aiPreviewTitle": "Tinjau apa yang dikirim",
   "aiPreviewBody": "Inilah yang persis akan dikirim ke AI. Tidak ada hal lain yang meninggalkan perangkat Anda.",
+  "aiPreviewShortened": "Teks yang panjang telah dipersingkat. Hanya teks yang ditampilkan di bawah ini yang akan dikirim.",
   "aiPreviewIncludeDescription": "Sertakan deskripsi",
   "aiPreviewIncludeUpdate": "Sertakan pembaruan terbaru",
   "aiPreviewSend": "Kirim",

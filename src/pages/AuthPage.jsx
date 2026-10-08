@@ -7,6 +7,7 @@ import { APP_NAME } from '../lib/brand';
 
 import { BrandMark, Wordmark } from '../components/shared/Brand';
 import { Input, PrimaryButton, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
+import '../styles/auth.css';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Map a raw Supabase auth error to a friendly, localized, actionable message.
@@ -285,9 +286,10 @@ export default function AuthPage({ onBack, intent }) {
 
       <header className="auth-brand">
         <div className="auth-brand__lockup">
-          <BrandMark size={56} />
-          <h1 className="m-0"><Wordmark height={32} title={APP_NAME} /></h1>
+          <BrandMark size={52} tone="inverse" />
+          <h1 className="m-0"><Wordmark height={32} tone="inverse" title={APP_NAME} /></h1>
         </div>
+        <span className="auth-brand__rule" aria-hidden="true" />
         <p className="auth-brand__line">{t(lang, 'authTagline')}</p>
       </header>
 

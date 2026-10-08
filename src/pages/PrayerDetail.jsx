@@ -16,7 +16,6 @@ import { toast } from '../store/toastStore';
 import AiConsentModal from '../components/AiConsentModal';
 import AiOutgoingPreview from '../components/AiOutgoingPreview';
 import { hasAiConsent } from '../lib/aiConsent';
-import { hasReviewedOutgoing, markOutgoingReviewed } from '../lib/aiCore';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import AiOutputReport from '../components/AiOutputReport';
 import PrayerForm from '../components/PrayerForm';
@@ -703,19 +702,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const recsLatestUpdate = () =>
     isCommunity ? '' : ((livePrayer.prayer_updates || []).slice(-1)[0]?.text || '');
 
-  // Gate: require consent, then a one-time review of the exact outgoing text for
-  // this prayer, before the first AI request.
+  // Review the current outgoing fields for each explicit request, after consent.
   const fetchRecs = () => {
     if (loadingRecs) return;
     if (!hasAiConsent('prayer')) { setShowAiConsent(true); return; }
-    if (!hasReviewedOutgoing(livePrayer.id)) { setShowAiPreview(true); return; }
-    runRecs();
+    setShowAiPreview(true);
   };
 
-  const runRecs = async () => {
+  const runRecs = async (reviewedInput) => {
     setLoadingRecs(true);
     setRecsError(null);
-    const { recs, error } = await getAIRecommendations({ title: livePrayer.title, description: recsDescription(), update: recsLatestUpdate(), type: 'evolution', lang });
+    const { recs, error } = await getAIRecommendations({ title: livePrayer.title, description: recsDescription(), update: recsLatestUpdate(), type: 'evolution', lang, reviewedInput });
     setUpdateRecs(recs);
     setRecsError(error);
     setLoadingRecs(false);
@@ -870,7 +867,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           title={livePrayer.title}
           description={recsDescription()}
           update={recsLatestUpdate()}
-          onSend={() => { setShowAiPreview(false); markOutgoingReviewed(livePrayer.id); runRecs(); }}
+          onSend={(reviewedInput) => { setShowAiPreview(false); runRecs(reviewedInput); }}
           onCancel={() => setShowAiPreview(false)}
         />
       )}

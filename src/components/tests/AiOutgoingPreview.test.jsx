@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 //
-// Before the first AI request for a prayer, the user sees the EXACT outgoing
+// Before each explicit AI request for a prayer, the user sees the EXACT outgoing
 // text. The default is minimum-data (title only; description opt-in), sensitive
 // tokens are redacted in the preview, and names are only hidden on request.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -19,6 +19,7 @@ vi.mock('../../lib/supabase', () => {
 import AiOutgoingPreview from '../AiOutgoingPreview';
 import usePrayerStore from '../../store/prayerStore';
 import { t } from '../../i18n';
+import { preparePrayerAiInput } from '../../lib/aiPrayerInput';
 
 const lang = 'en';
 afterEach(cleanup);
@@ -85,5 +86,28 @@ describe('AiOutgoingPreview', () => {
     expect(onSend).toHaveBeenCalled();
     fireEvent.click(screen.getByText(t(lang, 'cancel')));
     expect(onCancel).toHaveBeenCalled();
+  });
+
+  it('handles nullable optional fields from saved prayers', () => {
+    render(<AiOutgoingPreview lang={lang} title="Hope" description={null} update={null} onSend={() => {}} onCancel={() => {}} />);
+    expect(screen.getByText('Hope')).toBeTruthy();
+    expect(screen.queryByRole('switch')).toBeNull();
+  });
+
+  it('previews bounded, redacted text and sends the same selected-input snapshot', () => {
+    usePrayerStore.setState({ settings: { language: lang, aiSendDescription: true, aiSendUpdate: true } });
+    const onSend = vi.fn();
+    const { container } = render(
+      <AiOutgoingPreview lang={lang} title="  Email test@example.com  " description={'A long description. '.repeat(350)} update="Today at test@example.com" onSend={onSend} onCancel={() => {}} />,
+    );
+    expect(screen.getByText(t(lang, 'aiPreviewShortened'))).toBeTruthy();
+    const displayed = Array.from(container.querySelectorAll('dd')).map((field) => field.textContent);
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'aiPreviewSend') }));
+    const snapshot = onSend.mock.calls[0][0];
+    // Future store changes do not change the explicit fields selected on Send.
+    usePrayerStore.setState({ settings: { aiSendDescription: false, aiSendUpdate: false } });
+    const outgoing = preparePrayerAiInput(snapshot);
+    expect(displayed).toEqual([outgoing.title, outgoing.description, outgoing.update]);
+    expect(outgoing.context.length).toBeLessThanOrEqual(4000);
   });
 });

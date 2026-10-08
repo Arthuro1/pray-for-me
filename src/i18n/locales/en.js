@@ -1451,6 +1451,7 @@ export default {
   "aboutReadLetter": "Read the author's word",
   "aiPreviewTitle": "Review what's sent",
   "aiPreviewBody": "This is exactly what will be sent to the AI. Nothing else leaves your device.",
+  "aiPreviewShortened": "Long text has been shortened. Only the text shown below will be sent.",
   "aiPreviewIncludeDescription": "Include description",
   "aiPreviewIncludeUpdate": "Include latest update",
   "aiPreviewSend": "Send",

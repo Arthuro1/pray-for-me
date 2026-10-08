@@ -129,6 +129,19 @@ describe('AI provider request boundary', () => {
 });
 
 describe('AI limit backoff across features', () => {
+  it('reaches the server again after a daily allowance is changed instead of waiting until midnight', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-10-08T12:00:00Z'));
+    acknowledgeAiProvider('account-a');
+    fetch.mockResolvedValueOnce(limitResponse('daily_limit', 43_200));
+    const { aiFetch } = await import('./aiClient');
+    const input = { title: 'Wisdom', lang: 'en' };
+    expect((await aiFetch('prayer_recommendations', input)).status).toBe(429);
+    vi.advanceTimersByTime(60_000);
+    expect((await aiFetch('prayer_recommendations', input)).status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(2);
+  });
+
   it.each(['daily_limit', 'rate_limit', 'provider_rate_limit'])('shares a %s response with other features without another network request', async (code) => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-10-08T12:00:00Z'));

@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "Basahin ang salita ng may-akda",
   "aiPreviewTitle": "Suriin ang ipapadala",
   "aiPreviewBody": "Ito mismo ang ipapadala sa AI. Wala nang iba pang umaalis sa iyong device.",
+  "aiPreviewShortened": "Pinaikli ang mahabang teksto. Ang tekstong ipinapakita sa ibaba lamang ang ipapadala.",
   "aiPreviewIncludeDescription": "Isama ang paglalarawan",
   "aiPreviewIncludeUpdate": "Isama ang pinakabagong update",
   "aiPreviewSend": "Ipadala",

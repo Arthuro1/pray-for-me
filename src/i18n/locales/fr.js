@@ -1451,6 +1451,7 @@ export default {
   "aboutReadLetter": "Lire le mot de l'auteur",
   "aiPreviewTitle": "Vérifier ce qui est envoyé",
   "aiPreviewBody": "Voici exactement ce qui sera envoyé à l'IA. Rien d'autre ne quitte votre appareil.",
+  "aiPreviewShortened": "Le texte trop long a été raccourci. Seul le texte affiché ci-dessous sera envoyé.",
   "aiPreviewIncludeDescription": "Inclure la description",
   "aiPreviewIncludeUpdate": "Inclure la dernière mise à jour",
   "aiPreviewSend": "Envoyer",

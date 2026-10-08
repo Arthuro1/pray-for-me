@@ -66,6 +66,8 @@ Ensure the database has the shared minute-limit and daily-quota RPCs:
 - `supabase/ai_rate_limit.sql`: `check_ai_rate_limit`.
 - `supabase/migrations/20260731190702_ai_usage_quotas.sql`:
   `check_ai_usage_quota` and atomic per-user/global daily usage.
+- `supabase/migrations/20261008180009_refundable_ai_usage_reservations.sql`:
+  content-free quota receipts and idempotent refunds for provider rejections.
 - `supabase/migrations/20260804120000_encrypted_translations.sql`: encrypted
   private/community translation caches.
 
@@ -73,6 +75,29 @@ The handler refuses inference when authentication, rate-limit checks, or quota
 checks are unavailable. Apply the project's migrations using the normal
 [migration procedure](./MIGRATIONS.md), then verify an authenticated request on
 the deployed app.
+
+### Daily limits and provider failures
+
+The default daily caps are 100 requests per account and 5,000 across the app,
+resetting at midnight UTC. Prayer assistance and translation share these caps.
+Set `AI_USER_DAILY_LIMIT` and `AI_GLOBAL_DAILY_LIMIT` on the app host to change
+them. A local `.env.development.local` changes only the local Vite server.
+Vercel environment changes need a new deployment before functions use them.
+For a temporary increase, set `AI_USER_DAILY_LIMIT_TEMPORARY` together with
+`AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL` (an ISO timestamp); the regular cap resumes
+automatically at that deadline.
+
+The server reserves usage before inference to enforce caps across concurrent
+instances. Explicit provider HTTP rejections release exactly that reservation.
+Network/time-out outcomes and successful but invalid or truncated model output
+remain counted because inference may have been billed. Refund receipts never
+reach the browser. Historical counters are retained; previous failed requests
+cannot be safely inferred or refunded from aggregate counts.
+
+The browser briefly shares limit responses across features. It rechecks a daily
+limit after one minute so an updated allowance or released reservation becomes
+available without waiting until midnight. Concurrent provider cooldowns retain
+their own deadlines.
 
 ## Architecture and controls
 

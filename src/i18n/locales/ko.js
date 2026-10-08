@@ -1446,6 +1446,7 @@ export default {
   "aboutReadLetter": "만든 이의 글 읽기",
   "aiPreviewTitle": "보낼 내용 확인",
   "aiPreviewBody": "이것이 AI로 전송되는 정확한 내용입니다. 그 외에는 기기를 벗어나지 않습니다.",
+  "aiPreviewShortened": "긴 텍스트를 줄였습니다. 아래에 표시된 텍스트만 전송됩니다.",
   "aiPreviewIncludeDescription": "설명 포함",
   "aiPreviewIncludeUpdate": "최근 업데이트 포함",
   "aiPreviewSend": "보내기",
