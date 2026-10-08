@@ -398,7 +398,7 @@ export default function DesignScreens({ screen }) {
     return <PrayerSession prayers={usePrayerStore.getState().prayers.slice(0, 3)} categories={[]} lang={lang} tr={(text) => text} onClose={() => navigate('/__design/today')} />;
   }
 
-  return (
+  const layout = (
     <Layout onAddPrayer={() => {}}>
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
@@ -466,4 +466,22 @@ export default function DesignScreens({ screen }) {
       {nav}
     </Layout>
   );
+
+  // Store captures need the production route context for navigation, headers
+  // and the Today add button while keeping the synthetic preview data.
+  const capturePath = searchParams.get('capture') === '1' && {
+    today: '/',
+    journal: '/prayers',
+    plans: '/plans',
+    together: '/community',
+    group: '/community/group/g1',
+    detail: '/prayers/d1',
+    circle: `/circles/${searchParams.get('c') || 'household'}`,
+  }[screen];
+
+  return capturePath ? (
+    <Routes location={{ pathname: capturePath }}>
+      <Route path="*" element={layout} />
+    </Routes>
+  ) : layout;
 }

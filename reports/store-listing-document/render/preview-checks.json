@@ -1,0 +1,159 @@
+{
+  "renderer": "docx-preview 0.3.6 and Chromium",
+  "nativeRendererUnavailable": "LibreOffice is not bundled on this Windows host",
+  "pages": [
+    {
+      "page": 1,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Qetoret Google Play Store Descriptions",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 2,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "English",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 3,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "French",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 4,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "German",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 5,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Portuguese Brazil",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 6,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Chinese Simplified",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 7,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Spanish Spain",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 8,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Hindi",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 9,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Japanese",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 10,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Swahili",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 11,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Amharic",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 12,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Indonesian",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 13,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Filipino",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 14,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Korean",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 15,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Russian",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 16,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Arabic",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    },
+    {
+      "page": 17,
+      "width": 793.71875,
+      "height": 1122.53125,
+      "scrollHeight": 1123,
+      "heading": "Persian",
+      "rtlParagraphs": 0,
+      "missingReplacement": false
+    }
+  ]
+}

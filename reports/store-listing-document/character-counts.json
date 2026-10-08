@@ -1,0 +1,102 @@
+{
+  "unicodeNormalization": "NFC",
+  "countIncludes": "spaces punctuation URLs and LF paragraph separators",
+  "locales": [
+    {
+      "locale": "en-US",
+      "language": "English",
+      "shortCount": 66,
+      "fullCount": 1459
+    },
+    {
+      "locale": "fr-FR",
+      "language": "French",
+      "shortCount": 70,
+      "fullCount": 1806
+    },
+    {
+      "locale": "de-DE",
+      "language": "German",
+      "shortCount": 73,
+      "fullCount": 1754
+    },
+    {
+      "locale": "pt-BR",
+      "language": "Portuguese (Brazil)",
+      "shortCount": 67,
+      "fullCount": 1672
+    },
+    {
+      "locale": "zh-CN",
+      "language": "Chinese (Simplified)",
+      "shortCount": 25,
+      "fullCount": 569
+    },
+    {
+      "locale": "es-ES",
+      "language": "Spanish (Spain)",
+      "shortCount": 70,
+      "fullCount": 1740
+    },
+    {
+      "locale": "hi-IN",
+      "language": "Hindi",
+      "shortCount": 74,
+      "fullCount": 1684
+    },
+    {
+      "locale": "ja-JP",
+      "language": "Japanese",
+      "shortCount": 32,
+      "fullCount": 806
+    },
+    {
+      "locale": "sw",
+      "language": "Swahili",
+      "shortCount": 69,
+      "fullCount": 1759
+    },
+    {
+      "locale": "am",
+      "language": "Amharic",
+      "shortCount": 51,
+      "fullCount": 1148
+    },
+    {
+      "locale": "id",
+      "language": "Indonesian",
+      "shortCount": 61,
+      "fullCount": 1641
+    },
+    {
+      "locale": "fil",
+      "language": "Filipino",
+      "shortCount": 78,
+      "fullCount": 1838
+    },
+    {
+      "locale": "ko-KR",
+      "language": "Korean",
+      "shortCount": 35,
+      "fullCount": 894
+    },
+    {
+      "locale": "ru-RU",
+      "language": "Russian",
+      "shortCount": 67,
+      "fullCount": 1684
+    },
+    {
+      "locale": "ar",
+      "language": "Arabic",
+      "shortCount": 53,
+      "fullCount": 1300
+    },
+    {
+      "locale": "fa",
+      "language": "Persian",
+      "shortCount": 53,
+      "fullCount": 1581
+    }
+  ]
+}

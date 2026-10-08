@@ -1,0 +1,421 @@
+Qetoret Google Play Store Descriptions
+
+App name for every language: Qetoret
+
+Copy only the text under each description label. Character counts include spaces and paragraph breaks.
+
+English | en-US
+
+SHORT DESCRIPTION (66/80)
+
+A prayer journal for daily prayer, Scripture and praying together.
+
+FULL DESCRIPTION (1459/4000)
+
+Qetoret is a Christian prayer companion for bringing what is on your heart before God, returning to prayer with intention and remembering answers over time.
+
+Start a quiet prayer moment without an account. Sign in to save requests in your personal journal. Write prayers for yourself or others, add updates and notes, and record answered prayers and testimonies.
+
+Build a rhythm with prayers for today, recurring schedules, a calendar and optional reminders. Explore guided prayer plans, Bible passages and readings, and keep your reflections as you go.
+
+Create or join prayer groups. Share selected requests with their members, carry one another's prayers and encourage each other with updates. Add photos, voice recordings or video to supported updates and testimonies.
+
+Private journal content is encrypted in your browser before upload. Group content is encrypted for its members, who can read and keep what you share. Set up optional vault recovery before changing devices or browsers so you can unlock your encrypted journal there.
+
+An account is needed for syncing and community features. Some journal actions work offline and sync when a connection returns. Sign-in, media uploads and other online features need internet access.
+
+Qetoret is free to use and offers 16 interface languages. Android 7.0 or later is required.
+
+Website: https://qetoret.com
+Privacy: https://qetoret.com/privacy.html
+Account deletion: https://qetoret.com/delete-account.html
+
+French | fr-FR
+
+SHORT DESCRIPTION (70/80)
+
+Un journal pour la prière quotidienne, la Bible et la prière ensemble.
+
+FULL DESCRIPTION (1806/4000)
+
+Qetoret est un compagnon de prière chrétien pour présenter à Dieu ce qui vous tient à cœur, revenir à la prière avec intention et garder la mémoire des réponses reçues.
+
+Vivez un moment de prière sans créer de compte. Connectez-vous pour enregistrer vos sujets dans votre journal personnel. Notez vos prières pour vous-même ou pour d'autres, ajoutez des nouvelles et des notes, puis consignez les réponses et les témoignages.
+
+Trouvez votre rythme avec les prières du jour, des horaires récurrents, un calendrier et des rappels facultatifs. Explorez des parcours de prière guidée, des passages bibliques et des lectures, et gardez vos réflexions au fil du parcours.
+
+Créez ou rejoignez des groupes de prière. Partagez certains sujets avec leurs membres, portez-vous les uns les autres dans la prière et encouragez-vous avec des nouvelles. Ajoutez des photos, des enregistrements vocaux ou des vidéos aux nouvelles et témoignages compatibles.
+
+Le contenu privé du journal est chiffré dans votre navigateur avant son envoi. Le contenu d'un groupe est chiffré pour ses membres, qui peuvent lire et conserver ce que vous partagez. Configurez la récupération facultative du coffre avant de changer d'appareil ou de navigateur afin de pouvoir y déverrouiller votre journal chiffré.
+
+Un compte est nécessaire pour la synchronisation et les fonctions communautaires. Certaines actions du journal fonctionnent hors connexion puis se synchronisent au retour du réseau. La connexion au compte, l'envoi de médias et d'autres fonctions en ligne nécessitent internet.
+
+Qetoret est gratuit et propose 16 langues d'interface. Android 7.0 ou une version ultérieure est nécessaire.
+
+Site : https://qetoret.com
+Confidentialité : https://qetoret.com/privacy.html
+Suppression du compte : https://qetoret.com/delete-account.html
+
+German | de-DE
+
+SHORT DESCRIPTION (73/80)
+
+Ein Gebetstagebuch für tägliches Gebet, Bibeltexte und gemeinsames Beten.
+
+FULL DESCRIPTION (1754/4000)
+
+Qetoret ist ein christlicher Gebetsbegleiter, um Gott zu bringen, was dir auf dem Herzen liegt, bewusst zum Gebet zurückzukehren und Antworten im Laufe der Zeit festzuhalten.
+
+Beginne einen ruhigen Gebetsmoment ohne Konto. Melde dich an, um Anliegen in deinem persönlichen Tagebuch zu speichern. Schreibe Gebete für dich oder andere, ergänze Neuigkeiten und Notizen und halte erhörte Gebete und Zeugnisse fest.
+
+Finde deinen Rhythmus mit den Gebeten für heute, wiederkehrenden Terminen, einem Kalender und optionalen Erinnerungen. Entdecke geführte Gebetspläne, Bibelstellen und Lesetexte und halte deine Gedanken unterwegs fest.
+
+Erstelle eine Gebetsgruppe oder tritt einer bei. Teile ausgewählte Anliegen mit ihren Mitgliedern, tragt einander im Gebet und ermutigt euch mit Neuigkeiten. Füge Fotos, Sprachaufnahmen oder Videos zu den dafür vorgesehenen Neuigkeiten und Zeugnissen hinzu.
+
+Private Tagebuchinhalte werden vor dem Hochladen in deinem Browser verschlüsselt. Gruppeninhalte werden für die Mitglieder verschlüsselt, die geteilte Inhalte lesen und behalten können. Richte vor einem Geräte- oder Browserwechsel die optionale Tresor-Wiederherstellung ein, damit du dein verschlüsseltes Tagebuch dort entsperren kannst.
+
+Für die Synchronisierung und Gemeinschaftsfunktionen ist ein Konto erforderlich. Einige Tagebuchaktionen funktionieren offline und werden synchronisiert, sobald wieder eine Verbindung besteht. Anmeldung, Medienuploads und andere Onlinefunktionen benötigen Internetzugang.
+
+Qetoret ist kostenlos nutzbar und bietet 16 Sprachen für die Benutzeroberfläche. Android 7.0 oder neuer ist erforderlich.
+
+Website: https://qetoret.com
+Datenschutz: https://qetoret.com/privacy.html
+Kontolöschung: https://qetoret.com/delete-account.html
+
+Portuguese (Brazil) | pt-BR
+
+SHORT DESCRIPTION (67/80)
+
+Um diário para orar diariamente, ler a Bíblia e orar em comunidade.
+
+FULL DESCRIPTION (1672/4000)
+
+Qetoret é um companheiro de oração cristã para levar a Deus o que está em seu coração, voltar à oração com propósito e lembrar das respostas ao longo do tempo.
+
+Comece um momento tranquilo de oração sem criar uma conta. Entre para salvar pedidos em seu diário pessoal. Escreva orações por você ou por outras pessoas, adicione atualizações e notas e registre orações respondidas e testemunhos.
+
+Crie uma rotina com orações para hoje, programações recorrentes, um calendário e lembretes opcionais. Explore planos de oração guiados, passagens e leituras bíblicas e registre suas reflexões pelo caminho.
+
+Crie grupos de oração ou participe de um. Compartilhe pedidos selecionados com os membros, ore pelas necessidades uns dos outros e encorajem-se com atualizações. Adicione fotos, gravações de voz ou vídeos às atualizações e aos testemunhos que aceitam esses formatos.
+
+O conteúdo do diário pessoal é criptografado no seu navegador antes do envio. O conteúdo dos grupos é criptografado para seus membros, que podem ler e guardar o que você compartilha. Configure a recuperação opcional do cofre antes de trocar de dispositivo ou navegador para poder desbloquear seu diário criptografado no novo ambiente.
+
+É preciso ter uma conta para sincronizar e usar os recursos da comunidade. Algumas ações do diário funcionam sem internet e são sincronizadas quando a conexão volta. O acesso à conta, o envio de mídia e outros recursos online precisam de internet.
+
+Qetoret é gratuito e oferece 16 idiomas de interface. Requer Android 7.0 ou posterior.
+
+Site: https://qetoret.com
+Privacidade: https://qetoret.com/privacy.html
+Exclusão de conta: https://qetoret.com/delete-account.html
+
+Chinese (Simplified) | zh-CN
+
+SHORT DESCRIPTION (25/80)
+
+用祷告日记记录日常祷告、默想经文，与他人一同祷告。
+
+FULL DESCRIPTION (569/4000)
+
+Qetoret 是一款基督徒祷告工具，帮助你把心中的事带到上帝面前，有意识地回到祷告中，并随时间记录和回顾蒙应允的祷告。
+
+无需注册，即可开始一段安静的祷告时光。登录后，你可以在个人日记中保存祷告事项，为自己或他人写下祷告，添加近况和笔记，记录蒙应允的祷告与见证。
+
+通过今日祷告、重复安排、日历和可选提醒，建立祷告节奏。探索引导式祷告计划、圣经经文和阅读内容，并随时记录你的默想。
+
+创建或加入祷告小组。选择要与组员分享的祷告事项，彼此代祷，并通过近况更新互相鼓励。在支持的近况更新和见证中，你可以添加照片、录音或视频。
+
+私人日记内容在上传前会在你的浏览器中加密。小组内容会为组员加密，组员可以阅读并保留你分享的内容。更换设备或浏览器前，请设置可选的保险库恢复功能，以便在新设备或浏览器中解锁加密日记。
+
+同步和社区功能需要登录账号。部分日记操作可离线使用，并在网络恢复后同步。登录、媒体上传及其他在线功能需要互联网连接。
+
+Qetoret 可免费使用，提供 16 种界面语言。需要 Android 7.0 或更高版本。
+
+网站：https://qetoret.com
+隐私政策：https://qetoret.com/privacy.html
+删除账号：https://qetoret.com/delete-account.html
+
+Spanish (Spain) | es-ES
+
+SHORT DESCRIPTION (70/80)
+
+Un diario para la oración diaria, la Biblia y la oración en comunidad.
+
+FULL DESCRIPTION (1740/4000)
+
+Qetoret es un compañero de oración cristiana para llevar ante Dios lo que tienes en el corazón, volver a la oración con propósito y recordar las respuestas con el paso del tiempo.
+
+Comienza un momento tranquilo de oración sin crear una cuenta. Inicia sesión para guardar peticiones en tu diario personal. Escribe oraciones por ti o por otras personas, añade novedades y notas, y registra oraciones respondidas y testimonios.
+
+Crea una rutina con oraciones para hoy, programaciones recurrentes, un calendario y recordatorios opcionales. Explora planes de oración guiados, pasajes y lecturas bíblicas, y guarda tus reflexiones a medida que avanzas.
+
+Crea grupos de oración o únete a uno. Comparte peticiones seleccionadas con sus miembros, ora por las necesidades de los demás y animaos mutuamente con novedades. Añade fotos, grabaciones de voz o vídeos a las novedades y los testimonios que admiten estos formatos.
+
+El contenido del diario personal se cifra en tu navegador antes de subirse. El contenido de los grupos se cifra para sus miembros, que pueden leer y conservar lo que compartes. Configura la recuperación opcional de la bóveda antes de cambiar de dispositivo o navegador para poder desbloquear allí tu diario cifrado.
+
+Necesitas una cuenta para sincronizar y usar las funciones de comunidad. Algunas acciones del diario funcionan sin conexión y se sincronizan cuando esta se restablece. El inicio de sesión, la subida de archivos multimedia y otras funciones en línea requieren acceso a internet.
+
+Qetoret es gratuito y ofrece 16 idiomas de interfaz. Requiere Android 7.0 o posterior.
+
+Sitio web: https://qetoret.com
+Privacidad: https://qetoret.com/privacy.html
+Eliminación de la cuenta: https://qetoret.com/delete-account.html
+
+Hindi | hi-IN
+
+SHORT DESCRIPTION (74/80)
+
+दैनिक प्रार्थना, बाइबल मनन और मिलकर प्रार्थना करने के लिए प्रार्थना डायरी।
+
+FULL DESCRIPTION (1684/4000)
+
+Qetoret मसीही प्रार्थना का साथी है। अपने मन की बातें परमेश्वर के सामने रखें, मन लगाकर फिर से प्रार्थना की ओर लौटें और समय के साथ प्रार्थनाओं के मिले उत्तरों को याद रखें।
+
+बिना खाते के भी शांत प्रार्थना का समय शुरू करें। व्यक्तिगत डायरी में प्रार्थना अनुरोध सहेजने के लिए साइन इन करें। अपने लिए या दूसरों के लिए प्रार्थनाएँ लिखें, नई जानकारी और नोट जोड़ें तथा जिन प्रार्थनाओं का उत्तर मिला हो, उन्हें और अपनी गवाहियों को दर्ज करें।
+
+आज की प्रार्थनाओं, दोहराए जाने वाले कार्यक्रम, कैलेंडर और वैकल्पिक रिमाइंडर से प्रार्थना की नियमित लय बनाएँ। मार्गदर्शन वाली प्रार्थना योजनाओं, बाइबल के अंशों और पाठों को पढ़ें और अपने मनन लिखते जाएँ।
+
+प्रार्थना समूह बनाएँ या उनमें शामिल हों। चुने हुए प्रार्थना अनुरोध सदस्यों के साथ साझा करें, एक-दूसरे के लिए प्रार्थना करें और नई जानकारी साझा करके एक-दूसरे का उत्साह बढ़ाएँ। जिन अपडेट और गवाहियों में यह सुविधा उपलब्ध है, उनमें फ़ोटो, आवाज़ की रिकॉर्डिंग या वीडियो जोड़ें।
+
+निजी डायरी की सामग्री अपलोड होने से पहले आपके ब्राउज़र में एन्क्रिप्ट की जाती है। समूह की सामग्री उसके सदस्यों के लिए एन्क्रिप्ट की जाती है। सदस्य आपकी साझा की गई सामग्री पढ़ और अपने पास रख सकते हैं। डिवाइस या ब्राउज़र बदलने से पहले वैकल्पिक वॉल्ट रिकवरी सेट करें, ताकि वहाँ भी अपनी एन्क्रिप्ट की गई डायरी खोल सकें।
+
+सिंक और सामुदायिक सुविधाओं के लिए खाता ज़रूरी है। डायरी से जुड़े कुछ काम ऑफ़लाइन भी किए जा सकते हैं और कनेक्शन लौटने पर सिंक हो जाते हैं। साइन इन, मीडिया अपलोड और अन्य ऑनलाइन सुविधाओं के लिए इंटरनेट की ज़रूरत होती है।
+
+Qetoret का उपयोग मुफ़्त है और इसका इंटरफ़ेस 16 भाषाओं में उपलब्ध है। Android 7.0 या उसके बाद का संस्करण ज़रूरी है।
+
+वेबसाइट: https://qetoret.com
+गोपनीयता: https://qetoret.com/privacy.html
+खाता मिटाना: https://qetoret.com/delete-account.html
+
+Japanese | ja-JP
+
+SHORT DESCRIPTION (32/80)
+
+日々の祈りと聖書の黙想を記録し、仲間と共に祈るための祈りの日記。
+
+FULL DESCRIPTION (806/4000)
+
+Qetoret は、キリスト者の祈りに寄り添うアプリです。心にあることを神の前に差し出し、心を向けて祈りに立ち返り、時を重ねて祈りへの応えを振り返ることができます。
+
+アカウントがなくても、静かな祈りの時間を始められます。ログインすると、個人の日記に祈りの課題を保存できます。自分や誰かのための祈りを書き、近況やメモを加え、応えられた祈りや証しを記録しましょう。
+
+今日の祈り、繰り返しの予定、カレンダー、任意のリマインダーで、祈りの習慣を整えましょう。ガイド付きの祈りのプランや聖書の箇所、読むための資料を活用しながら、黙想を書き留められます。
+
+祈りのグループを作成したり、参加したりできます。選んだ祈りの課題をメンバーと共有し、互いのために祈り、近況を通して励まし合いましょう。対応している近況の投稿や証しには、写真、音声録音、動画を添えられます。
+
+個人の日記の内容は、アップロード前にブラウザー内で暗号化されます。グループの内容はメンバー向けに暗号化され、メンバーは共有された内容を読んで保存できます。端末やブラウザーを変更する前に、任意の保管庫の復旧機能を設定しておくと、新しい環境でも暗号化された日記のロックを解除できます。
+
+同期やコミュニティ機能の利用にはアカウントが必要です。日記の一部の操作はオフラインでも利用でき、接続が戻ると同期されます。ログイン、メディアのアップロード、その他のオンライン機能にはインターネット接続が必要です。
+
+Qetoret は無料で利用でき、16 言語のインターフェースに対応しています。Android 7.0 以降が必要です。
+
+ウェブサイト：https://qetoret.com
+プライバシー：https://qetoret.com/privacy.html
+アカウントの削除：https://qetoret.com/delete-account.html
+
+Swahili | sw
+
+SHORT DESCRIPTION (69/80)
+
+Shajara ya maombi kwa maombi ya kila siku, Maandiko na kuomba pamoja.
+
+FULL DESCRIPTION (1759/4000)
+
+Qetoret ni mwandamani wa Kikristo wa maombi wa kukusaidia kuleta yaliyo moyoni mwako mbele za Mungu, kurudia maombi kwa kusudi na kukumbuka majibu kadiri muda unavyopita.
+
+Anza wakati wa utulivu wa maombi bila akaunti. Ingia ili kuhifadhi mahitaji ya maombi katika shajara yako binafsi. Andika maombi kwa ajili yako au wengine, ongeza taarifa mpya na madokezo, na urekodi maombi yaliyojibiwa na ushuhuda.
+
+Jenga utaratibu kwa maombi ya leo, ratiba zinazojirudia, kalenda na vikumbusho vya hiari. Chunguza mipango ya maombi yenye mwongozo, vifungu vya Biblia na masomo, na uhifadhi tafakari zako unapoendelea.
+
+Unda vikundi vya maombi au ujiunge navyo. Shiriki mahitaji uliyochagua na wanachama wake, ombeni kwa ajili ya mahitaji ya kila mmoja na kutiana moyo kwa taarifa mpya. Ongeza picha, rekodi za sauti au video kwenye taarifa mpya na ushuhuda vinavyoruhusu aina hizo za maudhui.
+
+Maudhui ya shajara binafsi husimbwa kwa njia fiche kwenye kivinjari chako kabla ya kupakiwa. Maudhui ya kikundi husimbwa kwa njia fiche kwa ajili ya wanachama wake, ambao wanaweza kusoma na kuhifadhi unachoshiriki. Sanidi urejeshaji wa hiari wa sanduku la siri kabla ya kubadilisha kifaa au kivinjari ili uweze kufungua shajara yako iliyosimbwa kwa njia fiche huko.
+
+Akaunti inahitajika kwa usawazishaji na vipengele vya jumuiya. Baadhi ya shughuli za shajara hufanya kazi bila intaneti na husawazishwa muunganisho unaporejea. Kuingia, kupakia maudhui ya picha, sauti na video, na vipengele vingine vya mtandaoni kunahitaji intaneti.
+
+Qetoret ni ya kutumia bila malipo na inatoa lugha 16 za kiolesura. Android 7.0 au toleo jipya zaidi inahitajika.
+
+Tovuti: https://qetoret.com
+Faragha: https://qetoret.com/privacy.html
+Kufuta akaunti: https://qetoret.com/delete-account.html
+
+Amharic | am
+
+SHORT DESCRIPTION (51/80)
+
+ለዕለታዊ ጸሎት፣ ለመጽሐፍ ቅዱስ ማሰላሰል እና በጋራ ለመጸለይ የጸሎት ማስታወሻ።
+
+FULL DESCRIPTION (1148/4000)
+
+Qetoret የክርስቲያን የጸሎት አጋር ነው። በልብዎ ያለውን በእግዚአብሔር ፊት ለማቅረብ፣ በትኩረት ወደ ጸሎት ለመመለስ እና በጊዜ ሂደት የተሰጡ የጸሎት መልሶችን ለማስታወስ ይረዳዎታል።
+
+ያለ መለያ ጸጥ ያለ የጸሎት ጊዜ ይጀምሩ። የጸሎት ጥያቄዎችን በግል ማስታወሻዎ ለማስቀመጥ ወደ መለያዎ ይግቡ። ለራስዎ ወይም ለሌሎች ጸሎቶችን ይጻፉ፣ ወቅታዊ መረጃዎችንና ማስታወሻዎችን ያክሉ፣ መልስ ያገኙ ጸሎቶችንና ምስክርነቶችን ይመዝግቡ።
+
+በዛሬ ጸሎቶች፣ በተደጋጋሚ መርሃ ግብሮች፣ በቀን መቁጠሪያ እና በአማራጭ ማሳሰቢያዎች መደበኛ የጸሎት ልምድ ይገንቡ። መመሪያ ያላቸውን የጸሎት እቅዶች፣ የመጽሐፍ ቅዱስ ክፍሎችንና ንባቦችን ይመልከቱ፣ ሲቀጥሉም ማሰላሰሎችዎን ይመዝግቡ።
+
+የጸሎት ቡድኖችን ይፍጠሩ ወይም ይቀላቀሉ። የመረጧቸውን የጸሎት ጥያቄዎች ለአባላቱ ያጋሩ፣ እርስ በርሳችሁ ተጸላለዩ፣ ወቅታዊ መረጃዎችንም በማጋራት ተበረታቱ። ይህን ባህሪ በሚደግፉ ወቅታዊ መረጃዎችና ምስክርነቶች ላይ ፎቶዎችን፣ የድምፅ ቅጂዎችን ወይም ቪዲዮ ያክሉ።
+
+የግል ማስታወሻዎ ይዘት ከመስቀሉ በፊት በአሳሽዎ ውስጥ ይመሰጠራል። የቡድን ይዘት ለአባላቱ ይመሰጠራል፤ አባላቱም ያጋሩትን ይዘት ማንበብና ማስቀመጥ ይችላሉ። መሣሪያ ወይም አሳሽ ከመቀየርዎ በፊት አማራጭ የቮልት መልሶ ማግኛን ያዋቅሩ፣ ይህም በአዲሱ መሣሪያ ወይም አሳሽ የተመሰጠረውን ማስታወሻዎን ለመክፈት ያስችልዎታል።
+
+ለማመሳሰል እና ለማህበረሰብ ባህሪያት መለያ ያስፈልጋል። አንዳንድ የማስታወሻ ተግባራት ያለ በይነመረብ ይሰራሉ፣ ግንኙነት ሲመለስም ይመሳሰላሉ። ወደ መለያ መግባት፣ ሚዲያ መስቀል እና ሌሎች የመስመር ላይ ባህሪያት በይነመረብ ይፈልጋሉ።
+
+Qetoret በነፃ የሚጠቀሙበት ሲሆን በ16 ቋንቋዎች የተጠቃሚ በይነገጽ ያቀርባል። Android 7.0 ወይም ከዚያ በላይ ያስፈልጋል።
+
+ድረ ገጽ፦ https://qetoret.com
+ግላዊነት፦ https://qetoret.com/privacy.html
+መለያ መሰረዝ፦ https://qetoret.com/delete-account.html
+
+Indonesian | id
+
+SHORT DESCRIPTION (61/80)
+
+Jurnal untuk doa harian, membaca Alkitab, dan berdoa bersama.
+
+FULL DESCRIPTION (1641/4000)
+
+Qetoret adalah pendamping doa Kristen untuk membawa isi hati Anda kepada Tuhan, kembali berdoa dengan sungguh-sungguh, dan mengenang jawaban doa dari waktu ke waktu.
+
+Mulai saat teduh untuk berdoa tanpa akun. Masuk untuk menyimpan permohonan dalam jurnal pribadi. Tulis doa untuk diri sendiri atau orang lain, tambahkan kabar terbaru dan catatan, serta catat doa yang terjawab dan kesaksian.
+
+Bangun kebiasaan dengan doa untuk hari ini, jadwal berulang, kalender, dan pengingat opsional. Jelajahi rencana doa terpandu, ayat dan bacaan Alkitab, lalu simpan perenungan Anda selama menjalaninya.
+
+Buat atau ikuti kelompok doa. Bagikan permohonan yang dipilih kepada anggotanya, saling mendoakan, dan saling menguatkan melalui kabar terbaru. Tambahkan foto, rekaman suara, atau video pada kabar terbaru dan kesaksian yang mendukung format tersebut.
+
+Isi jurnal pribadi dienkripsi di peramban Anda sebelum diunggah. Konten kelompok dienkripsi untuk para anggotanya, yang dapat membaca dan menyimpan apa yang Anda bagikan. Siapkan pemulihan brankas opsional sebelum berganti perangkat atau peramban agar Anda dapat membuka jurnal terenkripsi di sana.
+
+Akun diperlukan untuk sinkronisasi dan fitur komunitas. Beberapa tindakan dalam jurnal dapat dilakukan secara offline dan akan disinkronkan saat koneksi kembali tersedia. Masuk ke akun, mengunggah media, dan fitur online lainnya memerlukan akses internet.
+
+Qetoret gratis digunakan dan menyediakan 16 bahasa antarmuka. Memerlukan Android 7.0 atau yang lebih baru.
+
+Situs web: https://qetoret.com
+Privasi: https://qetoret.com/privacy.html
+Penghapusan akun: https://qetoret.com/delete-account.html
+
+Filipino | fil
+
+SHORT DESCRIPTION (78/80)
+
+Talaarawan para sa araw-araw na panalangin, Bibliya at sama-samang pagdarasal.
+
+FULL DESCRIPTION (1838/4000)
+
+Ang Qetoret ay kasama mo sa Kristiyanong pananalangin upang ilapit sa Diyos ang laman ng iyong puso, bumalik sa panalangin nang may layunin, at alalahanin ang mga sagot sa paglipas ng panahon.
+
+Magsimula ng tahimik na sandali ng panalangin kahit walang account. Mag-sign in upang mag-save ng mga kahilingan sa iyong personal na talaarawan. Isulat ang mga panalangin para sa sarili o sa iba, magdagdag ng mga balita at tala, at itala ang mga nasagot na panalangin at patotoo.
+
+Bumuo ng gawi sa tulong ng mga panalangin para sa araw na ito, paulit-ulit na iskedyul, kalendaryo, at opsyonal na paalala. Tuklasin ang mga gabay sa pananalangin, mga talata at babasahin sa Bibliya, at itabi ang iyong mga pagninilay habang nagpapatuloy.
+
+Gumawa o sumali sa mga grupo ng panalangin. Ibahagi sa mga kasapi ang mga piniling kahilingan, ipanalangin ang isa't isa, at magpalakasan sa pamamagitan ng mga balita. Magdagdag ng mga larawan, rekording ng boses, o video sa mga balita at patotoong sumusuporta sa mga format na ito.
+
+Ine-encrypt ang nilalaman ng personal na talaarawan sa iyong browser bago i-upload. Ine-encrypt ang nilalaman ng grupo para sa mga kasapi nito, na maaaring basahin at itabi ang ibinabahagi mo. I-set up ang opsyonal na pagbawi ng vault bago lumipat ng device o browser upang ma-unlock mo roon ang iyong naka-encrypt na talaarawan.
+
+Kailangan ng account para sa pag-sync at mga feature ng komunidad. Gumagana offline ang ilang gawain sa talaarawan at nagsi-sync kapag bumalik ang koneksyon. Kailangan ng internet para sa pag-sign in, pag-upload ng media, at iba pang online na feature.
+
+Libreng gamitin ang Qetoret at may 16 na wika para sa interface. Kailangan ang Android 7.0 o mas bago.
+
+Website: https://qetoret.com
+Privacy: https://qetoret.com/privacy.html
+Pagtanggal ng account: https://qetoret.com/delete-account.html
+
+Korean | ko-KR
+
+SHORT DESCRIPTION (35/80)
+
+매일의 기도와 말씀 묵상을 기록하고, 함께 기도하는 기도 일기.
+
+FULL DESCRIPTION (894/4000)
+
+Qetoret은 그리스도인의 기도 생활을 돕는 앱입니다. 마음에 품은 것을 하나님께 아뢰고, 마음을 다해 다시 기도하며, 시간이 지나도 기도의 응답을 기억할 수 있습니다.
+
+계정 없이도 조용한 기도의 시간을 시작할 수 있습니다. 로그인하면 개인 일기에 기도 제목을 저장할 수 있습니다. 자신이나 다른 사람을 위한 기도를 쓰고, 근황과 메모를 더하며, 응답받은 기도와 간증을 기록하세요.
+
+오늘의 기도, 반복 일정, 달력, 선택 알림으로 기도의 리듬을 만들어 보세요. 안내가 있는 기도 계획, 성경 구절과 읽기 자료를 살펴보며 묵상한 내용을 기록할 수 있습니다.
+
+기도 모임을 만들거나 참여하세요. 선택한 기도 제목을 모임 회원들과 나누고, 서로의 기도를 함께 짊어지며, 근황을 통해 서로를 격려할 수 있습니다. 지원되는 근황과 간증 게시물에는 사진, 음성 녹음 또는 동영상을 추가할 수 있습니다.
+
+개인 일기 내용은 업로드 전에 브라우저에서 암호화됩니다. 모임의 내용은 회원들을 위해 암호화되며, 회원들은 공유한 내용을 읽고 보관할 수 있습니다. 기기나 브라우저를 바꾸기 전에 선택 사항인 보관함 복구를 설정하면 새 환경에서도 암호화된 일기의 잠금을 해제할 수 있습니다.
+
+동기화와 커뮤니티 기능에는 계정이 필요합니다. 일부 일기 작업은 오프라인에서도 가능하며, 연결이 복구되면 동기화됩니다. 로그인, 미디어 업로드 및 기타 온라인 기능에는 인터넷 연결이 필요합니다.
+
+Qetoret은 무료로 사용할 수 있으며 16개 언어의 인터페이스를 제공합니다. Android 7.0 이상이 필요합니다.
+
+웹사이트: https://qetoret.com
+개인정보 보호: https://qetoret.com/privacy.html
+계정 삭제: https://qetoret.com/delete-account.html
+
+Russian | ru-RU
+
+SHORT DESCRIPTION (67/80)
+
+Дневник для ежедневной молитвы, чтения Библии и совместной молитвы.
+
+FULL DESCRIPTION (1684/4000)
+
+Qetoret — помощник в христианской молитве: приносите Богу то, что у вас на сердце, осознанно возвращайтесь к молитве и сохраняйте память об ответах с течением времени.
+
+Начните тихую молитву без учётной записи. Войдите, чтобы сохранять просьбы в личном дневнике. Записывайте молитвы за себя и других, добавляйте обновления и заметки, отмечайте ответы на молитвы и сохраняйте свидетельства.
+
+Создайте ритм молитвенной жизни с молитвами на сегодня, повторяющимся расписанием, календарём и напоминаниями по желанию. Изучайте молитвенные планы с подсказками, библейские отрывки и чтения, сохраняя свои размышления.
+
+Создавайте молитвенные группы или присоединяйтесь к ним. Делитесь выбранными просьбами с участниками, молитесь о нуждах друг друга и поддерживайте друг друга новостями. Добавляйте фотографии, голосовые записи или видео в обновления и свидетельства, поддерживающие эти форматы.
+
+Содержимое личного дневника шифруется в вашем браузере до загрузки. Содержимое группы шифруется для её участников, которые могут читать и сохранять то, чем вы делитесь. При желании настройте восстановление хранилища до смены устройства или браузера, чтобы разблокировать там свой зашифрованный дневник.
+
+Для синхронизации и функций сообщества нужна учётная запись. Некоторые действия в дневнике доступны без интернета, а синхронизация выполняется после восстановления соединения. Вход, загрузка медиафайлов и другие сетевые функции требуют доступа к интернету.
+
+Qetoret бесплатен и предлагает интерфейс на 16 языках. Требуется Android 7.0 или новее.
+
+Сайт: https://qetoret.com
+Конфиденциальность: https://qetoret.com/privacy.html
+Удаление учётной записи: https://qetoret.com/delete-account.html
+
+Arabic | ar
+
+SHORT DESCRIPTION (53/80)
+
+دفتر صلاة للصلاة اليومية والكتاب المقدس والصلاة معًا.
+
+FULL DESCRIPTION (1300/4000)
+
+Qetoret رفيق مسيحي للصلاة، يساعدك على تقديم ما في قلبك أمام الله، والعودة إلى الصلاة بقصد، وتذكّر الاستجابات بمرور الوقت.
+
+ابدأ لحظة صلاة هادئة دون حساب. سجّل الدخول لحفظ طلبات الصلاة في دفتر صلاتك الشخصي. اكتب صلوات لنفسك أو للآخرين، وأضف مستجدات وملاحظات، وسجّل الصلوات المستجابة والشهادات.
+
+ابنِ إيقاعًا للصلاة مع صلوات اليوم، والجداول المتكررة، والتقويم، والتذكيرات الاختيارية. استكشف خطط الصلاة الموجّهة، ومقاطع الكتاب المقدس والقراءات، واحتفظ بتأملاتك أثناء تقدّمك.
+
+أنشئ مجموعات صلاة أو انضم إليها. شارك طلبات مختارة مع أعضائها، وساندوا بعضكم بالصلاة، وشجّعوا بعضكم بالمستجدات. أضف صورًا أو تسجيلات صوتية أو فيديو إلى المستجدات والشهادات التي تدعم ذلك.
+
+يُشفّر محتوى دفتر صلاتك الخاص في متصفحك قبل رفعه. ويُشفّر محتوى المجموعة لأعضائها، الذين يمكنهم قراءة ما تشاركه والاحتفاظ به. قم بإعداد ميزة استرداد الخزنة الاختيارية قبل تغيير الجهاز أو المتصفح، لتتمكن من فتح دفتر صلاتك المشفّر هناك.
+
+يلزم حساب للمزامنة وميزات المجتمع. تعمل بعض إجراءات دفتر الصلاة دون اتصال، وتتم مزامنتها عند عودة الاتصال. يحتاج تسجيل الدخول ورفع الوسائط والميزات الأخرى المتاحة عبر الإنترنت إلى اتصال بالإنترنت.
+
+Qetoret مجاني الاستخدام ويقدّم 16 لغة للواجهة. يتطلب Android 7.0 أو إصدارًا أحدث.
+
+الموقع: https://qetoret.com
+الخصوصية: https://qetoret.com/privacy.html
+حذف الحساب: https://qetoret.com/delete-account.html
+
+Persian | fa
+
+SHORT DESCRIPTION (53/80)
+
+دفتر دعا برای دعای روزانه، کتاب مقدس و دعا با یکدیگر.
+
+FULL DESCRIPTION (1581/4000)
+
+Qetoret همراهی مسیحی برای دعاست تا آنچه در دل دارید به حضور خدا بیاورید، آگاهانه به دعا بازگردید و پاسخ‌ها را در گذر زمان به یاد بسپارید.
+
+بدون حساب کاربری، لحظه‌ای آرام برای دعا آغاز کنید. برای ذخیرهٔ درخواست‌ها در دفتر دعای شخصی خود وارد حساب شوید. برای خود یا دیگران دعا بنویسید، به‌روزرسانی و یادداشت اضافه کنید و دعاهای پاسخ‌یافته و شهادت‌ها را ثبت کنید.
+
+با دعاهای امروز، برنامه‌های تکرارشونده، تقویم و یادآورهای اختیاری، به دعای خود نظم بدهید. برنامه‌های هدایت‌شدهٔ دعا، بخش‌های کتاب مقدس و خواندنی‌ها را بررسی کنید و تأملات خود را در طول مسیر نگه دارید.
+
+گروه دعا بسازید یا به گروهی بپیوندید. درخواست‌های منتخب را با اعضا به اشتراک بگذارید، در دعا پشتیبان یکدیگر باشید و با به‌روزرسانی‌ها همدیگر را تشویق کنید. به به‌روزرسانی‌ها و شهادت‌هایی که از این قابلیت پشتیبانی می‌کنند، عکس، صدای ضبط‌شده یا ویدئو اضافه کنید.
+
+محتوای دفتر دعای خصوصی پیش از بارگذاری در مرورگر شما رمزگذاری می‌شود. محتوای گروه برای اعضای آن رمزگذاری می‌شود و اعضا می‌توانند آنچه را به اشتراک می‌گذارید بخوانند و نگه دارند. پیش از تغییر دستگاه یا مرورگر، بازیابی اختیاری خزانه را تنظیم کنید تا بتوانید دفتر دعای رمزگذاری‌شدهٔ خود را در آنجا باز کنید.
+
+برای همگام‌سازی و قابلیت‌های اجتماعی، حساب کاربری لازم است. برخی کارهای دفتر دعا به‌صورت آفلاین انجام می‌شوند و پس از برقراری دوبارهٔ اتصال همگام می‌شوند. ورود به حساب، بارگذاری رسانه و دیگر قابلیت‌های آنلاین به اینترنت نیاز دارند.
+
+استفاده از Qetoret رایگان است و رابط کاربری آن 16 زبان دارد. Android 7.0 یا بالاتر لازم است.
+
+وب‌سایت: https://qetoret.com
+حریم خصوصی: https://qetoret.com/privacy.html
+حذف حساب: https://qetoret.com/delete-account.html
