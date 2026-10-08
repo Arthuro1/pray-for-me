@@ -1,164 +1,184 @@
-# AI self-hosting & migration guide
+# AI setup: direct Claude or private Ollama
 
-Pray4Me's AI no longer uses any external provider. It runs a **self-hosted open
-model** (Ollama + Qwen) behind a private **AI gateway**. This guide covers what
-changed, how to run it locally, how to deploy it, the residual security risks,
-and the migration steps.
+Qetoret's optional AI assistance and translation can use **Claude through
+Anthropic's API**, or a **private Ollama model**. Claude runs through this app's
+server-side `/api/ai` handler and needs no separate AI gateway deployment or
+sibling repository. Selected text goes to Anthropic after provider-specific
+consent. There is no automatic fallback to another provider.
 
-## What changed (Anthropic → self-hosted)
+The browser transport is `src/lib/aiClient.js` (`aiFetch`) → same-origin
+`/api/ai`. In Claude mode, this route verifies the Supabase session, checks shared
+quotas, defines the prompts/model/token budgets, calls Anthropic, and validates
+the result before returning `{ data, usage }`. The legacy `/api/anthropic` route
+delegates to the same handler and does not expose an unguarded raw-model API.
 
-| Before | After |
-|--------|-------|
-| `api/anthropic.js` (Vercel proxy → Anthropic) | `api/ai.js` (thin same-origin forwarder → the gateway) |
-| `src/lib/anthropic.js` (`anthropicFetch`) | `src/lib/aiClient.js` (`aiFetch`) |
-| `ANTHROPIC_API_KEY` | `AI_GATEWAY_URL` (+ optional `VITE_AI_GATEWAY_URL`, `VITE_AI_MODEL`) |
-| Prompts/model in `api/anthropic.js` | Prompts/model/validation in the gateway (`services/ai-gateway`) |
-| `bible_reference_to_usfm` AI fallback | Removed — reference→USFM is deterministic and local |
-| Response: Anthropic `content[0].text` | Response: normalized `{ data, usage }` |
-| Model returned verse **text** | Model returns **references only**; verse text comes from trusted sources |
-| Plaintext translation cache | Encrypted translation cache (keyed HMAC + AES-GCM) |
+Models return Bible **references only**; verse text comes from trusted sources,
+and reference-to-USFM conversion is deterministic and local. Translation caches
+use keyed HMAC lookups and AES-GCM ciphertext rather than plaintext.
 
-The **gateway** lives in the AI backend repo:
+## Run Claude locally
+
+Copy this app's `.env.example` to `.env`, configure Supabase, and set:
+
+```env
+# Server-only: never VITE_-prefix the API key.
+AI_PROVIDER=anthropic
+ANTHROPIC_API_KEY=your-anthropic-api-key
+ANTHROPIC_MODEL=claude-haiku-4-5-20251001
+
+# Public disclosure and cache hint; must match the server configuration.
+VITE_AI_PROVIDER=anthropic
+VITE_AI_MODEL=claude-haiku-4-5-20251001
+```
+
+Keep `VITE_AI_GATEWAY_URL` **unset** so requests use `/api/ai`. `AI_GATEWAY_URL`
+and `AI_GATEWAY_DIR` are not needed for Claude. An existing `AI_GATEWAY_URL` is
+ignored when `AI_PROVIDER=anthropic`.
+
+```bash
+npm install
+npm run dev
+```
+
+The Vite server runs the same direct-Claude handler used in production. You do
+not need `npm run ai:dev` for Claude. Do not commit filled-in environment files.
+`VITE_AI_MODEL` only keys the client result cache; the real inference model is
+chosen server-side by `ANTHROPIC_MODEL`. Keep the hint aligned when models change.
+
+## Deploy Claude with the app
+
+On the app host (for example, the Vercel project), set:
+
+| Server-only | Browser/build configuration |
+|---|---|
+| `AI_PROVIDER=anthropic` | `VITE_AI_PROVIDER=anthropic` |
+| `ANTHROPIC_API_KEY` | `VITE_AI_MODEL=claude-haiku-4-5-20251001` |
+| `ANTHROPIC_MODEL=claude-haiku-4-5-20251001` | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` |
+
+Deploy the app after setting the public build variables. Keep
+`VITE_AI_GATEWAY_URL` unset and `AI_PROXY_DISABLED` unset/`false`. The Anthropic
+key stays in the server runtime and must never appear in a `VITE_` variable.
+A localhost gateway URL cannot provide production inference; Claude mode does
+not use one. Changing these files does not itself deploy or configure production.
+
+Ensure the database has the shared minute-limit and daily-quota RPCs:
+
+- `supabase/ai_rate_limit.sql`: `check_ai_rate_limit`.
+- `supabase/migrations/20260731190702_ai_usage_quotas.sql`:
+  `check_ai_usage_quota` and atomic per-user/global daily usage.
+- `supabase/migrations/20260804120000_encrypted_translations.sql`: encrypted
+  private/community translation caches.
+
+The handler refuses inference when authentication, rate-limit checks, or quota
+checks are unavailable. Apply the project's migrations using the normal
+[migration procedure](./MIGRATIONS.md), then verify an authenticated request on
+the deployed app.
+
+## Architecture and controls
+
+```text
+Qetoret browser (provider-specific consent + redaction)
+   │ HTTPS + Supabase access token + X-Qetoret-AI-Provider
+   ▼
+/api/ai (app server / Vercel function)
+   │ session verification, strict tasks, shared quotas, prompts, output validation
+   ├── AI_PROVIDER=anthropic ── HTTPS ──▶ Anthropic Messages API ──▶ Claude
+   └── AI_PROVIDER=ollama ──▶ separate private gateway ──▶ Ollama
+       (one configured provider; no cross-provider fallback)
+```
+
+The Claude handler accepts only the supported method, bounded request body and
+strict task schemas. Clients cannot choose arbitrary prompts, models or token
+budgets. Supabase verifies the caller; shared per-minute and atomic daily
+per-user/global limits fail closed. Server request timeout is 50 seconds within
+a 60-second function duration. Output validation rejects malformed responses
+and detected verse quotations; this detection is best-effort. Application logs do not include raw prompts
+or personal content. Hosting/provider logs and retention require separate
+operational verification.
+
+## Consent and provider changes
+
+AI consent names the configured provider. Claude consent is checked against the
+current Anthropic disclosure revision and stored locally for the signed-in
+account. Legacy synced `aiConsentPrayer` / `aiConsentHome` booleans alone cannot
+authorize Claude requests: the user must accept the current disclosure on that
+device. Switching from private processing to Claude, or changing the Anthropic
+disclosure revision, requires renewed consent. Existing private/Ollama consent
+remains valid for private processing. Withdrawal clears AI result caches and
+request state; it does not recall text already processed by a provider.
+
+For Claude, keep `AI_PROVIDER=anthropic` and `VITE_AI_PROVIDER=anthropic` aligned.
+The browser sends `X-Qetoret-AI-Provider: anthropic`; the server rejects an absent
+or mismatching provider before inference. This compatibility guard prevents an
+older app bundle with only the private-processing disclosure from being silently
+sent to Claude. It is not cryptographic proof of consent. Deploy matching public
+disclosure and server configuration together.
+
+The outgoing prayer preview shows redacted text. By default the title is
+included; prayer details and the latest update require their respective opt-ins.
+Translation sends the selected text needed for that task. Requests also include
+task metadata such as language and selected guidance options. Encryption at rest
+and HTTPS do not prevent the app server or Anthropic from reading the selected
+plaintext during inference.
+
+## Private Ollama alternative
+
+Ollama uses a separate gateway in the AI backend repository:
 [`pray-for-me-ai/services/ai-gateway`](../../pray-for-me-ai/services/ai-gateway).
-It is the security authority: it verifies the Supabase JWT, owns the prompts,
-model and token budgets, enforces the shared Supabase quotas plus gateway-side
-concurrency/queue/timeout, validates the model's output, and rejects Bible verse
-text. It never logs prayer content.
+Set `AI_PROVIDER=ollama` on this app, `VITE_AI_PROVIDER=ollama`,
+`VITE_AI_MODEL=qwen3:4b-instruct`, and a server-only `AI_GATEWAY_URL` pointing to
+the gateway. The legacy `AI_PROVIDER=private` alias also selects this proxy path.
+No Anthropic key is needed for Ollama. Configure the gateway's Supabase settings,
+`AI_PROVIDER=ollama`, `AI_MODEL=qwen3:4b-instruct` and private `OLLAMA_BASE_URL`.
+The gateway remains responsible for authentication, quotas, prompts and output
+validation on this path.
 
-## Architecture
+For a local gateway, install its dependencies and optionally run this app's
+`npm run ai:dev` launcher in a second terminal. The launcher can read the app's
+`.env` without copying credentials into the sibling repository. For production
+Ollama, deploy and secure that gateway separately; its URL must be reachable from
+the app server. Keep the browser on same-origin `/api/ai`.
 
-```
-Pray4Me browser
-   │  HTTPS + Supabase access token
-   ▼
-/api/ai  (same-origin forwarder — api/ai.js / Vite dev middleware)
-   │
-   ▼
-AI gateway (Node/TS)  ── verifies JWT, quotas, prompts, output validation
-   │  localhost / private container network
-   ▼
-Ollama  ──▶  qwen3:4b-instruct     (never exposed publicly)
-```
+Prepare the model using the AI backend's model-download instructions. A private
+Ollama container with no internet egress cannot download a model itself.
 
-The browser talks only to Pray4Me's own origin (`/api/ai`). An operator may
-instead point the browser directly at a public gateway host with
-`VITE_AI_GATEWAY_URL` — that URL is not a secret, but its origin must then be
-added to the CSP `connect-src` in `vite.config.js` and `vercel.json`.
+## Data handling and residual risks
 
-## Run locally
+The encrypted-translation migration recreates the cache tables using
+`source_hmac`, `encrypted_translation`, `nonce`, `encryption_version`, and
+expiry/key-version fields. It **drops the legacy plaintext cache tables**;
+these are regenerable caches, and the server has no client keys to re-encrypt
+their old rows. Clients repopulate encrypted rows on demand. RLS limits private
+rows to their owner and community rows to group members.
 
-```bash
-# 1) Model + gateway (in the pray-for-me-ai repo)
-ollama pull qwen3:4b-instruct
-cd services/ai-gateway
-cp .env.example .env            # set SUPABASE_URL + SUPABASE_ANON_KEY
-npm install
-npm run dev                     # http://127.0.0.1:3001
-```
+- Malicious deployed JavaScript or XSS can read displayed plaintext, keys and
+  tokens. A compromised device or extension can also expose content.
+- App server administrators can access process memory and could observe
+  in-flight requests. The same applies to private gateway/Ollama administrators
+  when that alternative is configured.
+- Anthropic receives selected plaintext when Claude is configured. Retention,
+  training use, processing regions and deletion depend on the actual account,
+  settings and agreements; verify these before making policy/store promises.
+- Redaction is best-effort. It catches high-confidence contact details and
+  secrets, but names remain in selected text and sensitive details can remain.
+- Request metadata such as identity, timestamps and token counts is visible to
+  the operator. Audit hosting, proxy and provider logs separately.
 
-```bash
-# 2) The app (in the pray_for_me repo), pointed at the local gateway
-cp .env.example .env            # set VITE_SUPABASE_* and AI_GATEWAY_URL=http://127.0.0.1:3001
-npm install
-npm run dev                     # /api/ai proxies to the gateway
-```
-
-Or run the whole gateway stack in containers:
-
-```bash
-cd services/ai-gateway
-docker compose up -d --build
-docker compose exec ollama ollama pull qwen3:4b-instruct
-```
-
-## Deploy in production
-
-```bash
-# Gateway host (private server with Ollama)
-cd services/ai-gateway
-cp .env.example .env            # Supabase values; CORS_ALLOW_ORIGINS only if not same-origin
-docker compose up -d --build    # caddy(443) → ai-gateway(private) → ollama(private)
-docker compose exec ollama ollama pull qwen3:4b-instruct
-```
-
-```bash
-# App (Vercel or similar): set env, deploy
-#   AI_GATEWAY_URL = https://ai.pray4me.space   (server-only)
-#   VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY
-# Apply the DB migration:
-supabase db push                # includes 20260804120000_encrypted_translations.sql
-```
-
-- Ollama has **no published port**; only Caddy exposes 443.
-- Set your domain in `services/ai-gateway/Caddyfile`.
-- Ensure `AI_PROXY_DISABLED` is unset/`false` in production.
-
-## Database migration
-
-`supabase/migrations/20260804120000_encrypted_translations.sql`:
-
-- Recreates `translations` and `community_translations` with the encrypted shape
-  (`source_hmac`, `encrypted_translation`, `nonce`, `encryption_version`,
-  `expires_at` / `key_version`). No `original_text` / `translated_text`.
-- **Drops the legacy plaintext tables.** These are regenerable caches and the
-  server cannot re-encrypt them (keys are client-side), so no plaintext is
-  migrated and none survives. Clients repopulate encrypted rows on demand.
-- Adds RLS (owner-only private; members-only community) and
-  `cleanup_expired_translations()` for TTL sweeps.
-
-The AI quota/rate-limit tables (`ai_daily_usage`, `check_ai_rate_limit`,
-`check_ai_usage_quota`) are unchanged and still used — now called by the gateway.
-
-## Residual security risks
-
-- **Malicious deployed JavaScript / XSS** in the app origin can read displayed
-  plaintext, keys, and tokens. Self-hosting does not change this.
-- **Server administrators** on the gateway/Ollama host can access process memory
-  and could observe an in-flight request.
-- **A compromised AI host** can expose the requests currently being processed
-  (not past content, which is never stored there).
-- **Redaction is best-effort.** It catches high-confidence tokens (emails,
-  phones, secrets, sensitive URLs, identifiable addresses) but not everything;
-  people's names are sent by default (they are often central to the prayer).
-- **User-side exposure** — a compromised device, a malicious browser extension,
-  screenshots, or text copied out of the app — is outside these controls.
-- **Metadata** (who made a request, when, token counts) is visible to the
-  operator; prayer content is not logged.
-
-Do **not** describe this as "zero knowledge". Precise language:
+Do not describe AI processing as "zero knowledge". Precise language:
 
 > Prayer content selected for AI assistance is decrypted on the user's device and
-> processed by Pray4Me-operated infrastructure. It is not sent to an external AI
-> provider.
+> redacted before being sent through Qetoret's authenticated app server. With
+> Claude, Anthropic processes that selected text. With private Ollama, the
+> configured model processes it on the operator's infrastructure.
 
-## Commands cheat-sheet
-
-Local:
-
-```bash
-ollama pull qwen3:4b-instruct
-(cd services/ai-gateway && npm install && npm run dev)   # gateway :3001
-npm install && npm run dev                                # app, AI_GATEWAY_URL set
-```
-
-Gateway tests / checks:
+## Checks
 
 ```bash
-cd services/ai-gateway
-npm test && npm run lint && npm run typecheck
+npm test
+npm run lint:strict
+npm run typecheck
+npm run build
 ```
 
-App tests / checks / build:
-
-```bash
-npm test && npm run lint && npm run typecheck && npm run build
-```
-
-Production:
-
-```bash
-(cd services/ai-gateway && docker compose up -d --build)
-docker compose exec ollama ollama pull qwen3:4b-instruct
-supabase db push
-# deploy the app with AI_GATEWAY_URL set in the host env
-```
+For the optional Ollama gateway, run its own tests and deployment checks in the
+AI backend repository as well.

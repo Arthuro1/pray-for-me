@@ -4,7 +4,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'node',
-    include: ['src/**/*.test.{js,jsx}', 'api/**/*.test.js'],
+    include: ['src/**/*.test.{js,jsx}', 'api/**/*.test.js', 'server/**/*.test.js'],
     // Placeholder Supabase creds so the client constructs at import time.
     // Tests never make real network calls — the vault suite only exercises
     // local crypto — so these values just need to be syntactically valid.

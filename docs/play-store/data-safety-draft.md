@@ -52,39 +52,63 @@ smoke tests remain open. See [database-verification.md](database-verification.md
 
 ## AI topology must be verified
 
-The active browser transport is `src/lib/aiClient.js`: same-origin `/api/ai`
-unless `VITE_AI_GATEWAY_URL` is set. `api/ai.js` forwards requests to
-`AI_GATEWAY_URL` and does not itself contact an external AI model provider.
-The gateway implementation referenced by the comments is absent from this
-checkout. Self-hosted transport does **not** prove local inference or zero
-downstream recipients. The old `api/anthropic.js` remains in source.
+The active browser transport is `src/lib/aiClient.js`: same-origin `/api/ai`.
+With `AI_PROVIDER=anthropic`, `api/ai.js` calls Anthropic's Messages API directly
+from the app server, using server-only `ANTHROPIC_API_KEY` and
+`ANTHROPIC_MODEL=claude-haiku-4-5-20251001`. No separate gateway deployment is
+required and `AI_GATEWAY_URL` is ignored. The browser never receives the key.
+The legacy `/api/anthropic` route delegates to the same guarded handler.
+`AI_PROVIDER=ollama` (or legacy `private`) retains the separate private gateway
+path using `AI_GATEWAY_URL`. There is no automatic cross-provider fallback.
 
-Before declaring recipients, record the deployed endpoint, gateway operator/model
-runtime, any downstream model provider, prompt/response retention, backups, logs,
+The app's `AI_PROVIDER` and public `VITE_AI_PROVIDER` must match. For Claude,
+`VITE_AI_GATEWAY_URL` must remain unset so requests use `/api/ai`. The same-origin
+handler rejects an absent/mismatching `X-Qetoret-AI-Provider` header before
+inference, preventing old clients with only
+the old disclosure from being silently sent to Anthropic. Consent for the current
+Anthropic disclosure revision is stored locally per signed-in account; legacy
+synced consent booleans alone do not authorize Claude use. Session verification,
+shared per-minute limits and atomic daily per-user/global quotas run server-side
+and fail closed; prompts and output validation remain server-owned.
+
+Before declaring recipients, record the deployed endpoint, app host and any private
+gateway/model runtime, downstream model provider, prompt/response retention, backups, logs,
 training use and provider instructions/contracts. Verify whether the old endpoint
 is still deployed/reachable and used by an older active client. AI requests carry
-selected decrypted text only after the feature's consent path; they are readable
-at the inference endpoint and cannot be treated as private E2EE ciphertext.
+selected decrypted, redacted text only after the feature's consent path. Prayer
+guidance includes the title by default and details/latest update only when opted
+in; translations send the selected text needed for the task. With Claude,
+Anthropic receives this plaintext and task metadata. Redaction is best-effort,
+and names remain in the selected text. These requests are readable by the app
+server and Anthropic (or the private gateway/model for Ollama) and cannot be treated as private
+E2EE ciphertext. Encrypted translation cache rows do not exempt inference input
+from collection review. The application logger's avoidance of content logging
+does not establish upstream/provider retention or training behavior.
 
 ## Sharing decision
 
-Supabase (auth/database/storage), hosting and any inference operator are actual
-recipients. Decide whether each qualifies as a processor under the owner's
-contract and instructions before using Google's service-provider exception.
+Supabase (auth/database/storage), app hosting and Anthropic when Claude is
+configured are actual recipients; a private Ollama deployment also introduces its
+gateway/model operator. Decide whether each qualifies
+as a processor under the owner's contract and instructions before using Google's
+service-provider exception.
 Group sharing is explicitly user-directed; verify audience preview and user
 consent before using that exception. Do not simply list all infrastructure as
 “shared” or all opt-in AI as “not shared” without a documented basis.
 
 Provider disclosure in the privacy policy remains necessary even when a Play
-sharing exception applies. Unknown gateway recipients are a launch question,
-not a reason to invent “Anthropic only” or “no third parties”.
+sharing exception applies. The source supports a Claude recipient disclosure;
+confirm the deployed configuration and any additional recipients rather than
+asserting “Anthropic only” or “no third parties”. Provider retention, processing
+regions, training use and contracts remain deployment/account checks; this
+change does not approve or submit a Play declaration.
 
 ## Security and account-deletion answers
 
 | Console question | Draft answer / proof needed |
 | --- | --- |
 | Collects or shares required data types? | **Yes**: at least account email/IDs, optional avatars and non-exempt feedback. |
-| All collected data encrypted in transit? | Intended HTTPS transport; verify Supabase, qetoret.com, inference upstream, enabled providers and legacy endpoints before attesting **Yes**. Browser HTTPS alone does not prove gateway-to-model encryption. |
+| All collected data encrypted in transit? | Intended HTTPS transport; verify Supabase, qetoret.com, app-server-to-Anthropic transport, any private gateway/model connection and legacy endpoints before attesting **Yes**. |
 | Account creation methods | Email/password, email link and Google OAuth found in source; select all applicable options shown in Console. |
 | Account deletion | In-app deletion is implemented through `delete_account`; external resource is `https://qetoret.com/delete-account.html`. Verify both live and the actual erasure workflow before answering **Yes**. |
 | Independent security review badge | **No**, unless the owner supplies an actual qualifying independent assessment. Repository tests/review documents are not that certification. |
@@ -104,7 +128,7 @@ to host deleted user data on the operator's systems.
 
 - Production deployment ID, active Play tracks/versions and actual SDK network trace.
 - Supabase/hosting/storage regions, processors/contracts and retention schedules.
-- Gateway topology, recipients and whether prompt/output logging or training occurs.
+- AI topology, recipients and whether prompt/output logging or training occurs.
 - Media/content E2EE exemption decision with key/access evidence.
 - Logs, inferred location, identifiers, social graph and schedule classification.
 - Account/storage/provider erasure results and backup/retention exceptions.

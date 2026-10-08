@@ -116,13 +116,33 @@
     <section>
       <h2>AI-assisted features (optional)</h2>
       <p>
-        Qetoret can offer AI-generated guidance and scripture suggestions through a
-        self-hosted AI service. This feature is <strong>opt-in</strong>: we ask for your explicit consent
-        before ever sending anything to the AI. When you consent, only the specific
-        information needed for the selected task is decrypted in your browser and sent through
-        our authenticated proxy to the configured AI service. The app sends structured tasks
-        and limits request size. AI use is never automatic,
-        and you can withdraw consent at any time in Settings.
+        Qetoret can offer AI-generated prayer guidance, Bible references and translations
+        through <strong>Claude by Anthropic</strong>, or a privately hosted Ollama model,
+        depending on the configured service. These features are <strong>opt-in</strong>:
+        the consent screen identifies the configured provider before text is sent.
+        Switching from private processing to Claude requires fresh consent on your
+        device; consent to private processing does not authorize sending your text to Claude.
+      </p>
+      <p>
+        When you consent, the selected text is decrypted in your browser, redacted to
+        remove recognizable contact details and secrets, and sent through Qetoret's
+        authenticated app server. <strong>When Claude is configured, the app server
+        sends this text directly to Anthropic, which receives
+        and processes this selected text.</strong> For prayer guidance, the prayer title
+        is included by default; prayer details and the latest update are optional.
+        Translation sends the selected text needed for that task. Requests also include
+        task information such as language and selected guidance options. Redaction is
+        imperfect and names remain in the selected text, so text can
+        still contain sensitive personal information. Encryption of your saved journal
+        does not hide text you choose to send to an AI service.
+      </p>
+      <p>
+        Translation caches are encrypted before storage. Qetoret does not automatically
+        switch to a different AI provider when one is unavailable. You can withdraw AI
+        consent in Settings at any time; this clears AI result caches and prevents further
+        AI use until you consent again. Withdrawal cannot recall text already processed.
+        Provider processing and retention depend on the service and its applicable
+        settings and terms; contact us with questions about the configured service.
       </p>
     </section>
 
@@ -176,7 +196,7 @@
       <p>We do not sell your data. We use the following service providers (sub-processors) to run the app:</p>
       <ul>
         <li><strong>Supabase</strong> — database, authentication, storage</li>
-        <li><strong>Our self-hosted AI service</strong> — AI guidance, only for content you consent to send</li>
+        <li><strong>Anthropic (Claude)</strong> — optional AI guidance and translation of selected text sent through Qetoret's app server, only after consent when Claude is configured. A private Ollama deployment processes that text through a separate gateway on the operator's infrastructure instead.</li>
         <li><strong>Vercel</strong> — website hosting</li>
         <li><strong>YouVersion</strong> — scripture text, where enabled</li>
       </ul>

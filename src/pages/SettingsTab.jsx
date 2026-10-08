@@ -23,7 +23,7 @@ import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
 import Switch from '../components/shared/Switch';
 import SettingsRow from '../components/shared/SettingsRow';
-import { revokeAiConsent } from '../lib/aiConsent';
+import { hasAiConsent, revokeAiConsent } from '../lib/aiConsent';
 import useVaultStore from '../store/vaultStore';
 import { Input, PageHeader, QuietButton, SecondaryButton, SegmentedControl, StatusLabel } from '../components/shared/Primitives';
 import RadioRow from '../components/shared/RadioRow';
@@ -218,7 +218,7 @@ export default function SettingsTab() {
   const lang = settings.language || 'fr';
   // Derived from synced settings so consent granted/revoked anywhere (another
   // tab, another browser) is reflected here without a remount.
-  const aiOn = !!(settings.aiConsentPrayer || settings.aiConsentHome);
+  const aiOn = hasAiConsent('prayer') || hasAiConsent('home');
 
   // Server sets last_follow_up_sent_at each time it actually pushes one; pull
   // it in whenever the toggle is on so "next follow-up" reflects reality.

@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { X, Lock, Users, MessageSquareText, Bell, Download, Trash2, KeyRound } from 'lucide-react';
 import { t } from '../i18n';
 import { track, EVENTS } from '../lib/analytics';
+import { getAiProviderLabel } from '../lib/aiProvider';
 import { Modal } from './shared/Primitives';
 
 // A user-facing, plain-language "what leaves your device?" explanation of how
@@ -45,7 +46,7 @@ export default function PrivacyCenter({ lang = 'en', onClose }) {
             <Icon size={18} strokeWidth={1.85} aria-hidden="true" />
             <div>
               <h3 className="explain-list__title">{t(lang, titleKey)}</h3>
-              <p className="explain-list__body">{t(lang, bodyKey)}</p>
+              <p className="explain-list__body">{t(lang, bodyKey, { provider: getAiProviderLabel() })}</p>
             </div>
           </li>
         ))}

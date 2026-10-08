@@ -1,23 +1,23 @@
 import { supabase } from './supabase';
+import { getAiProvider, hasAiProviderAcknowledgement } from './aiProvider';
 
-// Browser client for the private, self-hosted Qetoret AI gateway.
+// Browser client for Qetoret's authenticated AI tasks.
 //
 // No external AI provider is ever contacted from the browser. Requests go to the
-// app's OWN origin (`/api/ai`, a thin reverse proxy to the gateway) by default,
-// or to VITE_AI_GATEWAY_URL when an operator deploys the gateway on a separate
-// public host. The browser can only ask for a server-defined { task, input }; it
+// app's OWN origin (`/api/ai`) for Claude. An explicitly configured private
+// provider can use VITE_AI_GATEWAY_URL on a separate public host. The browser
+// can only ask for a server-defined { task, input }; it
 // cannot choose a model, system prompt, temperature, token budget, or message
-// history — those live only in the gateway. There is NO client-side API key and
-// NO external-provider fallback, so nothing sensitive can be inlined into the
+// history — those live only on the server. There is NO client-side API key and
+// NO browser-side provider fallback, so nothing sensitive can be inlined into the
 // bundle. AI is therefore always "enabled" from the client's point of view; the
-// gateway is the single gatekeeper for whether inference is actually available.
+// server is the gatekeeper for whether inference is actually available.
 export const aiEnabled = true;
 
-// Same-origin by default (keeps the browser talking only to Qetoret's domain and
-// avoids a CSP connect-src change). An operator may point at a dedicated gateway
-// host via VITE_AI_GATEWAY_URL (that public URL is not a secret, but then its
-// origin must be added to the CSP connect-src).
-const GATEWAY_URL = import.meta.env.VITE_AI_GATEWAY_URL || '';
+// Claude always uses same-origin /api/ai, including when an old deployment still
+// has a gateway override. Only private inference may use a dedicated gateway;
+// its public origin must then be allowed in CSP connect-src.
+const GATEWAY_URL = getAiProvider() === 'anthropic' ? '' : import.meta.env.VITE_AI_GATEWAY_URL || '';
 const ENDPOINT = GATEWAY_URL ? `${GATEWAY_URL.replace(/\/$/, '')}/v1/tasks` : '/api/ai';
 
 // Public model hint, used ONLY to key client caches so a model change invalidates
@@ -25,13 +25,36 @@ const ENDPOINT = GATEWAY_URL ? `${GATEWAY_URL.replace(/\/$/, '')}/v1/tasks` : '/
 export const AI_MODEL_HINT = import.meta.env.VITE_AI_MODEL || 'server';
 
 // Request one server-defined task. Returns the raw fetch Response so callers can
-// branch on status; the gateway replies with a normalized { data, usage } body.
+// branch on status; the server replies with a normalized { data, usage } body.
 export async function aiFetch(task, input) {
   const headers = { 'Content-Type': 'application/json' };
+  // Same-origin deployments use this to reject an outdated client disclosure
+  // after the server switches providers. Direct gateway deployments retain their
+  // existing CORS header contract.
+  if (!GATEWAY_URL) headers['X-Qetoret-AI-Provider'] = getAiProvider();
 
-  // Attach the user's Supabase access token so the gateway can verify the JWT and
-  // enforce per-user quotas. The gateway derives the user id from the token only.
+  // The server verifies the Supabase token and enforces shared user quotas.
   const { data: { session } } = await supabase.auth.getSession();
+  // Includes translation requests triggered by a saved preference: an old
+  // private-service opt-in must never silently authorize an external provider.
+  let providerConsent = true;
+  if (getAiProvider() === 'anthropic') {
+    // Import after initialization to avoid the store -> AI helpers -> transport
+    // cycle. Synced revocation remains authoritative even if a local provider
+    // acknowledgement survives on this device.
+    const { default: usePrayerStore } = await import('../store/prayerStore');
+    const { userId, settings } = usePrayerStore.getState();
+    providerConsent = !!session?.user?.id && userId === session.user.id && (
+      (settings.aiConsentPrayer && hasAiProviderAcknowledgement(userId, 'prayer')) ||
+      (settings.aiConsentHome && hasAiProviderAcknowledgement(userId, 'home'))
+    );
+  }
+  if (!providerConsent) {
+    return new Response(JSON.stringify({ error: 'AI consent required' }), {
+      status: 403,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
   if (session?.access_token) headers['Authorization'] = `Bearer ${session.access_token}`;
 
   return fetch(ENDPOINT, { method: 'POST', headers, body: JSON.stringify({ task, input }) });

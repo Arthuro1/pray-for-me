@@ -107,9 +107,10 @@ const bookIndex = (() => {
 // Returns null if the book name isn't recognized. The range and chapter forms are
 // exactly what the YouVersion passages endpoint accepts (BOOK.CH.START-END and
 // BOOK.CH), so the passage resolves in full instead of collapsing to verse 1.
-// Anchored, and tolerant of an en/em dash and surrounding whitespace in the range.
+// Anchored, and tolerant of an en dash, range whitespace, and the German comma
+// separator ("1. Petrus 5,7"). A comma-separated verse list stays unsupported.
 export function usfmFromReference(reference) {
-  const m = /^\s*(.+?)\s+(\d{1,3})(?::(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?)?\s*$/.exec(String(reference || ''));
+  const m = /^\s*(.+?)\s+(\d{1,3})(?:\s*[:,]\s*(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?)?\s*$/.exec(String(reference || ''));
   if (!m) return null;
   const code = bookIndex.get(normalizeBook(m[1]));
   if (!code) return null;

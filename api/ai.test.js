@@ -30,10 +30,27 @@ function installFetch({ upstreamStatus = 200, upstreamBody = { data: {}, usage: 
 beforeEach(() => {
   process.env.AI_GATEWAY_URL = 'https://gateway.internal';
   delete process.env.AI_PROXY_DISABLED;
+  process.env.AI_PROVIDER = 'ollama';
   installFetch();
 });
 
 describe('same-origin AI forwarder', () => {
+  it('blocks stale self-hosted clients when Claude is configured', async () => {
+    process.env.AI_PROVIDER = 'anthropic';
+    const res = mockRes();
+    await handler(req(), res);
+    expect(res.statusCode).toBe(409);
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it('defaults to the guarded Claude route without implicit private fallback', async () => {
+    delete process.env.AI_PROVIDER;
+    const res = mockRes();
+    await handler(req(), res);
+    expect(res.statusCode).toBe(409);
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
   it('rejects non-POST methods', async () => {
     const res = mockRes();
     await handler(req({ method: 'GET' }), res);

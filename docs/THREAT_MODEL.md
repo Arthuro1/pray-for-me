@@ -1,6 +1,6 @@
 # Threat model
 
-Last reviewed: 2026-08-26. This document describes the implementation, not an
+Last reviewed: 2026-10-08. This document describes the implementation, not an
 aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 
 ## Assets and trust boundaries
@@ -8,10 +8,13 @@ aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 Prayer text, updates, points, testimonies, attachment plaintext, account keys,
 group keys, recovery credentials, relationship metadata, sessions, and provider
 secrets are sensitive. The browser, deployed JavaScript, Supabase, Vercel
-serverless functions, Edge Functions, the self-hosted AI gateway and local model
-(Ollama), YouVersion, Web Push services, and the user's device are separate trust
-boundaries. **No external AI provider (Anthropic, OpenAI, Google, Groq, …) is a
-trust boundary any more: prayer content selected for AI is never sent to one.**
+serverless functions, Edge Functions, the optional private AI gateway, the configured inference
+provider, YouVersion, Web Push services, and the user's device are separate trust
+boundaries. With **Claude**, selected redacted plaintext is sent through the
+app's authenticated `/api/ai` server route directly to **Anthropic** after
+provider-specific consent. No separate gateway is required. With private
+**Ollama** inference, a separate gateway and local model are the inference trust
+boundary. The app does not automatically fall back between providers.
 
 Supabase stores ciphertext for protected content, but necessarily sees metadata:
 account and group IDs, membership, record IDs, timestamps, status, categories,
@@ -62,6 +65,22 @@ Group members see content explicitly shared with their group.
   Removal and forward rotation are one transaction. Removed members retain any
   historical group keys or plaintext they already obtained; rotation protects
   future content, not history.
+- Claude consent is checked against the current Anthropic disclosure revision in
+  a local grant scoped to the signed-in account. Synced legacy consent booleans
+  alone do not authorize Claude requests. Switching to Claude or changing its
+  disclosure revision requires renewed consent; private/Ollama consent remains
+  valid for private processing. The same-origin app server checks
+  `X-Qetoret-AI-Provider` against its
+  configured `AI_PROVIDER` before calling Claude; deployments must keep
+  that setting and `VITE_AI_PROVIDER` aligned. `VITE_AI_GATEWAY_URL` must remain
+  unset for Claude so all requests use the authenticated app handler. The legacy
+  `/api/anthropic` route delegates to this handler with the same checks.
+- AI text is decrypted on device and redacted before transmission; prayer
+  details and the latest update are opt-in additions to the default title.
+  Translation sends the selected text needed for its task. Translation cache
+  rows contain keyed HMAC lookups and AES-GCM ciphertext, but inference inputs
+  are readable by the app server and Anthropic in Claude mode, or by the private
+  gateway and configured model in Ollama mode.
 
 ## Threats and controls
 
@@ -75,8 +94,9 @@ Group members see content explicitly shared with their group.
 | XSS or malicious deployment | CSP, no HTML injection for rich text, dependency review, code review/CODEOWNERS | JavaScript running in the origin can read displayed plaintext, IndexedDB keys, session keys, and auth tokens. Encryption does not protect an unlocked compromised origin |
 | Lost or shared device | OS/browser access control, explicit lock, optional passphrase recovery | Default auto-lock is off; an unlocked browser profile or extracted local profile can expose the account key |
 | Recovery-code theft | 128-bit random code, PBKDF2 wrapping, rotation, code shown once | Anyone with the code and synced wrapped record can reset the passphrase; rotation is required after suspected disclosure |
-| AI relay/cost abuse | Supabase JWT verification at the self-hosted gateway; server-defined tasks/prompts/model/token budgets; strict Zod input + structured-output validation; Bible-verse-text rejection; per-task limits; per-minute and atomic daily user/global quotas; gateway concurrency gate + bounded queue + request timeout; `AI_PROXY_DISABLED` breaker; no-content logging | Authorized inputs are decrypted on-device and processed by the Pray4Me-operated gateway + local model after explicit consent — never by an external AI provider. A server administrator can read process memory; a compromised AI host can expose active requests |
-| Sensitive data in AI input | Browser-side redaction of emails/phones/addresses/secrets/sensitive URLs before transmission; minimum-data default (title sent, description opt-in); optional name hiding | Redaction is best-effort; names are sent by default because they are often central to the prayer |
+| AI relay/cost abuse | Supabase session verification in `/api/ai` for Claude; server-defined tasks/prompts/model/token budgets; bounded body and strict input + structured-output validation; Bible-verse-text rejection; shared per-minute and atomic daily user/global quotas that fail closed; 50-second request timeout within a 60-second function duration; `AI_PROXY_DISABLED` breaker; no-content application logging. The optional Ollama gateway enforces its own controls | Authorized inputs are decrypted on-device and processed by the app server and Anthropic after provider-specific consent, or by the private gateway/model for Ollama. A server administrator can read process memory; infrastructure/provider retention requires separate verification |
+| Undisclosed AI provider change | Account-scoped local consent for the current Anthropic disclosure revision; same-origin handler rejects missing or mismatching provider header for Claude; no automatic cross-provider fallback | The header is a compatibility guard, not cryptographic proof of consent. Misaligned server/public provider configuration or malicious JavaScript can bypass assumptions |
+| Sensitive data in AI input | Browser-side redaction of emails/phones/addresses/secrets/sensitive URLs before transmission; minimum-data default (title sent, details/latest update opt-in) | Redaction is best-effort; names remain in selected text because they are often central to the prayer. Selected text can still reveal religious belief, health details or other sensitive information to the configured provider |
 | Community abuse/sensitive disclosure | Audience preview, local contact-detail warning/ack, report/block RPCs, restrictive blocking RLS, DB insert-rate triggers, moderator deletion | Moderators need human escalation processes; automated detection is intentionally limited and does not judge prayer/theology |
 | Avatar photo disclosure | Private bucket; no public URL; opaque object names; short-lived signed URLs; storage read policies scoped to friendship/shared group (profiles) or membership/pending invitation (groups); a row's photo key is pinned to its own folder by check constraint; on-device redraw strips EXIF; 512 KB / webp-jpeg-only bucket limits and a 20-object cap per folder | A photo shown to a legitimate viewer can be screenshotted or re-shared; a signed URL remains usable until it expires; the provider still sees a request when an account picture is loaded from its CDN |
 | Notification disclosure | Generic payload by default; no prayer text in durable notification rows or logs | Device lock-screen metadata still reveals that Praystead sent a notification |

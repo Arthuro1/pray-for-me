@@ -1,6 +1,6 @@
 // Shared client-side cooldown and response handling for the finite AI tasks. The
 // system prompts, model selection, token budgets, and output validation all live
-// in the self-hosted gateway (services/ai-gateway); the browser only asks for a
+// on the server; the browser only asks for a
 // server-defined { task, input } and receives a validated, normalized response.
 import { aiFetch } from './aiClient';
 import { devError } from './logger';

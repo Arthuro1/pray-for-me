@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "ai:dev": "node scripts/start-ai-gateway.mjs",
     "build": "vite build",
     "build:verses": "node scripts/build-verse-bundle.mjs",
     "build:covers": "node scripts/build-covers.mjs",

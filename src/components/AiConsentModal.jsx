@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import { t } from '../i18n';
 import { grantAiConsent } from '../lib/aiConsent';
+import { getAiProviderLabel } from '../lib/aiProvider';
 import AiDisclaimer from './shared/AiDisclaimer';
 import { Modal, PrimaryButton, SecondaryButton } from './shared/Primitives';
 
@@ -24,7 +25,7 @@ export default function AiConsentModal({ lang = 'en', context = 'prayer', onAcce
       </div>
 
       <AiDisclaimer lang={lang} variant="full" />
-      <p className="q-dialog__text">{t(lang, 'aiConsentBodyPrayer')}</p>
+      <p className="q-dialog__text">{t(lang, 'aiConsentBodyPrayer', { provider: getAiProviderLabel() })}</p>
 
       <div className="q-dialog__actions">
         <SecondaryButton onClick={onCancel}>{t(lang, 'aiConsentDecline')}</SecondaryButton>

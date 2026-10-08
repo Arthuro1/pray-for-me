@@ -4,7 +4,7 @@
 // persistent control on Today. All calls run through aiCore, so they share the one
 // theological guardrail (the gateway's system prompt) and the one client cooldown.
 //
-// The gateway returns references only ([{ title, verses: [{ ref }] }]); it never
+// The gateway returns references only ({ recommendations: [{ title, references }] }); it never
 // generates verse text. Any wording that slips through is dropped below — the
 // verse reader fills it from trusted Scripture sources.
 import { callAiForJson, localizeAiError } from './lib/aiCore';
@@ -48,12 +48,19 @@ export async function getAIRecommendations({ title, description = '', update = '
   });
   if (error) return { recs: [], error: localizeAiError(error, lang) };
 
-  const recs = Array.isArray(data)
-    ? data
-        .filter((r) => r && r.title && Array.isArray(r.verses) && r.verses.length > 0)
-        // References only — never AI verse wording presented as Scripture.
-        .map((r) => ({ ...r, verses: r.verses.filter((v) => v && v.ref).map((v) => ({ ref: String(v.ref) })) }))
-    : [];
+  // Accept the validated gateway envelope and the older array shape during
+  // rollout. Explicitly keep only the fields the UI needs, never model wording
+  // masquerading as Scripture or extra payload fields.
+  const suggestions = Array.isArray(data) ? data : data?.recommendations;
+  const recs = (Array.isArray(suggestions) ? suggestions : [])
+    .filter((r) => r && typeof r.title === 'string' && r.title.trim())
+    .map((r) => ({
+      title: r.title,
+      verses: (Array.isArray(r.references) ? r.references : Array.isArray(r.verses) ? r.verses : [])
+        .filter((v) => v && typeof v.ref === 'string' && v.ref.trim())
+        .map((v) => ({ ref: v.ref })),
+    }))
+    .filter((r) => r.verses.length > 0);
   if (recs.length > 0) cache.set(key, recs);
   return { recs, error: null };
 }

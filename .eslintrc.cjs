@@ -40,6 +40,7 @@ module.exports = {
       // browser: give them process/Buffer/etc. so they don't trip no-undef.
       files: [
         'api/**/*.js',
+        'server/**/*.js',
         '*.config.js',
         'vite.config.js',
         'postcss.config.js',

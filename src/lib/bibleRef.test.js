@@ -49,6 +49,18 @@ describe('usfmFromReference — deterministic citation mapping', () => {
     expect(usfmFromReference('腓立比书 4:6')).toBe('PHP.4.6');       // zh
   });
 
+  it('resolves German ordinal books and comma-separated chapter/verse citations', () => {
+    expect(usfmFromReference('1. Petrus 5,7')).toBe('1PE.5.7');
+    expect(usfmFromReference('2. Timotheus 1,7')).toBe('2TI.1.7');
+    expect(usfmFromReference('5. Mose 31,6–8')).toBe('DEU.31.6-8');
+    expect(usfmFromReference('Johannes 3, 16')).toBe('JHN.3.16');
+  });
+
+  it('does not collapse a comma-separated verse list to one verse', () => {
+    expect(usfmFromReference('Johannes 3:16,18')).toBeNull();
+    expect(usfmFromReference('Johannes 3,16,18')).toBeNull();
+  });
+
   it('returns null for an unrecognized book (AI fallback territory)', () => {
     expect(usfmFromReference('Nostrabook 1:1')).toBeNull();
     expect(usfmFromReference('not a reference')).toBeNull();

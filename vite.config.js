@@ -27,11 +27,9 @@ async function readJsonBody(req) {
   return raw ? JSON.parse(raw) : {}
 }
 
-// Development exercises the same same-origin forwarder as production: the browser
-// posts { task, input } to /api/ai and this middleware relays it to the private
-// AI gateway (AI_GATEWAY_URL). The dev server never talks to an external provider
-// and never lets the caller choose a model/prompt/token budget — the gateway owns
-// all of that.
+// Development runs the same authenticated task handler as production. Claude is
+// called server-side; an explicitly configured private provider uses a gateway.
+// The browser supplies only { task, input }, never prompts or provider credentials.
 function aiApiPlugin(env) {
   return {
     name: 'pray4me-ai-api',
@@ -72,7 +70,7 @@ function aiApiPlugin(env) {
 
 export default defineConfig(({ mode }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
-  // server-only AI_GATEWAY_URL. This is read in the Node dev server only and is
+  // server-only Anthropic credentials. This is read in the Node server only and is
   // never exposed to `import.meta.env` / the browser bundle.
   const env = loadEnv(mode, process.cwd(), '')
   const yvpKey = env.YVP_APP_KEY || ''

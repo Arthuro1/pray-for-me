@@ -3,7 +3,7 @@
 // The Privacy Center is a plain-language explanation of storage & sharing, and
 // opening it records a content-free impression so "understanding your privacy"
 // can be measured.
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 
 vi.mock('../../lib/analytics', async (importOriginal) => {
@@ -16,7 +16,8 @@ import { track, EVENTS } from '../../lib/analytics';
 import { t } from '../../i18n';
 
 const lang = 'fr';
-afterEach(cleanup);
+beforeEach(() => vi.stubEnv('VITE_AI_PROVIDER', 'ollama'));
+afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
 
 describe('PrivacyCenter', () => {
   it('renders the privacy sections and records the open event', () => {
@@ -44,5 +45,12 @@ describe('PrivacyCenter', () => {
     const push = t(lang, 'pcPushBody').toLowerCase();
     expect(push).toContain('jamais inclus');
     expect(push).toContain('nombre de prières');
+  });
+
+  it('names Claude as the recipient of selected AI content when configured', () => {
+    vi.stubEnv('VITE_AI_PROVIDER', 'anthropic');
+    render(<PrivacyCenter lang={lang} onClose={() => {}} />);
+    expect(screen.getByText(t(lang, 'pcAiBody', { provider: 'Claude (Anthropic)' }))).toBeTruthy();
+    expect(screen.getByRole('dialog').textContent).not.toContain('{provider}');
   });
 });

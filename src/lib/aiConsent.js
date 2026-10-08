@@ -10,13 +10,16 @@ import { track, EVENTS } from './analytics';
 import { clearAllAiResultCaches } from './aiResultCache';
 import { resetAiRequestState } from './aiCore';
 import { clearTranslationCache } from '../store/translationStore';
+import { acknowledgeAiProvider, clearAiProviderAcknowledgement, hasAiProviderAcknowledgement } from './aiProvider';
 
 export function hasAiConsent(context = 'prayer') {
-  const { aiConsentPrayer, aiConsentHome } = usePrayerStore.getState().settings;
-  return context === 'home' ? !!aiConsentHome : !!aiConsentPrayer;
+  const { settings: { aiConsentPrayer, aiConsentHome }, userId } = usePrayerStore.getState();
+  const consent = context === 'home' ? !!aiConsentHome : !!aiConsentPrayer;
+  return consent && hasAiProviderAcknowledgement(userId, context);
 }
 
 export function grantAiConsent(context = 'prayer') {
+  acknowledgeAiProvider(usePrayerStore.getState().userId, context);
   usePrayerStore.getState().updateSettings(
     context === 'home' ? { aiConsentHome: true } : { aiConsentPrayer: true }
   );
@@ -27,6 +30,7 @@ export function grantAiConsent(context = 'prayer') {
 // clears AI result caches and in-memory AI request state, but never deletes
 // prayer content (that stays in the user's encrypted store).
 export function revokeAiConsent() {
+  clearAiProviderAcknowledgement(usePrayerStore.getState().userId);
   usePrayerStore.getState().updateSettings({ aiConsentPrayer: false, aiConsentHome: false });
   clearAllAiResultCaches();
   clearTranslationCache();

@@ -34,4 +34,16 @@ describe('AI suggestions carry Scripture references, never Scripture text', () =
     expect(recs[0].verses).toEqual([{ ref: 'John 14:27' }, { ref: 'Philippians 4:6-7' }]);
     expect(JSON.stringify(recs)).not.toContain('AI-WRITTEN VERSE WORDING');
   });
+
+  it('reads the Claude gateway recommendation envelope and keeps references only', async () => {
+    reply.data = { recommendations: [{
+      title: 'Ask for wisdom at work',
+      references: [{ ref: 'James 1:5', why: 'Ask God for wisdom.', text: 'AI-WRITTEN VERSE WORDING' }],
+      extra: 'UNEXPECTED MODEL CONTENT',
+    }, { title: 'Missing citations', references: [] }] };
+    const { recs } = await getAIRecommendations({ title: 'Unique Claude gateway guard title', lang: 'en' });
+    expect(recs).toEqual([{ title: 'Ask for wisdom at work', verses: [{ ref: 'James 1:5' }] }]);
+    expect(JSON.stringify(recs)).not.toContain('AI-WRITTEN VERSE WORDING');
+    expect(JSON.stringify(recs)).not.toContain('UNEXPECTED MODEL CONTENT');
+  });
 });

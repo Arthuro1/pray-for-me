@@ -11,7 +11,7 @@
 // Bump AI_CACHE_VERSION whenever the gateway's prompts or task schemas change so
 // stale, differently-shaped results are never reused.
 
-export const AI_CACHE_VERSION = 2;
+export const AI_CACHE_VERSION = 3;
 
 const registry = new Set();
 

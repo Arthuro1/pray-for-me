@@ -25,11 +25,14 @@ import { grantAiConsent, revokeAiConsent, hasAiConsent } from '../../lib/aiConse
 import usePrayerStore from '../../store/prayerStore';
 import { track, EVENTS } from '../../lib/analytics';
 import { t } from '../../i18n';
+import { getAiProviderLabel, hasAiProviderAcknowledgement } from '../../lib/aiProvider';
 
 const lang = 'fr';
-afterEach(cleanup);
+afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
 
 beforeEach(() => {
+  vi.stubEnv('VITE_AI_PROVIDER', 'ollama');
+  localStorage.clear();
   usePrayerStore.setState({ settings: { language: lang, aiConsentPrayer: false, aiConsentHome: false }, userId: null });
   vi.clearAllMocks();
 });
@@ -57,11 +60,11 @@ describe('AI consent', () => {
     render(<AiConsentModal lang={lang} context="prayer" onAccept={() => {}} onCancel={() => {}} />);
     const text = screen.getByRole('dialog').textContent;
     expect(text).toContain(t(lang, 'aiPostureFull'));
-    expect(text).toContain(t(lang, 'aiConsentBodyPrayer'));
+    expect(text).toContain(t(lang, 'aiConsentBodyPrayer', { provider: getAiProviderLabel() }));
     expect(text).toContain(t(lang, 'aiConsentFooter'));
     expect(text).toMatch(/pas l’Écriture/);
     expect(text).toMatch(/connaître la volonté de Dieu/);
-    expect(text).toMatch(/service d’IA auto-hébergé de Qetoret/);
+    expect(text).toMatch(/envoyé à Qetoret/);
     expect(text).not.toMatch(/Anthropic|Claude/);
     expect(text).toMatch(/que si vous les incluez/);
     expect(text).toMatch(/Paramètres/);
@@ -75,5 +78,34 @@ describe('AI consent', () => {
     fireEvent.click(screen.getByText(t(lang, 'aiConsentAccept')));
     expect(onAccept).toHaveBeenCalled();
     expect(hasAiConsent('prayer')).toBe(true);
+  });
+
+  it('requires renewed, account-scoped consent for Claude despite old synced grants', () => {
+    vi.stubEnv('VITE_AI_PROVIDER', 'anthropic');
+    usePrayerStore.setState({ userId: 'account-a', settings: { language: lang, aiConsentPrayer: true, aiConsentHome: true } });
+    expect(hasAiConsent('prayer')).toBe(false);
+    expect(hasAiConsent('home')).toBe(false);
+
+    render(<AiConsentModal lang={lang} context="prayer" onAccept={() => {}} onCancel={() => {}} />);
+    const text = screen.getByRole('dialog').textContent;
+    expect(text).toContain('Claude (Anthropic)');
+    expect(text).toContain('texte que vous choisissez de traduire');
+    expect(text).not.toContain('{provider}');
+    fireEvent.click(screen.getByText(t(lang, 'aiConsentAccept')));
+    expect(hasAiConsent('prayer')).toBe(true);
+    expect(hasAiConsent('home')).toBe(false);
+
+    usePrayerStore.setState({ userId: 'account-b' });
+    expect(hasAiConsent('prayer')).toBe(false);
+  });
+
+  it('withdraws the provider acknowledgement along with both context grants', () => {
+    vi.stubEnv('VITE_AI_PROVIDER', 'anthropic');
+    usePrayerStore.setState({ userId: 'account-a' });
+    grantAiConsent('prayer');
+    grantAiConsent('home');
+    expect(hasAiProviderAcknowledgement('account-a')).toBe(true);
+    revokeAiConsent();
+    expect(hasAiProviderAcknowledgement('account-a')).toBe(false);
   });
 });
