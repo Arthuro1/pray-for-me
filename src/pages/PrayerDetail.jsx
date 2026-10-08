@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, CalendarClock, Flag, UserX, Pencil, Lock, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, BellOff, CalendarClock, Flag, UserX, Pencil, Lock, ShieldCheck, Sparkles } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
@@ -45,15 +45,14 @@ import { canUsePlan } from '../lib/planReview';
 import { isPlanShareable } from '../lib/planShareLink';
 import { planPrayerText } from '../lib/guidedPlan';
 import { PACE_LABEL_KEYS, paceOf, planTotal } from '../lib/planTempo';
-import GroupPrayerCalendar from '../components/GroupPrayerCalendar';
 import SchedulePlanner from '../components/SchedulePlanner';
-import PrayTogetherCard from '../components/PrayTogetherCard';
-import FollowPrayerButton from '../components/FollowPrayerButton';
+import CarryPresence from '../components/CarryPresence';
+import CarryButton from '../components/shared/CarryButton';
+import Avatar from '../components/shared/Avatar';
+import usePrayerFollow from '../hooks/usePrayerFollow';
 import ScriptureFirstStep from '../components/ScriptureFirstStep';
 import VerseAccordion from '../components/VerseAccordion';
-import CommunityUpdates from '../components/CommunityUpdates';
 import useMemberAvatars from '../hooks/useMemberAvatars';
-import CommunityTestimonies from '../components/CommunityTestimonies';
 import UpdateComposer from '../components/rich/UpdateComposer';
 import RichText from '../components/rich/RichText';
 import RemovableText from '../components/rich/RemovableText';
@@ -62,7 +61,6 @@ import { useSessionNoteIds } from '../hooks/useSessionNoteIds';
 import DeleteButton from '../components/rich/DeleteButton';
 import EditButton from '../components/rich/EditButton';
 import MessageEditor from '../components/rich/MessageEditor';
-import AnonymousToggle from '../components/AnonymousToggle';
 import ConfirmDialog from '../components/shared/ConfirmDialog';
 import LockedNotice from '../components/LockedNotice';
 import PrayerSession from '../components/PrayerSession';
@@ -77,13 +75,12 @@ import useFollowUpStore from '../store/followUpStore';
 import { audienceLabel, audienceOf, protectionLabel, protectionOf } from '../lib/audience';
 import { needsTranslationControl } from '../lib/langHint';
 import { getTranslationPref, setTranslationPref, prayerScope } from '../lib/translationPrefs';
-import { useEscapeKey } from '../hooks/useEscapeKey';
-import { useFocusTrap } from '../hooks/useFocusTrap';
 import { usePrayerActions } from '../hooks/usePrayerActions';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import PrayerPointItem from '../components/PrayerPointItem';
 import useCommunityPrayerUpdates from './prayerDetail/useCommunityPrayerUpdates';
 import useCommunityPrayerActions from './prayerDetail/useCommunityPrayerActions';
+import CommunityActivity from './prayerDetail/CommunityActivity';
 import usePrayerSharing from './prayerDetail/usePrayerSharing';
 import { safetyText } from '../lib/communitySafety';
 
@@ -162,6 +159,29 @@ function AudienceFact({ audience, protection, lang }) {
   );
 }
 
+// Who is asking, before what they ask: the author's face and name, then the
+// group it was brought to, when, and its labels — a group's request reads as a
+// word from someone, not as a record.
+function CommunityByline({ prayer, author, avatar, groupName, labels, answered, lang }) {
+  const anonymous = !!prayer.is_anonymous;
+  return (
+    <div className="prayer-detail__byline">
+      <Avatar name={anonymous ? '?' : author} avatar={avatar} anonymous={anonymous} size={40} />
+      <div className="min-w-0">
+        <p className="prayer-detail__byline-author">{author}</p>
+        <div className="prayer-detail__byline-meta">
+          {groupName && (
+            <AudienceFact audience={{ kind: 'fromGroup', groupName }} protection={protectionOf(prayer)} lang={lang} />
+          )}
+          <span>{timeAgo(prayer.created_at, lang)}</span>
+          {labels && <span>{labels}</span>}
+          {answered && <StatusLabel tone="answered">{t(lang, 'answered')}</StatusLabel>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // communityPrayer prop switches the component to community mode
 // `?day=` arrives from a URL, so it is checked for shape before it is asked
 // about: without this a hand-typed value walks the occurrence scan to its guard
@@ -219,11 +239,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const scheduleTriggerRef = useRef(null);
 
   // ── Community mode state ─────────────────────────────────────────────────
-  // (The encouragement timeline — communityUpdates/loadingUpdates — now lives in
-  // useCommunityPrayerUpdates.)
-  const [showCommunityTestimony, setShowCommunityTestimony] = useState(false);
-  const [communityTestimonyAnon, setCommunityTestimonyAnon] = useState(false);
-  // testimonySent + togglingPraying now live in useCommunityPrayerActions.
+  // (The encouragement timeline lives in useCommunityPrayerUpdates, the carry
+  // toggle in useCommunityPrayerActions.) Which entry flow the action row
+  // opened: 'word', 'answer' or 'testimony' — one at a time, like personal.
+  const [communityFlow, setCommunityFlow] = useState(null);
   const [showCommunityEdit, setShowCommunityEdit] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -262,21 +281,13 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const { followUps, setFollowUp } = useFollowUpStore(
     useShallow((s) => ({ followUps: s.followUps, setFollowUp: s.setFollowUp }))
   );
-  // Esc closes the delete overlay (the share modal handles its own Esc/focus
-  // trap; ConfirmDialog handles its own).
-  useEscapeKey(showDeleteConfirm ? () => setShowDeleteConfirm(false) : null);
-  const deleteTrapRef = useFocusTrap(showDeleteConfirm);
   const { user } = useAuthStore();
   // (fetchPrayerUpdates, addUpdate, delete/editCommunityUpdate, subscribePrayerActivity,
   // refreshPrayer, fetchUserReactions moved into useCommunityPrayerUpdates.)
-  const { groups, activeGroupId, prayers: communityPrayers, deleteCommunityTestimony, editCommunityTestimony, addTestimony, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, testimonies: communityTestimonies, setPrayerShares, reportCommunityContent, setUserBlocked } = useCommunityStore(
+  const { groups, prayers: communityPrayers, updatePrayer: updateCommunityPrayer, deleteCommunityPrayer, addCommunityPrayerPoint, removeCommunityPrayerPoint, addCommunityVerse, removeCommunityVerse, testimonies: communityTestimonies, setPrayerShares, reportCommunityContent, setUserBlocked } = useCommunityStore(
     useShallow((s) => ({
       groups: s.groups,
-      activeGroupId: s.activeGroupId,
       prayers: s.prayers,
-      deleteCommunityTestimony: s.deleteCommunityTestimony,
-      editCommunityTestimony: s.editCommunityTestimony,
-      addTestimony: s.addTestimony,
       updatePrayer: s.updatePrayer,
       deleteCommunityPrayer: s.deleteCommunityPrayer,
       addCommunityPrayerPoint: s.addCommunityPrayerPoint,
@@ -299,42 +310,18 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     communityUpdates, loadingUpdates, handleSendWord, handleDeleteWord, handleEditWord,
   } = useCommunityPrayerUpdates({ communityPrayer, isCommunity, user, authorName, lang });
 
-  // ── Community mode: answered mirroring + "I'm praying" toggle ──────────────
+  // ── Community mode: answered mirroring + "Carry this prayer" toggle ────────
   const {
-    communityHasReacted, togglingPraying, testimonySent, setTestimonySent,
+    communityHasReacted, togglingPraying,
     handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying,
   } = useCommunityPrayerActions({ communityPrayer, isCommunity, user, authorName, lang });
 
-  // Whole-testimony delete (author or group admin). The store drops it from the
-  // testimonies list; CommunityTestimonies handles the author-only media cleanup.
-  const handleDeleteCommunityTestimony = async (testimonyId) => {
-    const res = await deleteCommunityTestimony(testimonyId);
-    if (res?.error) toast.error(t(lang, 'errorGeneric'));
-  };
-
-  // Author-only testimony text edit. The store owns the testimonies list and
-  // patches it (with a revert built into its own error path).
-  const handleEditCommunityTestimony = async (testimonyId, content) => {
-    const testimony = communityTestimonies.find((tm) => tm.id === testimonyId);
-    if (!testimony) return;
-    const res = await editCommunityTestimony(testimony, content);
-    if (res?.error) {
-      toast.error(t(lang, 'errorGeneric'));
-      return false;
-    }
-    return true;
-  };
-
-  const handlePostCommunityTestimony = async (text, attachments) => {
-    const result = await addTestimony({ groupId: activeGroupId, userId: user.id, authorName, content: text, isAnonymous: communityTestimonyAnon, communityPrayerId: communityPrayer.id, contentLanguage: lang, attachments });
-    if (result?.error) {
-      toast.error(t(lang, 'errorGeneric'));
-      return false;
-    }
-    setTestimonySent(true);
-    setShowCommunityTestimony(false);
-    return true;
-  };
+  // Following lives in the ⋯ menu; carrying a prayer already follows it.
+  const { following, toggle: toggleFollow } = usePrayerFollow({
+    userId: isCommunity ? user?.id : null,
+    prayerId: communityPrayer?.id,
+    lang,
+  });
 
   const handleDeleteCommunity = async () => {
     setDeleting(true);
@@ -511,7 +498,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   // prayer points beside it. Points an older run already carries still render —
   // decluttering hides affordances, never what someone wrote.
   const offerPointAuthoring = !isPlanRun;
-  const showWaysToPray = !isPlanRun || (displayPrayer.prayer_points || []).length > 0;
+  // An answered prayer is not asked how to pray for it: its points stay, the
+  // empty invitation and the authoring tools go — on a group's request too.
+  const showWaysToPray = (!isPlanRun && !isAnswered) || (displayPrayer.prayer_points || []).length > 0;
   // Same rule for the per-prayer follow-up: not offered on a run that already
   // returns by itself, but never taken away from one that has a date set.
   const followUpRelevant = !isPlanRun || !!followUps[livePrayer.id];
@@ -544,6 +533,19 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
   const carryingCount = isCommunity
     ? communityReactionCount
     : sharedGroups.reduce((total, share) => total + (share.prayingCount || 0), 0);
+  // A community request is prayed through the reader's OWN copy of it — the one
+  // carrying added, or the prayer they shared it from — so a session here counts
+  // in the same per-prayer log as Today. Without an open copy there is nothing
+  // to record against, and the action row offers Carry instead.
+  const communityCopy = isCommunity
+    ? prayers.find((p) => p.community_origin_id === communityPrayer.id)
+      || (communityPrayer.user_id === user?.id && communityPrayer.source_prayer_id
+        ? prayers.find((p) => p.id === communityPrayer.source_prayer_id)
+        : null)
+      || null
+    : null;
+  const communityPrayable = communityHasReacted && !!communityCopy && communityCopy.status !== 'answered' && !communityCopy._locked;
+  const communityGroupName = isCommunity ? (groups.find((g) => g.id === communityPrayer.group_id)?.name || '') : '';
 
   // ── Shared (saved-from-community) prayer flags ───────────────────────────
   // A saved copy follows the shared content read-only: it pulls the author's/
@@ -737,6 +739,14 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
     el?.querySelector(field)?.focus({ preventScroll: true });
   };
 
+  // On a group's request each tool opens its own flow and brings it into
+  // view; pressing the same tool again folds it away.
+  const openCommunityFlow = (flow, sectionId) => {
+    if (communityFlow === flow) { setCommunityFlow(null); return; }
+    setCommunityFlow(flow);
+    requestAnimationFrame(() => revealAndFocus(sectionId, '[contenteditable]'));
+  };
+
   const openAnswerFlow = () => {
     setShowTestimony(true);
     requestAnimationFrame(() => revealAndFocus('pd-answer', '[contenteditable]'));
@@ -818,7 +828,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           Today, so praying from here counts everywhere. */}
       {showPraySession && (
         <PrayerSession
-          prayers={[displayPrayer]}
+          prayers={[isCommunity ? communityCopy : displayPrayer]}
           categories={categories}
           lang={lang}
           tr={tr}
@@ -899,20 +909,16 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         />
       )}
 
-      {/* Community delete confirm */}
       {showDeleteConfirm && (
-        <div className="dialog-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4" onClick={() => setShowDeleteConfirm(false)}>
-          <div ref={deleteTrapRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t(lang, 'tipDeletePrayer')} className="editorial-dialog w-full max-w-sm p-5" onClick={e => e.stopPropagation()}>
-            <h3 className="font-semibold text-base mb-2" style={{ color: 'var(--q-text)' }}>{t(lang, 'tipDeletePrayer')}</h3>
-            <p className="text-sm mb-5" style={{ color: 'var(--q-text-tertiary)' }}>{livePrayer.title}</p>
-            <div className="flex gap-2">
-              <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 py-2.5 rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>{t(lang, 'cancel')}</button>
-              <button onClick={handleDeleteCommunity} disabled={deleting} className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white disabled:opacity-40" style={{ background: 'var(--q-danger)' }}>
-                {deleting ? <Loader2 size={14} className="animate-spin mx-auto" /> : t(lang, 'tipDeletePrayer')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title={t(lang, 'tipDeletePrayer')}
+          message={livePrayer.title}
+          confirmLabel={t(lang, 'tipDeletePrayer')}
+          cancelLabel={t(lang, 'cancel')}
+          loading={deleting}
+          onConfirm={handleDeleteCommunity}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
       )}
       {showReportConfirm && (
         <ConfirmDialog
@@ -949,14 +955,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         </button>
         <div className="flex items-center gap-2 shrink-0">
           {isCommunity ? (
-            // Author/admin management only; the primary "I'm praying" action now
-            // lives in the prominent Pray-together card below the request.
+            // Following, then author/admin management and safety. Carrying
+            // leads in the action row under the request.
             <OverflowMenu
               lang={lang}
               ariaLabel={t(lang, 'options')}
               triggerStyle={{ background: 'transparent', color: 'var(--q-text-secondary)', border: 0 }}
               iconColor="var(--q-text-secondary)"
               items={[
+                { key: 'follow', icon: following ? BellOff : Bell, label: t(lang, following ? 'unfollowPrayerMenu' : 'followPrayerMenu'), onClick: toggleFollow, hidden: following === null },
                 { key: 'edit', icon: Edit2, label: t(lang, 'edit'), onClick: () => setShowCommunityEdit(true), hidden: !canEditCommunityPrayer },
                 { key: 'report', icon: Flag, label: safetyText(lang, 'report'), onClick: () => setShowReportConfirm(true), hidden: communityPrayer.user_id === user?.id },
                 { key: 'block', icon: UserX, label: safetyText(lang, 'block'), danger: true, onClick: () => setShowBlockConfirm(true), hidden: communityPrayer.user_id === user?.id },
@@ -1004,6 +1011,17 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <span className="section-label">{heroContext}</span>
           </div>
         )}
+        {isCommunity && (
+          <CommunityByline
+            prayer={livePrayer}
+            author={communityAuthor(livePrayer, user?.id, lang)}
+            avatar={memberAvatarFor?.(livePrayer.user_id)}
+            groupName={communityGroupName}
+            labels={prayerCategories.map((c) => tr(c.name, lang)).join(' · ')}
+            answered={isAnswered}
+            lang={lang}
+          />
+        )}
         {showCirclePicker && (
           <PlaceCircleModal
             value={heroCircle}
@@ -1041,11 +1059,15 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {livePrayer._locked ? (
           <LockedNotice lang={lang} />
         ) : (planText?.description || livePrayer.description) ? (
-          <RichText text={planText?.description || loc(livePrayer.description)} className="prayer-detail__description" />
+          <RichText
+            text={planText?.description || loc(livePrayer.description)}
+            className={`prayer-detail__description ${isCommunity ? 'prayer-detail__description--request' : ''}`}
+          />
         ) : null}
 
         {/* One line of facts — its circle, its rhythm, who can read it — each
-            a small icon and a word, never a pill. */}
+            a small icon and a word, never a pill. (A group's request says where
+            it is from in its byline, and who carries it in its carry band.) */}
         {!isCommunity && (
           <div className="prayer-detail__facts">
             <CircleFact circle={heroCircle} lang={lang} onChange={canPlaceCircle ? () => setShowCirclePicker(true) : null} />
@@ -1065,21 +1087,20 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         {/* Then one quiet line of memory: its labels ("Marriage · Healing"),
             how long it has been carried and how often prayed. A saved copy
             files its labels further down, under your own categories. */}
+        {!isCommunity && (
         <div className="prayer-detail__meta">
           {!savedCopy && prayerCategories.length > 0 && (
             <span>{prayerCategories.map((c) => tr(c.name, lang)).join(' · ')}</span>
           )}
           <span>
-            {isCommunity
-              ? `${communityAuthor(livePrayer, user?.id, lang)} · ${timeAgo(livePrayer.created_at, lang)}`
-              : showsCarriedSince(livePrayer)
-                // Long-carried prayer as memory, never merit: a date and,
-                // once there is one, a plain count of the days it was prayed.
-                ? [
-                  t(lang, 'carriedSince', { date: carriedSinceLabel(livePrayer, lang) }),
-                  prayedDays > 0 ? tp(lang, 'prayedDays', prayedDays) : null,
-                ].filter(Boolean).join(' · ')
-                : timeAgo(livePrayer.created_at, lang)}
+            {showsCarriedSince(livePrayer)
+              // Long-carried prayer as memory, never merit: a date and,
+              // once there is one, a plain count of the days it was prayed.
+              ? [
+                t(lang, 'carriedSince', { date: carriedSinceLabel(livePrayer, lang) }),
+                prayedDays > 0 ? tp(lang, 'prayedDays', prayedDays) : null,
+              ].filter(Boolean).join(' · ')
+              : timeAgo(livePrayer.created_at, lang)}
           </span>
           {isAnswered && <StatusLabel tone="answered">{t(lang, 'answered')}</StatusLabel>}
           {carryingCount > 0 && (
@@ -1088,6 +1109,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             </span>
           )}
         </div>
+        )}
 
         {/* Pray now leads. Adding news and marking answered sit beside it as
             two compact tools — labelled where there is room, icons on a phone —
@@ -1118,6 +1140,57 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
                 </SecondaryButton>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Who carries a group's request: their faces and one sentence that
+            counts the reader as "you". Once the reader prays it through their
+            own copy, the band also holds the mark that lays it down again. */}
+        {isCommunity && (
+          <div className="carry-band">
+            <CarryPresence
+              prayerId={communityPrayer.id}
+              count={communityReactionCount}
+              carrying={communityHasReacted}
+              user={user}
+              lang={lang}
+              className="carry-band__presence"
+            />
+            {!isAnswered && !livePrayer._locked && communityPrayable && (
+              <CarryButton variant="icon" carrying busy={togglingPraying} onToggle={handleTogglePraying} lang={lang} />
+            )}
+          </div>
+        )}
+
+        {/* Then the actions, stacked: Carry leads until the reader carries it,
+            then Pray now (through their own copy), across the full width. A
+            word for the group and marking answered — or, for members, a
+            testimony — sit on one row beneath, each opening its own flow. */}
+        {isCommunity && !livePrayer._locked && (
+          <div className="prayer-detail__actions prayer-detail__actions--stacked">
+            {!isAnswered && (communityPrayable ? (
+              <PrimaryButton onClick={() => setShowPraySession(true)} className="prayer-detail__pray">
+                {t(lang, 'prayNow')}
+              </PrimaryButton>
+            ) : (
+              <CarryButton carrying={communityHasReacted} busy={togglingPraying} onToggle={handleTogglePraying} lang={lang} className="prayer-detail__pray" />
+            ))}
+            <div className="prayer-detail__secondary-actions">
+              {!isAnswered && (
+                <SecondaryButton onClick={() => openCommunityFlow('word', 'pd-word')} aria-expanded={communityFlow === 'word'} aria-controls="pd-word" icon={Plus} iconSize={18} title={t(lang, 'addUpdateBtn')}>
+                  {t(lang, 'addUpdateBtn')}
+                </SecondaryButton>
+              )}
+              {canEditCommunityPrayer ? !isAnswered && (
+                <SecondaryButton onClick={() => openCommunityFlow('answer', 'pd-answer')} aria-expanded={communityFlow === 'answer'} aria-controls="pd-answer" icon={CheckCircle} iconSize={18} title={t(lang, 'markAnswered')}>
+                  {t(lang, 'markAnswered')}
+                </SecondaryButton>
+              ) : (
+                <SecondaryButton onClick={() => openCommunityFlow('testimony', 'pd-testimony')} aria-expanded={communityFlow === 'testimony'} aria-controls="pd-testimony" icon={Sparkles} iconSize={18} title={t(lang, 'postTestimony')}>
+                  {t(lang, 'postTestimony')}
+                </SecondaryButton>
+              )}
+            </div>
           </div>
         )}
       </section>
@@ -1307,7 +1380,7 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
         <div className="prayer-points-panel">
           <div className="prayer-points-panel__header flex items-center justify-between">
             <p className="section-label">{t(lang, 'waysToPray')}</p>
-            {offerPointAuthoring && (isCommunity || canAddContent) && (
+            {offerPointAuthoring && canAddContent && (
               <div className="flex items-center gap-1.5">
                 <QuietButton
                   onClick={fetchRecs}
@@ -1472,108 +1545,30 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
           </p>
         )}
 
-        {/* ── Community mode: pray-together (primary action + who's praying) ── */}
+        {/* ── Community mode: words, testimonies and the flow the action row
+            opened — the same order and voice as a personal prayer. ── */}
         {isCommunity && (
-          <PrayTogetherCard
+          <CommunityActivity
             communityPrayer={communityPrayer}
-            count={communityReactionCount}
-            hasReacted={communityHasReacted}
-            busy={togglingPraying}
             lang={lang}
             user={user}
-            onTogglePraying={handleTogglePraying}
-          />
-        )}
-
-        {/* Follow this prayer for update / answered / testimony notifications.
-            Reversible surface for the auto-follow that happens on "I'm praying". */}
-        {isCommunity && user?.id && (
-          <div className="flex items-center justify-end py-2">
-            <FollowPrayerButton userId={user.id} prayerId={communityPrayer.id} lang={lang} />
-          </div>
-        )}
-
-        {/* ── Community mode: prayer-chain calendar (claim a day) ── */}
-        {isCommunity && (
-          <GroupPrayerCalendar
-            communityPrayer={communityPrayer}
-            groupId={communityPrayer.group_id}
-            lang={lang}
-            user={user}
-          />
-        )}
-
-        {/* ── Community mode: member updates ── */}
-        {isCommunity && (
-          <CommunityUpdates
-            updates={communityUpdates}
-            loading={loadingUpdates}
+            authorName={authorName}
             loc={loc}
-            lang={lang}
-            userId={user?.id}
+            flow={communityFlow}
+            onCloseFlow={() => setCommunityFlow(null)}
+            isAnswered={isAnswered}
+            canManage={canEditCommunityPrayer}
             isAdmin={isGroupAdmin}
             avatarFor={memberAvatarFor}
-            onSend={handleSendWord}
-            onDelete={handleDeleteWord}
-            onEdit={handleEditWord}
+            updates={communityUpdates}
+            loadingUpdates={loadingUpdates}
+            onSendWord={handleSendWord}
+            onDeleteWord={handleDeleteWord}
+            onEditWord={handleEditWord}
+            testimonies={prayerTestimonies}
+            onConfirmAnswered={handleConfirmCommunityAnswered}
+            onResume={handleResumeCommunity}
           />
-        )}
-
-        {/* ── Community mode: testimonies posted for this prayer ── */}
-        {isCommunity && (
-          <CommunityTestimonies items={prayerTestimonies} loc={loc} lang={lang} userId={user?.id} isAdmin={isGroupAdmin} onDelete={handleDeleteCommunityTestimony} onEdit={handleEditCommunityTestimony} />
-        )}
-
-        {/* ── Community mode: mark answered (author/admin) — mirrors personal ── */}
-        {isCommunity && canEditCommunityPrayer && (
-          !isAnswered ? (
-            <div className="prayer-activity-panel">
-              <p className="prayer-activity-panel__title">{t(lang, 'testimony')}</p>
-              {/* Confirm marks the request answered; the testimony (text and/or
-                  media) is optional, so allowEmpty keeps Confirm available. */}
-              <UpdateComposer
-                lang={lang}
-                rows={1}
-                allowEmpty
-                placeholder={`${t(lang, 'testimony')}…`}
-                sendLabel={t(lang, 'confirm')}
-                onSend={handleConfirmCommunityAnswered}
-              />
-            </div>
-          ) : (
-            <div className="flex gap-3">
-              <button onClick={handleResumeCommunity} title={t(lang, 'tipResume')} className="flex items-center gap-2 text-sm px-4 py-3 rounded-xl font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-                {t(lang, 'resumePrayer')}
-              </button>
-            </div>
-          )
-        )}
-
-        {/* ── Community mode: testimony (members; author/admin use the answered flow) ── */}
-        {isCommunity && !canEditCommunityPrayer && (
-          testimonySent ? (
-            <div className="prayer-activity-action rounded-xl px-4 py-3 text-sm text-center" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)' }}>
-              {t(lang, 'testimony')}
-            </div>
-          ) : showCommunityTestimony ? (
-            <div className="prayer-activity-panel">
-              <p className="prayer-activity-panel__title">{t(lang, 'postTestimony')}</p>
-              <UpdateComposer
-                lang={lang}
-                rows={3}
-                autoFocus
-                placeholder={`${t(lang, 'testimony')}…`}
-                sendLabel={t(lang, 'postTestimony')}
-                onSend={handlePostCommunityTestimony}
-              />
-              <AnonymousToggle checked={communityTestimonyAnon} onChange={setCommunityTestimonyAnon} lang={lang} className="mt-3 mb-3" />
-              <button onClick={() => setShowCommunityTestimony(false)} className="w-full py-2.5 rounded-xl text-sm" style={{ background: 'var(--q-field)', color: 'var(--q-text-secondary)', border: '0.5px solid var(--q-field-border)' }}>{t(lang, 'cancel')}</button>
-            </div>
-          ) : (
-            <button onClick={() => setShowCommunityTestimony(true)} className="prayer-activity-action w-full py-3 rounded-xl text-sm font-medium" style={{ background: 'var(--q-selected)', color: 'var(--q-royal-text)', border: '0.5px solid var(--q-selected-border)' }}>
-              {t(lang, 'postTestimony')}
-            </button>
-          )
         )}
 
         {/* ── Personal mode: updates, testimony, actions. The per-prayer plan

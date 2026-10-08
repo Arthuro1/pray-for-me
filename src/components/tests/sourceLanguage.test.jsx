@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 //
 // Source-language metadata: defaulted from the active language (nobody is asked
-// to pick one), correctable in one tap from inside an existing disclosure, and
-// authoritative over the on-device heuristic once stated.
+// to pick one), stated in the form's one quiet footer line and correctable from
+// it in one tap, and authoritative over the on-device heuristic once stated.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 
@@ -45,16 +45,13 @@ beforeEach(() => {
 describe('the form defaults the language and hides the correction', () => {
   it('defaults to the active interface language without asking anything', () => {
     render(<PrayerForm onClose={() => {}} />);
-    // Collapsed by default: no language row until Organize is opened, so the
-    // default form gains nothing.
-    expect(screen.queryByText(t(lang, 'sourceLangWrittenIn', { name: labelOf(lang) }))).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
+    // Stated, not asked: one line of text, and no picker until "Change".
     expect(screen.getByText(t(lang, 'sourceLangWrittenIn', { name: labelOf(lang) }))).toBeTruthy();
+    expect(screen.queryByLabelText(t(lang, 'sourceLangLabel'))).toBeNull();
   });
 
   it('corrects the language without opening any permanent form section', () => {
     render(<PrayerForm onClose={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
 
     // The picker itself is a disclosure — absent until "Change" is pressed.
     const change = screen.getByRole('button', { name: t(lang, 'sourceLangChange') });
@@ -72,7 +69,6 @@ describe('the form defaults the language and hides the correction', () => {
   it('persists the correction onto the created prayer', async () => {
     render(<PrayerForm onClose={() => {}} />);
     fireEvent.change(screen.getByLabelText(t(lang, 'prayerFieldLabel')), { target: { value: 'Ayúdame' } });
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'sourceLangChange') }));
     fireEvent.change(screen.getByLabelText(t(lang, 'sourceLangLabel')), { target: { value: 'es' } });
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'savePrayer') }));
@@ -84,14 +80,12 @@ describe('the form defaults the language and hides the correction', () => {
   it('reopens an edited prayer on its OWN stored language, not the interface one', () => {
     const edited = { id: 'p1', title: 'Oración', description: '', content_language: 'es', prayer_categories: [], prayer_points: [] };
     render(<PrayerForm editPrayer={edited} onClose={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
     expect(screen.getByText(t(lang, 'sourceLangWrittenIn', { name: labelOf('es') }))).toBeTruthy();
   });
 
   it('falls back to the active language for a legacy row with no metadata', () => {
     const legacy = { id: 'p1', title: 'Vieille prière', description: '', prayer_categories: [], prayer_points: [] };
     render(<PrayerForm editPrayer={legacy} onClose={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
     expect(screen.getByText(t(lang, 'sourceLangWrittenIn', { name: labelOf(lang) }))).toBeTruthy();
   });
 });

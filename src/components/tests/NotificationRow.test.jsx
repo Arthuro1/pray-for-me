@@ -6,7 +6,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import NotificationRow from '../NotificationRow';
-import { t } from '../../i18n';
+import { t, tp } from '../../i18n';
 
 const lang = 'fr';
 const notification = (extra = {}) => ({
@@ -48,5 +48,14 @@ describe('NotificationRow group context', () => {
     // The tile is decorative: it adds recognition for sighted readers without
     // putting a second, redundant identity into the row's accessible name.
     expect(document.querySelector('.avatar').closest('[aria-hidden="true"]')).not.toBeNull();
+  });
+});
+
+describe('NotificationRow — folded notifications', () => {
+  it('says how many more of the same kind it holds, in words', () => {
+    render(<NotificationRow notification={notification({ type: 'friend_request' })} count={3} lang={lang} onActivate={() => {}} />);
+    const row = screen.getByRole('button');
+    expect(row.textContent).toContain(tp(lang, 'notifAndMore', 2));
+    expect(row.getAttribute('aria-label')).toBe(`${t(lang, 'notifFriendRequest')}, ${tp(lang, 'notifAndMore', 2)}`);
   });
 });

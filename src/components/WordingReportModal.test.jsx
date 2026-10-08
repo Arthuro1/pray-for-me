@@ -15,20 +15,36 @@ beforeEach(async () => {
   submitWordingReport.mockResolvedValue(undefined);
 });
 afterEach(cleanup);
+// A text is chosen by tapping it in the search results.
+const choose = async (text) => fireEvent.click(await screen.findByRole('radio', { name: text }));
+
 it('submits selected published wording and the explicit correction', async () => {
   render(<WordingReportModal lang="en" onClose={() => {}} />);
-  await screen.findByRole('option', { name: /Save a prayer/ });
-  fireEvent.change(screen.getByLabelText('Choose wording'), { target: { value: 'ui:save' } });
+  await choose('Save a prayer');
   fireEvent.change(screen.getByLabelText('Suggested wording (optional)'), { target: { value: 'Save prayer' } });
   fireEvent.click(screen.getByRole('button', { name: 'Send' }));
   await screen.findByText('Thank you for your feedback!');
   expect(submitWordingReport).toHaveBeenCalledWith({ locale: 'en', translation_key: 'ui:save', screen: 'ui', current_string: 'Save a prayer', issue_type: 'unnatural', suggested_wording: 'Save prayer' });
 });
+it('narrows the list by search, shows the chosen text alone, and sends the issue picked', async () => {
+  loadCatalogue.mockResolvedValue([...entries, { id: 'ui:pray', locale: 'en', surface: 'ui', key: 'pray', text: 'Pray now' }]);
+  render(<WordingReportModal lang="en" onClose={() => {}} />);
+  await screen.findByRole('radio', { name: 'Pray now' });
+  fireEvent.change(screen.getByRole('searchbox', { name: 'Search for a phrase' }), { target: { value: 'pray now' } });
+  expect(screen.queryByRole('radio', { name: 'Save a prayer' })).toBeNull();
+  // Nothing can be sent before a text is chosen.
+  expect(screen.getByRole('button', { name: 'Send' }).disabled).toBe(true);
+  await choose('Pray now');
+  expect(screen.queryByRole('searchbox')).toBeNull();
+  fireEvent.click(screen.getByRole('radio', { name: 'Unclear meaning' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+  await screen.findByText('Thank you for your feedback!');
+  expect(submitWordingReport).toHaveBeenCalledWith(expect.objectContaining({ translation_key: 'ui:pray', issue_type: 'unclear' }));
+});
 it('retains the correction after a submission failure so the user can retry', async () => {
   submitWordingReport.mockRejectedValueOnce(new Error('Offline'));
   render(<WordingReportModal lang="en" onClose={() => {}} />);
-  await screen.findByRole('option', { name: /Save a prayer/ });
-  fireEvent.change(screen.getByLabelText('Choose wording'), { target: { value: 'ui:save' } });
+  await choose('Save a prayer');
   fireEvent.change(screen.getByLabelText('Suggested wording (optional)'), { target: { value: 'Keep prayer' } });
   fireEvent.click(screen.getByRole('button', { name: 'Send' }));
   await screen.findByRole('alert');
@@ -40,16 +56,16 @@ it('shows a recoverable catalogue-load failure', async () => {
   loadCatalogue.mockRejectedValueOnce(new Error('Chunk unavailable'));
   render(<WordingReportModal lang="en" onClose={() => {}} />);
   fireEvent.click(await screen.findByRole('button', { name: 'Try again' }));
-  await screen.findByRole('option', { name: /Save a prayer/ });
+  await screen.findByRole('radio', { name: 'Save a prayer' });
 });
 it('opens on the screen it was reported from, or the app text when that screen has none', async () => {
   const guide = { id: 'guides/acts:intro', locale: 'en', surface: 'guides/acts', key: 'intro', text: 'Adore God for who He is', surfaceLabel: 'ACTS' };
   loadCatalogue.mockResolvedValue([...entries, guide]);
   render(<WordingReportModal lang="en" initialSurface="guides/acts" onClose={() => {}} />);
-  await screen.findByRole('option', { name: /Adore God/ });
+  await screen.findByRole('radio', { name: 'Adore God for who He is' });
   expect(screen.getByLabelText('Section').value).toBe('guides/acts');
   cleanup();
   render(<WordingReportModal lang="en" initialSurface="plans/unpublished" onClose={() => {}} />);
-  await screen.findByRole('option', { name: /Save a prayer/ });
+  await screen.findByRole('radio', { name: 'Save a prayer' });
   expect(screen.getByLabelText('Section').value).toBe('ui');
 });

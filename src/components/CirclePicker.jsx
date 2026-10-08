@@ -84,24 +84,33 @@ function CircleRow({ value, onChange, lang, idPrefix, defaultOpen }) {
         </span>
       </button>
       {open && (
-        <div id={choicesId} role="group" aria-labelledby={labelId} className="q-chips circle-row__choices">
-          {CIRCLES.map((circle) => {
-            const selected = value === circle;
-            return (
-              <button
-                key={circle}
-                type="button"
-                aria-pressed={selected}
-                onClick={() => choose(circle)}
-                className="q-chip circle-chip pressable"
-              >
-                <CircleGlyph circle={circle} size={16} selected={selected} />
-                <span>{t(lang, circleLabelKey(circle))}</span>
-              </button>
-            );
-          })}
-        </div>
+        <CircleChips id={choicesId} labelledBy={labelId} value={value} onChoose={choose} lang={lang} className="circle-row__choices" />
       )}
+    </div>
+  );
+}
+
+// The seven circles as one wrapping row of toggle chips — shared by the circle
+// row above and the prayer form's own details list. The host decides what a
+// choice does next (fold away, hand focus back).
+export function CircleChips({ id, labelledBy, value, onChoose, lang, className = '' }) {
+  return (
+    <div id={id} role="group" aria-labelledby={labelledBy} className={`q-chips ${className}`}>
+      {CIRCLES.map((circle) => {
+        const selected = value === circle;
+        return (
+          <button
+            key={circle}
+            type="button"
+            aria-pressed={selected}
+            onClick={() => onChoose(circle)}
+            className="q-chip circle-chip pressable"
+          >
+            <CircleGlyph circle={circle} size={16} selected={selected} />
+            <span>{t(lang, circleLabelKey(circle))}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

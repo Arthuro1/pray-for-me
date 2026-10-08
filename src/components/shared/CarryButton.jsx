@@ -8,8 +8,13 @@ import RiseMark from './RiseMark';
 // incense rises, and the button settles on "Carrying". Never a heart, never a
 // like, never a burst. `aria-pressed` carries the state for assistive tech,
 // and the label says it in words, so nothing depends on seeing the motion.
-// variant: 'primary' (a prayer's own page) or 'quiet' (a row in a list).
+// variant: 'primary' (a prayer's own page), 'quiet' (a row in a list) or
+// 'icon' (just the mark, where the words beside it already say who carries it —
+// the label stays for assistive tech and as the tooltip).
 export default function CarryButton({ carrying, busy = false, onToggle, lang, variant = 'primary', className = '', ...props }) {
+  const label = t(lang, carrying ? 'carryingLabel' : 'carryThisPrayer');
+  const iconOnly = variant === 'icon';
+
   // The lift plays only when the reader starts carrying — not on load, and not
   // when they lay the prayer down again.
   const [lifted, setLifted] = useState(0);
@@ -27,6 +32,7 @@ export default function CarryButton({ carrying, busy = false, onToggle, lang, va
       disabled={busy}
       aria-pressed={!!carrying}
       className={`carry-button carry-button--${variant} pressable ${carrying ? 'carry-button--carrying' : ''} ${className}`}
+      title={iconOnly ? label : undefined}
       {...props}
     >
       <span className="carry-button__mark" aria-hidden="true">
@@ -39,7 +45,7 @@ export default function CarryButton({ carrying, busy = false, onToggle, lang, va
           </>
         )}
       </span>
-      <span>{t(lang, carrying ? 'carryingLabel' : 'carryThisPrayer')}</span>
+      <span className={iconOnly ? 'sr-only' : undefined}>{label}</span>
     </button>
   );
 }

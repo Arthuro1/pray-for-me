@@ -5,6 +5,7 @@ import usePrayerStore from '../store/prayerStore';
 import useNotificationStore from '../store/notificationStore';
 import useAuthStore from '../store/authStore';
 import { notificationRoute } from '../lib/notificationRoutes';
+import { groupNotifications } from '../lib/notificationGroups';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { t } from '../i18n';
@@ -14,7 +15,8 @@ import { QuietButton, SecondaryButton } from './shared/Primitives';
 import EmptyState from './shared/EmptyState';
 
 // A dropdown-style panel (bottom sheet on mobile) listing the most recent
-// notifications. Clicking one marks it read and deep-links to the relevant page.
+// notifications, alike ones folded into one row. Clicking a row marks all it
+// holds read and deep-links to the relevant page.
 export default function NotificationPanel({ onClose }) {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const { user } = useAuthStore();
@@ -35,12 +37,12 @@ export default function NotificationPanel({ onClose }) {
     if (user?.id) fetchNotifications(user.id);
   }, [user?.id, fetchNotifications]);
 
-  const recent = notifications.slice(0, 8);
+  const recent = groupNotifications(notifications).slice(0, 8);
 
-  const handleActivate = async (n) => {
-    await markRead(n.id);
+  const handleActivate = async (row) => {
+    await Promise.all(row.ids.map(markRead));
     onClose();
-    navigate(notificationRoute(n));
+    navigate(notificationRoute(row.latest));
   };
 
   return (
@@ -78,9 +80,15 @@ export default function NotificationPanel({ onClose }) {
             <EmptyState compact title={t(lang, 'notifEmpty')} subtitle={t(lang, 'notifEmptySub')} />
           ) : (
             <ul className="notif-list">
-              {recent.map((n) => (
-                <li key={n.id}>
-                  <NotificationRow notification={n} lang={lang} onActivate={handleActivate} group={groupFor(n.group_id)} />
+              {recent.map((row) => (
+                <li key={row.latest.id}>
+                  <NotificationRow
+                    notification={row.latest}
+                    count={row.ids.length}
+                    lang={lang}
+                    onActivate={() => handleActivate(row)}
+                    group={groupFor(row.latest.group_id)}
+                  />
                 </li>
               ))}
             </ul>

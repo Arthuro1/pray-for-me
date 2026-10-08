@@ -22,7 +22,7 @@ import IntercessionQueue from '../IntercessionQueue';
 import usePrayerStore from '../../store/prayerStore';
 import useCommunityStore from '../../store/communityStore';
 import { todayKey } from '../../lib/prayedLog';
-import { t } from '../../i18n';
+import { t, tp } from '../../i18n';
 
 const lang = 'fr';
 const dayKey = todayKey();
@@ -55,7 +55,7 @@ describe('IntercessionQueue — membership', () => {
   it('counts only committed requests, with nothing to configure before praying', () => {
     usePrayerStore.setState({ prayers: [base('a'), forOther('b'), saved('c')] });
     render(<IntercessionQueue lang={lang} />);
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 2 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 2))).toBeTruthy();
     // No source switch and no folded Filter: each request names its group.
     expect(screen.queryByRole('button', { name: new RegExp(t(lang, 'filterLabel')) })).toBeNull();
     expect(screen.queryByText(t(lang, 'srcPersonal'))).toBeNull();
@@ -81,12 +81,12 @@ describe('IntercessionQueue — by the carrier’s own circles', () => {
     expect(within(circleRow()).getAllByRole('button').map((b) => b.textContent))
       .toEqual([t(lang, 'all'), t(lang, 'circle_people'), t(lang, 'circle_nations')]);
     expect(chip(t(lang, 'all')).getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 3))).toBeTruthy();
 
     fireEvent.click(chip(t(lang, 'circle_nations')));
     expect(chip(t(lang, 'circle_nations')).getAttribute('aria-pressed')).toBe('true');
     expect(chip(t(lang, 'all')).getAttribute('aria-pressed')).toBe('false');
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 1))).toBeTruthy();
     fireEvent.click(screen.getByText(t(lang, 'prayNow')));
     expect(screen.getByText('Sujet b')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t(lang, 'close')));
@@ -96,7 +96,7 @@ describe('IntercessionQueue — by the carrier’s own circles', () => {
     expect(chip(t(lang, 'all')).getAttribute('aria-pressed')).toBe('true');
     fireEvent.click(chip(t(lang, 'circle_people')));
     fireEvent.click(chip(t(lang, 'all')));
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 3))).toBeTruthy();
     expect(usePrayerStore.getState().completions).toEqual({});
   });
 });
@@ -112,7 +112,7 @@ describe('IntercessionQueue — session & resume', () => {
     expect(usePrayerStore.getState().completions.b).toContain(dayKey);
     // Leave midway — progress is kept, count reflects it.
     fireEvent.click(screen.getByLabelText(t(lang, 'close')));
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 1))).toBeTruthy();
   });
 
   it('resume starts at the first unfinished request, never repeating completed ones', () => {
@@ -144,7 +144,7 @@ describe('IntercessionQueue — schedule-aware default', () => {
     usePrayerStore.setState({ prayers: [forOther('b'), { ...saved('c'), schedule: weeklyElsewhere }] });
     render(<IntercessionQueue lang={lang} />);
     // Only the due (legacy daily) request counts toward today's session.
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 1))).toBeTruthy();
     const disclosure = screen.getByText(t(lang, 'intercessionAllCarried', { n: 2 }));
     fireEvent.click(disclosure);
     // Every carried request is listed, including the not-due one.
@@ -156,7 +156,7 @@ describe('IntercessionQueue — schedule-aware default', () => {
     usePrayerStore.setState({ prayers: [{ ...saved('c'), schedule: weeklyElsewhere }] });
     useCommunityStore.setState({ myCommitments: [{ community_prayer_id: 'c-c', day: dayKey }] });
     render(<IntercessionQueue lang={lang} />);
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
+    expect(screen.getByText(tp(lang, 'carryTodayCount', 1))).toBeTruthy();
   });
 
   it('renders nothing at all only when nothing is carried — a not-due-only queue still shows the disclosure', () => {

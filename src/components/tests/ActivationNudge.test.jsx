@@ -89,7 +89,7 @@ describe('ActivationNudge', () => {
 
     expect(screen.getByText(t(lang, 'activationRhythmTitle'))).toBeTruthy();
     fireEvent.click(screen.getByText(t(lang, 'activationRhythmCta')));
-    expect(onEditPrayer).toHaveBeenCalledWith(prayers[0], { openOrganize: true });
+    expect(onEditPrayer).toHaveBeenCalledWith(prayers[0], { openDetail: 'rhythm' });
     expect(screen.queryByText(t(lang, 'activationRhythmTitle'))).toBeNull();
     expect(localStorage.getItem('pfm_activation_progress_v1')).not.toContain('p1');
   });

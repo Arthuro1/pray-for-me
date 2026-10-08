@@ -53,7 +53,7 @@ import { resolvePwaShortcut } from './lib/pwaInstall';
 import { isInvitePath, savePendingInvite, takePendingInvite } from './lib/pendingInvite';
 import { hasPendingGuestDraftSync, clearGuestDraft } from './lib/guestPrayerDraft';
 import { hasPendingPlanJoin, isPlanSharePath } from './lib/planShareLink';
-import { normalizeTheme } from './utils/theme';
+import { applyTheme, normalizeTheme } from './utils/theme';
 import { importGuestPrayerOnce } from './lib/guestPrayerImport';
 import './lib/mutationExecutors'; // self-registers queued-mutation executors
 import { t, loadLocale, isLocaleLoaded, dirFor } from './i18n';
@@ -253,7 +253,7 @@ export default function AuthenticatedApp({
     init();
     const saved = normalizeTheme(localStorage.getItem('pfm_theme'));
     localStorage.setItem('pfm_theme', saved);
-    document.documentElement.setAttribute('data-theme', saved);
+    applyTheme(saved);
     // Replay any writes queued offline. If a mutation fails permanently, tell
     // the user and reconcile local state back to server truth (rolls back the
     // optimistic change instead of leaving an un-saved "ghost").
@@ -504,7 +504,7 @@ export default function AuthenticatedApp({
                   old standalone page redirects there so saved links keep working. */}
               <Route path="/answered" element={<Navigate to="/prayers" state={{ filter: 'answered' }} replace />} />
               <Route path="/more" element={<MoreTab />} />
-              <Route path="/about" element={<AboutTab />} />
+              <Route path="/about" element={<AboutTab onPrayInCircle={openAddInCircle} />} />
               <Route path="/community" element={<CommunityTab />} />
               <Route path="/community/join/:code" element={<JoinGroupPage />} />
               <Route path="/community/add-friend/:id" element={<AddFriendPage />} />
@@ -539,10 +539,10 @@ export default function AuthenticatedApp({
             setFormPrefill(null);
             setFormOptions(null);
           }}
-          onEditSaved={(saved) => openEdit(saved, { openOrganize: true })}
+          onEditSaved={(saved) => openEdit(saved, { openDetail: 'rhythm' })}
           editPrayer={editPrayer}
           prefill={formPrefill}
-          initialOrganizeOpen={!!formOptions?.openOrganize}
+          initialDetail={formOptions?.openDetail || null}
           context={formOptions?.circle || formOptions?.prompt ? { circle: formOptions.circle, prompt: formOptions.prompt } : null}
         />
       )}

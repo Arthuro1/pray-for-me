@@ -33,25 +33,6 @@ function PlanSection({ id, label, grid = false, children }) {
   );
 }
 
-// One row of category shortcuts: a tap scrolls to that part of the catalogue.
-// Nothing is filtered or hidden — it only shortens the way down a long page.
-function PlanJumps({ lang, categories }) {
-  if (categories.length < 2) return null;
-  const jump = (id) => {
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    document.getElementById(`plans-${id}`)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-  };
-  return (
-    <nav className="plan-jumps" aria-label={t(lang, 'plansJumpLabel')}>
-      {categories.map((group) => (
-        <button key={group.id} type="button" onClick={() => jump(group.id)} className="q-chip pressable">
-          {t(lang, group.labelKey)}
-        </button>
-      ))}
-    </nav>
-  );
-}
-
 // Prayer plans as a destination of their own: what you're praying through,
 // one gentle place to begin, then the whole catalogue — open, grouped by need,
 // nothing behind a "Browse" disclosure.
@@ -191,8 +172,7 @@ export default function PlansTab() {
       )}
 
       <div className="phase-page__shell">
-        <PageHeader title={t(lang, 'journeysTitle')} subtitle={t(lang, 'journeysSub')} />
-        <PlanJumps lang={lang} categories={categories} />
+        <PageHeader title={t(lang, 'journeysTitle')} />
       </div>
 
       <div className="phase-content">
@@ -216,9 +196,10 @@ export default function PlansTab() {
           </section>
         )}
 
-        {/* The second way in, open at the top: the seven circles, each a door
-            to its page, which lists that circle's plans — never a second
-            catalogue. One row; it scrolls sideways where it doesn't fit. */}
+        {/* The way in, open at the top: the seven circles, each a door to its
+            page, which lists that circle's plans — never a second catalogue.
+            One row; it scrolls sideways where it doesn't fit. The catalogue
+            below keeps its own headings by need. */}
         <section aria-labelledby="plans-circles" className="plan-section">
           <h2 id="plans-circles" className="section-label">{t(lang, 'exploreByCircle')}</h2>
           <CircleLinks lang={lang} returnTo={{ from: '/plans' }} labelledBy="plans-circles" variant="doors" />

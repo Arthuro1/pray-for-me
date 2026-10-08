@@ -395,7 +395,11 @@ a.q-card:hover {
 }
 
 .segmented-control button {
+  display: inline-flex;
   min-height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   padding-inline: var(--q-space-4);
   border-radius: 8px;
   color: var(--q-text-secondary);
@@ -404,10 +408,12 @@ a.q-card:hover {
   transition: background-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease);
 }
 
+/* The chosen option is raised out of the track, never sunk into it — in the
+   dark themes the track is the lighter ground, so it gets its own token. */
 .segmented-control button[aria-pressed="true"] {
-  background: var(--q-surface);
+  background: var(--q-segment-on);
   color: var(--q-text);
-  box-shadow: 0 0 0 1px var(--q-border);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 12%), 0 0 0 1px var(--q-border);
 }
 
 /* A small switch for HOW something is shown (not what it holds). */

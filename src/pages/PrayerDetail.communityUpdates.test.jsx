@@ -32,19 +32,19 @@ vi.mock('../lib/verseText', () => ({
 }));
 vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 vi.mock('../lib/mutationQueue', () => ({ enqueue: vi.fn(), pendingPrayerIds: () => new Set() }));
-vi.mock('../components/GroupPrayerCalendar', () => ({ default: () => null }));
 vi.mock('../components/CommunityTestimonies', () => ({ default: () => null }));
-vi.mock('../components/FollowPrayerButton', () => ({ default: () => null }));
-vi.mock('../components/rich/UpdateComposer', () => ({ default: () => null }));
+// The word flow's composer, reduced to the send it performs.
+vi.mock('../components/rich/UpdateComposer', () => ({
+  default: ({ onSend }) => <button onClick={() => onSend('A new word', [])}>send-word</button>,
+}));
 
-// A prop-exposing stand-in: it renders the timeline and offers buttons that call
-// the send/delete handlers the way the real composer/menu would.
+// A prop-exposing stand-in: it renders the timeline and offers the delete the
+// real row menu would.
 vi.mock('../components/CommunityUpdates', () => ({
-  default: ({ updates, loading, onSend, onDelete }) => (
+  default: ({ updates, loading, onDelete }) => (
     <div>
       <span data-testid="loading">{String(!!loading)}</span>
       <ul>{updates.map((u) => <li key={u.id}>{u.text}</li>)}</ul>
-      <button onClick={() => onSend('A new word', [], false)}>send-word</button>
       <button onClick={() => onDelete('up1')}>delete-word</button>
     </div>
   ),
@@ -110,13 +110,18 @@ describe('PrayerDetail — community updates timeline', () => {
     renderCommunity({ addUpdate, fetchPrayerUpdates });
 
     await screen.findByText('Existing word');
+    // A word is written in its own flow, opened from the action row.
+    expect(screen.queryByText('send-word')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'addUpdateBtn') }));
+    expect(screen.getByRole('heading', { name: t(lang, 'groupWordTitle') })).toBeTruthy();
     fireEvent.click(screen.getByText('send-word'));
 
     await waitFor(() => expect(addUpdate).toHaveBeenCalledWith(expect.objectContaining({
-      prayerId: 'c1', userId: 'u1', text: 'A new word',
+      prayerId: 'c1', userId: 'u1', text: 'A new word', isAnonymous: false,
     })));
-    // Refetched → the new word appears.
+    // Refetched → the new word appears, and the flow folds away once sent.
     expect(await screen.findByText('A new word')).toBeTruthy();
+    await waitFor(() => expect(screen.queryByText('send-word')).toBeNull());
   });
 
   it('deleting a word optimistically removes it and calls deleteCommunityUpdate', async () => {

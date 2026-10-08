@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 //
-// Settings is grouped into five collapsible, labelled sections (Account,
-// Privacy & Security, Notifications, Appearance & language, Support & feedback).
+// Settings opens on the profile card — who you are, how you signed in and the
+// way out — then four collapsible, labelled sections (Privacy & Security,
+// Notifications, Appearance & language, Support & feedback).
 // Privacy & Security is the ONE consolidated destination: Privacy Center, vault,
 // notification previews, low data mode, AI consent, export and account deletion
 // all live there. This verifies the structure, that deletion sits in the privacy
@@ -9,7 +10,7 @@
 // #data alias) expand their section. Only French is loaded in unit tests, so
 // t() resolves to French strings.
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { render, screen, cleanup, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent, waitFor, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 // Heavy children / side-effecting modules are stubbed — this test is about the
@@ -63,11 +64,22 @@ beforeEach(() => {
 });
 
 describe('SettingsTab — grouped sections', () => {
-  it('renders all five section headers (reminders titled "Prayer reminders")', () => {
+  it('renders the four section headers (reminders titled "Prayer reminders")', () => {
     renderSettings();
-    for (const key of ['account', 'privacySecurity', 'prayerReminders', 'settingsSecAppearance', 'settingsSecSupport']) {
+    for (const key of ['privacySecurity', 'prayerReminders', 'settingsSecAppearance', 'settingsSecSupport']) {
       expect(screen.getAllByText(t(lang, key)).length).toBeGreaterThan(0);
     }
+  });
+
+  it('signs out from the profile card — no Account section for one button', () => {
+    const signOut = vi.fn();
+    useAuthStore.setState({ signOut });
+    renderSettings();
+    const card = document.getElementById('account');
+    expect(card.textContent).toContain(t(lang, 'signedInByEmail'));
+    expect(document.getElementById('account-panel')).toBeNull();
+    fireEvent.click(within(card).getByRole('button', { name: t(lang, 'signOut') }));
+    expect(signOut).toHaveBeenCalledTimes(1);
   });
 
   it('consolidates privacy: vault, previews, low data, export and deletion in Privacy & Security', () => {
@@ -87,7 +99,7 @@ describe('SettingsTab — grouped sections', () => {
   it('starts EVERY section collapsed — Settings reads as a short list of destinations', () => {
     renderSettings();
     // Panels are present in the DOM; collapsed ones carry the `hidden` attribute.
-    for (const id of ['account-panel', 'privacy-panel', 'notifications-panel', 'appearance-panel', 'support-panel']) {
+    for (const id of ['privacy-panel', 'notifications-panel', 'appearance-panel', 'support-panel']) {
       expect(document.getElementById(id).hidden, `${id} should start collapsed`).toBe(true);
     }
   });
@@ -104,12 +116,17 @@ describe('SettingsTab — grouped sections', () => {
     expect(document.getElementById('privacy-panel').hidden).toBe(false);
   });
 
-  it('offers only Light and Dark in Appearance', () => {
+  it('offers Light, Dark and Automatic in Appearance — never the old Night', () => {
     window.location.hash = '#appearance';
     renderSettings();
-    expect(screen.getByRole('button', { name: t(lang, 'themeLight') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'themeLight') }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByRole('button', { name: t(lang, 'themeDark') })).toBeTruthy();
     expect(screen.queryByRole('button', { name: 'Nuit' })).toBeNull();
+    // Automatic is a stored preference of its own; the drawn theme follows the device.
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'themeSystem') }));
+    expect(usePrayerStore.getState().settings.theme).toBe('system');
+    expect(localStorage.getItem('pfm_theme')).toBe('system');
+    expect(['light', 'dark']).toContain(document.documentElement.getAttribute('data-theme'));
   });
 
   it('personal prayers stay private by default: the preview choice defaults to generic', () => {

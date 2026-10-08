@@ -1294,40 +1294,10 @@ const useCommunityStore = create((set, get) => ({
     return {};
   },
 
-  // ── Group prayer calendar (commitments) ────────────────────────────────────
-  // Prayer-chain style: a member claims a local day for a community prayer
-  // ("I'll pray for this on the 18th"). The group sees its coverage, and each
-  // claimed day also lands on the member's personal calendar (fetchMyCommitments).
-
-  // All commitments for one community prayer, day-ascending.
-  fetchCommitments: async (communityPrayerId) => {
-    const { data, error } = await supabase
-      .from('prayer_commitments')
-      .select('*')
-      .eq('community_prayer_id', communityPrayerId)
-      .order('day', { ascending: true });
-    if (error) return { error: error.message };
-    return { commitments: data || [] };
-  },
-
-  // Claim a day. Unique (prayer, user, day) → a duplicate claim is a no-op.
-  addCommitment: async ({ communityPrayerId, groupId, userId, userName, day, slot = null }) => {
-    const { data, error } = await supabase
-      .from('prayer_commitments')
-      .upsert(
-        { community_prayer_id: communityPrayerId, group_id: groupId, user_id: userId, user_name: userName || '', day, slot },
-        { onConflict: 'community_prayer_id,user_id,day' }
-      )
-      .select()
-      .single();
-    if (error) return toError(error);
-    return { commitment: data };
-  },
-
-  removeCommitment: async (commitmentId) => {
-    const { error } = await supabase.from('prayer_commitments').delete().eq('id', commitmentId);
-    return error ? toError(error) : {};
-  },
+  // ── Claimed prayer days (commitments) ──────────────────────────────────────
+  // Days a member claimed to pray for a community prayer. New claims are no
+  // longer offered, but the ones already made still feed the carried queue and
+  // the personal calendar until they pass.
 
   // The user's commitments across all groups from a day onward, joined with the
   // prayer title + group name so the personal calendar can render them standalone.

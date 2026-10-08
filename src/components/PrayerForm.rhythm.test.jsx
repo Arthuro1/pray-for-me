@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 //
 // Creating a prayer stays one question, but the rhythm it silently receives is
-// no longer hidden: a quiet line under the subject states when the prayer comes
-// back, and one tap opens the real control. And what someone has typed but not
-// yet saved survives an accidental close.
+// never hidden: its row states when the prayer comes back, and one tap on that
+// row opens the real control. And what someone has typed but not yet saved
+// survives an accidental close.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, waitFor, act } from '@testing-library/react';
 
@@ -22,7 +22,7 @@ import PrayerForm from './PrayerForm';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import { DRAFT_SLOTS, saveFormDraft, clearFormDraft } from '../lib/prayerFormDrafts';
-import { defaultNewSchedule, returnsSummary, weekdayName } from '../lib/scheduleDraft';
+import { defaultNewSchedule, scheduleSummary, weekdayName } from '../lib/scheduleDraft';
 import { parseKey } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
 import { t } from '../i18n';
@@ -49,52 +49,40 @@ const renderForm = (props = {}) => render(<PrayerForm onClose={() => {}} {...pro
 const settled = () => act(async () => { await Promise.resolve(); });
 
 describe('PrayerForm — the default rhythm is visible before saving', () => {
+  const rhythmRow = () => screen.getByRole('button', { name: new RegExp(t(lang, 'schedRhythmLabel')) });
+
   it('states when a new prayer comes back, using the real weekday', async () => {
     renderForm();
     await settled();
     const today = weekdayName(lang, parseKey(todayKey()).getDay());
-    const line = returnsSummary(defaultNewSchedule(), lang);
+    const summary = scheduleSummary(defaultNewSchedule(), lang);
 
-    expect(screen.getByText(line)).toBeTruthy();
-    expect(line).toContain(today);
+    expect(summary).toContain(today);
+    expect(rhythmRow().textContent).toContain(summary);
     // Secondary information, not another field to fill in.
-    expect(screen.queryByLabelText(line)).toBeNull();
+    expect(screen.queryByLabelText(summary)).toBeNull();
   });
 
-  it('gives screen readers the rhythm AND what the control does', async () => {
+  it('opens the real control from the same row that states the rhythm', async () => {
     renderForm();
     await settled();
-    const change = screen.getByRole('button', {
-      name: `${returnsSummary(defaultNewSchedule(), lang)} — ${t(lang, 'rhythmChangeAria')}`,
-    });
-    expect(change).toBeTruthy();
-  });
-
-  it('leaves Organize collapsed until the rhythm line is used', async () => {
-    renderForm();
-    await settled();
-    const organize = screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) });
-    expect(organize.getAttribute('aria-expanded')).toBe('false');
-
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'rhythmChangeAria')) }));
-    expect(organize.getAttribute('aria-expanded')).toBe('true');
-    // …and the rhythm control itself is what the user lands on.
-    const rhythmRow = screen.getByRole('button', { name: new RegExp(t(lang, 'schedRhythmLabel')) });
-    expect(document.activeElement).toBe(rhythmRow);
+    const row = rhythmRow();
+    expect(row.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(row);
+    expect(row.getAttribute('aria-expanded')).toBe('true');
+    expect(document.getElementById(row.getAttribute('aria-controls'))).toBeTruthy();
   });
 
   it('follows a changed rhythm immediately', async () => {
     renderForm();
     await settled();
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'rhythmChangeAria')) }));
     // Open the editor, choose "every day", and use it.
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'schedRhythmLabel')) }));
+    fireEvent.click(rhythmRow());
     fireEvent.click(screen.getByText(t(lang, 'schedEveryDay')));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'schedUseRhythm') }));
 
-    const daily = t(lang, 'rhythmReturns', { phrase: t(lang, 'sentDaily') });
-    expect(screen.getByText(daily)).toBeTruthy();
-    expect(screen.queryByText(returnsSummary(defaultNewSchedule(), lang))).toBeNull();
+    expect(rhythmRow().textContent).toContain(t(lang, 'schedDaily'));
+    expect(rhythmRow().textContent).not.toContain(scheduleSummary(defaultNewSchedule(), lang));
   });
 
   it('shows an edited prayer its own existing schedule', async () => {
@@ -104,13 +92,13 @@ describe('PrayerForm — the default rhythm is visible before saving', () => {
     };
     renderForm({ editPrayer });
     await settled();
-    expect(screen.getByText(t(lang, 'rhythmReturns', { phrase: t(lang, 'sentDaily') }))).toBeTruthy();
+    expect(rhythmRow().textContent).toContain(t(lang, 'schedDaily'));
   });
 
   it('says nothing about a rhythm on a community request (there is none)', async () => {
     renderForm({ communityMode: true, onCommunitySubmit: vi.fn() });
     await settled();
-    expect(screen.queryByText(returnsSummary(defaultNewSchedule(), lang))).toBeNull();
+    expect(screen.queryByText(t(lang, 'schedRhythmLabel'))).toBeNull();
   });
 });
 

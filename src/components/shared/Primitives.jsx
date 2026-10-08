@@ -89,17 +89,19 @@ export function SectionLabel({ as: Tag = 'p', sacred = false, className = '', ch
   return <Tag className={`section-label ${sacred ? 'section-label--sacred' : ''} ${className}`} {...props}>{children}</Tag>;
 }
 
+// An option may carry a small `icon` beside its word (Light ☀, Dark ☾).
 export function SegmentedControl({ label, value, options, onChange, className = '' }) {
   return (
     <div className={`segmented-control ${className}`} role="group" aria-label={label}>
-      {options.map((option) => (
+      {options.map(({ value: optionValue, label: optionLabel, icon: Icon }) => (
         <button
-          key={option.value}
+          key={optionValue}
           type="button"
-          aria-pressed={value === option.value}
-          onClick={() => onChange(option.value)}
+          aria-pressed={value === optionValue}
+          onClick={() => onChange(optionValue)}
         >
-          {option.label}
+          {Icon && <Icon size={15} strokeWidth={1.85} aria-hidden="true" />}
+          {optionLabel}
         </button>
       ))}
     </div>

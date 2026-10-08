@@ -13,8 +13,8 @@ import { track } from '@vercel/analytics';
 const copy = en.circles;
 const heading = (circle) => circleContent(circle).heading.en;
 const option = (i) => screen.getByRole('button', { name: new RegExp(`^${copy.items[i].name}`) });
-const ringStates = () => [...document.querySelectorAll('.landing__ring')]
-  .map((ring) => ring.getAttribute('class').match(/landing__ring--(rest|selected|within|outside)/)[1]);
+const ringStates = () => [...document.querySelectorAll('.circle-rings__ring')]
+  .map((ring) => ring.getAttribute('class').match(/circle-rings__ring--(rest|selected|within|outside)/)[1]);
 
 function setReducedMotion(reduce) {
   window.matchMedia = vi.fn().mockImplementation((query) => ({
@@ -40,12 +40,12 @@ describe('LandingCircles', () => {
     expect(within(list).getAllByRole('button')).toHaveLength(CIRCLES.length);
     CIRCLES.forEach((_, i) => expect(option(i).getAttribute('aria-expanded')).toBe('false'));
     // The ring drawing repeats the list for sighted people only.
-    expect(document.querySelector('.landing__rings-art').getAttribute('aria-hidden')).toBe('true');
+    expect(document.querySelector('.circle-rings').getAttribute('aria-hidden')).toBe('true');
     expect(screen.getByText(CIRCLE_UI.choose.en)).toBeTruthy();
     // Nothing is open until someone chooses; without IntersectionObserver the
     // rings are simply drawn.
     expect(document.querySelector('.circle-teaching')).toBeNull();
-    expect(document.querySelector('.landing__rings-art--static')).toBeTruthy();
+    expect(document.querySelector('.circle-rings--static')).toBeTruthy();
   });
 
   it('opens the chosen circle’s teaching beneath, without leaving the page', () => {
@@ -84,9 +84,9 @@ describe('LandingCircles', () => {
 
   it('lets the rings themselves be chosen, through generous hit bands', () => {
     render(<LandingCircles lang="en" copy={copy} onBeginPrayer={vi.fn()} />);
-    const hits = document.querySelectorAll('.landing__ring-hit');
+    const hits = document.querySelectorAll('.circle-rings__hit');
     expect(hits).toHaveLength(CIRCLES.length);
-    fireEvent.click(document.querySelector('.landing__ring-hit--heart'));
+    fireEvent.click(document.querySelector('.circle-rings__hit--heart'));
     expect(option(0).getAttribute('aria-expanded')).toBe('true');
     expect(screen.getByRole('heading', { name: heading('self') })).toBeTruthy();
   });

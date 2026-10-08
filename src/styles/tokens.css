@@ -70,6 +70,8 @@
   --q-selected: color-mix(in srgb, var(--q-royal) 8%, var(--q-canvas));
   --q-selected-border: color-mix(in srgb, var(--q-royal) 26%, var(--q-border));
   --q-hover: color-mix(in srgb, var(--q-text) 4%, transparent);
+  /* The chosen option of a segmented control, raised out of its track. */
+  --q-segment-on: var(--q-surface);
 
   /* Borders, focus, overlay */
   --q-border: #DED9CF;
@@ -138,6 +140,7 @@
   --q-canvas: #111018;
   --q-surface: #191720;
   --q-surface-muted: #211E2A;
+  --q-segment-on: color-mix(in srgb, var(--q-text) 10%, var(--q-surface-muted));
   --q-surface-inverse: #211A37;
   --q-text: #F1EEE8;
   --q-text-secondary: #AAA6B0;
@@ -180,6 +183,7 @@
   --q-canvas: var(--q-royal-deep);
   --q-surface: color-mix(in srgb, var(--q-royal-deep) 88%, #F7F5EF);
   --q-surface-muted: color-mix(in srgb, var(--q-royal-deep) 82%, #F7F5EF);
+  --q-segment-on: color-mix(in srgb, #F7F5EF 26%, var(--q-royal-deep));
   --q-surface-inverse: #F7F5EF;
   --q-field: rgb(247 245 239 / 6%);
   --q-field-border: rgb(247 245 239 / 24%);

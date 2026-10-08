@@ -13,12 +13,6 @@
   .plan-list--grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--q-space-8); }
 }
 
-/* Category shortcuts: one row; on a phone it scrolls sideways, not wraps. */
-.plan-jumps { display: flex; gap: var(--q-space-2); margin-block: calc(-1 * var(--q-space-2)) var(--q-space-6); overflow-x: auto; scrollbar-width: none; }
-.plan-jumps::-webkit-scrollbar { display: none; }
-.plan-jumps > .q-chip { flex: 0 0 auto; }
-@media (min-width: 640px) { .plan-jumps { flex-wrap: wrap; overflow: visible; } }
-
 /* A plan's kind, as a quiet line mark. */
 .plan-emblem { display: inline-flex; width: 40px; height: 40px; flex: 0 0 auto; align-items: center; justify-content: center; border: 1px solid var(--q-border); border-radius: 12px; color: var(--q-gold-text); }
 
@@ -115,6 +109,62 @@
 /* The circle switcher on a circle page: seven doors in the chip voice. */
 .circle-links { margin: 0; padding: 0; list-style: none; }
 
+/* The seven circles as one ring model around the heart (circles/CircleRings):
+   the landing page and About. One palette: royal violet for reach, temple
+   gold for the heart and the incense. Never a colour per ring. */
+.circle-rings { display: block; width: 100%; height: auto; }
+
+.circle-rings__ring {
+  fill: none;
+  stroke: var(--q-royal);
+  stroke-opacity: 0.22;
+  stroke-width: 1;
+  transition: stroke-opacity var(--q-motion-standard) var(--q-ease), stroke-width var(--q-motion-standard) var(--q-ease), fill-opacity var(--q-motion-standard) var(--q-ease);
+}
+/* Nothing chosen: the rings rest, the heart a little stronger. */
+.circle-rings__ring--rest { stroke-opacity: 0.3; }
+.circle-rings__ring--rest.circle-rings__ring--heart { fill: var(--q-royal); fill-opacity: 0.08; stroke-opacity: 1; stroke-width: 1.5; }
+/* A circle chosen: the circles it reaches across, then the circle itself. */
+.circle-rings__ring--within { stroke-opacity: 0.5; }
+.circle-rings__ring--selected { fill: var(--q-royal); fill-opacity: 0.05; stroke-opacity: 1; stroke-width: 1.75; }
+.circle-rings__ring--outside { stroke-opacity: 0.22; }
+/* On the dark canvas the same violet needs more ink to read as a ring. */
+:root[data-theme="dark"] .circle-rings__ring--rest { stroke-opacity: 0.5; }
+:root[data-theme="dark"] .circle-rings__ring--within { stroke-opacity: 0.7; }
+:root[data-theme="dark"] .circle-rings__ring--outside { stroke-opacity: 0.32; }
+
+.circle-rings__point { fill: var(--q-gold); }
+.circle-rings__rise { fill: none; stroke: var(--q-gold); stroke-linecap: round; stroke-width: 2.5; }
+
+/* Invisible hit bands, one ring step wide; the innermost is a disc. */
+.circle-rings__hit { fill: none; stroke: transparent; pointer-events: stroke; cursor: pointer; }
+.circle-rings__hit--heart { fill: transparent; stroke: none; pointer-events: fill; }
+
+/* The first time the rings are seen: the gold point and incense, then each
+   ring drawn from the heart outward, once — about a second in all. */
+.circle-rings--armed .circle-rings__ring { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.circle-rings--armed .circle-rings__point,
+.circle-rings--armed .circle-rings__rise { opacity: 0; }
+.circle-rings--revealed .circle-rings__ring {
+  stroke-dasharray: 1;
+  animation: circle-ring-draw 420ms var(--q-ease) both;
+  animation-delay: calc(180ms + var(--ring-index) * 100ms);
+}
+.circle-rings--revealed .circle-rings__point,
+.circle-rings--revealed .circle-rings__rise { animation: q-rise-in 260ms var(--q-ease) both; }
+
+@keyframes circle-ring-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circle-rings--armed .circle-rings__ring,
+  .circle-rings--revealed .circle-rings__ring { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
+  .circle-rings--armed .circle-rings__point,
+  .circle-rings--armed .circle-rings__rise { opacity: 1; }
+}
+
 /* "Explore plans by circle", open at the top of the Plans page: one row of
    seven small cards, each with its circle's icon in its tone (as on prayer
    rows). They share the width where there is room and scroll sideways on a
@@ -205,9 +255,70 @@
 .grow-tabs { display: flex; width: 100%; margin-block-end: var(--q-space-8); }
 .grow-tabs button { flex: 1 1 0; min-height: 44px; }
 .grow-next { margin-block-end: var(--q-space-8); }
-.grow-next > .section-label { margin-block-end: var(--q-space-2); }
+.grow-next > .section-label { margin-block-end: var(--q-space-3); }
+
+/* The next step: one deep-violet doorway (as Today's), the guide's mark, its
+   title in the serif, why it is next, and the way in. */
+.grow-hero {
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 15rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--q-space-2);
+  padding: clamp(var(--q-space-6), 5vw, var(--q-space-8));
+  overflow: hidden;
+  border-radius: var(--q-radius-surface);
+  text-align: start;
+}
+.grow-hero__rise { position: absolute; inset-block-start: -14px; inset-inline-end: clamp(16px, 7vw, 48px); opacity: 0.14; pointer-events: none; }
+.grow-hero__mark { position: relative; width: 44px; height: 44px; margin-block-end: var(--q-space-4); border-radius: 12px; }
+.grow-hero__title {
+  position: relative;
+  max-width: 30rem;
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: clamp(1.625rem, 4.5vw, 2rem);
+  font-weight: 450;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.grow-hero__desc { position: relative; max-width: 34rem; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
+.grow-hero__foot { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-3) var(--q-space-5); margin-block-start: auto; padding-block-start: var(--q-space-6); }
+.grow-hero__cta { pointer-events: none; }
+.grow-hero__meta { display: inline-flex; align-items: center; gap: 6px; color: var(--q-text-tertiary); font-size: var(--q-type-meta); font-weight: 600; }
+.grow-hero:hover .grow-hero__cta { background: var(--q-action-primary-hover); }
+.grow-hero:focus-visible { outline: 2px solid var(--q-focus); outline-offset: 3px; }
+
+/* Guides and teaching as soft cards: the theme's mark, the title in the
+   serif, a line of what it is, how long it takes. Two across where there is
+   room. */
+.grow-grid { display: grid; gap: var(--q-space-2); margin-block-end: var(--q-space-4); }
+@media (min-width: 900px) {
+  .grow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.grow-card {
+  display: flex;
+  width: 100%;
+  min-height: 88px;
+  align-items: flex-start;
+  gap: var(--q-space-3);
+  padding: var(--q-space-4);
+  color: var(--q-text);
+  text-align: start;
+}
+.grow-card > .icon-tile { width: 40px; height: 40px; border-radius: 12px; }
+.grow-card__body { display: grid; min-width: 0; flex: 1 1 auto; gap: 4px; }
+.grow-card__title { font-family: var(--q-font-editorial); font-size: 1.125rem; font-weight: 500; letter-spacing: -0.006em; line-height: 1.3; overflow-wrap: anywhere; }
+.grow-card__sub { color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.5; }
+.grow-card__meta { display: inline-flex; align-items: center; gap: 6px; margin-block-start: 2px; color: var(--q-text-tertiary); font-size: 0.75rem; font-weight: 600; }
+.grow-card__chevron { flex: 0 0 auto; align-self: center; color: var(--q-text-tertiary); }
+.grow-card--seeker { border-color: color-mix(in srgb, var(--q-gold) 35%, var(--q-card-border)); }
+
 .grow-fold { border-block-end: 1px solid var(--q-border); }
-.grow-fold > div:last-child > .plan-list { margin-block-end: var(--q-space-4); }
+.grow-fold > div:last-child > .grow-grid { margin-block: var(--q-space-2) var(--q-space-4); }
 .grow-intro { margin: 0 0 var(--q-space-4); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
 .grow-seeker { margin-block: var(--q-space-10) var(--q-space-8); }
 

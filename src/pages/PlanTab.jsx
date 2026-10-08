@@ -73,6 +73,12 @@ export default function CalendarTab() {
     }
   }
 
+  const goToToday = () => {
+    const now = new Date();
+    setMonthDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    setSelectedKey(todayKey());
+  };
+
   const entries = sortEntries(prayersForDay(prayers, categories, selectedKey), categories);
   const commitments = myCommitments.filter((commitment) => commitment.day === selectedKey);
 
@@ -88,7 +94,7 @@ export default function CalendarTab() {
   };
 
   return (
-    <div className="phase-page plan-tab">
+    <div className="phase-page phase-page--wide plan-tab">
       <div className="phase-page__shell">
         <PageHeader
           title={t(lang, 'calendarTitle')}
@@ -107,13 +113,16 @@ export default function CalendarTab() {
         />
       </div>
 
-      <div className="phase-content max-w-4xl space-y-4">
+      {/* The month and the chosen day side by side where there is room; the
+          day follows the month on a phone. */}
+      <div className="phase-content calendar-layout">
         <MonthCalendar
           monthDate={monthDate}
           dots={dots}
           selectedKey={selectedKey}
           onSelect={setSelectedKey}
           onMonthChange={setMonthDate}
+          onToday={goToToday}
           lang={lang}
         />
         <DayAgenda

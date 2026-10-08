@@ -32,7 +32,6 @@ const renderList = (props = {}) =>
       loc={(x) => x}
       lang={lang}
       userId={ME}
-      onSend={vi.fn()}
       {...props}
     />,
   );

@@ -18,7 +18,7 @@ import { BackLink } from '../components/shared/Primitives';
 
 // Where a circle page returns to, by the path it was opened from. Anything else
 // (a prayer's page, a link) reads as a plain "Back".
-const BACK_LABEL_KEYS = Object.freeze({ '/plans': 'navPlans', '/prayers': 'journal' });
+const BACK_LABEL_KEYS = Object.freeze({ '/plans': 'navPlans', '/prayers': 'journal', '/about': 'aboutTitle' });
 
 // Where the back link returns: the in-app path the page was opened from (and
 // any state that page handed over), or the Plans page. Only an in-app path is
@@ -33,7 +33,7 @@ function returnTarget(state) {
 // the short layer for everyone, the deep layer where its review gate allows —
 // as a doorway into prayer, then the plans that shape prayer in it ("Go
 // deeper"), chosen from authored plan metadata only. Opened from the Plans
-// page, the Journal's circle groups and a prayer's circle.
+// page, the Journal's circle groups, a prayer's circle and About.
 //
 // Praying from here opens the composer with the circle preselected; a "Pray
 // this" prompt shows above the empty field and is never written into it.

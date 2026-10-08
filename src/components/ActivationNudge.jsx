@@ -112,7 +112,8 @@ export default function ActivationNudge({
     if (step === ACTIVATION_STEPS.PLANS) onOpenPlans(starter.id);
     else if (step === ACTIVATION_STEPS.REMINDER) onOpenReminders?.();
     else if (step === ACTIVATION_STEPS.CARRY) onAddPrayer?.();
-    else if (target) onEditPrayer?.(target, { openOrganize: true });
+    // A rhythm or a circle: the form opens on the one row the card asked about.
+    else if (target) onEditPrayer?.(target, { openDetail: step === ACTIVATION_STEPS.RHYTHM ? 'rhythm' : 'circle' });
   };
 
   const openAllPlans = () => {

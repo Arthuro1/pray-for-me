@@ -13,12 +13,10 @@ const CHOOSE_CIRCLE_TTL = 10000;
 // Actions on an open COMMUNITY prayer: marking it answered / resuming (mirrored
 // onto the viewer's personal source or saved copy), and the "I'm praying" toggle
 // (which symmetrically adds/removes the personal copy, and offers to place a new
-// copy in one of the carrier's own circles). Owns the togglingPraying and
-// testimonySent flags; setTestimonySent is returned for the separate
-// community-testimony composer that stays in PrayerDetail. No-op in personal mode.
+// copy in one of the carrier's own circles). Owns the togglingPraying flag.
+// No-op in personal mode.
 export default function useCommunityPrayerActions({ communityPrayer, isCommunity, user, authorName, lang }) {
   const [togglingPraying, setTogglingPraying] = useState(false);
-  const [testimonySent, setTestimonySent] = useState(false);
 
   const { userReactions, groups, toggleReaction, setCommunityAnswered, addTestimony } = useCommunityStore(
     useShallow((s) => ({
@@ -88,7 +86,6 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
         toast.error(t(lang, 'errorGeneric'));
         return false;
       }
-      setTestimonySent(true);
     }
     return true;
   };
@@ -134,7 +131,7 @@ export default function useCommunityPrayerActions({ communityPrayer, isCommunity
   };
 
   return {
-    communityHasReacted, togglingPraying, testimonySent, setTestimonySent,
+    communityHasReacted, togglingPraying,
     handleConfirmCommunityAnswered, handleResumeCommunity, handleTogglePraying,
   };
 }

@@ -1,80 +1,25 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { t } from '../i18n';
 import ScheduleEditor from './ScheduleEditor';
-import DisclosureRow from './shared/DisclosureRow';
 import { PrimaryButton, SecondaryButton } from './shared/Primitives';
-import { modeOf, planSummary, scheduleFromDraft, scheduleSummary } from '../lib/scheduleDraft';
 
-// Scheduling as ONE line until someone asks for more:
-//
-//     Prayer rhythm
-//     Every Tuesday · Anytime                               Change
-//     You can change this later.
-//
-// The rhythm a prayer already has is stated — never a blank "Add a schedule" —
-// and the full editor only exists after Change. Saving with it untouched keeps
-// exactly the draft that was passed in, which is how a new prayer keeps its
-// bounded weekly default without anyone confirming a schedule.
+// The rhythm editor that opens under the prayer form's "Prayer rhythm" row. The
+// row itself states the rhythm a prayer already has — never a blank "Add a
+// schedule" — so this exists only once someone asks to change it.
 //
 // Works on a DRAFT (lib/scheduleDraft.js) and commits through onCommit, so the
 // host owns the value and the persisted shape is unchanged. Edits happen on a
-// COPY: Cancel drops them, "Use this rhythm" commits them once.
-export default function SchedulePicker({ draft, onCommit, lang, planDays, idPrefix = 'sched', focusSignal = 0 }) {
-  const [open, setOpen] = useState(false);
+// COPY: Cancel drops them, "Use this rhythm" commits them once — which is how a
+// new prayer keeps its bounded weekly default without anyone confirming it.
+export default function SchedulePicker({ draft, onCommit, onClose, lang, planDays, idPrefix = 'sched' }) {
   const [working, setWorking] = useState(draft);
-  const triggerRef = useRef(null);
-  const returnFocus = useRef(false);
-
-  // Closing returns focus to the row that opened the editor — the control the
-  // user actually left, not the top of the form.
-  useEffect(() => {
-    if (!open && returnFocus.current) {
-      returnFocus.current = false;
-      triggerRef.current?.focus();
-    }
-  }, [open]);
-
-  // A host can ask for this control by name (the form's one-line rhythm summary
-  // has a "Change" action). Bumping the signal brings the row into view and
-  // gives it focus, so the answer to "where do I change this?" is under the
-  // cursor rather than somewhere further down the form.
-  useEffect(() => {
-    if (!focusSignal) return;
-    const row = triggerRef.current;
-    if (!row) return;
-    row.scrollIntoView?.({ block: 'nearest' });
-    row.focus();
-  }, [focusSignal]);
-
-  const start = () => { setWorking(draft); setOpen(true); };
-  const close = () => { returnFocus.current = true; setOpen(false); };
-  const commit = () => { onCommit(working); close(); };
-
-  if (!open) {
-    const schedule = scheduleFromDraft(draft);
-    return (
-      <div className="space-y-1.5">
-        <DisclosureRow
-          ref={triggerRef}
-          label={t(lang, 'schedRhythmLabel')}
-          value={schedule ? scheduleSummary(schedule, lang, { showAnytime: true }) : planSummary(planDays, lang)}
-          action={t(lang, 'schedChange')}
-          open={false}
-          onToggle={start}
-          controlsId={`${idPrefix}-editor`}
-        />
-        <p className="q-field__hint px-1">
-          {modeOf(draft) === 'plan' ? t(lang, 'rhythmPlanHint') : t(lang, 'schedChangeLater')}
-        </p>
-      </div>
-    );
-  }
+  const commit = () => { onCommit(working); onClose(); };
 
   return (
-    <div id={`${idPrefix}-editor`} className="schedule-picker">
+    <div className="schedule-picker">
       <ScheduleEditor draft={working} onChange={setWorking} lang={lang} planDays={planDays} idPrefix={idPrefix} />
       <div className="schedule-picker__actions">
-        <SecondaryButton onClick={close}>{t(lang, 'cancel')}</SecondaryButton>
+        <SecondaryButton onClick={onClose}>{t(lang, 'cancel')}</SecondaryButton>
         <PrimaryButton onClick={commit}>{t(lang, 'schedUseRhythm')}</PrimaryButton>
       </div>
     </div>

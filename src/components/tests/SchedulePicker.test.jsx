@@ -1,100 +1,63 @@
 // @vitest-environment jsdom
 //
-// Scheduling stays one line until asked for. These tests cover the two hosts of
-// the shared editor: the picker inside the new-prayer form (which works on a
-// draft) and the planner on Prayer Detail (which works on a saved schedule) —
-// specifically that opening is optional, Cancel discards, and a save commits
-// exactly once through the existing update path.
+// The shared schedule editor has two hosts: the picker under the prayer form's
+// rhythm row (which works on a draft) and the planner on Prayer Detail (which
+// works on a saved schedule). These tests cover that Cancel discards and that a
+// save commits exactly once through the existing update path. (The row that
+// states the rhythm and opens the picker is covered with the form.)
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { useState } from 'react';
 import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import SchedulePicker from '../SchedulePicker';
 import SchedulePlanner from '../SchedulePlanner';
 import { defaultNewDraft, emptyDraft, weekdayName } from '../../lib/scheduleDraft';
 import { t } from '../../i18n';
 import { todayKey } from '../../lib/prayedLog';
-import { parseKey } from '../../lib/schedule';
 
 const lang = 'fr';
 afterEach(cleanup);
 
 const startsWith = (key) => new RegExp(`^${t(lang, key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`);
 const radio = (key) => screen.getByRole('radio', { name: startsWith(key) });
-const rhythmRow = () => screen.getByText(t(lang, 'schedRhythmLabel')).closest('button');
 const schedulerCancel = () => within(screen.getByText(t(lang, 'schedUseRhythm')).closest('div'))
   .getByText(t(lang, 'cancel'));
 
-function PickerHarness({ initial = defaultNewDraft(), onCommit = () => {}, planDays }) {
-  const [draft, setDraft] = useState(initial);
-  return (
-    <SchedulePicker
-      draft={draft}
-      onCommit={(d) => { setDraft(d); onCommit(d); }}
-      lang={lang}
-      planDays={planDays}
-    />
-  );
-}
+const renderPicker = ({ draft = defaultNewDraft(), onCommit = () => {}, onClose = () => {} } = {}) =>
+  render(<SchedulePicker draft={draft} onCommit={onCommit} onClose={onClose} lang={lang} />);
 
-describe('SchedulePicker — one line until asked', () => {
-  it('shows only the rhythm summary and a reassurance, never the scheduler', () => {
-    render(<PickerHarness />);
-    expect(rhythmRow()).toBeTruthy();
-    expect(screen.getByText(t(lang, 'schedChangeLater'))).toBeTruthy();
-    expect(screen.queryByText(t(lang, 'schedWhenAppear'))).toBeNull();
-    expect(screen.queryByRole('radio')).toBeNull();
-  });
-
-  it('states the rhythm the prayer already has, in words', () => {
-    render(<PickerHarness />);
-    // The bounded weekly default, named by its real weekday and time.
-    expect(rhythmRow().textContent).toContain(weekdayName(lang, parseKey(todayKey()).getDay()));
-    expect(rhythmRow().textContent).toContain(t(lang, 'slotAnytime'));
-  });
-
-  it('states a "no fixed schedule" prayer as staying in the Journal', () => {
-    render(<PickerHarness initial={emptyDraft()} />);
-    expect(rhythmRow().textContent).toContain(t(lang, 'noFixedSchedule'));
-    expect(screen.getByText(t(lang, 'rhythmPlanHint'))).toBeTruthy();
-  });
-
-  it('opens the scheduler on Change and collapses again after "Use this rhythm"', () => {
-    const onCommit = vi.fn();
-    render(<PickerHarness onCommit={onCommit} />);
-    fireEvent.click(rhythmRow());
+describe('SchedulePicker — the editor under the rhythm row', () => {
+  it('opens on the rhythm the prayer already has', () => {
+    renderPicker();
     expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
+    expect(radio('schedOtherRhythm').checked).toBe(true);
+    expect(radio('schedNoFixed').checked).toBe(false);
+  });
 
+  it('opens a "no fixed schedule" prayer on that choice', () => {
+    renderPicker({ draft: emptyDraft() });
+    expect(radio('schedNoFixed').checked).toBe(true);
+  });
+
+  it('commits once on "Use this rhythm", then closes', () => {
+    const onCommit = vi.fn();
+    const onClose = vi.fn();
+    renderPicker({ onCommit, onClose });
     fireEvent.click(radio('schedEveryDay'));
     fireEvent.click(screen.getByText(t(lang, 'schedUseRhythm')));
 
     expect(onCommit).toHaveBeenCalledTimes(1);
     expect(onCommit.mock.calls[0][0]).toMatchObject({ mode: 'recurring', freq: 'daily' });
-    // Back to the compact row, now describing the new rhythm.
-    expect(screen.queryByText(t(lang, 'schedWhenAppear'))).toBeNull();
-    expect(rhythmRow().textContent).toContain(t(lang, 'schedDaily'));
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('discards the draft on Cancel — nothing is committed', () => {
+  it('discards the edits on Cancel — nothing is committed', () => {
     const onCommit = vi.fn();
-    render(<PickerHarness onCommit={onCommit} />);
-    fireEvent.click(rhythmRow());
+    const onClose = vi.fn();
+    renderPicker({ onCommit, onClose });
     fireEvent.click(radio('schedEveryDay'));
     fireEvent.click(schedulerCancel());
 
     expect(onCommit).not.toHaveBeenCalled();
-    expect(rhythmRow().textContent).toContain(weekdayName(lang, parseKey(todayKey()).getDay()));
-    // Reopening starts from the committed value again, not the discarded one.
-    fireEvent.click(rhythmRow());
-    expect(radio('schedEveryDay').checked).toBe(false);
-  });
-
-  it('returns focus to the row that opened it', () => {
-    render(<PickerHarness />);
-    fireEvent.click(rhythmRow());
-    fireEvent.click(schedulerCancel());
-    // The collapsed row is re-created on close, so identity is checked against
-    // the row that exists now — what matters is that focus is on it.
-    expect(document.activeElement).toBe(rhythmRow());
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
 

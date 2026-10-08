@@ -15,7 +15,7 @@ import { trackPlanDayCompleted } from '../lib/planAnalytics';
 import { ensurePushSubscription } from '../push';
 import { isEventPushEnabled } from '../lib/notificationPrefs';
 import { resolveLanguage } from '../i18n';
-import { normalizeTheme } from '../utils/theme';
+import { applyTheme, normalizeTheme } from '../utils/theme';
 import {
   canEncrypt,
   encryptPrayerForStorage,
@@ -1268,7 +1268,7 @@ const usePrayerStore = create((set, get) => ({
     if (updates.language) localStorage.setItem('pfm_language', updates.language);
     if (updates.theme) {
       localStorage.setItem('pfm_theme', updates.theme);
-      document.documentElement.setAttribute('data-theme', updates.theme);
+      applyTheme(updates.theme);
     }
     let next;
     set((state) => {
@@ -1295,7 +1295,7 @@ const usePrayerStore = create((set, get) => ({
         if (server.language) {
           server.language = resolveLanguage(server.language, navigator.language || navigator.userLanguage);
         }
-        if (server.theme !== 'light' && server.theme !== 'dark') delete server.theme;
+        if (!['light', 'dark', 'system'].includes(server.theme)) delete server.theme;
         get().updateSettings(server, { sync: false });
       } else {
         await saveUserSettings(userId, get().settings);

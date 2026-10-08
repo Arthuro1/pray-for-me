@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { X, ChevronDown, Plus, SlidersHorizontal } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { X, ChevronDown, Plus, Repeat, Tag, UserRound } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { useShallow } from 'zustand/react/shallow';
 import useTranslationStore from '../store/translationStore';
@@ -10,8 +10,9 @@ import { setContentLang } from '../lib/contentLang';
 import { normalizeContentLang } from '../lib/langHint';
 import { toast } from '../store/toastStore';
 import { canHoldPrivateMetadata, willEncryptNewPrayer } from '../lib/crypto/prayerCrypto';
-import { circleOf, circlePromptKey, normalizeCircle } from '../lib/circles';
-import CirclePicker from './CirclePicker';
+import { circleLabelKey, circleOf, circlePromptKey, normalizeCircle } from '../lib/circles';
+import { CircleChips } from './CirclePicker';
+import CircleGlyph from './shared/CircleGlyph';
 import useCommunityStore from '../store/communityStore';
 import AudienceBadge from './shared/AudienceBadge';
 import SourceLanguageField from './SourceLanguageField';
@@ -21,14 +22,14 @@ import SchedulePicker from './SchedulePicker';
 import CategorySelector from './CategorySelector';
 import FormattedTextarea from './rich/FormattedTextarea';
 import { planWeekDays } from '../lib/planner';
-import { defaultNewDraft, draftFromSchedule, returnsSummary, scheduleFromDraft } from '../lib/scheduleDraft';
+import { defaultNewDraft, draftFromSchedule, modeOf, planSummary, scheduleFromDraft, scheduleSummary } from '../lib/scheduleDraft';
 import { useFormDraft } from '../hooks/useFormDraft';
 import { DRAFT_SLOTS } from '../lib/prayerFormDrafts';
-import { Checkbox, PrimaryButton, SecondaryButton } from './shared/Primitives';
+import { Checkbox, PrimaryButton } from './shared/Primitives';
 
-// A quiet inline expander ("Add a note", "Organize") — a comfortably tappable
-// full-width row that reveals an optional part of the form and can fold it away
-// again. Entered values live in the form state, so collapsing never loses them.
+// A quiet inline expander ("Add a note") — a comfortably tappable full-width
+// row that reveals an optional part of the form and can fold it away again.
+// Entered values live in the form state, so collapsing never loses them.
 function SectionToggle({ label, open, onToggle, controlsId, icon: Icon = Plus }) {
   return (
     <button
@@ -46,10 +47,38 @@ function SectionToggle({ label, open, onToggle, controlsId, icon: Icon = Plus })
   );
 }
 
+// One line of the form's details: what it is, the value it has now, and — only
+// when asked — the control that changes it, opening in place beneath the row.
+// One row stands open at a time, so the form never grows a form inside it.
+// `children` receives the row label's id, for a panel that names its group.
+function DetailRow({ id, icon, label, value, unset = false, hint = null, open, onToggle, rowRef, children }) {
+  const labelId = `${id}-label`;
+  const panelId = `${id}-panel`;
+  return (
+    <div className="form-detail">
+      <button
+        ref={rowRef}
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className="form-detail__row pressable"
+      >
+        <span className="form-detail__icon" aria-hidden="true">{icon}</span>
+        <span id={labelId} className="form-detail__label">{label}</span>
+        <span className={`form-detail__value ${unset ? 'form-detail__value--unset' : ''}`}>{value}</span>
+        <ChevronDown size={16} aria-hidden="true" className="form-detail__chevron" />
+      </button>
+      {hint && !open && <p className="form-detail__hint">{hint}</p>}
+      {open && <div id={panelId} className="form-detail__panel">{children(labelId)}</div>}
+    </div>
+  );
+}
+
 function initialForm(editPrayer, prefill, lang, context = null) {
   // A new prayer may be seeded with an optional, fully-editable prefill (e.g. a
   // starter prompt from the gospel journey). Editing always wins over prefill.
-  // New prayers default to the bounded weekly rhythm (visible under Organize);
+  // New prayers default to the bounded weekly rhythm (stated on its row);
   // an edited prayer keeps exactly the schedule it already has — including the
   // legacy "no schedule" (weekly category plan), which is never migrated.
   // Source language DEFAULTS from the active interface/content language and is
@@ -82,17 +111,9 @@ function initialForm(editPrayer, prefill, lang, context = null) {
 function hasNote(editPrayer, prefill) {
   return !!(editPrayer?.description || prefill?.description);
 }
-// Editing a prayer that already uses any organizing choice — its rhythm, who
-// it's for, or its labels — auto-opens Organize, so nothing set earlier hides.
-// (Its circle is always named on its own row, even while that row is folded.)
-function usesOrganize(editPrayer) {
-  return !!(editPrayer && (editPrayer.schedule || editPrayer.for_other
-    || (editPrayer.prayer_categories || []).length > 0 || (editPrayer.category_ids || []).length > 0));
-}
-
 // communityMode hides the forOther field and calls onCommunitySubmit instead of prayerStore.
-// initialOrganizeOpen is used by a contextual next-step card after sign-in; the
-// normal quick-add experience remains collapsed.
+// initialDetail ('rhythm' | 'circle') opens one detail row for someone who came
+// to settle exactly that — a contextual next step; quick add opens none.
 export default function PrayerForm({
   onClose,
   editPrayer,
@@ -104,7 +125,7 @@ export default function PrayerForm({
   // and the circle is preselected. A `prompt` ("Pray this") sits above the
   // field as a starting point — never written into the person's own words.
   context = null,
-  initialOrganizeOpen = false,
+  initialDetail = null,
   onEditSaved,
 }) {
   const { categories, addPrayer, updatePrayer, settings } = usePrayerStore(
@@ -126,18 +147,29 @@ export default function PrayerForm({
   const startingPoint = editPrayer || communityMode ? null : (context?.prompt || null);
   const [created, setCreated] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  // One required question — everything else is optional and folded: a note, the
-  // circle row and "Organize" (person, categories, prayer rhythm). The community request
-  // form keeps its note open (context for the group is the point there).
+  // One required question — everything else is optional: a folded note, then
+  // the details (who it's for, circle, categories, rhythm), each one line that
+  // states its value and opens alone. The community request form keeps its
+  // note open (context for the group is the point there).
   const [noteOpen, setNoteOpen] = useState(() => communityMode || hasNote(editPrayer, prefill));
-  const [organizeOpen, setOrganizeOpen] = useState(() => initialOrganizeOpen || usesOrganize(editPrayer));
+  const [openDetail, setOpenDetail] = useState(initialDetail);
+  const rowRefs = useRef({});
   useEffect(() => {
     if (editPrayer) {
       setForm(initialForm(editPrayer, null, lang));
       setNoteOpen(communityMode || hasNote(editPrayer));
-      setOrganizeOpen(initialOrganizeOpen || usesOrganize(editPrayer));
+      setOpenDetail(initialDetail);
     }
-  }, [communityMode, editPrayer, initialOrganizeOpen, lang]);
+  }, [communityMode, editPrayer, initialDetail, lang]);
+
+  const toggleDetail = (key) => setOpenDetail((current) => (current === key ? null : key));
+  // Closing hands focus back to the row that opened it — the control the user
+  // actually left, not the top of the dialog (which is focus-trapped).
+  const closeDetail = (key) => {
+    setOpenDetail(null);
+    rowRefs.current[key]?.focus();
+  };
+  const rowRef = (key) => (el) => { rowRefs.current[key] = el; };
 
   const patch = (key, value) => setForm(f => ({ ...f, [key]: value }));
   const toggleCategory = (id) => patch('categoryIds', form.categoryIds.includes(id)
@@ -197,26 +229,34 @@ export default function PrayerForm({
   const startFresh = () => {
     setForm(initialForm(null, prefill, lang, context));
     setNoteOpen(hasNote(null, prefill));
-    setOrganizeOpen(false);
+    setOpenDetail(null);
     discardDraft();
   };
-
-  // "Change" on the rhythm line opens Organize and hands focus to the rhythm
-  // row itself, so the control the user asked for is where they're looking.
-  const [rhythmFocusSignal, setRhythmFocusSignal] = useState(0);
-  const revealRhythm = useCallback(() => {
-    setOrganizeOpen(true);
-    setRhythmFocusSignal((n) => n + 1);
-  }, []);
 
   // What "follow my normal rhythm" would actually mean for THIS prayer, from
   // the same planner Today uses — so the choice can show its real days instead
   // of asking the user to remember their weekly plan.
   const planDays = planWeekDays(categories, form.categoryIds, editPrayer?.week_days);
 
-  // Read from the SAME conversion the save performs, so the line and the saved
-  // schedule can never disagree.
-  const rhythmLine = returnsSummary(scheduleFromDraft(form.scheduleDraft), lang, { planDays });
+  // Each detail row's value, in words. The rhythm is read from the SAME
+  // conversion the save performs, so the row and the saved schedule can never
+  // disagree; a prayer with no fixed rhythm says where it stays instead.
+  const draftSchedule = scheduleFromDraft(form.scheduleDraft);
+  const rhythmValue = draftSchedule
+    ? scheduleSummary(draftSchedule, lang)
+    : planSummary(planDays, lang);
+  const rhythmHint = modeOf(form.scheduleDraft) === 'plan' ? t(lang, 'rhythmPlanHint') : null;
+  const personValue = form.forOther
+    ? (form.personName.trim() || t(lang, 'forWhomSomeone'))
+    : t(lang, 'forWhomMe');
+  const chosenCategories = categories.filter((c) => form.categoryIds.includes(c.id));
+  const categoriesValue = chosenCategories.length > 0
+    ? chosenCategories.map((c) => tr(c.name, lang)).join(', ')
+    : t(lang, 'categoriesNone');
+  // The circle can only be kept where it lives inside this prayer's
+  // ciphertext (lib/circles.js) — never on a group's request.
+  const showCircle = !communityMode && canHoldPrivateMetadata(editPrayer || null);
+  const showCategories = categories.length > 0;
 
   // Subtle, non-technical reassurance after a personal prayer is saved. Offline,
   // say plainly where the prayer lives and that it will sync — the write is
@@ -349,24 +389,6 @@ export default function PrayerForm({
             />
           </div>
 
-          {/* The rhythm this prayer already has, in one quiet line, BEFORE the
-              optional sections — so the bounded weekly default a new prayer
-              receives is something the writer reads rather than discovers later.
-              It is secondary information, not a field: one tap opens the real
-              control under Organize. */}
-          {!communityMode && (
-            <button
-              type="button"
-              onClick={revealRhythm}
-              aria-label={`${rhythmLine} — ${t(lang, 'rhythmChangeAria')}`}
-              className="prayer-form__rhythm"
-            >
-              <span className="min-w-0 break-words">{rhythmLine}</span>
-              <span aria-hidden="true">·</span>
-              <span className="prayer-form__rhythm-change">{t(lang, 'schedChange')}</span>
-            </button>
-          )}
-
           {/* Something unfinished was put back. Stated once, quietly, with the
               one action that undoes it — never a modal in the way of praying. */}
           {restored && (
@@ -407,123 +429,148 @@ export default function PrayerForm({
             )}
           </div>
 
-          {/* The Intercession Circle: one quiet row that opens onto the seven
-              circles only when asked — the prayer comes first and never needs
-              one. Preselected when the person came from a circle. Offered only
-              where the circle can live inside this prayer's ciphertext
-              (lib/circles.js). */}
-          {!communityMode && canHoldPrivateMetadata(editPrayer || null) && (
-            <CirclePicker
-              compact
-              defaultOpen={initialOrganizeOpen}
-              value={form.circle}
-              onChange={(circle) => patch('circle', circle)}
-              lang={lang}
-              idPrefix="prayer-circle"
+          {communityMode && (
+            <Checkbox
+              id="prayer-anonymous"
+              checked={form.isAnonymous}
+              onChange={() => patch('isAnonymous', !form.isAnonymous)}
+              label={t(lang, 'anonymous')}
             />
           )}
 
-          {communityMode && (
-            <>
-              <Checkbox
-                id="prayer-anonymous"
-                checked={form.isAnonymous}
-                onChange={() => patch('isAnonymous', !form.isAnonymous)}
-                label={t(lang, 'anonymous')}
-              />
-              <CategorySelector
-                categories={categories}
-                selectedIds={form.categoryIds}
-                onToggle={toggleCategory}
-                tr={tr}
-                lang={lang}
-              />
-              {/* Group members read in many languages — stating the request's
-                  own language is what lets the right people see "Translate". */}
-              <SourceLanguageField
-                value={form.contentLanguage}
-                onChange={(code) => patch('contentLanguage', code)}
-                sampleText={`${form.title} ${form.description}`}
-                lang={lang}
-              />
-            </>
-          )}
-
-          {/* Organization is OPTIONAL: person, categories and the prayer rhythm
-              all wait behind one quiet "Organize" expander, so writing a request
-              and saving stays a single-field act. */}
-          {!communityMode && (
-            <div>
-              <SectionToggle
-                label={t(lang, 'organizeLabel')}
-                open={organizeOpen}
-                onToggle={() => setOrganizeOpen((v) => !v)}
-                controlsId="prayer-organize-section"
-                icon={SlidersHorizontal}
-              />
-              {organizeOpen && (
-                <div id="prayer-organize-section" className="prayer-form__organize">
-                  <Checkbox
-                    id="prayer-for-other"
-                    checked={form.forOther}
-                    onChange={() => patch('forOther', !form.forOther)}
-                    label={t(lang, 'forOther')}
-                  />
-
-                  {form.forOther && (
-                    <div className="prayer-form__person">
-                      <div className="q-field">
-                        <label htmlFor="prayer-person" className="q-field__label">{t(lang, 'personName')}</label>
-                        <input id="prayer-person" type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
-                          placeholder={t(lang, 'personNamePlaceholder')} className="q-input" />
-                      </div>
-                    </div>
+          {/* The details, all optional and all already answered: who it is for,
+              its Intercession Circle, its labels and its rhythm — one calm card
+              of rows, each stating its value. A new prayer arrives with the
+              bounded weekly rhythm, so saving without opening anything is a
+              complete answer. */}
+          {(!communityMode || showCategories) && (
+            <div className="form-details">
+              {!communityMode && (
+                <DetailRow
+                  id="detail-person"
+                  icon={<UserRound size={16} />}
+                  label={t(lang, 'forWhomLabel')}
+                  value={personValue}
+                  open={openDetail === 'person'}
+                  onToggle={() => toggleDetail('person')}
+                  rowRef={rowRef('person')}
+                >
+                  {() => (
+                    <>
+                      <Checkbox
+                        id="prayer-for-other"
+                        checked={form.forOther}
+                        onChange={() => patch('forOther', !form.forOther)}
+                        label={t(lang, 'forOther')}
+                      />
+                      {form.forOther && (
+                        <div className="q-field">
+                          <label htmlFor="prayer-person" className="q-field__label">{t(lang, 'personName')}</label>
+                          <input id="prayer-person" type="text" value={form.personName} onChange={e => patch('personName', e.target.value)}
+                            placeholder={t(lang, 'personNamePlaceholder')} className="q-input" />
+                        </div>
+                      )}
+                    </>
                   )}
+                </DetailRow>
+              )}
 
-                  <CategorySelector
-                    categories={categories}
-                    selectedIds={form.categoryIds}
-                    onToggle={toggleCategory}
-                    tr={tr}
-                    lang={lang}
-                  />
+              {/* Never required, and preselected when the person came from a
+                  circle. Choosing folds the circles away again. */}
+              {showCircle && (
+                <DetailRow
+                  id="detail-circle"
+                  icon={<CircleGlyph circle={form.circle || 'nations'} size={16} selected={!!form.circle} />}
+                  label={t(lang, 'circleFieldLabel')}
+                  value={form.circle ? t(lang, circleLabelKey(form.circle)) : t(lang, 'circleNotSet')}
+                  unset={!form.circle}
+                  open={openDetail === 'circle'}
+                  onToggle={() => toggleDetail('circle')}
+                  rowRef={rowRef('circle')}
+                >
+                  {(labelId) => (
+                    <CircleChips
+                      labelledBy={labelId}
+                      value={form.circle}
+                      onChoose={(circle) => {
+                        patch('circle', form.circle === circle ? null : circle);
+                        closeDetail('circle');
+                      }}
+                      lang={lang}
+                    />
+                  )}
+                </DetailRow>
+              )}
 
-                  {/* The rhythm this prayer already has, in one line. A new
-                      prayer arrives with the bounded weekly default already
-                      chosen, so saving without opening this is a complete
-                      answer — the scheduler only exists after "Change". */}
-                  <SchedulePicker
-                    draft={form.scheduleDraft}
-                    onCommit={(d) => patch('scheduleDraft', d)}
-                    lang={lang}
-                    planDays={planDays}
-                    idPrefix="prayer-sched"
-                    focusSignal={rhythmFocusSignal}
-                  />
+              {showCategories && (
+                <DetailRow
+                  id="detail-categories"
+                  icon={<Tag size={16} />}
+                  label={t(lang, 'categories')}
+                  value={categoriesValue}
+                  unset={chosenCategories.length === 0}
+                  open={openDetail === 'categories'}
+                  onToggle={() => toggleDetail('categories')}
+                  rowRef={rowRef('categories')}
+                >
+                  {(labelId) => (
+                    <CategorySelector
+                      categories={categories}
+                      selectedIds={form.categoryIds}
+                      onToggle={toggleCategory}
+                      tr={tr}
+                      lang={lang}
+                      labelledBy={labelId}
+                    />
+                  )}
+                </DetailRow>
+              )}
 
-                  {/* Source language — already answered, correctable in one tap.
-                      It sits inside Organize so the default form never grows. */}
-                  <SourceLanguageField
-                    value={form.contentLanguage}
-                    onChange={(code) => patch('contentLanguage', code)}
-                    sampleText={`${form.title} ${form.description}`}
-                    lang={lang}
-                  />
-                </div>
+              {!communityMode && (
+                <DetailRow
+                  id="detail-rhythm"
+                  icon={<Repeat size={16} />}
+                  label={t(lang, 'schedRhythmLabel')}
+                  value={rhythmValue}
+                  hint={rhythmHint}
+                  open={openDetail === 'rhythm'}
+                  onToggle={() => toggleDetail('rhythm')}
+                  rowRef={rowRef('rhythm')}
+                >
+                  {() => (
+                    <SchedulePicker
+                      draft={form.scheduleDraft}
+                      onCommit={(d) => patch('scheduleDraft', d)}
+                      onClose={() => closeDetail('rhythm')}
+                      lang={lang}
+                      planDays={planDays}
+                      idPrefix="prayer-sched"
+                    />
+                  )}
+                </DetailRow>
               )}
             </div>
           )}
 
-          {/* Where this prayer will be visible — stated in the form, not after.
-              Encryption shows as a quiet separate status, never as an audience. */}
-          {formAudience && (
-            <AudienceBadge audience={formAudience} protection={formProtection} lang={lang} />
-          )}
+          {/* Who will see it and the language it is written in, in one quiet
+              line — stated in the form, not after. Encryption shows as a quiet
+              status beside the audience, never as an audience of its own. Group
+              members read in many languages: stating the request's own language
+              is what lets the right people see "Translate". */}
+          <div className="prayer-form__meta">
+            {formAudience && (
+              <AudienceBadge audience={formAudience} protection={formProtection} lang={lang} plain />
+            )}
+            <SourceLanguageField
+              value={form.contentLanguage}
+              onChange={(code) => patch('contentLanguage', code)}
+              sampleText={`${form.title} ${form.description}`}
+              lang={lang}
+            />
+          </div>
 
+          {/* One way forward; the ✕ above (or Escape) is the way out. */}
           <div className="prayer-form__actions">
-            <SecondaryButton onClick={onClose} title={t(lang, 'tipDiscard')}>
-              {t(lang, 'cancel')}
-            </SecondaryButton>
             <PrimaryButton type="submit" disabled={submitting} title={editPrayer ? t(lang, 'tipSavePrayer') : t(lang, 'tipAddPrayerForm')}>
               {editPrayer || communityMode ? t(lang, editPrayer ? 'save' : 'add') : t(lang, 'savePrayer')}
             </PrimaryButton>

@@ -61,21 +61,6 @@
   font-size: 1.1875rem;
 }
 
-.prayer-form__rhythm {
-  display: flex;
-  width: 100%;
-  min-height: 44px;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0 6px;
-  margin-block-start: calc(-1 * var(--q-space-2));
-  color: var(--q-text-tertiary);
-  font-size: var(--q-type-meta);
-  text-align: start;
-}
-
-.prayer-form__rhythm-change { color: var(--q-royal-text); font-weight: 600; }
-
 /* An optional part of the form: a quiet full-width row that folds open. */
 .prayer-form__toggle {
   display: flex;
@@ -93,18 +78,111 @@
 .prayer-form__toggle > svg { transition: transform var(--q-motion-standard) var(--q-ease); }
 .prayer-form__toggle[aria-expanded="true"] > svg { transform: rotate(180deg); }
 
-/* Organize: no box — a hairline, then each choice in its own breathing room. */
-.prayer-form__organize {
-  display: grid;
-  gap: var(--q-space-6);
-  padding-block: var(--q-space-4) var(--q-space-2);
-  border-block-start: 1px solid var(--q-border);
+/* The details: one calm card of rows — who it is for, its circle, its labels,
+   its rhythm — each stating its value, each opening alone beneath itself. */
+.form-details {
+  overflow: hidden;
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
 }
 
-.prayer-form__person { display: grid; gap: var(--q-space-3); padding-inline-start: var(--q-space-4); border-inline-start: 2px solid var(--q-selected-border); }
+.form-detail + .form-detail { border-block-start: 1px solid var(--q-border); }
 
-.prayer-form__actions { display: flex; gap: var(--q-space-3); padding-block-start: var(--q-space-2); }
-.prayer-form__actions > * { flex: 1 1 0; }
+.form-detail__row {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  gap: var(--q-space-3);
+  padding: var(--q-space-2) var(--q-space-4);
+  text-align: start;
+}
+
+.form-detail__row:hover { background: var(--q-hover); }
+
+.form-detail__icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--q-selected);
+  color: var(--q-royal-text);
+}
+
+.form-detail__label { flex: 0 0 auto; color: var(--q-text); font-size: 0.9375rem; font-weight: 500; }
+
+.form-detail__value {
+  display: -webkit-box;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--q-text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  text-align: end;
+}
+
+.form-detail__value--unset { color: var(--q-text-tertiary); }
+.form-detail__chevron { flex: 0 0 auto; color: var(--q-text-tertiary); transition: transform var(--q-motion-standard) var(--q-ease); }
+.form-detail__row[aria-expanded="true"] .form-detail__chevron { transform: rotate(180deg); }
+
+/* Aligned under the label, past the icon tile. */
+.form-detail__hint {
+  margin: calc(-1 * var(--q-space-2)) 0 0;
+  padding: 0 var(--q-space-4) var(--q-space-3) calc(var(--q-space-4) + 28px + var(--q-space-3));
+  color: var(--q-text-tertiary);
+  font-size: var(--q-type-meta);
+}
+
+.form-detail__panel { display: grid; gap: var(--q-space-3); padding: var(--q-space-1) var(--q-space-4) var(--q-space-4); }
+
+/* Categories: chosen first, tinted with their own colour; the rest behind Add. */
+.category-chips { display: flex; flex-wrap: wrap; gap: var(--q-space-2); }
+
+.category-chip {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 6px;
+  padding-inline: var(--q-space-3);
+  border: 1px solid var(--q-field-border);
+  border-radius: var(--q-radius-pill);
+  background: var(--q-field);
+  color: var(--q-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.category-chip--selected {
+  border-color: var(--category-color, var(--q-royal));
+  background: color-mix(in srgb, var(--category-color, var(--q-royal)) 18%, var(--q-surface));
+  color: var(--q-text);
+}
+
+.category-chip--add { border-style: dashed; background: transparent; color: var(--q-royal-text); }
+
+/* Who will see it and its language: one quiet line above the action. */
+.prayer-form__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--q-space-4);
+  color: var(--q-text-tertiary);
+  font-size: var(--q-type-meta);
+}
+
+.audience-line { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-3); }
+.audience-line__item { display: inline-flex; min-height: 44px; align-items: center; gap: 5px; }
+
+.prayer-form__actions { display: flex; gap: var(--q-space-3); }
+.prayer-form__actions > * { flex: 1 1 0; min-height: 52px; }
 
 /* ── Circle picker ──────────────────────────────────────────────────────── */
 .circle-picker { min-width: 0; margin: 0; padding: 0; border: 0; }
@@ -229,6 +307,12 @@
 
 .carry-button--quiet.carry-button--carrying { border-color: transparent; background: transparent; }
 
+/* Just the mark — a round 44px target beside words that already say who
+   carries the prayer. */
+.carry-button--icon { width: 44px; min-height: 44px; flex: 0 0 auto; padding: 0; border-radius: 50%; background: transparent; color: var(--q-royal-text); }
+.carry-button--icon:hover:not(:disabled) { background: var(--q-hover); }
+.carry-button--icon.carry-button--carrying { border-color: color-mix(in srgb, var(--q-gold) 40%, transparent); background: color-mix(in srgb, var(--q-gold) 12%, transparent); }
+
 .carry-button__mark { position: relative; display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; }
 .carry-button__mark .rise-mark { color: currentColor; }
 .carry-button--carrying .carry-button__mark > .rise-mark:first-child { color: var(--q-gold); }
@@ -251,34 +335,11 @@
   .carry-button__lift { display: none; }
 }
 
-.carry-section {
-  display: grid;
-  justify-items: start;
-  gap: var(--q-space-3);
-  padding-block: var(--q-space-6);
-  border-block: 1px solid var(--q-border);
-}
-
-.carry-section__button { min-width: min(100%, 16rem); }
-
-@media (max-width: 480px) {
-  .carry-section { justify-items: stretch; }
-}
-
-.carry-section__presence {
-  display: flex;
-  min-height: 24px;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--q-space-2);
-  margin: 0;
-  color: var(--q-text-tertiary);
-  font-size: var(--q-type-meta);
-}
-
-.carry-section__faces { display: inline-flex; }
-.carry-section__faces > * { box-shadow: 0 0 0 2px var(--q-canvas); }
-.carry-section__faces > * + * { margin-inline-start: -6px; }
+/* Who carries a group's request: a few faces, overlapped, then the count —
+   one fact beside the group it is from. */
+.carry-presence__faces { display: inline-flex; }
+.carry-presence__faces > * { box-shadow: 0 0 0 2px var(--q-canvas); }
+.carry-presence__faces > * + * { margin-inline-start: -6px; }
 
 /* The composer's circle row: one quiet line beside "Add a note" and "Organize"
    — its label, then what is chosen (or "Not set") — that opens onto the shared

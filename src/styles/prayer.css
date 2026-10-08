@@ -514,6 +514,41 @@
 
 .prayer-detail__description { max-width: 40rem; margin-block-start: var(--q-space-4); color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.7; }
 
+/* A group's request: who is asking comes first — a face, a name, then where,
+   when and its labels on one quiet line. */
+.prayer-detail__byline { display: flex; align-items: center; gap: var(--q-space-3); margin-block-end: var(--q-space-4); }
+.prayer-detail__byline > .avatar { flex: 0 0 auto; }
+.prayer-detail__byline-author { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; line-height: 1.3; }
+.prayer-detail__byline-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+.prayer-detail__byline-meta > :not(:first-child):not(.status-label):not(.prayer-detail__fact-note)::before { padding-inline: 6px; content: '·'; }
+.prayer-detail__byline-meta > .status-label { margin-inline-start: var(--q-space-3); }
+.prayer-detail__byline-meta .prayer-detail__fact { min-height: 24px; color: var(--q-text-tertiary); font-size: inherit; font-weight: 500; }
+
+/* Their words, set apart as theirs: a soft card under the title. */
+.prayer-detail__description--request {
+  max-width: none;
+  padding: var(--q-space-4) var(--q-space-5);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  color: var(--q-text);
+}
+
+/* Who carries it: faces and one sentence, with the mark that lays it down. */
+.carry-band {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--q-space-3);
+  margin-block-start: var(--q-space-4);
+  padding: var(--q-space-2) var(--q-space-2) var(--q-space-2) var(--q-space-4);
+  border: 1px solid color-mix(in srgb, var(--q-gold) 28%, var(--q-border));
+  border-radius: var(--q-radius-control);
+  background: color-mix(in srgb, var(--q-gold) 7%, var(--q-surface));
+}
+.carry-band__presence { display: flex; min-width: 0; min-height: 44px; align-items: center; gap: var(--q-space-3); color: var(--q-text-secondary); font-size: 0.875rem; font-weight: 500; }
+.carry-band__presence .carry-presence__faces > * { box-shadow: 0 0 0 2px var(--q-surface); }
+
 /* Memory, one quiet line: labels · carried since · days prayed. */
 .prayer-detail__meta {
   display: flex;
@@ -524,7 +559,9 @@
   color: var(--q-text-tertiary);
   font-size: var(--q-type-meta);
 }
-.prayer-detail__meta > * + *::before { padding-inline: 6px; color: var(--q-text-tertiary); content: '·'; }
+.prayer-detail__meta > * + *:not(.status-label)::before { padding-inline: 6px; color: var(--q-text-tertiary); content: '·'; }
+/* A status brings its own dot, so it is spaced rather than separated. */
+.prayer-detail__meta > * + .status-label { margin-inline-start: var(--q-space-3); }
 
 .prayer-detail__praying { color: var(--q-text-secondary); }
 
@@ -540,9 +577,17 @@
 
 @media (max-width: 560px) {
   .prayer-detail__pray { min-width: 0; flex: 1 1 auto; }
-  .prayer-detail__secondary-actions > * { width: 44px; padding-inline: 0; }
-  .prayer-detail__secondary-actions > * > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .prayer-detail__actions:not(.prayer-detail__actions--stacked) .prayer-detail__secondary-actions > * { width: 44px; padding-inline: 0; }
+  .prayer-detail__actions:not(.prayer-detail__actions--stacked) .prayer-detail__secondary-actions > * > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 }
+
+/* A group's request stacks them: the one action across the full width, its
+   tools sharing the row beneath, labelled at every width. */
+.prayer-detail__actions--stacked { display: grid; gap: var(--q-space-2); margin-block-start: var(--q-space-4); }
+.prayer-detail__actions--stacked > .prayer-detail__pray { width: 100%; min-width: 0; min-height: 52px; }
+.prayer-detail__actions--stacked > .prayer-detail__secondary-actions > * { flex: 1 1 0; height: auto; min-height: 48px; padding: var(--q-space-2) var(--q-space-3); }
+/* A long label wraps onto a second line rather than losing its end. */
+.prayer-detail__actions--stacked > .prayer-detail__secondary-actions > * > span { overflow: visible; font-size: 0.875rem; line-height: 1.25; text-align: center; white-space: normal; }
 
 .detail-page__content { width: min(100%, 48rem); margin-inline: auto; padding: 0 clamp(var(--q-space-4), 4vw, var(--q-space-8)) var(--q-space-12); }
 .prayer-detail__section { padding-block-start: var(--q-space-6); border-block-start: 1px solid var(--q-border); }
@@ -550,7 +595,8 @@
 /* Ways to pray — a numbered list, each point one compact entry: a gold
    numeral, its words, its passages as small chips, and a ⋯ at the end. */
 .prayer-points-panel { padding-block-start: var(--q-space-6); border-block-start: 1px solid var(--q-border); }
-.prayer-points-panel__header { min-height: 44px; margin-block-end: var(--q-space-1); }
+.prayer-points-panel__header { min-height: 44px; flex-wrap: wrap; gap: 0 var(--q-space-3); margin-block-end: var(--q-space-1); }
+.prayer-points-panel__header > .section-label { white-space: nowrap; }
 .prayer-points-panel__list { display: grid; margin: 0; padding: 0; list-style: none; counter-reset: prayer-point; }
 .prayer-point {
   display: grid;
@@ -635,7 +681,6 @@
   border-radius: var(--q-radius-control);
 }
 
-.prayer-activity-composer { margin-block-start: var(--q-space-3); padding-block-start: var(--q-space-3); border-block-start: 1px solid var(--q-border); }
 
 @media (hover: hover) and (pointer: fine) {
   .prayer-activity-item__actions > button { opacity: 0; }

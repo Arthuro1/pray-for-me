@@ -41,12 +41,10 @@ vi.mock('../lib/verseText', () => ({
 vi.mock('../utils/bibleLink', () => ({ bibleLink: () => 'https://www.bible.com' }));
 vi.mock('../lib/mutationQueue', () => ({ enqueue: vi.fn(), pendingPrayerIds: () => new Set() }));
 
-// Isolate the answered flow from the heavy community children (calendar,
-// updates, testimonies, follow button) — none of them are under test here.
-vi.mock('../components/GroupPrayerCalendar', () => ({ default: () => null }));
+// Isolate the answered flow from the community lists (updates, testimonies) —
+// neither is under test here.
 vi.mock('../components/CommunityUpdates', () => ({ default: () => null }));
 vi.mock('../components/CommunityTestimonies', () => ({ default: () => null }));
-vi.mock('../components/FollowPrayerButton', () => ({ default: () => null }));
 // A stand-in composer whose confirm button calls onSend with no testimony —
 // exactly what the real answered composer does when confirmed empty.
 vi.mock('../components/rich/UpdateComposer', () => ({
@@ -60,7 +58,7 @@ import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
 import useAuthStore from '../store/authStore';
 import useFollowUpStore from '../store/followUpStore';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 
 const lang = 'fr';
 
@@ -118,6 +116,12 @@ beforeEach(() => {
 // Spies are injected into the stores BEFORE render, so the component captures
 // them in its handler closures from the first commit (setting them afterward
 // would leave the already-attached click handler pointing at the real actions).
+// "Mark answered" opens the answered flow; its Confirm completes it.
+const confirmAnswered = () => {
+  fireEvent.click(screen.getByRole('button', { name: t(lang, 'markAnswered') }));
+  fireEvent.click(screen.getByRole('button', { name: t(lang, 'confirm') }));
+};
+
 const renderCommunity = (cp, sourcePrayer, { role = 'member', prayerSpies = {}, communitySpies = {} } = {}) => {
   usePrayerStore.setState({
     prayers: sourcePrayer ? [sourcePrayer] : [],
@@ -140,7 +144,7 @@ describe('PrayerDetail — community answered mirrors the personal source', () =
       communitySpies: { setCommunityAnswered }, prayerSpies: { markAnswered },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'confirm') }));
+    confirmAnswered();
     // let the awaited handler chain settle
     await Promise.resolve();
     await Promise.resolve();
@@ -173,7 +177,7 @@ describe('PrayerDetail — community answered mirrors the personal source', () =
       role: 'admin', communitySpies: { setCommunityAnswered }, prayerSpies: { markAnswered },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'confirm') }));
+    confirmAnswered();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -193,7 +197,7 @@ describe('PrayerDetail — community answered mirrors a saved-from-community cop
       role: 'admin', communitySpies: { setCommunityAnswered }, prayerSpies: { markAnswered },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'confirm') }));
+    confirmAnswered();
     await Promise.resolve();
     await Promise.resolve();
 
@@ -262,5 +266,64 @@ describe('PrayerDetail — "Carry this prayer" mirrors the personal list', () =>
 
     expect(toggleReaction).toHaveBeenCalledWith('c1', 'u1');
     expect(softDeletePrayer).not.toHaveBeenCalled();
+  });
+});
+
+describe('PrayerDetail — the action row on a group request', () => {
+  const fetchReactors = vi.fn(async () => ({ reactors: [] }));
+
+  it('leads with Carry until the reader carries it', () => {
+    renderCommunity(communityPrayer({ user_id: 'u2' }), null, { communitySpies: { fetchReactors } });
+    expect(screen.getByRole('button', { name: t(lang, 'carryThisPrayer') }).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.queryByRole('button', { name: t(lang, 'prayNow') })).toBeNull();
+  });
+
+  it('leads with Pray now once carried, Carrying beside it', () => {
+    renderCommunity(communityPrayer({ user_id: 'u2' }), savedCopy(), {
+      communitySpies: { fetchReactors, userReactions: new Set(['c1']) },
+    });
+    expect(screen.getByRole('button', { name: t(lang, 'prayNow') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t(lang, 'carryingLabel') }).getAttribute('aria-pressed')).toBe('true');
+  });
+
+  it('says who is asking first: the author and the group, before the title', () => {
+    renderCommunity(communityPrayer({ user_id: 'u2' }), null, { communitySpies: { fetchReactors } });
+    const title = screen.getByRole('heading', { level: 1 });
+    const author = screen.getByText('Grace');
+    expect(author.compareDocumentPosition(title) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByText(t(lang, 'audienceFromGroup', { name: 'Église' }))).toBeTruthy();
+  });
+
+  it('counts the reader as "you" in the carry band, never as a number beside "Carrying"', () => {
+    const prayer = communityPrayer({ user_id: 'u2', prayer_reactions: [{ count: 3 }] });
+    renderCommunity(prayer, savedCopy(), {
+      communitySpies: { fetchReactors, userReactions: new Set(['c1']) },
+    });
+    expect(screen.getByText(tp(lang, 'carryYouAndOthers', 2))).toBeTruthy();
+    expect(screen.queryByText(tp(lang, 'carryCount', 3))).toBeNull();
+  });
+
+  it('counts everyone when the reader does not carry it yet', () => {
+    const prayer = communityPrayer({ user_id: 'u2', prayer_reactions: [{ count: 1 }] });
+    renderCommunity(prayer, null, { communitySpies: { fetchReactors } });
+    expect(screen.getByText(tp(lang, 'carryCount', 1))).toBeTruthy();
+  });
+
+  it('offers a member a testimony, never Mark answered', () => {
+    renderCommunity(communityPrayer({ user_id: 'u2' }), null, { communitySpies: { fetchReactors } });
+    expect(screen.getByRole('button', { name: t(lang, 'postTestimony') })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'markAnswered') })).toBeNull();
+  });
+
+  it('keeps every flow folded until its tool is pressed', () => {
+    renderCommunity(communityPrayer(), personalSource(), { communitySpies: { fetchReactors } });
+    expect(screen.queryByRole('button', { name: t(lang, 'confirm') })).toBeNull();
+    const tool = screen.getByRole('button', { name: t(lang, 'markAnswered') });
+    fireEvent.click(tool);
+    expect(tool.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByRole('button', { name: t(lang, 'confirm') })).toBeTruthy();
+    // Pressing the same tool again folds it away.
+    fireEvent.click(tool);
+    expect(screen.queryByRole('button', { name: t(lang, 'confirm') })).toBeNull();
   });
 });

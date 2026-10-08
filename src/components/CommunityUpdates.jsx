@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import Avatar from './shared/Avatar';
-import AnonymousToggle from './AnonymousToggle';
-import UpdateComposer from './rich/UpdateComposer';
 import RemovableText from './rich/RemovableText';
 import AttachmentList from './rich/AttachmentList';
 import DeleteButton from './rich/DeleteButton';
@@ -13,17 +11,18 @@ import { communityAuthor } from '../utils/user';
 import { timeAgo } from '../utils/date';
 import { t } from '../i18n';
 
-// Member updates on a community prayer — encouragements, verses, words, now
-// with light formatting and media (photos / voice notes / video / links). The
-// list lives in the parent (which also feeds it to the translation toggle);
-// posting a word is delegated through onSend(text, attachments, isAnonymous) so
-// the parent stays the source of truth. A word's TEXT can be edited only by its
+// Member updates on a community prayer — encouragements, verses, words, with
+// light formatting and media (photos / voice notes / video / links). The list
+// lives in the parent (which also feeds it to the translation toggle); a word
+// is written in the parent's own "Add an update" flow, so this is titled only
+// once there is something to read. A word's TEXT can be edited only by its
 // author (onEdit) — the WhatsApp "edit message" gesture. A word can be removed
 // as a whole by its author or a group admin (isAdmin) via onDelete — the same
 // trash affordance used on prayer points. Attachments render read-only.
-export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, avatarFor, onSend, onDelete, onEdit }) {
-  const [anon, setAnon] = useState(false);
+export default function CommunityUpdates({ updates, loading, loc, lang, userId, isAdmin = false, avatarFor, onDelete, onEdit }) {
   const [editingId, setEditingId] = useState(null);
+
+  if (!loading && updates.length === 0) return null;
 
   const canDelete = (u) => !!onDelete && !u._locked && (u.user_id === userId || isAdmin);
   // Editing is strictly the author's own — an admin moderates by deleting, and
@@ -97,16 +96,6 @@ export default function CommunityUpdates({ updates, loading, loc, lang, userId, 
           ))}
         </div>
       )}
-
-      <div className="prayer-activity-composer">
-        <UpdateComposer
-          lang={lang}
-          rows={1}
-          placeholder={t(lang, 'newUpdate')}
-          onSend={(text, attachments) => onSend(text, attachments, anon)}
-        />
-      </div>
-      <AnonymousToggle checked={anon} onChange={setAnon} lang={lang} className="mt-2" />
     </div>
   );
 }

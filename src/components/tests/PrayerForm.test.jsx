@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 //
-// Quick Add asks ONE question — who or what to pray for. A note and all
-// organization (person, categories, prayer rhythm) are optional and collapsed.
+// Quick Add asks ONE question — who or what to pray for. A note is folded, and
+// the details (who it is for, categories, prayer rhythm) are rows that state
+// their value and open one at a time.
 // French is the always-loaded locale, so assertions go through t() to verify the
 // show/hide LOGIC rather than pin copy.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -30,34 +31,39 @@ import { t } from '../../i18n';
 const lang = 'fr';
 afterEach(cleanup);
 
+const startsWith = (key) => new RegExp(`^${t(lang, key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`);
 // Scheduling rows are named "<label> <sub-line>", so match from the start.
-const rhythmRadio = (key) => screen.getByRole('radio', {
-  name: new RegExp(`^${t(lang, key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`),
-});
+const rhythmRadio = (key) => screen.getByRole('radio', { name: startsWith(key) });
+// A detail row is named "<label> <value>".
+const detailRow = (key) => screen.getByRole('button', { name: startsWith(key) });
 
 beforeEach(() => {
   usePrayerStore.setState({ categories: [], settings: { language: lang } });
 });
 
 describe('PrayerForm — Quick Add', () => {
-  it('asks only who/what to pray for; note and organization collapsed', () => {
+  it('asks only who/what to pray for; the note and every detail wait folded', () => {
     render(<PrayerForm onClose={() => {}} />);
     expect(screen.getByText(t(lang, 'prayerFieldLabel'))).toBeTruthy();
     expect(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder'))).toBeTruthy();
-    // The note textarea and everything under Organize (person, labels, rhythm)
-    // wait behind their expanders.
+    // The note textarea and every detail's control wait behind their rows; the
+    // rows only state what is already true.
     expect(screen.queryByRole('textbox', { name: t(lang, 'details') })).toBeNull();
     expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
-    expect(screen.queryByText(t(lang, 'schedRhythmLabel'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'schedWhenAppear'))).toBeNull();
     expect(screen.getByText(t(lang, 'addNote'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'organizeLabel'))).toBeTruthy();
+    expect(detailRow('forWhomLabel').textContent).toContain(t(lang, 'forWhomMe'));
+    expect(detailRow('schedRhythmLabel').getAttribute('aria-expanded')).toBe('false');
+    // One way forward; the ✕ is the way out.
+    expect(screen.queryByRole('button', { name: t(lang, 'cancel') })).toBeNull();
   });
 
-  it('can open Organize directly from a contextual activation invitation', () => {
+  it('opens on the one row a contextual invitation asked about', () => {
     const legacy = { id: 'p1', title: 'Ancienne', schedule: null, prayer_categories: [] };
-    render(<PrayerForm onClose={() => {}} editPrayer={legacy} initialOrganizeOpen />);
-    expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'schedRhythmLabel'))).toBeTruthy();
+    render(<PrayerForm onClose={() => {}} editPrayer={legacy} initialDetail="rhythm" />);
+    expect(detailRow('schedRhythmLabel').getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
   });
 
   it('"Add a note" reveals the note field', () => {
@@ -79,36 +85,61 @@ describe('PrayerForm — Quick Add', () => {
     }
   });
 
-  it('"Organize" reveals person, labels, and the prayer rhythm', () => {
+  it('opens one detail at a time: who it is for, its labels, its rhythm', () => {
     usePrayerStore.setState({
       categories: [{ id: 'c1', name: 'Famille', emoji: '👨‍👩‍👧', color: '#7c5cfc' }],
       settings: { language: lang },
     });
     render(<PrayerForm onClose={() => {}} />);
-    // Everything organizing is collapsed until asked — person, labels, rhythm.
-    expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
-    expect(screen.queryByText(t(lang, 'schedRhythmLabel'))).toBeNull();
-    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
+    expect(detailRow('categories').textContent).toContain(t(lang, 'categoriesNone'));
+
+    fireEvent.click(detailRow('forWhomLabel'));
     expect(screen.getByText(t(lang, 'forOther'))).toBeTruthy();
-    expect(screen.getByText('Famille', { exact: false })).toBeTruthy();
-    // The rhythm reads as a summary row; the scheduler waits behind it.
-    expect(screen.getByText(t(lang, 'schedRhythmLabel'))).toBeTruthy();
-    expect(screen.getByText(t(lang, 'schedChangeLater'))).toBeTruthy();
+
+    // Opening the labels folds the person away again.
+    fireEvent.click(detailRow('categories'));
+    expect(screen.queryByText(t(lang, 'forOther'))).toBeNull();
+    const labels = screen.getByRole('group', { name: t(lang, 'categories') });
+    fireEvent.click(within(labels).getByRole('button', { name: /Famille/ }));
+    expect(within(labels).getByRole('button', { name: /Famille/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(detailRow('categories').textContent).toContain('Famille');
+
+    // The scheduler waits behind the rhythm row, one tap away.
     expect(screen.queryByText(t(lang, 'schedWhenAppear'))).toBeNull();
-    // Opening the scheduler is one tap on the visible rhythm row.
-    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    fireEvent.click(detailRow('schedRhythmLabel'));
     expect(screen.getByText(t(lang, 'schedWhenAppear'))).toBeTruthy();
+    expect(screen.queryByRole('group', { name: t(lang, 'categories') })).toBeNull();
+  });
+
+  it('keeps a long list of labels behind "Add" once some are chosen', () => {
+    usePrayerStore.setState({
+      categories: [
+        { id: 'c1', name: 'Famille', emoji: '🏠', color: '#7c5cfc' },
+        { id: 'c2', name: 'Santé', emoji: '🙏', color: '#4F7A6B' },
+      ],
+      settings: { language: lang },
+    });
+    const editPrayer = { id: 'p1', title: 'Ma mère', prayer_categories: [{ category_id: 'c1' }], schedule: null };
+    render(<PrayerForm onClose={() => {}} editPrayer={editPrayer} />);
+    fireEvent.click(detailRow('categories'));
+    const labels = screen.getByRole('group', { name: t(lang, 'categories') });
+    expect(within(labels).getByRole('button', { name: /Famille/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(labels).queryByRole('button', { name: /Santé/ })).toBeNull();
+    fireEvent.click(within(labels).getByRole('button', { name: t(lang, 'addCategoryFull') }));
+    expect(within(labels).getByRole('button', { name: /Santé/ }).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('a rhythm chosen in the scheduler maps onto a real schedule (daily)', () => {
     const addPrayer = vi.fn(async () => null);
     usePrayerStore.setState({ addPrayer });
     render(<PrayerForm onClose={() => {}} />);
-    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
-    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    fireEvent.click(detailRow('schedRhythmLabel'));
     fireEvent.click(rhythmRadio('schedOtherRhythm'));
     fireEvent.click(rhythmRadio('schedEveryDay'));
     fireEvent.click(screen.getByText(t(lang, 'schedUseRhythm')));
+    // Folded again, the row names the new rhythm and holds focus.
+    expect(detailRow('schedRhythmLabel').textContent).toContain(t(lang, 'schedDaily'));
+    expect(document.activeElement).toBe(detailRow('schedRhythmLabel'));
     fireEvent.change(screen.getByPlaceholderText(t(lang, 'prayerSubjectPlaceholder')), {
       target: { value: 'Paix' },
     });
@@ -123,11 +154,10 @@ describe('PrayerForm — Quick Add', () => {
     const addPrayer = vi.fn(async () => null);
     usePrayerStore.setState({ addPrayer });
     render(<PrayerForm onClose={() => {}} />);
-    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
-    fireEvent.click(screen.getByText(t(lang, 'schedRhythmLabel')));
+    fireEvent.click(detailRow('schedRhythmLabel'));
     fireEvent.click(rhythmRadio('schedOtherRhythm'));
     fireEvent.click(rhythmRadio('schedEveryDay'));
-    // The scheduler's own Cancel, not the form's.
+    // The scheduler's own Cancel.
     const scheduler = screen.getByText(t(lang, 'schedUseRhythm')).closest('div');
     fireEvent.click(within(scheduler).getByText(t(lang, 'cancel')));
 
@@ -167,14 +197,12 @@ describe('PrayerForm — Quick Add', () => {
     );
   });
 
-  it('the weekly default is readable, in words, once Organize is open', () => {
+  it('states the weekly default in words on its row', () => {
     render(<PrayerForm onClose={() => {}} />);
-    fireEvent.click(screen.getByText(t(lang, 'organizeLabel')));
     // The compact row states the rhythm this prayer already has — no chips, no
     // decision to make, and the weekday it names is today's.
-    const row = screen.getByText(t(lang, 'schedRhythmLabel')).closest('button');
+    const row = detailRow('schedRhythmLabel');
     expect(row.textContent).toContain(weekdayName(lang, parseKey(todayKey()).getDay()));
-    expect(row.textContent).toContain(t(lang, 'slotAnytime'));
     // Opening the scheduler does not preselect the "no fixed schedule" mode.
     fireEvent.click(row);
     expect(rhythmRadio('schedNoFixed').checked).toBe(false);
@@ -236,12 +264,14 @@ describe('PrayerForm — accessibility', () => {
 
   it('uses a real labelled checkbox for "for someone else" (keyboard/screen-reader operable)', () => {
     render(<PrayerForm onClose={() => {}} />);
-    fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
+    fireEvent.click(detailRow('forWhomLabel'));
     const checkbox = screen.getByRole('checkbox', { name: t(lang, 'forOther') });
     expect(checkbox.checked).toBe(false);
     fireEvent.click(checkbox);
     expect(checkbox.checked).toBe(true);
-    expect(screen.getByText(t(lang, 'personName'))).toBeTruthy();
+    expect(detailRow('forWhomLabel').textContent).toContain(t(lang, 'forWhomSomeone'));
+    fireEvent.change(screen.getByLabelText(t(lang, 'personName')), { target: { value: 'Marie' } });
+    expect(detailRow('forWhomLabel').textContent).toContain('Marie');
   });
 
   it('the icon-only close button has an accessible name, and the title field a label', () => {

@@ -2,13 +2,14 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, ClipboardCheck, Download, Flag, Heart, KeyRound, Lock, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Pencil, RefreshCw, Shield, ShieldCheck, Sun, Sunrise, Trash2, Unlock, UserRound, WifiOff } from 'lucide-react';
+import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, ClipboardCheck, Download, Flag, Heart, KeyRound, Lock, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Moon, Pencil, RefreshCw, Shield, ShieldCheck, Sun, SunMoon, Sunrise, Trash2, Unlock, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
 import { dailyReminderStartDay, enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
 import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
+import { normalizeTheme } from '../utils/theme';
 import { track, EVENTS } from '../lib/analytics';
 import FeedbackModal from '../components/FeedbackModal';
 import { canReviewWording } from '../lib/wordingReports';
@@ -76,11 +77,11 @@ function PrivacyRow({ id, icon: Icon, label, open, onToggle, children }) {
 }
 
 // A setting and its control on one line: the label at the start, the control
-// at the end.
+// at the end — the control moving under the label where the line is too short.
 function InlineRow({ label, children }) {
   return (
     <div className="settings-row">
-      <div className="settings-row__main">
+      <div className="settings-row__main settings-row__main--wrap">
         <p className="settings-row__label">{label}</p>
         {children}
       </div>
@@ -207,7 +208,7 @@ export default function SettingsTab() {
   // Privacy & Security is ONE consolidated section (visibility, vault,
   // notification previews, AI consent, export, deletion) — reachable from More.
   const [openSections, setOpenSections] = useState({
-    account: false, privacy: false, notifications: false, appearance: false, support: false,
+    privacy: false, notifications: false, appearance: false, support: false,
   });
   const toggleSection = (key) => setOpenSections((s) => ({ ...s, [key]: !s[key] }));
   // Privacy & Security's internal rows start compact too — each expands alone.
@@ -398,8 +399,9 @@ export default function SettingsTab() {
       },
     });
   };
-  const provider = user?.app_metadata?.provider;
-  const providerLabel = provider === 'google' ? 'Google' : t(lang, 'providerEmail');
+  const signedInLabel = user?.app_metadata?.provider === 'google'
+    ? t(lang, 'signedInWith', { provider: 'Google' })
+    : t(lang, 'signedInByEmail');
   const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0];
   const memberSince = user?.created_at
     ? new Date(user.created_at).toLocaleDateString(lang, { month: 'long', year: 'numeric' })
@@ -426,33 +428,45 @@ export default function SettingsTab() {
       </div>
 
       <div className="phase-content max-w-3xl">
-        {/* Who you are, once: the image, the name, the email. The image's
-            three controls stay folded behind Edit — deliberately not a profile
-            screen. */}
-        <div className="settings-profile">
-          <span className="settings-profile__avatar">
-            <Avatar name={displayName || ''} avatar={myAvatar} size={60} />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="settings-profile__name">{displayName}</p>
-            <p className="q-meta truncate">{user?.email}</p>
-            {memberSince && (
-              <p className="settings-profile__since">
-                <CalendarDays size={12} aria-hidden="true" /> {t(lang, 'memberSince')} {memberSince}
-              </p>
-            )}
+        {/* Who you are, once: the image, the name, the email — and, in the
+            card's footer, how you signed in and the way out. The image's three
+            controls stay folded behind Edit — deliberately not a profile screen. */}
+        {/* `account` keeps old /settings#account deep-links landing here. */}
+        <div id="account" className="settings-profile">
+          <div className="settings-profile__main">
+            <span className="settings-profile__avatar">
+              <Avatar name={displayName || ''} avatar={myAvatar} size={60} />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="settings-profile__name">{displayName}</p>
+              <p className="q-meta truncate">{user?.email}</p>
+              {memberSince && (
+                <p className="settings-profile__since">
+                  <CalendarDays size={12} aria-hidden="true" /> {t(lang, 'memberSince')} {memberSince}
+                </p>
+              )}
+            </div>
+            <QuietButton
+              icon={Pencil}
+              iconSize={15}
+              onClick={() => setEditingAvatar((v) => !v)}
+              aria-expanded={editingAvatar}
+              aria-controls="settings-avatar"
+              aria-label={`${t(lang, 'edit')} — ${t(lang, 'profileAvatar')}`}
+              className="settings-profile__edit shrink-0"
+            >
+              {t(lang, 'edit')}
+            </QuietButton>
           </div>
-          <QuietButton
-            icon={Pencil}
-            iconSize={15}
-            onClick={() => setEditingAvatar((v) => !v)}
-            aria-expanded={editingAvatar}
-            aria-controls="settings-avatar"
-            aria-label={`${t(lang, 'edit')} — ${t(lang, 'profileAvatar')}`}
-            className="settings-profile__edit shrink-0"
-          >
-            {t(lang, 'edit')}
-          </QuietButton>
+          <div className="settings-profile__account">
+            <p className="settings-profile__provider">
+              <KeyRound size={15} aria-hidden="true" />
+              <span>{signedInLabel}</span>
+            </p>
+            <SecondaryButton icon={LogOut} iconSize={16} onClick={signOut} title={t(lang, 'tipSignOut')} className="settings-profile__signout">
+              {t(lang, 'signOut')}
+            </SecondaryButton>
+          </div>
         </div>
         {editingAvatar && (
           <div id="settings-avatar" className="settings-avatar">
@@ -470,26 +484,6 @@ export default function SettingsTab() {
         )}
 
         <div className="settings-sections">
-          {/* ── Account ── */}
-          {/* Titled "Account" alone: privacy has its own section right below. */}
-          <SettingsSection id="account" title={t(lang, 'account')} icon={UserRound} tone="plum" open={openSections.account} onToggle={() => toggleSection('account')}>
-            {/* How you sign in, and the way out — one card, one row. */}
-            <div className="settings-card">
-              <div className="settings-row settings-row--icon">
-                <div className="settings-row__main settings-row__main--wrap">
-                  <span className="icon-tile tone-plum" aria-hidden="true"><KeyRound size={18} strokeWidth={1.85} /></span>
-                  <div className="settings-row__text">
-                    <p className="settings-row__label">{t(lang, 'via')} <strong>{providerLabel}</strong></p>
-                    <p className="settings-row__sub truncate">{user?.email}</p>
-                  </div>
-                  <SecondaryButton icon={LogOut} iconSize={16} onClick={signOut} title={t(lang, 'tipSignOut')}>
-                    {t(lang, 'signOut')}
-                  </SecondaryButton>
-                </div>
-              </div>
-            </div>
-          </SettingsSection>
-
           {/* ── Privacy & Security — the ONE consolidated destination. Inside, a
               compact list of disclosure ROWS instead of a long card stack; only
               Delete account stays apart, at the bottom. ── */}
@@ -677,11 +671,12 @@ export default function SettingsTab() {
             <InlineRow label={t(lang, 'appearance')}>
               <SegmentedControl
                 label={t(lang, 'appearance')}
-                value={settings.theme === 'dark' ? 'dark' : 'light'}
+                value={normalizeTheme(settings.theme)}
                 onChange={(value) => updateSettings({ theme: value })}
                 options={[
-                  { value: 'light', label: t(lang, 'themeLight') },
-                  { value: 'dark', label: t(lang, 'themeDark') },
+                  { value: 'light', label: t(lang, 'themeLight'), icon: Sun },
+                  { value: 'dark', label: t(lang, 'themeDark'), icon: Moon },
+                  { value: 'system', label: t(lang, 'themeSystem'), icon: SunMoon },
                 ]}
               />
             </InlineRow>

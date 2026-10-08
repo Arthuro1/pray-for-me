@@ -22,7 +22,8 @@ import PrayerDetail from '../pages/PrayerDetail';
 import PrayerSession from '../components/PrayerSession';
 import PrayerForm from '../components/PrayerForm';
 import TendAltar from '../components/TendAltar';
-import PrayTogetherCard from '../components/PrayTogetherCard';
+import CarryButton from '../components/shared/CarryButton';
+import CarryPresence from '../components/CarryPresence';
 import CommunityTab from '../pages/CommunityTab';
 import PlansTab from '../pages/PlansTab';
 import CirclePage from '../pages/CirclePage';
@@ -136,7 +137,7 @@ function seed() {
 }
 
 const SCREENS = [
-  'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group',
+  'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group', 'group-prayer',
   'circle', 'bring-circle', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
 ];
 
@@ -253,9 +254,11 @@ function InboxPreview() {
         { id: 'n1', type: 'reaction_bucket', group_id: null, created_at: hoursAgo(1), read_at: null },
         { id: 'n2', type: 'plan_invitation', group_id: null, created_at: hoursAgo(5), read_at: null },
         { id: 'n3', type: 'testimony', group_id: null, created_at: hoursAgo(28), read_at: hoursAgo(20) },
-        { id: 'n4', type: 'friend_request', group_id: null, created_at: hoursAgo(70), read_at: hoursAgo(60) },
+        { id: 'n4', type: 'friend_request', group_id: null, created_at: hoursAgo(70), read_at: null },
+        { id: 'n5', type: 'friend_request', group_id: null, created_at: hoursAgo(220), read_at: null },
+        { id: 'n6', type: 'friend_request', group_id: null, created_at: hoursAgo(360), read_at: null },
       ],
-      unreadCount: 2, loading: false, error: null, hasMore: false,
+      unreadCount: 5, loading: false, error: null, hasMore: false,
       fetchNotifications: noop, fetchMoreNotifications: noop, markRead: noop, markAllRead: noop,
     });
   });
@@ -283,6 +286,29 @@ const REACTORS = [
   { user_id: 'r3', name: 'Paul' },
 ];
 
+// A group's request on its own page. `?id=c1` (default) is carried, so Pray
+// now leads; `?id=c3` is not yet carried; `?id=c4` is answered. `?member=1`
+// shows it as a member rather than the group's admin.
+function GroupPrayerPreview({ lang, prayerId, member }) {
+  const navigate = useNavigate();
+  useState(() => {
+    seedTogether();
+    useCommunityStore.setState((s) => ({
+      groups: s.groups.map((g) => (g.id === 'g1' && member ? { ...g, role: 'member' } : g)),
+      fetchReactors: async (id) => ({ reactors: id === 'c3' ? [] : REACTORS }),
+      fetchPrayerUpdates: async (id) => (id === 'c1' ? [
+        { id: 'w1', user_id: 'u3', author_name: 'Paul', text: 'Praying for the surgeons this morning. Psalm 121 for you all.', created_at: hoursAgo(2), attachments: [] },
+        { id: 'w2', user_id: 'u2', author_name: 'Sarah', text: 'Thank you, all of you. She slept well last night.', created_at: hoursAgo(1), attachments: [] },
+      ] : []),
+      subscribePrayerActivity: () => () => {},
+      refreshPrayer: async () => {},
+      fetchUserReactions: async () => {},
+    }));
+  });
+  const prayer = useCommunityStore.getState().prayers.find((p) => p.id === prayerId);
+  return prayer && <PrayerDetail communityPrayer={prayer} onBack={() => navigate('/__design/group')} lang={lang} />;
+}
+
 // "Carry this prayer" as a group member meets it: before and after carrying,
 // the confirmation that offers the carrier's own circle, and the carrier's
 // dialog (`?open=1`). Placing needs the account key in the app, which a
@@ -302,8 +328,14 @@ function CarryPreview({ lang, open: initiallyOpen }) {
     <div className="phase-page">
       <div className="phase-page__shell"><PageHeader eyebrow="Home group" title="Please pray for my mother" /></div>
       <div className="phase-content grid gap-10">
-        <PrayTogetherCard communityPrayer={{ id: 'c1' }} count={0} hasReacted={false} busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
-        <PrayTogetherCard communityPrayer={{ id: 'c2' }} count={8} hasReacted busy={false} lang={lang} user={user} onTogglePraying={() => {}} />
+        <div className="grid justify-items-start gap-3">
+          <CarryButton carrying={false} onToggle={() => {}} lang={lang} />
+          <CarryPresence prayerId="c1" count={0} user={user} lang={lang} />
+        </div>
+        <div className="grid justify-items-start gap-3">
+          <CarryButton variant="quiet" carrying onToggle={() => {}} lang={lang} />
+          <CarryPresence prayerId="c2" count={8} user={user} lang={lang} />
+        </div>
       </div>
       <Toaster />
       {open && <PlaceCircleModal value={circle} onPlace={setCircle} onClose={() => setOpen(false)} lang={lang} carried idPrefix="design-carry-circle" />}
@@ -357,6 +389,7 @@ export default function DesignScreens({ screen }) {
       {screen === 'journal' && <PrayersTab onAdd={() => {}} />}
       {screen === 'detail' && <PrayerDetail prayer={prayer} onBack={() => navigate('/__design/journal')} onEdit={() => {}} lang={lang} />}
       {screen === 'carry' && <CarryPreview lang={lang} open={searchParams.get('open') === '1'} />}
+      {screen === 'group-prayer' && <GroupPrayerPreview lang={lang} prayerId={searchParams.get('id') || 'c1'} member={searchParams.get('member') === '1'} />}
       {(screen === 'plans' || screen === 'plan' || screen === 'plan-share' || screen === 'plan-tailor') && <PlansTab />}
       {screen === 'plan-day' && <PlanDayPreview lang={lang} />}
       {screen === 'plan-share' && <PlanSharePreview lang={lang} />}
@@ -377,7 +410,7 @@ export default function DesignScreens({ screen }) {
         </Routes>
       )}
       {screen === 'more' && <MoreTab />}
-      {screen === 'about' && <AboutTab />}
+      {screen === 'about' && <AboutTab onPrayInCircle={() => navigate('/__design/bring-circle')} />}
       {screen === 'settings' && <SettingsTab />}
       {screen === 'calendar' && <PlanTab />}
       {screen === 'saved' && <PrayerSavedStep prayerId="d4" title="My children" schedule={usePrayerStore.getState().prayers[3].schedule} lang={lang} onClose={() => navigate('/__design/today')} />}

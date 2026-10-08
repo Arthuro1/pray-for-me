@@ -170,16 +170,13 @@ describe('PlansTab — Intercession Circles', () => {
 });
 
 describe('PlansTab — finding your way', () => {
-  it('offers one row of category shortcuts that only scrolls, never filters', () => {
+  it('opens on the circle doors, without a second row of category shortcuts', () => {
     renderPlans();
-    const jumps = screen.getByRole('navigation', { name: t(lang, 'plansJumpLabel') });
-    const chip = within(jumps).getAllByRole('button')[0];
-    const target = document.getElementById(`plans-${PLAN_CATEGORIES[0].id}`);
-    target.scrollIntoView = vi.fn();
-    fireEvent.click(chip);
-    expect(target.scrollIntoView).toHaveBeenCalled();
-    // Every catalogue section is still on the page.
-    expect(document.querySelectorAll('.plan-list--grid').length).toBeGreaterThan(1);
+    expect(screen.getByRole('heading', { name: t(lang, 'exploreByCircle') })).toBeTruthy();
+    // Each need is a heading of the catalogue, never also a button above it.
+    const label = t(lang, PLAN_CATEGORIES[0].labelKey);
+    expect(screen.getByRole('heading', { name: label })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: label })).toBeNull();
   });
 
   it('says a plan’s length once — on its chip, never again in the subtitle', async () => {

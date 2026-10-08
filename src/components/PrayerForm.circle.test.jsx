@@ -41,7 +41,6 @@ beforeEach(() => {
 });
 
 const settled = () => act(async () => { await Promise.resolve(); });
-const openOrganize = () => fireEvent.click(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }));
 const write = (title) => fireEvent.change(screen.getByLabelText(t(lang, 'prayerFieldLabel')), { target: { value: title } });
 const save = () => act(async () => { fireEvent.click(screen.getByRole('button', { name: t(lang, 'savePrayer') })); });
 const circleRow = () => screen.queryByRole('button', { name: new RegExp(t(lang, 'circleFieldLabel')) });
@@ -105,7 +104,7 @@ describe('PrayerForm — the Intercession Circle row', () => {
   // prayer on purpose: there the circles are already in view.
   it('opens onto the circles when the person came to organize this prayer', async () => {
     const editPrayer = { id: 'p1', title: 'Ma famille', prayer_categories: [], schedule: null };
-    render(<PrayerForm onClose={() => {}} editPrayer={editPrayer} initialOrganizeOpen />);
+    render(<PrayerForm onClose={() => {}} editPrayer={editPrayer} initialDetail="circle" />);
     await settled();
     expect(circleRow().getAttribute('aria-expanded')).toBe('true');
     expect(circleChoices().querySelectorAll('button[aria-pressed]')).toHaveLength(CIRCLES.length);
@@ -115,8 +114,6 @@ describe('PrayerForm — the Intercession Circle row', () => {
     crypto.canHold = false;
     render(<PrayerForm onClose={() => {}} />);
     await settled();
-    expect(circleRow()).toBeNull();
-    openOrganize();
     expect(circleRow()).toBeNull();
   });
 });
@@ -168,7 +165,7 @@ describe('PrayerForm — arriving from a circle', () => {
     render(<PrayerForm onClose={() => {}} editPrayer={editPrayer} />);
     await settled();
     expect(circleRow().textContent).toContain(t(lang, 'circle_household'));
-    // Organize stays folded: the circle does not live there.
-    expect(screen.getByRole('button', { name: new RegExp(t(lang, 'organizeLabel')) }).getAttribute('aria-expanded')).toBe('false');
+    // Named, not opened: the chips wait behind the row.
+    expect(circleChoices()).toBeNull();
   });
 });

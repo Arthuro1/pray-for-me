@@ -7,6 +7,7 @@ import useNotificationStore from '../store/notificationStore';
 import { notificationRoute } from '../lib/notificationRoutes';
 import { t } from '../i18n';
 import NotificationRow from '../components/NotificationRow';
+import { groupNotifications } from '../lib/notificationGroups';
 import useGroupLookup from '../hooks/useGroupLookup';
 import { PageHeader, QuietButton, SecondaryButton } from '../components/shared/Primitives';
 import EmptyState from '../components/shared/EmptyState';
@@ -29,9 +30,9 @@ export default function NotificationsPage() {
     if (user?.id) fetchNotifications(user.id);
   }, [user?.id, fetchNotifications]);
 
-  const handleActivate = async (n) => {
-    await markRead(n.id);
-    navigate(notificationRoute(n));
+  const handleActivate = async (row) => {
+    await Promise.all(row.ids.map(markRead));
+    navigate(notificationRoute(row.latest));
   };
 
   return (
@@ -71,9 +72,15 @@ export default function NotificationsPage() {
         ) : (
           <>
             <ul className="notif-list">
-              {notifications.map((n) => (
-                <li key={n.id}>
-                  <NotificationRow notification={n} lang={lang} onActivate={handleActivate} group={groupFor(n.group_id)} />
+              {groupNotifications(notifications).map((row) => (
+                <li key={row.latest.id}>
+                  <NotificationRow
+                    notification={row.latest}
+                    count={row.ids.length}
+                    lang={lang}
+                    onActivate={() => handleActivate(row)}
+                    group={groupFor(row.latest.group_id)}
+                  />
                 </li>
               ))}
             </ul>

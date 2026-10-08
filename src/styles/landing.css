@@ -101,58 +101,10 @@ html.landing-root body { background: var(--q-canvas); }
 }
 
 /* The circles: a widening ring model beside the seven names — one control
-   (landing/LandingCircles.jsx). One palette: royal violet for reach, temple
-   gold for the heart and the incense. Never a colour per circle. */
+   (landing/LandingCircles.jsx). The rings themselves are shared with About
+   (components/circles/CircleRings.jsx; styles in formation.css). */
 .landing__circles { display: grid; align-items: center; gap: var(--q-space-10); }
 .landing__rings { width: 100%; max-width: 20rem; margin-inline: auto; }
-.landing__rings-art { display: block; width: 100%; height: auto; }
-
-.landing__ring {
-  fill: none;
-  stroke: var(--q-royal);
-  stroke-opacity: 0.22;
-  stroke-width: 1;
-  transition: stroke-opacity var(--q-motion-standard) var(--q-ease), stroke-width var(--q-motion-standard) var(--q-ease), fill-opacity var(--q-motion-standard) var(--q-ease);
-}
-/* Nothing chosen: the rings rest, the heart a little stronger. */
-.landing__ring--rest { stroke-opacity: 0.3; }
-.landing__ring--rest.landing__ring--heart { fill: var(--q-royal); fill-opacity: 0.08; stroke-opacity: 1; stroke-width: 1.5; }
-/* A circle chosen: the circles it reaches across, then the circle itself. */
-.landing__ring--within { stroke-opacity: 0.5; }
-.landing__ring--selected { fill: var(--q-royal); fill-opacity: 0.05; stroke-opacity: 1; stroke-width: 1.75; }
-.landing__ring--outside { stroke-opacity: 0.22; }
-
-.landing__ring-point { fill: var(--q-gold); }
-.landing__ring-rise { fill: none; stroke: var(--q-gold); stroke-linecap: round; stroke-width: 2.5; }
-
-/* Invisible hit bands, one ring step wide; the innermost is a disc. */
-.landing__ring-hit { fill: none; stroke: transparent; pointer-events: stroke; cursor: pointer; }
-.landing__ring-hit--heart { fill: transparent; stroke: none; pointer-events: fill; }
-
-/* The first time the section is seen: the gold point and incense, then each
-   ring drawn from the heart outward, once — about a second in all. */
-.landing__rings-art--armed .landing__ring { stroke-dasharray: 1; stroke-dashoffset: 1; }
-.landing__rings-art--armed .landing__ring-point,
-.landing__rings-art--armed .landing__ring-rise { opacity: 0; }
-.landing__rings-art--revealed .landing__ring {
-  stroke-dasharray: 1;
-  animation: landing-ring-draw 420ms var(--q-ease) both;
-  animation-delay: calc(180ms + var(--ring-index) * 100ms);
-}
-.landing__rings-art--revealed .landing__ring-point,
-.landing__rings-art--revealed .landing__ring-rise { animation: q-rise-in 260ms var(--q-ease) both; }
-
-@keyframes landing-ring-draw {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .landing__rings-art--armed .landing__ring,
-  .landing__rings-art--revealed .landing__ring { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
-  .landing__rings-art--armed .landing__ring-point,
-  .landing__rings-art--armed .landing__ring-rise { opacity: 1; }
-}
 
 @media (min-width: 900px) {
   .landing__circles { grid-template-columns: 0.9fr 1.1fr; gap: var(--q-space-16); }

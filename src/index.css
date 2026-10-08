@@ -541,21 +541,3 @@
   background: var(--q-canvas);
 }
 
-/* Published-wording report and editorial review controls. */
-.wording-control {
-  display: block;
-  width: 100%;
-  margin-top: .35rem;
-  padding: .65rem;
-  border-radius: var(--q-radius-control);
-  border: 1px solid var(--q-field-border);
-  background: var(--q-field);
-  color: var(--q-text);
-}
-.wording-action {
-  border-radius: var(--q-radius-control);
-  padding: .6rem .9rem;
-  background: var(--q-selected);
-  color: var(--q-royal-text);
-}
-.wording-action:disabled { opacity: .5; }

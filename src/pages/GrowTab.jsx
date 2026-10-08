@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ChevronRight, Check } from 'lucide-react';
+import { ArrowRight, BookOpen, Check, ChevronRight, CircleHelp, Clock, CloudSun, Compass, Flame, Footprints, HandHeart, MessageCircleHeart, Sprout } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { pick } from '../content/teaching';
@@ -11,28 +11,89 @@ import { guideDurationMinutes } from '../lib/guideMeta';
 import GuideReader from '../components/GuideReader';
 import ArticleReader from '../components/ArticleReader';
 import GospelJourneyReader from '../components/GospelJourneyReader';
+import RiseMark from '../components/shared/RiseMark';
 import { Disclosure, PageHeader, SegmentedControl } from '../components/shared/Primitives';
 import { runningPlanIds } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 
-// A guide/article row. Top-level (not defined inside GrowTab) so React keeps
-// the DOM node across re-renders — an inline component type would remount on
-// every state change and drop keyboard focus. Read as a line of a contents
-// page: the title in the serif, what it is, how long it takes.
-function ItemCard({ item, lang, onOpen, done, durationLabel, description, featured = false }) {
+// One mark per teaching theme (the `theme` authored on each guide and article),
+// in the icon-tile voice of prayer rows, so the library scans by more than its
+// titles. Decorative: the title beside it says what it is.
+const THEME_MARKS = {
+  foundations: { Icon: Flame, tone: 'amber' },
+  practices: { Icon: Footprints, tone: 'plum' },
+  scripture: { Icon: BookOpen, tone: 'indigo' },
+  others: { Icon: HandHeart, tone: 'rose' },
+  virtues: { Icon: Sprout, tone: 'teal' },
+  seasons: { Icon: CloudSun, tone: 'sky' },
+  'hard-questions': { Icon: CircleHelp, tone: 'clay' },
+  requests: { Icon: MessageCircleHeart, tone: 'rose' },
+};
+const DEFAULT_MARK = { Icon: Compass, tone: 'teal' };
+
+function ThemeMark({ theme, className = '' }) {
+  const { Icon, tone } = THEME_MARKS[theme] || DEFAULT_MARK;
   return (
-    <button type="button" onClick={onOpen} className={`plan-row pressable ${featured ? 'plan-row--featured' : ''}`}>
-      <span className="plan-row__body">
-        <span className="plan-row__title">{pick(item.title, lang)}</span>
-        <span className="plan-row__sub">{description || pick(item.summary, lang)}</span>
+    <span className={`icon-tile tone-${tone} ${className}`} aria-hidden="true">
+      <Icon size={20} strokeWidth={1.8} />
+    </span>
+  );
+}
+
+const minutesLabel = (guide, lang) => {
+  const minutes = guideDurationMinutes(guide);
+  return minutes ? t(lang, 'aboutMinutes', { n: minutes }) : null;
+};
+
+// A guide/article card. Top-level (not defined inside GrowTab) so React keeps
+// the DOM node across re-renders — an inline component type would remount on
+// every state change and drop keyboard focus. Its theme's mark, the title in
+// the serif, what it is, how long it takes.
+function ItemCard({ item, lang, onOpen, done, durationLabel }) {
+  return (
+    <button type="button" onClick={onOpen} className="grow-card q-card pressable">
+      <ThemeMark theme={item.theme} />
+      <span className="grow-card__body">
+        <span className="grow-card__title">{pick(item.title, lang)}</span>
+        <span className="grow-card__sub">{pick(item.summary, lang)}</span>
         {(durationLabel || done) && (
-          <span className="plan-row__meta inline-flex items-center gap-1.5">
-            {done && <Check size={13} aria-hidden="true" />}
+          <span className="grow-card__meta">
+            {done ? <Check size={13} aria-hidden="true" /> : <Clock size={13} aria-hidden="true" />}
             {durationLabel}
           </span>
         )}
       </span>
-      <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
+      <ChevronRight size={16} className="grow-card__chevron rtl-mirror" aria-hidden="true" />
+    </button>
+  );
+}
+
+// The one recommended next step, as the page's doorway: a deep-violet card
+// with the guide's mark, its title, why it is next (or, when it is simply the
+// next new one, what it is), how long it takes and the way in.
+const REC_DESC_KEYS = { continue: 'growContinueDesc', again: 'growAgainDesc' };
+const REC_CTA_KEYS = { continue: 'guidanceContinue', new: 'guideBegin', again: 'guideBegin' };
+
+function NextStep({ recommendation, lang, onOpen }) {
+  const { guide, type } = recommendation;
+  const duration = minutesLabel(guide, lang);
+  return (
+    <button type="button" onClick={onOpen} className="grow-hero q-immersive pressable">
+      <RiseMark motion="still" size={160} className="grow-hero__rise" />
+      <ThemeMark theme={guide.theme} className="grow-hero__mark" />
+      <span className="grow-hero__title">{pick(guide.title, lang)}</span>
+      <span className="grow-hero__desc">
+        {REC_DESC_KEYS[type] ? t(lang, REC_DESC_KEYS[type]) : pick(guide.summary, lang)}
+      </span>
+      <span className="grow-hero__foot">
+        <span className="primary-button grow-hero__cta">
+          <span>{t(lang, REC_CTA_KEYS[type])}</span>
+          <ArrowRight className="rtl-mirror" size={16} aria-hidden="true" />
+        </span>
+        {duration && (
+          <span className="grow-hero__meta"><Clock size={13} aria-hidden="true" /> {duration}</span>
+        )}
+      </span>
     </button>
   );
 }
@@ -80,8 +141,6 @@ export default function GrowTab({ onCreatePrayer }) {
   // The browsable rest: everything not already surfaced by the next-step card
   // and not completed (those live in History).
   const browsable = guides.filter((g) => g.id !== recommendation?.guide?.id && !completedIds.has(g.id));
-
-  const REC_DESC_KEYS = { continue: 'growContinueDesc', new: 'growNewDesc', again: 'growAgainDesc' };
 
   // The journey and the Learn articles reference each other by STABLE id, never by
   // translated title, so navigation is language-independent.
@@ -153,17 +212,8 @@ export default function GrowTab({ onCreatePrayer }) {
                 the Pray segment so Learn stays focused on learning content. */}
             {recommendation && (
               <section className="grow-next" aria-labelledby="grow-next-label">
-                <h2 id="grow-next-label" className="section-label">{t(lang, 'growNextStep')}</h2>
-                <div className="plan-list">
-                  <ItemCard
-                    item={recommendation.guide}
-                    lang={lang}
-                    featured
-                    onOpen={() => setOpenGuide(recommendation.guide)}
-                    description={t(lang, REC_DESC_KEYS[recommendation.type])}
-                    durationLabel={guideDurationMinutes(recommendation.guide) ? t(lang, 'aboutMinutes', { n: guideDurationMinutes(recommendation.guide) }) : null}
-                  />
-                </div>
+                <h2 id="grow-next-label" className="section-label section-label--sacred">{t(lang, 'growNextStep')}</h2>
+                <NextStep recommendation={recommendation} lang={lang} onOpen={() => setOpenGuide(recommendation.guide)} />
               </section>
             )}
 
@@ -171,10 +221,9 @@ export default function GrowTab({ onCreatePrayer }) {
                 step above already carries the primary invitation. */}
             {browsable.length > 0 && (
               <Disclosure id="grow-browse" label={t(lang, 'growBrowseAll')} open={browseOpen} onToggle={() => setBrowseOpen((v) => !v)} className="grow-fold">
-                <div className="plan-list">
+                <div className="grow-grid">
                   {browsable.map((item) => (
-                    <ItemCard key={item.id} item={item} lang={lang} onOpen={() => setOpenGuide(item)}
-                      durationLabel={guideDurationMinutes(item) ? t(lang, 'aboutMinutes', { n: guideDurationMinutes(item) }) : null} />
+                    <ItemCard key={item.id} item={item} lang={lang} onOpen={() => setOpenGuide(item)} durationLabel={minutesLabel(item, lang)} />
                   ))}
                 </div>
               </Disclosure>
@@ -183,7 +232,7 @@ export default function GrowTab({ onCreatePrayer }) {
             {/* Completed guides retire into a collapsed History. */}
             {completed.length > 0 && (
               <Disclosure id="grow-history" label={t(lang, 'growHistory')} count={completed.length} open={historyOpen} onToggle={() => setHistoryOpen((v) => !v)} className="grow-fold">
-                <div className="plan-list">
+                <div className="grow-grid">
                   {completed.map((item) => (
                     <ItemCard key={item.id} item={item} lang={lang} onOpen={() => setOpenGuide(item)} done />
                   ))}
@@ -194,7 +243,7 @@ export default function GrowTab({ onCreatePrayer }) {
         ) : (
           <>
             <p className="grow-intro">{t(lang, 'growLearnIntro')}</p>
-            <div className="plan-list">
+            <div className="grow-grid">
               {articles.map((item) => (
                 <ItemCard key={item.id} item={item} lang={lang} onOpen={() => setOpenArticle(item)} />
               ))}
@@ -207,13 +256,14 @@ export default function GrowTab({ onCreatePrayer }) {
             content comes first). It never auto-opens and stays available after
             it's been read or dismissed. */}
         {prayers.length <= 1 && Object.keys(progress).length === 0 && !hasActiveJourney && (
-          <div className="plan-list grow-seeker">
-            <button type="button" onClick={() => setOpenJourney(true)} className="plan-row pressable">
-              <span className="plan-row__body">
-                <span className="plan-row__title">{t(lang, 'growSeekerTitle')}</span>
-                <span className="plan-row__sub">{t(lang, 'growSeekerDesc')}</span>
+          <div className="grow-seeker">
+            <button type="button" onClick={() => setOpenJourney(true)} className="grow-card grow-card--seeker q-card pressable">
+              <span className="icon-tile tone-sky" aria-hidden="true"><Compass size={20} strokeWidth={1.8} /></span>
+              <span className="grow-card__body">
+                <span className="grow-card__title">{t(lang, 'growSeekerTitle')}</span>
+                <span className="grow-card__sub">{t(lang, 'growSeekerDesc')}</span>
               </span>
-              <ChevronRight size={16} className="rtl-mirror shrink-0" style={{ color: 'var(--q-text-tertiary)' }} aria-hidden="true" />
+              <ChevronRight size={16} className="grow-card__chevron rtl-mirror" aria-hidden="true" />
             </button>
           </div>
         )}

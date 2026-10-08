@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { BookOpen, Calendar, CheckCircle, Globe, Lock, ChevronDown, ChevronUp, Sun, Moon, Users, Sprout, Bell, Smartphone, HandHeart, Feather, Loader2, Repeat } from 'lucide-react';
 import { dirFor, LANGUAGES } from '../i18n';
-import { normalizeTheme } from '../utils/theme';
+import { applyTheme, normalizeTheme, resolveTheme } from '../utils/theme';
 import { cachedLandingCopy, FALLBACK_LANDING_COPY, FALLBACK_LANDING_LANG, resolveLandingCopy } from './landing/copy';
 import { APP_NAME } from '../lib/brand';
 import { BrandLockup, BrandMark, Wordmark } from '../components/shared/Brand';
@@ -100,11 +100,13 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const [langOpen, setLangOpen] = useState(false);
   const langMenuRef = useRef(null);
   const langButtonRef = useRef(null);
-  // Public and signed-in surfaces share one Light/Dark choice. A legacy Night
-  // value is folded into Dark so returning visitors never see a broken state.
+  // Public and signed-in surfaces share one appearance preference (Light, Dark
+  // or Automatic). A legacy Night value is folded into Dark so returning
+  // visitors never see a broken state. `shown` is what is drawn right now.
   const [theme, setTheme] = useState(() => {
     return normalizeTheme(localStorage.getItem('pfm_theme'));
   });
+  const shown = resolveTheme(theme);
   // The feature list is folded away by default so the hero and the
   // movements carry the first impression; visitors opt in to the full list.
   const [showAllFeatures, setShowAllFeatures] = useState(false);
@@ -135,7 +137,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   useEffect(() => {
     document.documentElement.lang = rendered.lang;
     document.documentElement.dir = dirFor(lang);
-    document.documentElement.setAttribute('data-theme', theme);
+    applyTheme(theme);
     document.documentElement.classList.add('landing-root');
     localStorage.setItem('pfm_theme', theme);
     return () => document.documentElement.classList.remove('landing-root');
@@ -201,13 +203,14 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   };
 
   const toggleTheme = () => {
-    // The compact public control and Settings now expose the same two choices.
-    const next = theme === 'light' ? 'dark' : 'light';
+    // The compact public control flips what is shown into an explicit choice;
+    // Automatic is offered in Settings.
+    const next = shown === 'light' ? 'dark' : 'light';
     setTheme(next);
     // Same key + attribute the app reads, so the choice follows the visitor
     // through sign-in.
     localStorage.setItem('pfm_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
+    applyTheme(next);
   };
 
   const copy = rendered.copy;
@@ -250,11 +253,11 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <button
             type="button"
             onClick={toggleTheme}
-            title={theme === 'light' ? 'Dark mode' : 'Light mode'}
-            aria-label={theme === 'light' ? 'Dark mode' : 'Light mode'}
+            title={shown === 'light' ? 'Dark mode' : 'Light mode'}
+            aria-label={shown === 'light' ? 'Dark mode' : 'Light mode'}
             className="icon-button icon-button--outlined pressable"
           >
-            {theme === 'light' ? <Moon size={17} aria-hidden="true" /> : <Sun size={17} aria-hidden="true" />}
+            {shown === 'light' ? <Moon size={17} aria-hidden="true" /> : <Sun size={17} aria-hidden="true" />}
           </button>
 
           {/* Language dropdown */}
