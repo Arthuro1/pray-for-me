@@ -9,11 +9,14 @@ import { APP_NAME } from '../lib/brand';
 import { CIRCLES, circleLabelKey } from '../lib/circles';
 import { EVENTS, track } from '../lib/analytics';
 import { localizeRef } from '../content/teaching';
+import { AUTHOR, AUTHOR_REFS } from '../content/author';
+import { ACCESS_REFS, HEBREW_NAME, NAME_REFS, TRANSLITERATION } from '../content/identity';
 import { useCircleTeaching } from '../hooks/useCircleTeaching';
 import CircleRings from '../components/circles/CircleRings';
 import { reducedMotion, useRingReveal } from '../hooks/useRingReveal';
 import { CIRCLE_ICONS } from '../components/shared/circleIcons';
 import Avatar from '../components/shared/Avatar';
+import LatinCross from '../components/shared/LatinCross';
 import { PageHeader, PrimaryButton } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 import VerseAccordion from '../components/VerseAccordion';
@@ -23,31 +26,9 @@ import VerseAccordion from '../components/VerseAccordion';
 // biblical foundation (docs/QETORET_IDENTITY.md), never a substitute for
 // Scripture. Scripture is cited by reference only; tapping one unfolds the
 // passage from the reader's Bible sources in place. No verse text is authored here.
-const HEBREW_NAME = 'קְטֹרֶת';
-const TRANSLITERATION = 'qetoret';
-
-// A Latin cross in the icon set's stroke: lucide's own "Cross" has equal arms
-// and reads as a plus sign.
-function LatinCross({ size = 24, strokeWidth = 2 }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M12 3v18M6.5 8.5h11" />
-    </svg>
-  );
-}
-
 const FOUNDATIONS = [
-  { id: 'name', icon: Flame, tone: 'amber', titleKey: 'aboutNameTitle', bodyKey: 'aboutNameBody', refs: ['Exodus 30:7-8', 'Psalm 141:2', 'Revelation 5:8', 'Revelation 8:3-4'] },
-  { id: 'access', icon: LatinCross, tone: 'plum', titleKey: 'aboutAccessTitle', bodyKey: 'aboutAccessBody', refs: ['Hebrews 4:14-16', 'Hebrews 10:19-22', '1 Peter 2:9', 'Revelation 1:6'] },
+  { id: 'name', icon: Flame, tone: 'amber', titleKey: 'aboutNameTitle', bodyKey: 'aboutNameBody', refs: NAME_REFS },
+  { id: 'access', icon: LatinCross, tone: 'plum', titleKey: 'aboutAccessTitle', bodyKey: 'aboutAccessBody', refs: ACCESS_REFS },
 ];
 
 const PROMISES = [
@@ -57,10 +38,6 @@ const PROMISES = [
   { key: 'aboutPromiseAi', icon: BookOpen },
 ];
 
-// The author's testimony is theirs: first person, signed with their name and
-// portrait (public/authors/). The name is not translated.
-const AUTHOR = { name: 'Paul', photo: '/authors/paul.webp' };
-const AUTHOR_REFS = ['Luke 1:5-17', '1 Peter 2:9', 'Ezekiel 22:30', 'James 5:16'];
 const LETTER_ID = 'about-letter';
 
 // A section's references in one row; the one tapped opens beneath the row (a

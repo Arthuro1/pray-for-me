@@ -2,89 +2,7 @@
 export default {
   "content": {
     "signIn": "Anmelden",
-    "badge": "Gebetstagebuch",
     "howItWorks": "Wie es funktioniert",
-    "featuresTitle": "Ein Ort für dein Gebetsleben",
-    "featuresSub": "Deine Gebete, Rhythmen und Zeugnisse an einem Ort.",
-    "features": [
-      {
-        "icon": "Users",
-        "color": "#0d9488",
-        "title": "Gemeinsam beten",
-        "desc": "Teile ein Anliegen mit Freunden oder einer Gruppe und tragt einander im Gebet."
-      },
-      {
-        "icon": "BookOpen",
-        "color": "#7c5cfc",
-        "title": "Gebetstagebuch",
-        "desc": "Halte Anliegen für dich und andere fest und ergänze mit der Zeit Neuigkeiten."
-      },
-      {
-        "icon": "Calendar",
-        "color": "#059669",
-        "title": "Gebetsrhythmen",
-        "desc": "Wähle, wann jedes Gebet wiederkommt: einmal, täglich oder an bestimmten Tagen."
-      },
-      {
-        "icon": "CheckCircle",
-        "color": "#0891b2",
-        "title": "Zeugnisse",
-        "desc": "Bewahre deine erhörten Gebete und Zeugnisse als Erinnerung an Gottes Treue."
-      },
-      {
-        "icon": "Sprout",
-        "color": "#65a30d",
-        "title": "Im Gebet wachsen",
-        "desc": "Geführte Pläne, Gebetsanleitungen und kurze Lesungen, verwurzelt in der Schrift."
-      },
-      {
-        "icon": "Bell",
-        "color": "#ea580c",
-        "title": "Sanfte Erinnerungen",
-        "desc": "Eine tägliche Erinnerung zum Beten und eine, bei den Menschen nachzufragen, die du im Gebet trägst."
-      },
-      {
-        "icon": "Smartphone",
-        "color": "#4f46e5",
-        "title": "Überall installieren",
-        "desc": "Lade die Android-App bei Google Play herunter oder installiere sie über deinen Browser auf deinem Handy oder Computer. Sie funktioniert auch offline."
-      },
-      {
-        "icon": "Globe",
-        "color": "#db2777",
-        "title": "16 Sprachen",
-        "desc": "Wechsle die Sprache jederzeit."
-      },
-      {
-        "icon": "Lock",
-        "color": "#6d28d9",
-        "title": "Standardmäßig privat",
-        "desc": "Private Gebete sind Ende-zu-Ende-verschlüsselt. Du entscheidest, was du teilst."
-      }
-    ],
-    "stepsTitle": "Wie es funktioniert",
-    "steps": [
-      {
-        "emoji": "✍️",
-        "title": "Ein Gebet bringen",
-        "desc": "Ein paar Worte genügen. Details kannst du später ergänzen."
-      },
-      {
-        "emoji": "🙏",
-        "title": "Zum Gebet zurückkehren",
-        "desc": "Jedes Gebet kommt an den Tagen wieder, die du wählst, damit du wieder dafür beten kannst."
-      },
-      {
-        "emoji": "🎉",
-        "title": "Ein Zeugnis festhalten",
-        "desc": "Wenn etwas geschieht, schreib auf, wie du Gott am Werk gesehen hast."
-      }
-    ],
-    "calloutBadge": "Bibelvers-Vorschläge",
-    "calloutTitle": "Mit Gottes Wort beten",
-    "calloutDesc": "Finde Bibelstellen zu deinem Anliegen und lies sie direkt in der App.",
-    "calloutDisclaimer": "Die Vorschläge sind nur ein Ausgangspunkt. Lies jede Stelle in ihrem Zusammenhang.",
-    "calloutPreviewLabel": "Bibelvers-Vorschläge",
     "faqTitle": "Fragen",
     "faqs": [
       {
@@ -96,8 +14,20 @@ export default {
         "a": "Nein. Dein erstes Gebet braucht kein Konto und bleibt auf diesem Gerät. Mit einem kostenlosen Konto behältst du deine Gebete und nutzt sie auf all deinen Geräten."
       },
       {
+        "q": "Spricht die KI für Gott?",
+        "a": "Nein. Die KI ist eine freiwillige Hilfe. Wenn du sie fragst, kann sie Bibelstellen oder Worte vorschlagen, mit denen du beten könntest. Sie prophezeit nie, erklärt nie ein Gebet für erhört und ersetzt nie die Schrift. Du entscheidest, was passt."
+      },
+      {
         "q": "Wie funktionieren die Bibelvers-Vorschläge?",
         "a": "Wenn du Vorschläge anforderst, werden Titel und Details des Gebets an einen KI-Dienst geschickt, der Bibelstellen vorschlägt. Du liest jede Stelle und prüfst, was passt."
+      },
+      {
+        "q": "Ist Qetoret ein soziales Netzwerk?",
+        "a": "Nein. Es gibt keinen Feed, keine Likes und keine Ranglisten. Gruppen gibt es, damit du ein Gebetsanliegen mit Menschen teilen kannst, denen du vertraust, und ihr einander im Gebet tragt."
+      },
+      {
+        "q": "Für welche Kirchen ist Qetoret gedacht?",
+        "a": "Für Christen aller kirchlichen Traditionen. Qetoret hilft dir beim Beten; es ersetzt nie deine Ortsgemeinde, ihre Pastoren oder ihre Gemeinschaft."
       },
       {
         "q": "Welche Sprachen werden unterstützt?",
@@ -111,59 +41,57 @@ export default {
     "ctaTitle": "Was liegt dir heute auf dem Herzen?",
     "footerBuilt": "Mit Glauben gebaut · Open Source · MIT-Lizenz"
   },
-  "explore": {
-    "more": "Alle Funktionen entdecken",
-    "less": "Weniger anzeigen"
-  },
   "beginLabel": "Mit einem Gebet beginnen",
   "playStore": {
-    "announcement": "Jetzt bei Google Play verfügbar",
     "cta": "Bei Google Play herunterladen"
   },
   "languageMenuLabel": "Sprache",
   "translationInProgress": "Übersetzung in Arbeit",
   "heroReassurance": "Kein Konto nötig. Dein erstes Gebet bleibt auf diesem Gerät, außer du entscheidest dich, es zu speichern.",
   "hero": {
-    "title": "Bau ein Leben des Gebets vor Gott.",
-    "promise": "Lass deine Gebete aufsteigen.",
-    "subtitle": "Bring vor Gott, was dir auf dem Herzen liegt. Trage deine Familie, deine Freunde, deine Gemeinde und die Nationen im Gebet. Finde treue Gebetsrhythmen und denk an seine Treue."
+    "gloss": "hebräisch für „Räucherwerk“",
+    "title": "Lass deine Gebete aufsteigen.",
+    "subtitle": "Baue ein Leben des Gebets vor Gott — für dich, dein Zuhause, die Gemeinde und die Nationen."
   },
-  "samplePrayerTitle": "Frieden für unsere Familie",
-  "scripturePreviewPoints": [
-    "Friede, der allen Verstand übersteigt",
-    "Auf Gottes Zeit vertrauen"
-  ],
-  "scriptureReferences": [
-    "Philipper 4:7",
-    "Jesaja 40:31"
-  ],
   "todayLabel": "Heute",
   "prayNowLabel": "Jetzt beten",
+  "samplePrayerTitle": "Frieden für unsere Familie",
   "preview": {
     "altarToday": "Dein Altar heute",
-    "carriedLabel": "Im Gebet getragen seit März 2025",
-    "carriedTitle": "Heilung für Papa",
-    "rememberLabel": "Zeugnis",
-    "rememberText": "Denk daran, was Gott getan hat."
+    "rows": [
+      {
+        "title": "Weisheit für die Verantwortlichen unserer Stadt",
+        "meta": "Jeden Montag"
+      },
+      {
+        "title": "Die Evangelisation unserer Gemeinde",
+        "meta": "Jeden Sonntag"
+      }
+    ]
   },
   "movements": [
-    {
-      "title": "Bringen",
-      "desc": "Bring vor Gott, was dir auf dem Herzen liegt, mit deinen eigenen Worten."
-    },
-    {
-      "title": "Tragen",
-      "desc": "Tritt im Gebet für die Menschen und Orte ein, die Gott dir anvertraut hat."
-    },
-    {
-      "title": "Zurückkehren",
-      "desc": "Finde Rhythmen, die dich Tag für Tag ins Gebet zurückführen."
-    },
-    {
-      "title": "Erinnern",
-      "desc": "Halte Zeugnisse fest und denk an Gottes Treue."
-    }
+    "Kommen",
+    "Bringen",
+    "Tragen",
+    "Zurückkehren",
+    "Hören",
+    "Antworten",
+    "Erinnern"
   ],
+  "come": {
+    "title": "Komm durch Christus vor Gott",
+    "body": "Zacharias ging in den Tempel, um das Räucheropfer darzubringen, während das Volk draußen betete. Heute steht der Weg zum Vater jedem Gläubigen offen — durch Jesus Christus, unseren großen Hohepriester.",
+    "nameTitle": "Der Name",
+    "nameBody": "Qetoret ist das hebräische Wort für das Räucherwerk, das vor Gott dargebracht wurde. In der Bibel wird der aufsteigende Rauch zum Bild für die Gebete des Volkes Gottes. Qetoret ist nach diesem Bild benannt: ein Leben im Gebet, das immer wieder vor Gott gebracht wird.",
+    "christTitle": "Durch Christus",
+    "christBody": "Qetoret ist ein Werkzeug für das Gebet, nie ein Vermittler. Wir kommen zum Vater durch Jesus Christus, unseren großen Hohepriester. In ihm werden Gläubige eine königliche Priesterschaft genannt: eingeladen, nahe zu kommen, für andere einzutreten und als seine Zeugen zu leben — unter seiner Autorität, nie über anderen Menschen."
+  },
+  "bring": {
+    "title": "Bring, was dir auf dem Herzen liegt",
+    "body": "Du brauchst keine schönen Worte. Eine Not, eine Sorge, ein Dank, ein Name: Ein paar Zeilen genügen, Details kannst du später ergänzen.",
+    "question": "Was liegt dir auf dem Herzen?",
+    "placeholder": "Ein paar Worte genügen …"
+  },
   "circles": {
     "title": "Von deinem Herzen bis zu den Nationen",
     "subtitle": "Gebet wird mit der Zeit weiter. Das sind keine Stufen, die man erreichen muss, sondern die Menschen und Orte, die du vor Gott tragen kannst.",
@@ -199,16 +127,77 @@ export default {
       }
     ]
   },
-  "why": {
-    "title": "Warum Qetoret?",
-    "body": "Qetoret ist das hebräische Wort für das Räucherwerk, das vor Gott dargebracht wurde. In der Bibel wird der aufsteigende Rauch zum Bild für die Gebete des Volkes Gottes. Qetoret ist nach diesem Bild benannt: ein Leben im Gebet, das immer wieder vor Gott gebracht wird.",
-    "referencesLabel": "In der Bibel nachlesen",
-    "references": [
-      "Psalm 141:2",
-      "Offenbarung 5:8",
-      "Offenbarung 8:3–4",
-      "Lukas 1:5–25"
-    ],
-    "note": "Qetoret ist ein Werkzeug für das Gebet, nie ein Vermittler. Wir kommen durch Jesus Christus zum Vater."
+  "together": {
+    "label": "Gemeinsam",
+    "title": "Tragt einander im Gebet",
+    "body": "Während Zacharias am Altar diente, betete das Volk draußen. Teile ein Gebetsanliegen mit Freunden oder einer Gruppe und tragt eure Gebete gemeinsam. Kein Feed, keine Likes, keine Ranglisten.",
+    "group": "Hauskreis",
+    "request": "Weisheit für eine neue Stelle",
+    "answeredRequest": "Eine sichere Heimreise",
+    "answered": "Erhört",
+    "carry": "Dieses Gebet mittragen",
+    "carrying": "Du trägst es mit"
+  },
+  "rhythm": {
+    "title": "Kehre zurück, morgens und abends",
+    "body": "Das Räucherwerk wurde jeden Morgen und jeden Abend dargebracht. Wähle, wann jedes Gebet wiederkommt, folge einem geführten Plan und bete mit der Schrift. Ein verpasster Tag ist nie ein Versagen: Du kannst immer zurückkehren.",
+    "planTitle": "21 Tage Gebet für meine Familie",
+    "planDay": "Tag 4 von 21",
+    "rowTitle": "Weisheit für meine Entscheidungen",
+    "rowMeta": "Jeden Morgen",
+    "stillTitle": "Bei Gott verweilen",
+    "stillBody": "Nimm dir einen Moment, um vor ihm still zu werden. Nichts zu lesen, nichts zu tun."
+  },
+  "remember": {
+    "title": "Erinnere dich, was Gott getan hat",
+    "body": "Zacharias hatte sein Gebet lange getragen. Qetoret erinnert sich, wie lange du deines schon trägst. Wenn du Gott am Werk siehst, halte ein Zeugnis fest und frag dich, ob die Antwort zu einem treuen nächsten Schritt ruft.",
+    "prayerTitle": "Heilung für Papa",
+    "carriedSince": "Im Gebet getragen seit März 2025",
+    "testimonyLabel": "Zeugnis",
+    "testimony": "Papa ist wieder zu Hause. Wir danken Gott für die Ärzte und für alle, die mit uns gebetet haben.",
+    "answered": "Du hast dieses Gebet als erhört markiert.",
+    "nextTitle": "Gibt es einen treuen nächsten Schritt?",
+    "nextSteps": [
+      "Jemanden ermutigen",
+      "Danken",
+      "Dienen"
+    ]
+  },
+  "letter": {
+    "title": "Ein persönliches Wort",
+    "quote": "Dein Gebet ist nicht vergeblich.",
+    "storyBody": "Vor einiger Zeit hatte ich mir vorgenommen, für eine Schwester im Glauben zu beten, die eine schwere Zeit durchmachte. Mit der Zeit und im Trubel des Alltags merkte ich, dass es mir nicht gelang, beständig für sie zu beten. Daraus entstand die Idee einer App, die mir hilft, mich an die Gebetsanliegen anderer zu erinnern, um treu beten zu können. Anfangs hieß sie Pray4Me, dann Praystead.\n\nEtwa drei Monate später, als ich über meiner Bibel nachsann, lenkte der Herr meine Aufmerksamkeit auf die Geschichte von Zacharias. Er und Elisabeth waren untadelig, doch bis ins Alter kinderlos geblieben. Eines Tages, als Gott ihn erwählt hatte, im Tempel das Räucheropfer darzubringen, kündigte ihm ein Engel an, dass sein Gebet erhört war. Dieses Gebet hatte er gewiss lange getragen. Es war nicht vergeblich: Gott hatte zugehört, und zu der Zeit, die er für richtig hielt, antwortete er weit über seine Erwartungen hinaus.\n\nDas hat mich ermutigt, im Gebet auszuharren, auch wenn eine Lage andauert. Es hat mich auch an meine Berufung erinnert: In Christus sind wir eine königliche Priesterschaft, berufen, für die Menschen um uns herum in den Riss zu treten. An diesem Tag bekam ich auch eine klarere Vision für die App: Aus Praystead wurde Qetoret, und die App wurde ganz neu gestaltet, um uns als königlichen Priestern zu helfen, unsere Gebetsanliegen und die anderer vor Gott zu bringen.\n\nVielleicht trägst auch du schon lange ein Gebet mit dir, für dich selbst oder für jemanden, den du liebst. Ich möchte dich ermutigen, dranzubleiben: Dein Gebet ist nicht vergeblich. Der Herr hört es, und zu der Zeit, die er für richtig hält, kann er weit über deine Erwartungen hinaus antworten, denn das inständige Gebet eines Gerechten vermag viel.",
+    "prayer": "Vater, hilf uns, treu im Gebet zu bleiben.",
+    "readMore": "Den ganzen Brief lesen",
+    "readLess": "Weniger anzeigen"
+  },
+  "facts": {
+    "title": "Privat, einfach und kostenlos",
+    "items": [
+      {
+        "title": "Standardmäßig privat",
+        "desc": "Private Gebete sind Ende-zu-Ende-verschlüsselt. Du entscheidest, was du teilst."
+      },
+      {
+        "title": "Funktioniert offline",
+        "desc": "Bete ohne Verbindung. Alles wird synchronisiert, sobald du wieder online bist."
+      },
+      {
+        "title": "Überall installieren",
+        "desc": "Die Android-App bei Google Play, oder installiere sie über deinen Browser auf Handy oder Computer."
+      },
+      {
+        "title": "16 Sprachen",
+        "desc": "Wechsle die Sprache jederzeit."
+      },
+      {
+        "title": "Sanfte Erinnerungen",
+        "desc": "Eine tägliche Erinnerung zum Beten und eine, bei den Menschen nachzufragen, die du im Gebet trägst."
+      },
+      {
+        "title": "Kostenlos und Open Source",
+        "desc": "Kein Abo und keine Werbung."
+      }
+    ]
   }
 };

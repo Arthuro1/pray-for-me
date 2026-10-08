@@ -2,89 +2,7 @@
 export default {
   "content": {
     "signIn": "Ingia",
-    "badge": "Jarida la maombi",
     "howItWorks": "Angalia jinsi inavyofanya kazi",
-    "featuresTitle": "Mahali pamoja kwa maisha yako ya maombi",
-    "featuresSub": "Maombi yako, desturi na shuhuda pamoja.",
-    "features": [
-      {
-        "icon": "Users",
-        "color": "#0d9488",
-        "title": "Ombeni pamoja",
-        "desc": "Shiriki hitaji na marafiki au kikundi, na mwombeane."
-      },
-      {
-        "icon": "BookOpen",
-        "color": "#7c5cfc",
-        "title": "Shajara ya maombi",
-        "desc": "Andika mahitaji yako na ya wengine, na uongeze habari mpya kadiri muda unavyokwenda."
-      },
-      {
-        "icon": "Calendar",
-        "color": "#059669",
-        "title": "Desturi za maombi",
-        "desc": "Chagua lini kila ombi lirudi: mara moja, kila siku au siku maalum."
-      },
-      {
-        "icon": "CheckCircle",
-        "color": "#0891b2",
-        "title": "Shuhuda",
-        "desc": "Hifadhi maombi yaliyojibiwa na shuhuda kama kumbukumbu ya uaminifu wa Mungu."
-      },
-      {
-        "icon": "Sprout",
-        "color": "#65a30d",
-        "title": "Kua katika maombi",
-        "desc": "Mipango ya kuongozwa, miongozo ya maombi na masomo mafupi yaliyojengwa juu ya Maandiko."
-      },
-      {
-        "icon": "Bell",
-        "color": "#ea580c",
-        "title": "Vikumbusho vya upole",
-        "desc": "Kikumbusho cha kila siku cha kuomba, na kikumbusho cha kuwajulia hali watu unaowaombea."
-      },
-      {
-        "icon": "Smartphone",
-        "color": "#4f46e5",
-        "title": "Sakinisha popote",
-        "desc": "Pakua programu ya Android kutoka Google Play, au isakinishe kupitia kivinjari kwenye simu au kompyuta yako. Inafanya kazi hata bila mtandao."
-      },
-      {
-        "icon": "Globe",
-        "color": "#db2777",
-        "title": "Lugha 16",
-        "desc": "Badilisha lugha wakati wowote."
-      },
-      {
-        "icon": "Lock",
-        "color": "#6d28d9",
-        "title": "Faragha kwa chaguo-msingi",
-        "desc": "Maombi ya faragha yamesimbwa kutoka mwanzo hadi mwisho. Wewe ndiye unayeamua unachoshiriki."
-      }
-    ],
-    "stepsTitle": "Jinsi inavyofanya kazi",
-    "steps": [
-      {
-        "emoji": "✍️",
-        "title": "Leta ombi",
-        "desc": "Maneno machache yanatosha. Unaweza kuongeza maelezo baadaye."
-      },
-      {
-        "emoji": "🙏",
-        "title": "Rudi kuomba",
-        "desc": "Kila ombi hurudi siku unazochagua, ili ulirudie katika maombi."
-      },
-      {
-        "emoji": "🎉",
-        "title": "Andika ushuhuda",
-        "desc": "Jambo linapotokea, andika jinsi ulivyomwona Mungu akitenda kazi."
-      }
-    ],
-    "calloutBadge": "Mapendekezo ya mistari",
-    "calloutTitle": "Omba kwa Neno la Mungu",
-    "calloutDesc": "Pata vifungu vya Biblia vinavyohusiana na ombi lako na uvisome ndani ya programu.",
-    "calloutDisclaimer": "Mapendekezo ni mwanzo tu. Soma kila kifungu katika muktadha wake.",
-    "calloutPreviewLabel": "Mapendekezo ya mistari",
     "faqTitle": "Maswali",
     "faqs": [
       {
@@ -96,8 +14,20 @@ export default {
         "a": "Hapana. Ombi lako la kwanza halihitaji akaunti na linabaki kwenye kifaa hiki. Akaunti ya bure hukuwezesha kuhifadhi maombi yako na kuyatumia kwenye vifaa vyako vyote."
       },
       {
+        "q": "Je, AI inazungumza kwa niaba ya Mungu?",
+        "a": "Hapana. AI ni msaidizi wa hiari. Ukiiomba, inaweza kupendekeza marejeo ya Biblia au maneno unayoweza kuomba nayo. Haitoi unabii kamwe, haitangazi kamwe kwamba ombi limejibiwa, na haichukui nafasi ya Maandiko kamwe. Wewe ndiye unayeamua kinachofaa."
+      },
+      {
         "q": "Mapendekezo ya mistari hufanyaje kazi?",
         "a": "Unapoomba mapendekezo, kichwa na maelezo ya ombi hutumwa kwa huduma ya AI, inayopendekeza vifungu vya Biblia. Wewe unasoma kila kifungu na kupambanua kinachofaa."
+      },
+      {
+        "q": "Je, Qetoret ni mtandao wa kijamii?",
+        "a": "Hapana. Hakuna mlisho wa habari, \"likes\" wala viwango. Vikundi vipo ili ushiriki ombi na watu unaowaamini na mbebeane katika maombi."
+      },
+      {
+        "q": "Qetoret ni kwa ajili ya makanisa gani?",
+        "a": "Kwa Wakristo wa mapokeo yote ya kanisa. Qetoret inakusaidia kuomba; haichukui kamwe nafasi ya kanisa lako la mahali, wachungaji wake au ushirika wake."
       },
       {
         "q": "Ni lugha zipi zinazotumika?",
@@ -111,59 +41,57 @@ export default {
     "ctaTitle": "Una nini moyoni leo?",
     "footerBuilt": "Imejengwa kwa imani · Chanzo wazi · Leseni ya MIT"
   },
-  "explore": {
-    "more": "Chunguza vipengele vyote",
-    "less": "Onyesha kidogo"
-  },
   "beginLabel": "Anza kwa sala",
   "playStore": {
-    "announcement": "Sasa inapatikana kwenye Google Play",
     "cta": "Pakua kwenye Google Play"
   },
   "languageMenuLabel": "Lugha",
   "translationInProgress": "Tafsiri inaendelea",
   "heroReassurance": "Huhitaji akaunti. Ombi lako la kwanza linabaki kwenye kifaa hiki hadi utakapochagua kulihifadhi.",
   "hero": {
-    "title": "Jenga maisha ya maombi mbele za Mungu.",
-    "promise": "Maombi yako na yapande juu kama uvumba.",
-    "subtitle": "Mpelekee Mungu yaliyo moyoni mwako. Waombee familia yako, marafiki, kanisa lako na mataifa. Jenga desturi ya maombi ya uaminifu na ukumbuke uaminifu wake."
+    "gloss": "“uvumba” kwa Kiebrania",
+    "title": "Maombi yako na yapande juu kama uvumba.",
+    "subtitle": "Jenga maisha ya maombi mbele za Mungu — kwa ajili yako, nyumba yako, Kanisa na mataifa."
   },
-  "samplePrayerTitle": "Amani kwa familia yetu",
-  "scripturePreviewPoints": [
-    "Amani ipitayo ufahamu wote",
-    "Amini wakati wa Mungu"
-  ],
-  "scriptureReferences": [
-    "Wafilipi 4:7",
-    "Isaya 40:31"
-  ],
   "todayLabel": "Leo",
   "prayNowLabel": "Omba sasa",
+  "samplePrayerTitle": "Amani kwa familia yetu",
   "preview": {
     "altarToday": "Madhabahu yako leo",
-    "carriedLabel": "Unaliombea tangu Machi 2025",
-    "carriedTitle": "Uponyaji wa baba",
-    "rememberLabel": "Ushuhuda",
-    "rememberText": "Kumbuka yale Mungu amefanya."
+    "rows": [
+      {
+        "title": "Hekima kwa viongozi wa mji wetu",
+        "meta": "Kila Jumatatu"
+      },
+      {
+        "title": "Uinjilisti wa kanisa letu",
+        "meta": "Kila Jumapili"
+      }
+    ]
   },
   "movements": [
-    {
-      "title": "Leta",
-      "desc": "Mpelekee Mungu yaliyo moyoni mwako, kwa maneno yako mwenyewe."
-    },
-    {
-      "title": "Ombea",
-      "desc": "Waombee watu na mahali ambapo Mungu amekukabidhi."
-    },
-    {
-      "title": "Rudi",
-      "desc": "Jenga desturi zinazokurudisha kwenye maombi siku baada ya siku."
-    },
-    {
-      "title": "Kumbuka",
-      "desc": "Andika shuhuda na ukumbuke uaminifu wa Mungu."
-    }
+    "Njoo",
+    "Leta",
+    "Ombea",
+    "Rudi",
+    "Sikiliza",
+    "Itikia",
+    "Kumbuka"
   ],
+  "come": {
+    "title": "Njoo mbele za Mungu kupitia Kristo",
+    "body": "Zakaria aliingia Hekaluni kufukiza uvumba, huku watu wakiomba nje. Leo njia ya kumwendea Baba iko wazi kwa kila mwamini kupitia Yesu Kristo, Kuhani wetu Mkuu.",
+    "nameTitle": "Jina",
+    "nameBody": "Qetoret ni neno la Kiebrania linalomaanisha uvumba uliotolewa mbele za Mungu. Katika Maandiko, uvumba unaopanda unakuwa picha ya maombi ya watu wa Mungu. Jina Qetoret linatokana na picha hii: maisha ya maombi yanayoletwa mbele za Mungu daima.",
+    "christTitle": "Kupitia Kristo",
+    "christBody": "Qetoret ni chombo cha maombi tu, kamwe si mpatanishi. Tunamjia Baba kupitia Yesu Kristo, Kuhani wetu Mkuu. Ndani yake, waaminio wanaitwa ukuhani wa kifalme: wamealikwa kukaribia, kuwaombea wengine na kuishi kama mashahidi wake — chini ya mamlaka yake, kamwe si juu ya watu wengine."
+  },
+  "bring": {
+    "title": "Leta kilicho moyoni mwako",
+    "body": "Huhitaji maneno mazuri. Hitaji, hofu, shukrani, jina: mistari michache inatosha, na unaweza kuongeza maelezo baadaye.",
+    "question": "Kuna nini moyoni mwako?",
+    "placeholder": "Maneno machache yanatosha…"
+  },
   "circles": {
     "title": "Kutoka moyoni mwako hadi mataifa",
     "subtitle": "Maombi hupanuka kadiri muda unavyokwenda. Hizi si ngazi za kufikia, bali ni watu na mahali unaoweza kuwaleta mbele za Mungu.",
@@ -199,16 +127,77 @@ export default {
       }
     ]
   },
-  "why": {
-    "title": "Kwa nini Qetoret?",
-    "body": "Qetoret ni neno la Kiebrania linalomaanisha uvumba uliotolewa mbele za Mungu. Katika Maandiko, uvumba unaopanda unakuwa picha ya maombi ya watu wa Mungu. Jina Qetoret linatokana na picha hii: maisha ya maombi yanayoletwa mbele za Mungu daima.",
-    "referencesLabel": "Soma katika Maandiko",
-    "references": [
-      "Zaburi 141:2",
-      "Ufunuo 5:8",
-      "Ufunuo 8:3-4",
-      "Luka 1:5-25"
-    ],
-    "note": "Qetoret ni chombo cha maombi tu, kamwe si mpatanishi. Tunamjia Baba kupitia Yesu Kristo."
+  "together": {
+    "label": "Pamoja",
+    "title": "Bebeaneni katika maombi",
+    "body": "Zakaria alipokuwa akihudumu madhabahuni, watu walikuwa wakiomba nje. Shiriki ombi na marafiki au kikundi, na mbebeane katika maombi. Hakuna mlisho wa habari, hakuna \"likes\", hakuna viwango.",
+    "group": "Kikundi cha nyumbani",
+    "request": "Hekima kwa kazi mpya",
+    "answeredRequest": "Safari salama ya kurudi nyumbani",
+    "answered": "Limejibiwa",
+    "carry": "Beba ombi hili",
+    "carrying": "Unalibeba"
+  },
+  "rhythm": {
+    "title": "Rudi, asubuhi na jioni",
+    "body": "Uvumba ulitolewa kila asubuhi na kila jioni. Chagua lini kila ombi lirudi, fuata mpango wa maombi ulioongozwa, na uombe kwa Maandiko. Siku uliyoikosa si kushindwa kamwe: unaweza kurudi wakati wowote.",
+    "planTitle": "Siku 21 za maombi kwa familia yangu",
+    "planDay": "Siku ya 4 kati ya 21",
+    "rowTitle": "Hekima kwa maamuzi yangu",
+    "rowMeta": "Kila asubuhi",
+    "stillTitle": "Kaa na Mungu",
+    "stillBody": "Chukua muda kutulia mbele zake. Hakuna cha kusoma, hakuna cha kufanya."
+  },
+  "remember": {
+    "title": "Kumbuka yale Mungu aliyotenda",
+    "body": "Zakaria alikuwa amebeba ombi lake kwa muda mrefu. Qetoret hukumbuka umebeba ombi lako kwa muda gani. Unapomwona Mungu akitenda kazi, andika ushuhuda, na ujiulize kama jibu hilo linakuita kwenye hatua inayofuata ya uaminifu.",
+    "prayerTitle": "Uponyaji wa baba",
+    "carriedSince": "Unaliombea tangu Machi 2025",
+    "testimonyLabel": "Ushuhuda",
+    "testimony": "Baba amerudi nyumbani. Tunamshukuru Mungu kwa ajili ya madaktari na kwa wote walioomba pamoja nasi.",
+    "answered": "Umeweka ombi hili kama limejibiwa.",
+    "nextTitle": "Je, kuna hatua inayofuata ya uaminifu?",
+    "nextSteps": [
+      "Kumtia mtu moyo",
+      "Kushukuru",
+      "Kutumika"
+    ]
+  },
+  "letter": {
+    "title": "Neno kutoka kwa mwandishi",
+    "quote": "Ombi lako si bure.",
+    "storyBody": "Muda fulani uliopita, niliahidi kumwombea dada mmoja katika imani aliyekuwa akipitia nyakati ngumu. Kadiri muda ulivyopita na shughuli zikiongezeka, niligundua kwamba sikuweza kumwombea kwa uthabiti. Hapo ndipo lilipozaliwa wazo la programu itakayonisaidia kukumbuka mahitaji ya maombi ya wengine, ili niombe kwa uaminifu. Mwanzoni iliitwa Pray4Me, kisha Praystead.\n\nTakriban miezi mitatu baadaye, nilipokuwa nikitafakari Biblia yangu, Bwana alielekeza fikira zangu kwa habari ya Zakaria. Yeye na Elisabeti hawakuwa na lawama, lakini hadi uzeeni hawakuwa na mtoto. Siku moja, alipochaguliwa na Mungu kufukiza uvumba Hekaluni, malaika alimwambia kwamba ombi lake limesikiwa. Bila shaka alikuwa amelibeba ombi hilo kwa muda mrefu. Halikuwa bure: Mungu alikuwa amelisikia, na kwa wakati alioona unafaa, alijibu kupita matarajio yake.\n\nHili lilinitia moyo kudumu katika maombi, hata hali inapodumu kwa muda mrefu. Pia lilinikumbusha wajibu wangu: katika Kristo sisi ni ukuhani wa kifalme, tulioitwa kusimama mahali palipobomoka kwa ajili ya wale wanaotuzunguka. Siku hiyo pia nilipokea maono yaliyo wazi zaidi kwa ajili ya programu hii: Praystead ikawa Qetoret, na ikaundwa upya kabisa ili kutusaidia, kama makuhani wa kifalme, kuleta mbele za Mungu mahitaji yetu ya maombi na ya wengine.\n\nHuenda nawe umekuwa ukibeba ombi kwa muda mrefu, kwa ajili yako mwenyewe au kwa ajili ya mtu unayempenda. Ningependa kukutia moyo kudumu: ombi lako si bure. Bwana analisikia, na kwa wakati atakaoona unafaa, anaweza kujibu kupita matarajio yako, kwa maana maombi ya mwenye haki yakiombwa kwa bidii yana nguvu nyingi.",
+    "prayer": "Baba, utusaidie kudumu kwa uaminifu katika maombi.",
+    "readMore": "Soma barua yote",
+    "readLess": "Onyesha kidogo"
+  },
+  "facts": {
+    "title": "Faragha, rahisi na bure",
+    "items": [
+      {
+        "title": "Faragha kwa chaguo-msingi",
+        "desc": "Maombi ya faragha yamesimbwa kutoka mwanzo hadi mwisho. Wewe ndiye unayeamua unachoshiriki."
+      },
+      {
+        "title": "Inafanya kazi bila mtandao",
+        "desc": "Omba bila mtandao. Kila kitu kinasawazishwa ukirudi mtandaoni."
+      },
+      {
+        "title": "Sakinisha popote",
+        "desc": "Programu ya Android kwenye Google Play, au isakinishe kupitia kivinjari kwenye simu au kompyuta."
+      },
+      {
+        "title": "Lugha 16",
+        "desc": "Badilisha lugha wakati wowote."
+      },
+      {
+        "title": "Vikumbusho vya upole",
+        "desc": "Kikumbusho cha kila siku cha kuomba, na kikumbusho cha kuwajulia hali watu unaowaombea."
+      },
+      {
+        "title": "Bure na chanzo huria",
+        "desc": "Hakuna usajili wa kulipia wala matangazo."
+      }
+    ]
   }
 };

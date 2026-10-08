@@ -2,89 +2,7 @@
 export default {
   "content": {
     "signIn": "Masuk",
-    "badge": "Jurnal doa",
     "howItWorks": "Lihat cara kerjanya",
-    "featuresTitle": "Satu tempat untuk kehidupan doa Anda",
-    "featuresSub": "Doa, ritme, dan kesaksian Anda, dalam satu tempat.",
-    "features": [
-      {
-        "icon": "Users",
-        "color": "#0d9488",
-        "title": "Berdoa bersama",
-        "desc": "Bagikan pokok doa dengan sahabat atau kelompok, dan saling mendoakan."
-      },
-      {
-        "icon": "BookOpen",
-        "color": "#7c5cfc",
-        "title": "Jurnal doa",
-        "desc": "Catat pokok doa untuk diri sendiri dan orang lain, lalu tambahkan kabar terbaru dari waktu ke waktu."
-      },
-      {
-        "icon": "Calendar",
-        "color": "#059669",
-        "title": "Ritme doa",
-        "desc": "Pilih kapan setiap doa kembali: sekali, setiap hari, atau pada hari tertentu."
-      },
-      {
-        "icon": "CheckCircle",
-        "color": "#0891b2",
-        "title": "Kesaksian",
-        "desc": "Simpan doa yang dijawab dan kesaksian sebagai pengingat akan kesetiaan Tuhan."
-      },
-      {
-        "icon": "Sprout",
-        "color": "#65a30d",
-        "title": "Bertumbuh dalam doa",
-        "desc": "Rencana terpandu, panduan doa, dan bacaan singkat yang berakar pada Alkitab."
-      },
-      {
-        "icon": "Bell",
-        "color": "#ea580c",
-        "title": "Pengingat yang lembut",
-        "desc": "Pengingat harian untuk berdoa, dan pengingat untuk menanyakan kabar orang-orang yang Anda doakan."
-      },
-      {
-        "icon": "Smartphone",
-        "color": "#4f46e5",
-        "title": "Pasang di mana saja",
-        "desc": "Unduh aplikasi Android di Google Play, atau pasang melalui browser di ponsel atau komputer Anda. Aplikasi ini juga bisa dipakai tanpa internet."
-      },
-      {
-        "icon": "Globe",
-        "color": "#db2777",
-        "title": "16 bahasa",
-        "desc": "Ganti bahasa kapan saja."
-      },
-      {
-        "icon": "Lock",
-        "color": "#6d28d9",
-        "title": "Privat secara bawaan",
-        "desc": "Doa pribadi dienkripsi end-to-end. Anda yang menentukan apa yang dibagikan."
-      }
-    ],
-    "stepsTitle": "Cara kerjanya",
-    "steps": [
-      {
-        "emoji": "✍️",
-        "title": "Bawa sebuah doa",
-        "desc": "Beberapa kata sudah cukup. Anda bisa menambahkan detail nanti."
-      },
-      {
-        "emoji": "🙏",
-        "title": "Kembali berdoa",
-        "desc": "Setiap doa kembali pada hari yang Anda pilih, supaya Anda mendoakannya lagi."
-      },
-      {
-        "emoji": "🎉",
-        "title": "Catat kesaksian",
-        "desc": "Saat sesuatu terjadi, tuliskan bagaimana Anda melihat Tuhan bekerja."
-      }
-    ],
-    "calloutBadge": "Saran ayat",
-    "calloutTitle": "Berdoa dengan Firman",
-    "calloutDesc": "Temukan bagian Alkitab yang berkaitan dengan doa Anda dan baca langsung di aplikasi.",
-    "calloutDisclaimer": "Saran hanyalah titik awal. Bacalah setiap bagian dalam konteksnya.",
-    "calloutPreviewLabel": "Saran ayat",
     "faqTitle": "Pertanyaan",
     "faqs": [
       {
@@ -96,8 +14,20 @@ export default {
         "a": "Tidak. Doa pertama Anda tidak memerlukan akun dan tetap di perangkat ini. Dengan akun gratis, doa Anda tersimpan dan bisa dipakai di semua perangkat."
       },
       {
+        "q": "Apakah AI berbicara atas nama Tuhan?",
+        "a": "Tidak. AI adalah bantuan opsional. Jika Anda meminta, AI dapat menyarankan referensi Alkitab atau kata-kata untuk berdoa. AI tidak pernah bernubuat, tidak pernah menyatakan sebuah doa sudah dijawab, dan tidak pernah menggantikan Firman Tuhan. Andalah yang memutuskan apa yang berlaku."
+      },
+      {
         "q": "Bagaimana saran ayat bekerja?",
         "a": "Saat Anda meminta saran, judul dan detail doa dikirim ke layanan AI yang mengusulkan bagian Alkitab. Anda membaca setiap bagian dan menimbang mana yang sesuai."
+      },
+      {
+        "q": "Apakah Qetoret media sosial?",
+        "a": "Tidak. Tidak ada linimasa, 'suka', atau peringkat. Kelompok ada agar Anda dapat membagikan pokok doa dengan orang yang Anda percayai dan saling mendoakan."
+      },
+      {
+        "q": "Qetoret untuk gereja yang mana?",
+        "a": "Untuk orang Kristen dari semua tradisi gereja. Qetoret membantu Anda berdoa; Qetoret tidak pernah menggantikan gereja lokal Anda, para gembalanya, atau persekutuannya."
       },
       {
         "q": "Bahasa apa saja yang didukung?",
@@ -111,59 +41,57 @@ export default {
     "ctaTitle": "Apa yang ada di hati Anda hari ini?",
     "footerBuilt": "Dibangun dengan iman · Open source · Lisensi MIT"
   },
-  "explore": {
-    "more": "Jelajahi semua fitur",
-    "less": "Tampilkan lebih sedikit"
-  },
   "beginLabel": "Mulai dengan doa",
   "playStore": {
-    "announcement": "Kini tersedia di Google Play",
     "cta": "Unduh di Google Play"
   },
   "languageMenuLabel": "Bahasa",
   "translationInProgress": "Terjemahan sedang berlangsung",
   "heroReassurance": "Tidak perlu akun. Doa pertama Anda tetap di perangkat ini sampai Anda memilih untuk menyimpannya.",
   "hero": {
-    "title": "Bangunlah kehidupan doa di hadapan Tuhan.",
-    "promise": "Biarlah doa-doa Anda naik seperti dupa.",
-    "subtitle": "Bawalah isi hati Anda kepada Tuhan. Doakan keluarga, sahabat, gereja, dan bangsa-bangsa. Bangun ritme doa yang setia dan ingatlah kesetiaan-Nya."
+    "gloss": "bahasa Ibrani untuk “ukupan”",
+    "title": "Biarlah doa-doa Anda naik seperti dupa.",
+    "subtitle": "Bangun kehidupan doa di hadapan Tuhan — bagi diri Anda, keluarga Anda, Gereja, dan bangsa-bangsa."
   },
-  "samplePrayerTitle": "Kedamaian bagi keluarga kami",
-  "scripturePreviewPoints": [
-    "Damai yang melampaui segala pengertian",
-    "Percaya pada waktu Tuhan"
-  ],
-  "scriptureReferences": [
-    "Filipi 4:7",
-    "Yesaya 40:31"
-  ],
   "todayLabel": "Hari ini",
   "prayNowLabel": "Berdoa sekarang",
+  "samplePrayerTitle": "Kedamaian bagi keluarga kami",
   "preview": {
     "altarToday": "Mezbah Anda hari ini",
-    "carriedLabel": "Didoakan sejak Maret 2025",
-    "carriedTitle": "Kesembuhan untuk Ayah",
-    "rememberLabel": "Kesaksian",
-    "rememberText": "Ingatlah apa yang telah Tuhan lakukan."
+    "rows": [
+      {
+        "title": "Hikmat bagi para pemimpin kota kami",
+        "meta": "Setiap Senin"
+      },
+      {
+        "title": "Penginjilan gereja kami",
+        "meta": "Setiap Minggu"
+      }
+    ]
   },
   "movements": [
-    {
-      "title": "Membawa",
-      "desc": "Bawalah isi hati Anda kepada Tuhan dengan kata-kata Anda sendiri."
-    },
-    {
-      "title": "Bersyafaat",
-      "desc": "Berdoalah bagi orang-orang dan tempat-tempat yang Tuhan percayakan kepada Anda."
-    },
-    {
-      "title": "Kembali",
-      "desc": "Bangun ritme yang membawa Anda kembali kepada doa, hari demi hari."
-    },
-    {
-      "title": "Mengingat",
-      "desc": "Catat kesaksian dan ingatlah kesetiaan Tuhan."
-    }
+    "Datang",
+    "Membawa",
+    "Bersyafaat",
+    "Kembali",
+    "Mendengar",
+    "Menanggapi",
+    "Mengingat"
   ],
+  "come": {
+    "title": "Datanglah kepada Tuhan melalui Kristus",
+    "body": "Zakharia masuk ke Bait Suci untuk mempersembahkan dupa, sementara umat berdoa di luar. Kini jalan kepada Bapa terbuka bagi setiap orang percaya melalui Yesus Kristus, Imam Besar Agung kita.",
+    "nameTitle": "Nama",
+    "nameBody": "Qetoret adalah kata Ibrani untuk ukupan yang dipersembahkan di hadapan Tuhan. Dalam Alkitab, asap ukupan yang naik menjadi gambaran doa-doa umat Tuhan. Nama Qetoret diambil dari gambaran ini: kehidupan doa yang terus-menerus dibawa ke hadapan Tuhan.",
+    "christTitle": "Melalui Kristus",
+    "christBody": "Qetoret hanyalah alat untuk berdoa, bukan perantara. Kita datang kepada Bapa melalui Yesus Kristus, Imam Besar Agung kita. Di dalam Dia, orang percaya disebut imamat yang rajani: diundang untuk mendekat, bersyafaat bagi sesama, dan hidup sebagai saksi-Nya — di bawah otoritas-Nya, tidak pernah di atas orang lain."
+  },
+  "bring": {
+    "title": "Bawalah apa yang ada di hati Anda",
+    "body": "Anda tidak perlu kata-kata yang indah. Sebuah kebutuhan, ketakutan, ucapan syukur, sebuah nama: beberapa baris sudah cukup, dan Anda bisa menambahkan detail nanti.",
+    "question": "Apa yang ada di hati Anda?",
+    "placeholder": "Beberapa kata sudah cukup…"
+  },
   "circles": {
     "title": "Dari hati Anda sampai bangsa-bangsa",
     "subtitle": "Doa meluas seiring waktu. Ini bukan tingkatan yang harus dicapai, melainkan orang dan tempat yang dapat Anda bawa ke hadapan Tuhan.",
@@ -199,16 +127,77 @@ export default {
       }
     ]
   },
-  "why": {
-    "title": "Mengapa Qetoret?",
-    "body": "Qetoret adalah kata Ibrani untuk ukupan yang dipersembahkan di hadapan Tuhan. Dalam Alkitab, asap ukupan yang naik menjadi gambaran doa-doa umat Tuhan. Nama Qetoret diambil dari gambaran ini: kehidupan doa yang terus-menerus dibawa ke hadapan Tuhan.",
-    "referencesLabel": "Baca dalam Alkitab",
-    "references": [
-      "Mazmur 141:2",
-      "Wahyu 5:8",
-      "Wahyu 8:3-4",
-      "Lukas 1:5-25"
-    ],
-    "note": "Qetoret hanyalah alat untuk berdoa, bukan perantara. Kita datang kepada Bapa melalui Yesus Kristus."
+  "together": {
+    "label": "Bersama",
+    "title": "Saling menanggung dalam doa",
+    "body": "Ketika Zakharia melayani di mezbah, umat berdoa di luar. Bagikan pokok doa dengan teman atau kelompok, dan saling mendoakan. Tanpa linimasa, tanpa 'suka', tanpa peringkat.",
+    "group": "Kelompok sel",
+    "request": "Hikmat untuk pekerjaan baru",
+    "answeredRequest": "Perjalanan pulang yang aman",
+    "answered": "Terjawab",
+    "carry": "Doakan pokok ini",
+    "carrying": "Sedang mendoakan"
+  },
+  "rhythm": {
+    "title": "Kembali, pagi dan petang",
+    "body": "Dupa dipersembahkan setiap pagi dan setiap petang. Pilih kapan setiap doa kembali, ikuti rencana doa terpandu, dan berdoalah dengan Firman. Hari yang terlewat bukanlah kegagalan: Anda selalu bisa kembali.",
+    "planTitle": "21 hari doa untuk keluarga saya",
+    "planDay": "Hari 4 dari 21",
+    "rowTitle": "Hikmat untuk keputusan saya",
+    "rowMeta": "Setiap pagi",
+    "stillTitle": "Tinggal bersama Tuhan",
+    "stillBody": "Luangkan waktu sejenak untuk diam di hadapan-Nya. Tidak ada yang perlu dibaca atau dilakukan."
+  },
+  "remember": {
+    "title": "Ingatlah apa yang telah Tuhan lakukan",
+    "body": "Zakharia telah lama menanggung doanya. Qetoret mengingat berapa lama Anda telah menanggung doa Anda. Saat Anda melihat Tuhan bekerja, catat kesaksian, dan tanyakan apakah jawaban itu memanggil Anda pada langkah setia berikutnya.",
+    "prayerTitle": "Kesembuhan untuk Ayah",
+    "carriedSince": "Didoakan sejak Maret 2025",
+    "testimonyLabel": "Kesaksian",
+    "testimony": "Ayah sudah pulang ke rumah. Kami bersyukur kepada Tuhan untuk para dokter dan untuk semua yang berdoa bersama kami.",
+    "answered": "Anda menandai doa ini sudah dijawab.",
+    "nextTitle": "Adakah langkah setia berikutnya?",
+    "nextSteps": [
+      "Menguatkan seseorang",
+      "Bersyukur",
+      "Melayani"
+    ]
+  },
+  "letter": {
+    "title": "Sepatah kata dari penulis",
+    "quote": "Doa Anda tidak sia-sia.",
+    "storyBody": "Beberapa waktu lalu, saya berkomitmen untuk mendoakan seorang saudari seiman yang sedang melewati masa sulit. Seiring waktu dan berbagai kesibukan, saya menyadari bahwa saya tidak mampu mendoakannya dengan konsisten. Dari situlah muncul gagasan sebuah aplikasi yang membantu saya mengingat pokok-pokok doa sesama, supaya saya dapat berdoa dengan setia. Awalnya aplikasi ini bernama Pray4Me, lalu Praystead.\n\nSekitar tiga bulan kemudian, saat saya merenungkan Alkitab, Tuhan menarik perhatian saya kepada kisah Zakharia. Ia dan Elisabet hidup tidak bercacat, tetapi sampai masa tua mereka belum juga memiliki anak. Suatu hari, ketika ia dipilih Allah untuk mempersembahkan ukupan di Bait Allah, seorang malaikat memberitahunya bahwa doanya telah didengar. Pastilah ia telah lama membawa doa itu. Doa itu tidak sia-sia: Allah telah mendengarnya, dan pada waktu yang Ia pandang tepat, Ia menjawab melampaui harapannya.\n\nHal ini menguatkan saya untuk tekun berdoa, bahkan ketika suatu keadaan berlangsung lama. Hal ini juga mengingatkan saya akan peran saya: di dalam Kristus kita adalah imamat yang rajani, dipanggil untuk berdiri di celah bagi orang-orang di sekitar kita. Pada hari itu saya juga menerima visi yang lebih jelas untuk aplikasi ini: Praystead menjadi Qetoret, dan aplikasi ini dirancang ulang sepenuhnya untuk menolong kita, sebagai imam-imam rajani, membawa pokok-pokok doa kita dan sesama ke hadapan Allah.\n\nMungkin Anda juga sudah lama membawa sebuah doa, untuk diri sendiri atau untuk seseorang yang Anda kasihi. Saya ingin menguatkan Anda untuk tetap bertekun: doa Anda tidak sia-sia. Tuhan mendengarnya, dan pada waktu yang Ia pandang tepat, Ia sanggup menjawab jauh melampaui harapan Anda, sebab doa orang yang benar sangat besar kuasanya.",
+    "prayer": "Bapa, tolonglah kami untuk tetap setia dalam doa.",
+    "readMore": "Baca seluruh surat",
+    "readLess": "Tampilkan lebih sedikit"
+  },
+  "facts": {
+    "title": "Privat, sederhana, dan gratis",
+    "items": [
+      {
+        "title": "Privat secara bawaan",
+        "desc": "Doa pribadi dienkripsi end-to-end. Anda yang menentukan apa yang dibagikan."
+      },
+      {
+        "title": "Bisa dipakai offline",
+        "desc": "Berdoa tanpa koneksi. Semuanya tersinkron saat Anda kembali online."
+      },
+      {
+        "title": "Pasang di mana saja",
+        "desc": "Aplikasi Android di Google Play, atau pasang dari browser di ponsel atau komputer Anda."
+      },
+      {
+        "title": "16 bahasa",
+        "desc": "Ganti bahasa kapan saja."
+      },
+      {
+        "title": "Pengingat yang lembut",
+        "desc": "Pengingat harian untuk berdoa, dan pengingat untuk menanyakan kabar orang-orang yang Anda doakan."
+      },
+      {
+        "title": "Gratis dan sumber terbuka",
+        "desc": "Tanpa langganan dan tanpa iklan."
+      }
+    ]
   }
 };

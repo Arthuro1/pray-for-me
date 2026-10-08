@@ -6,6 +6,28 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Changed — the landing page tells Zechariah's story (`docs/QETORET_IDENTITY.md` §2)
+
+- **One story, top to bottom**, beside the app that serves each step: the
+  Hebrew name קְטֹרֶת and "Let your prayers rise." with the real Today; **Come**
+  (the name and access through Christ, as on About); **Bring**; **Carry** (the
+  seven circles, now on circle-tone tiles); **Together** (a group wall with the
+  real Carry gesture); **Return · Listen** (rhythms, a plan, Remain with God);
+  **Remember · Respond** (carried since…, a testimony, a faithful next step).
+  It closes on the seven movements.
+- **The author's letter** is on the public page, folded after its first
+  paragraph, in the About page's exact words (a guard test keeps them equal;
+  the brand guard exempts the letter there too, since it names the old app).
+- **Removed:** the four-movement row and "How it works" (they said the same
+  thing twice), "Why Qetoret?" (now the Come cards), the folded feature grid
+  (now an always-visible facts strip) and the AI Scripture-suggestion band
+  (now one FAQ answer: AI never speaks for God). FAQ adds "Is Qetoret a social
+  network?" and "Which churches is Qetoret for?".
+- Landing locales rebuilt ×16 (`movements`, `come`, `bring`, `together`,
+  `rhythm`, `remember`, `letter`, `facts`); strings the app already had are
+  reused verbatim. New wording is AI-drafted in 15 languages and needs a native
+  pass. No SQL, no server change.
+
 ### Changed — a quieter altar: prayer first, circles as a quiet layer (`docs/INTERCESSION_CIRCLES.md`)
 
 - **Today** no longer lists your circles with prayer counts, and no longer names

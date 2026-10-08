@@ -1,10 +1,22 @@
 /* Landing — the public first page, on the product's own tokens and
-   primitives. Mostly alabaster, one deep-violet band, the serif for what is
-   sacred, hairlines instead of cards. Its hero shows the app's real Today
-   (the `.today-focus` classes from prayer.css), not a mock-up. */
+   primitives, so it reads as the app's front door rather than a separate
+   brochure: alabaster washed with royal violet and a trace of gold, the
+   Hebrew name under the rising stroke, soft cards and circle-tone tiles,
+   the serif for what is sacred, and the deep violet of the place of prayer.
+   Every illustration is the app's own markup (prayer.css, altar.css,
+   together.css), never a picture of a phone. */
 html.landing-root body { background: var(--q-canvas); }
 
-.landing { min-height: 100vh; background: var(--q-canvas); color: var(--q-text); }
+.landing {
+  min-height: 100vh;
+  /* One wash behind the header and the hero: royal at the head, gold beneath. */
+  background:
+    radial-gradient(64rem 38rem at 10% -8rem, color-mix(in srgb, var(--q-royal) 13%, transparent), transparent 70%),
+    radial-gradient(52rem 32rem at 95% 24rem, color-mix(in srgb, var(--q-gold) 11%, transparent), transparent 70%),
+    var(--q-canvas);
+  background-repeat: no-repeat;
+  color: var(--q-text);
+}
 
 /* ── Header ─────────────────────────────────────────────────────────────── */
 .landing__nav {
@@ -25,36 +37,49 @@ html.landing-root body { background: var(--q-canvas); }
 .landing__language-menu [aria-checked="true"] { background: var(--q-selected); color: var(--q-royal-text); }
 .landing__language-status { max-width: 7rem; color: var(--q-text-tertiary); font-size: 0.6875rem; line-height: 1.2; text-align: end; }
 
-/* ── Hero ───────────────────────────────────────────────────────────────── */
+/* ── Hero: the name, the line, the first step, the real Today ───────────── */
 .landing__hero {
   display: grid;
   max-width: 72rem;
   align-items: center;
   gap: var(--q-space-12);
   margin-inline: auto;
-  padding: var(--q-space-12) var(--q-space-6) var(--q-space-20);
+  padding: var(--q-space-10) var(--q-space-6) var(--q-space-20);
 }
 
 @media (min-width: 900px) {
-  .landing__hero { grid-template-columns: 1.05fr 0.95fr; gap: var(--q-space-16); padding-block-start: var(--q-space-16); }
+  .landing__hero { grid-template-columns: 1.05fr 0.95fr; gap: var(--q-space-16); padding-block-start: var(--q-space-12); }
 }
 
 .landing__hero-copy { min-width: 0; }
 
+/* The Hebrew word under the rising stroke, how it sounds, what it means. */
+.landing__name { display: grid; justify-items: start; }
+.landing__name-mark { color: var(--q-gold); }
+.landing__hebrew {
+  margin: var(--q-space-2) 0 0;
+  color: var(--q-text);
+  font-family: 'Noto Serif Hebrew', 'Frank Ruehl CLM', 'SBL Hebrew', 'Times New Roman', var(--q-font-editorial);
+  font-size: clamp(2.25rem, 6vw, 3rem);
+  line-height: 1.2;
+}
+.landing__gloss { margin: var(--q-space-1) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
+.landing__sound { color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1rem; font-style: italic; }
+
 .landing__title {
-  max-width: 13ch;
-  margin: var(--q-space-4) 0 0;
+  max-width: 12ch;
+  margin: var(--q-space-6) 0 0;
   color: var(--q-text);
   font-family: var(--q-font-editorial);
   font-optical-sizing: auto;
-  font-size: clamp(2.75rem, 7vw, 4.5rem);
+  font-size: clamp(2.75rem, 7vw, 4.75rem);
   font-weight: 450;
   letter-spacing: -0.03em;
   line-height: 1.02;
   text-wrap: balance;
 }
 
-.landing__lede { max-width: 34rem; margin: var(--q-space-6) 0 0; color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.7; }
+.landing__lede { max-width: 32rem; margin: var(--q-space-6) 0 0; color: var(--q-text-secondary); font-size: 1.125rem; line-height: 1.65; }
 .landing__actions { display: flex; flex-wrap: wrap; gap: var(--q-space-3); margin-block-start: var(--q-space-8); }
 .landing__actions--center { justify-content: center; }
 .landing__cta { min-height: 52px; padding-inline: var(--q-space-6); }
@@ -68,42 +93,132 @@ html.landing-root body { background: var(--q-canvas); }
   .landing__actions > * { flex: 1 1 100%; }
 }
 
-/* The app's Today, framed as a page — no phone, no decoration. */
-.landing__preview { width: 100%; max-width: 30rem; margin-inline: auto; }
-.landing__preview-page { padding: var(--q-space-6); border: 1px solid var(--q-border); border-radius: var(--q-radius-dialog); background: var(--q-canvas); }
-.landing__preview-page > .section-label { margin-block-end: var(--q-space-4); }
-.landing__focus { margin-block-end: var(--q-space-4); }
-.landing__preview-rows { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
-.landing__preview-rows > li { display: grid; gap: 4px; padding-block: var(--q-space-4); border-block-end: 1px solid var(--q-border); }
-.landing__preview-rows > li:last-child { border-block-end: 0; padding-block-end: 0; }
-.landing__preview-title { color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.125rem; line-height: 1.3; }
-.landing__preview-meta { color: var(--q-gold-text); font-size: var(--q-type-meta); font-weight: 600; }
+/* Today as the app draws it, on a sheet of its own. */
+.landing__preview {
+  display: grid;
+  width: 100%;
+  max-width: 30rem;
+  gap: var(--q-space-4);
+  margin-inline: auto;
+  padding: var(--q-space-5);
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-dialog);
+  background: var(--q-surface);
+  box-shadow: var(--q-elevation);
+}
+.landing__preview > .section-label { margin: 0; }
+.landing__focus { min-height: 12rem; margin: 0; }
+.landing__focus .today-focus__begin { margin-block-start: var(--q-space-6); }
 
-/* ── Bands: one measure, generous space, a hairline between ─────────────── */
-.landing__band { max-width: 72rem; margin-inline: auto; padding: var(--q-space-16) var(--q-space-6); border-block-start: 1px solid var(--q-border); }
-.landing__narrow { max-width: 48rem; }
-.landing__heading { margin: 0 0 var(--q-space-3); color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; }
-.landing__text { max-width: 36rem; margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
-.landing__note { margin: var(--q-space-6) 0 0; color: var(--q-text-tertiary); font-size: 0.875rem; font-style: italic; line-height: 1.6; }
-
-/* Bring · Carry · Return · Remember: one editorial row, divided by hairlines. */
-.landing__movements { display: grid; margin: 0; padding: 0; list-style: none; }
-.landing__movements > li { padding-block: var(--q-space-6); border-block-start: 1px solid var(--q-border); }
-.landing__movements > li:first-child { border-block-start: 0; padding-block-start: 0; }
-.landing__movements > li > svg { color: var(--q-royal-text); }
-.landing__movement-title { margin: var(--q-space-4) 0 var(--q-space-2); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.5rem; font-weight: 450; }
-.landing__movement-desc { margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
-
-@media (min-width: 768px) {
-  .landing__movements { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .landing__movements > li { padding: 0 var(--q-space-6); border-block-start: 0; border-inline-start: 1px solid var(--q-border); }
-  .landing__movements > li:first-child { padding-inline-start: 0; border-inline-start: 0; }
+/* ── The story: one step after another, words beside the app ────────────── */
+.landing__story {
+  display: grid;
+  max-width: 72rem;
+  gap: clamp(var(--q-space-20), 11vw, 9rem);
+  margin-inline: auto;
+  padding: var(--q-space-16) var(--q-space-6) var(--q-space-20);
 }
 
-/* The circles: a widening ring model beside the seven names — one control
-   (landing/LandingCircles.jsx). The rings themselves are shared with About
+.landing-beat { display: grid; align-items: center; gap: var(--q-space-10); scroll-margin-block-start: var(--q-space-6); }
+.landing-beat__copy { min-width: 0; max-width: 34rem; }
+.landing-beat__visual { min-width: 0; }
+
+@media (min-width: 900px) {
+  .landing-beat { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--q-space-16); }
+  .landing-beat--flip > .landing-beat__visual { order: -1; }
+}
+
+/* The movement a step belongs to: small capitals after a short gold stroke. */
+.landing-beat__label { display: inline-flex; align-items: center; gap: var(--q-space-3); margin: 0 0 var(--q-space-4); }
+.landing-beat__label::before { width: 24px; height: 1px; flex: 0 0 auto; background: var(--q-gold); content: ''; }
+
+.landing__heading { margin: 0 0 var(--q-space-4); color: var(--q-text); font-family: var(--q-font-editorial); font-optical-sizing: auto; font-size: clamp(1.875rem, 4vw, 2.625rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.12; text-wrap: balance; }
+.landing__text { max-width: 36rem; margin: 0; color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.7; }
+
+/* Passages under the words; the one opened takes the whole row. */
+.landing__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-5); margin: var(--q-space-4) 0 0; padding: 0; list-style: none; }
+.landing__refs > li { min-width: 0; }
+.landing__refs > li:has(.scripture-panel) { flex-basis: 100%; }
+
+/* The stage the app stands on: a quiet panel washed with royal and gold. */
+.landing-stage {
+  padding: clamp(var(--q-space-5), 4vw, var(--q-space-10));
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-dialog);
+  background:
+    radial-gradient(90% 80% at 100% 0%, color-mix(in srgb, var(--q-royal) 11%, transparent), transparent 70%),
+    radial-gradient(80% 70% at 0% 100%, color-mix(in srgb, var(--q-gold) 10%, transparent), transparent 70%),
+    var(--q-surface-muted);
+}
+
+.landing-stack { display: grid; gap: var(--q-space-2); }
+.landing-row { cursor: default; }
+.landing-row__progress { width: 19%; }
+
+/* Come: the opening words, then the name and the access it rests on. */
+.landing-come { display: grid; gap: var(--q-space-10); scroll-margin-block-start: var(--q-space-6); }
+.landing-come__intro { max-width: 40rem; }
+.landing-come__cards { display: grid; gap: var(--q-space-4); }
+.landing-card { display: grid; align-content: start; gap: var(--q-space-3); min-width: 0; padding: var(--q-space-6); }
+.landing-card__title { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.375rem; font-weight: 450; line-height: 1.25; }
+.landing-card__body { margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
+.landing-card .landing__refs { margin-block-start: 0; }
+
+@media (min-width: 760px) {
+  .landing-come__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Bring: the guest flow's first question, a field waiting for a few words. */
+.landing-bring { display: grid; gap: var(--q-space-4); padding: var(--q-space-6); }
+.landing-bring__question { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(1.5rem, 3vw, 1.875rem); font-weight: 450; line-height: 1.2; }
+.landing-bring__field {
+  min-height: 6.5rem;
+  margin: 0;
+  padding: var(--q-space-3) var(--q-space-4);
+  border: 1px solid var(--q-field-border);
+  border-radius: var(--q-radius-control);
+  background: var(--q-field);
+  color: var(--q-text-tertiary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.landing-bring__field::before {
+  display: inline-block;
+  width: 1.5px;
+  height: 1.15em;
+  margin-inline-end: 3px;
+  background: var(--q-royal-text);
+  content: '';
+  vertical-align: text-bottom;
+  animation: landing-caret 1.1s steps(1) infinite;
+}
+.landing-bring__begin { justify-self: start; }
+
+@keyframes landing-caret { 50% { opacity: 0; } }
+
+/* Together: the group a request was shared in, then its wall. */
+.landing-group { display: flex; align-items: center; gap: var(--q-space-3); margin: 0 0 var(--q-space-4); color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+
+/* Listen: the stillness of Remain with God, in the deep violet. */
+.landing-still { display: grid; justify-items: center; gap: var(--q-space-2); margin-block-start: var(--q-space-2); padding: var(--q-space-6); border-radius: var(--q-radius-surface); background: var(--q-canvas); text-align: center; }
+.landing-still__mark { color: var(--q-gold); }
+.landing-still__title { margin: var(--q-space-1) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.375rem; font-weight: 450; }
+.landing-still__body { max-width: 22rem; margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
+
+/* Remember and Respond: the testimony in the person's words, then the
+   question that turns an answer toward obedience. */
+.landing-testimony { display: grid; justify-items: start; gap: var(--q-space-2); padding: var(--q-space-4) var(--q-space-5); border-inline-start: 3px solid color-mix(in srgb, var(--q-gold) 70%, var(--q-card-border)); }
+.landing-testimony__text { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.125rem; font-style: italic; line-height: 1.5; }
+.landing-testimony__marked { margin: 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
+.landing-next { display: grid; gap: var(--q-space-3); padding: var(--q-space-4) var(--q-space-5); }
+.landing-next__title { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
+.landing-next__steps { display: flex; flex-wrap: wrap; gap: var(--q-space-2); margin: 0; padding: 0; list-style: none; }
+.landing-next__steps > .q-chip { cursor: default; }
+
+/* ── Carry: the rings beside the seven circles — one control ─────────────
+   (landing/LandingCircles.jsx). The rings are shared with About
    (components/circles/CircleRings.jsx; styles in formation.css). */
-.landing__circles { display: grid; align-items: center; gap: var(--q-space-10); }
+.landing__circles { display: grid; align-items: center; gap: var(--q-space-10); scroll-margin-block-start: var(--q-space-6); }
 .landing__rings { width: 100%; max-width: 20rem; margin-inline: auto; }
 
 @media (min-width: 900px) {
@@ -112,30 +227,28 @@ html.landing-root body { background: var(--q-canvas); }
 
 .landing__circles-hint { margin: var(--q-space-4) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
 
-/* The seven names stay an editorial list: a hairline under each, no cards. */
-.landing__circle-list { display: grid; gap: 0 var(--q-space-6); margin: var(--q-space-4) 0 0; padding: 0; list-style: none; }
-.landing__circle-list > li { border-block-end: 1px solid var(--q-border); }
+/* The seven names as soft cards, each in its circle's tone. */
+.landing__circle-list { display: grid; gap: var(--q-space-2); margin: var(--q-space-4) 0 0; padding: 0; list-style: none; }
 .landing__circle-option {
   display: flex;
   width: 100%;
-  min-height: 56px;
-  align-items: flex-start;
+  min-height: 60px;
+  align-items: center;
   gap: var(--q-space-3);
-  padding-block: var(--q-space-3);
-  padding-inline: var(--q-space-2) 0;
-  border: 0;
-  border-inline-start: 2px solid transparent;
-  border-radius: 0;
-  background: none;
+  padding: var(--q-space-3);
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
   color: inherit;
   text-align: start;
   cursor: pointer;
-  transition: border-color var(--q-motion-micro) var(--q-ease);
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease);
 }
-.landing__circle-option > svg { margin-block-start: 1px; }
+.landing__circle-option:hover,
+.landing__circle-option.is-active { background: var(--q-card-hover); }
 .landing__circle-option.is-active .landing__circle-name,
 .landing__circle-option:hover .landing__circle-name { color: var(--q-royal-text); }
-.landing__circle-option[aria-expanded="true"] { border-inline-start-color: var(--q-royal); }
+.landing__circle-option[aria-expanded="true"] { border-color: var(--q-selected-border); background: color-mix(in srgb, var(--q-royal) 5%, var(--q-surface)); }
 .landing__circle-option[aria-expanded="true"] .landing__circle-name { color: var(--q-royal-text); }
 .landing__circle-name { display: block; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; transition: color var(--q-motion-micro) var(--q-ease); }
 .landing__circle-desc { display: block; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.45; }
@@ -152,52 +265,37 @@ html.landing-root body { background: var(--q-canvas); }
 .landing__circle-panel .circle-teaching { animation: q-rise-in var(--q-motion-standard) var(--q-ease) both; }
 .landing__circle-panel.is-leaving { opacity: 0; transform: translateY(-4px); transition: opacity 140ms var(--q-ease), transform 140ms var(--q-ease); }
 
-@media (prefers-reduced-motion: reduce) {
-  .landing__circle-panel .circle-teaching { animation: none; }
-  .landing__circle-panel.is-leaving { opacity: 1; transform: none; transition: none; }
+/* ── The author's word: the About page's letter, folded ────────────────── */
+.landing-letter { max-width: 46rem; margin-inline: auto; padding: 0 var(--q-space-6); scroll-margin-block-start: var(--q-space-6); }
+.landing-letter__card > .landing-beat__label { margin-block-end: 0; }
+.landing-letter__quote { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-optical-sizing: auto; font-size: clamp(1.75rem, 4.5vw, 2.5rem); font-style: italic; font-weight: 450; letter-spacing: -0.01em; line-height: 1.18; text-wrap: balance; }
+.landing-letter__byline { display: flex; align-items: center; gap: var(--q-space-3); margin: var(--q-space-2) 0 var(--q-space-3); color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1.125rem; font-style: italic; }
+.landing-letter__portrait { width: 56px; height: 56px; }
+.landing-letter__initial { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; border-radius: 50%; background: var(--q-selected); color: var(--q-royal-text); font-family: var(--q-font-editorial); font-size: 1.5rem; font-style: normal; }
+.landing-letter__rest { display: grid; gap: var(--q-space-2); margin-block-start: var(--q-space-2); }
+.landing-letter__more,
+.landing-letter__rest { animation: q-rise-in var(--q-motion-standard) var(--q-ease) both; }
+.landing-letter__toggle { justify-self: start; margin-block-start: var(--q-space-3); margin-inline-start: calc(-1 * var(--q-space-3)); }
+.landing-letter__toggle > svg { transition: transform var(--q-motion-standard) var(--q-ease); }
+.landing-letter__toggle[aria-expanded="true"] > svg { transform: rotate(180deg); }
+
+/* ── Trust: the practical facts, then the questions ─────────────────────── */
+.landing-facts { max-width: 72rem; margin-inline: auto; padding: var(--q-space-20) var(--q-space-6) 0; }
+.landing-facts__list { display: grid; gap: var(--q-space-3); margin: var(--q-space-6) 0 0; padding: 0; list-style: none; }
+.landing-fact { display: flex; align-items: flex-start; gap: var(--q-space-3); padding: var(--q-space-4); border: 1px solid var(--q-card-border); border-radius: var(--q-radius-surface); background: var(--q-surface); box-shadow: var(--q-card-shadow); }
+.landing-fact__title { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; line-height: 1.35; }
+.landing-fact__desc { margin: 2px 0 0; color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.5; }
+
+@media (min-width: 560px) {
+  .landing-facts__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-/* How it works: three steps, numbered in the serif. */
-.landing__steps { margin: var(--q-space-6) 0 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
-.landing__steps > li { display: flex; align-items: baseline; gap: var(--q-space-5); padding-block: var(--q-space-5); border-block-end: 1px solid var(--q-border); }
-.landing__step-number { flex: 0 0 2rem; color: var(--q-gold-text); font-family: var(--q-font-editorial); font-size: 1.75rem; line-height: 1; }
-.landing__step-title { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.25rem; font-weight: 450; }
-.landing__step-desc { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
-
-/* Why Qetoret? — room to breathe: a gold eyebrow, the name explained in the
-   serif, one Rise Mark, the references beneath. */
-.landing__why > .rise-mark { margin-block-end: var(--q-space-5); }
-.landing__why-body { max-width: 40rem; margin: var(--q-space-4) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-optical-sizing: auto; font-size: clamp(1.25rem, 3vw, 1.5rem); line-height: 1.55; }
-.landing__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-5); margin: var(--q-space-2) 0 0; padding: 0; list-style: none; }
-
-/* Features: a quiet list, not a grid of cards. */
-.landing__features { display: grid; gap: 0 var(--q-space-8); margin: var(--q-space-6) 0 0; padding: 0; list-style: none; }
-.landing__features > li { display: flex; gap: var(--q-space-3); padding-block: var(--q-space-4); border-block-end: 1px solid var(--q-border); }
-.landing__features > li > svg { flex: 0 0 auto; margin-block-start: 2px; color: var(--q-royal-text); }
-.landing__feature-title { margin: 0; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
-.landing__feature-desc { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.55; }
-
-@media (min-width: 640px) {
-  .landing__features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-/* Praying with Scripture — the one deep-violet band (tokens remapped by
-   .q-immersive, so the primary button inverts by itself). */
-.landing__scripture { margin-block: var(--q-space-8); padding: var(--q-space-16) var(--q-space-6); background: var(--q-canvas); }
-.landing__scripture-inner { display: grid; max-width: 64rem; gap: var(--q-space-10); margin-inline: auto; }
-.landing__scripture .landing__heading { margin-block-start: var(--q-space-3); }
-
 @media (min-width: 900px) {
-  .landing__scripture-inner { grid-template-columns: 1.2fr 0.8fr; align-items: center; }
+  .landing-facts__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-.landing__scripture-list { margin: var(--q-space-3) 0 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
-.landing__scripture-list > li { display: grid; gap: 2px; padding-block: var(--q-space-3) var(--q-space-1); border-block-end: 1px solid var(--q-border); }
-.landing__scripture-point { color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; }
-
-/* FAQ */
-.landing__faq { margin-block-start: var(--q-space-4); border-block-start: 1px solid var(--q-border); }
-.landing__faq-item { border-block-end: 1px solid var(--q-border); }
+.landing-faq { max-width: 48rem; margin-inline: auto; padding: var(--q-space-20) var(--q-space-6); scroll-margin-block-start: var(--q-space-6); }
+.landing__faq { display: grid; gap: var(--q-space-2); margin-block-start: var(--q-space-6); }
+.landing__faq-item.is-open { border-color: var(--q-selected-border); }
 
 .landing__faq-question {
   display: flex;
@@ -206,7 +304,7 @@ html.landing-root body { background: var(--q-canvas); }
   align-items: center;
   justify-content: space-between;
   gap: var(--q-space-4);
-  padding-block: var(--q-space-4);
+  padding: var(--q-space-4) var(--q-space-5);
   color: var(--q-text);
   font-family: var(--q-font-editorial);
   font-size: 1.125rem;
@@ -214,16 +312,33 @@ html.landing-root body { background: var(--q-canvas); }
 }
 
 .landing__faq-question > svg { flex: 0 0 auto; color: var(--q-text-tertiary); transition: transform var(--q-motion-standard) var(--q-ease); }
-.landing__faq-question[aria-expanded="true"] > svg { transform: rotate(180deg); }
-.landing__faq-answer { margin: 0; padding-block-end: var(--q-space-5); padding-inline-end: var(--q-space-8); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.75; }
+.landing__faq-question[aria-expanded="true"] > svg { color: var(--q-royal-text); transform: rotate(180deg); }
+.landing__faq-answer { margin: 0; padding: 0 var(--q-space-5) var(--q-space-5); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.75; }
 
-/* The last invitation, and the footer. */
-.landing__final { display: flex; max-width: 40rem; flex-direction: column; align-items: center; margin-inline: auto; padding: var(--q-space-20) var(--q-space-6); border-block-start: 1px solid var(--q-border); text-align: center; }
-.landing__final-title { margin: var(--q-space-5) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
-.landing__promise { margin: var(--q-space-6) 0 0; color: var(--q-royal-text); font-family: var(--q-font-editorial); font-size: 1.125rem; }
+/* ── The last invitation, in the deep violet, and the footer ────────────── */
+.landing__final {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--q-space-20) var(--q-space-6);
+  background:
+    radial-gradient(50% 70% at 50% 100%, color-mix(in srgb, var(--q-gold) 16%, transparent), transparent 70%),
+    var(--q-canvas);
+  text-align: center;
+}
+.landing__final-title { max-width: 40rem; margin: var(--q-space-5) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
+.landing__litany { max-width: 40rem; margin: var(--q-space-10) 0 0; color: var(--q-gold-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.6; }
 
-.landing__footer { display: flex; max-width: 64rem; flex-direction: column; align-items: center; gap: var(--q-space-3); margin-inline: auto; padding: var(--q-space-8) var(--q-space-6); border-block-start: 1px solid var(--q-border); text-align: center; }
+.landing__footer { display: flex; max-width: 64rem; flex-direction: column; align-items: center; gap: var(--q-space-3); margin-inline: auto; padding: var(--q-space-8) var(--q-space-6); text-align: center; }
 
 @media (min-width: 768px) {
   .landing__footer { flex-direction: row; justify-content: space-between; text-align: start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-bring__field::before { animation: none; }
+  .landing__circle-panel .circle-teaching,
+  .landing-letter__more,
+  .landing-letter__rest { animation: none; }
+  .landing__circle-panel.is-leaving { opacity: 1; transform: none; transition: none; }
 }

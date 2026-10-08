@@ -55,7 +55,7 @@ describe('content-quality protections', () => {
   it('catalogues all main surfaces with stable, unique ids and real German text', async () => {
     const entries = await loadCatalogue('de');
     expect(new Set(entries.map((e) => e.id)).size).toBe(entries.length);
-    expect(entries.find((e) => e.id === 'landing:content.features[3].desc').text).toContain('erhörten Gebete');
+    expect(entries.find((e) => e.id === 'landing:remember.answered').text).toContain('als erhört markiert');
     expect(entries.some((e) => e.surface.startsWith('gospel/') && e.text)).toBe(true);
     expect(entries.find((e) => e.id === 'plans/preparing21:days[0].reflection').text).toContain('Asaf');
   });

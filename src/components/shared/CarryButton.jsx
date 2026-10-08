@@ -11,8 +11,12 @@ import RiseMark from './RiseMark';
 // variant: 'primary' (a prayer's own page), 'quiet' (a row in a list) or
 // 'icon' (just the mark, where the words beside it already say who carries it —
 // the label stays for assistive tech and as the tooltip).
-export default function CarryButton({ carrying, busy = false, onToggle, lang, variant = 'primary', className = '', ...props }) {
-  const label = t(lang, carrying ? 'carryingLabel' : 'carryThisPrayer');
+// `labels` ({ carry, carrying }) replaces the app's words where its dictionary
+// is not loaded — the public landing page brings its own.
+export default function CarryButton({ carrying, busy = false, onToggle, lang, labels = null, variant = 'primary', className = '', ...props }) {
+  const label = labels
+    ? labels[carrying ? 'carrying' : 'carry']
+    : t(lang, carrying ? 'carryingLabel' : 'carryThisPrayer');
   const iconOnly = variant === 'icon';
 
   // The lift plays only when the reader starts carrying — not on load, and not

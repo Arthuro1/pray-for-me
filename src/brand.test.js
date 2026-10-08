@@ -38,9 +38,10 @@ describe('the public brand is Qetoret', () => {
       ...filesUnder('src/pages/landing/locales', (p) => p.endsWith('.js')),
     ];
     expect(locales.length).toBe(32);
-    // The one exception: the author's letter on the About page tells how the
-    // app came by its name, so it names the old one. Nothing else may.
-    const withoutAuthorLetter = (source) => source.replace(/^\s*"aboutStoryBody":.*$/m, '');
+    // The one exception: the author's letter tells how the app came by its
+    // name, so it names the old one — on the About page (`aboutStoryBody`) and,
+    // in the same words, on the landing page (`letter.storyBody`). Nothing else may.
+    const withoutAuthorLetter = (source) => source.replace(/^\s*"(aboutStoryBody|storyBody)":.*$/m, '');
     for (const path of locales) expect(withoutAuthorLetter(read(path)), path).not.toMatch(/Praystead/);
   });
 

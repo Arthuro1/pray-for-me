@@ -2,89 +2,7 @@
 export default {
   "content": {
     "signIn": "Iniciar sesión",
-    "badge": "Diario de oración",
     "howItWorks": "Ver cómo funciona",
-    "featuresTitle": "Un solo lugar para tu vida de oración",
-    "featuresSub": "Tus oraciones, ritmos y testimonios, juntos.",
-    "features": [
-      {
-        "icon": "Users",
-        "color": "#0d9488",
-        "title": "Orar juntos",
-        "desc": "Comparte una petición con amigos o con un grupo, y oren unos por otros."
-      },
-      {
-        "icon": "BookOpen",
-        "color": "#7c5cfc",
-        "title": "Diario de oración",
-        "desc": "Anota peticiones por ti y por otros, y añade novedades con el tiempo."
-      },
-      {
-        "icon": "Calendar",
-        "color": "#059669",
-        "title": "Ritmos de oración",
-        "desc": "Elige cuándo vuelve cada oración: una vez, cada día o en días concretos."
-      },
-      {
-        "icon": "CheckCircle",
-        "color": "#0891b2",
-        "title": "Testimonios",
-        "desc": "Guarda las oraciones respondidas y los testimonios como memoria de la fidelidad de Dios."
-      },
-      {
-        "icon": "Sprout",
-        "color": "#65a30d",
-        "title": "Crecer en la oración",
-        "desc": "Planes guiados, guías de oración y lecturas breves basadas en la Escritura."
-      },
-      {
-        "icon": "Bell",
-        "color": "#ea580c",
-        "title": "Recordatorios discretos",
-        "desc": "Un recordatorio diario para orar, y otro para preguntar por las personas que llevas en oración."
-      },
-      {
-        "icon": "Smartphone",
-        "color": "#4f46e5",
-        "title": "Instálala donde quieras",
-        "desc": "Descarga la aplicación para Android en Google Play, o instálala desde tu navegador en tu teléfono o computadora. También funciona sin conexión."
-      },
-      {
-        "icon": "Globe",
-        "color": "#db2777",
-        "title": "16 idiomas",
-        "desc": "Cambia de idioma cuando quieras."
-      },
-      {
-        "icon": "Lock",
-        "color": "#6d28d9",
-        "title": "Privada por defecto",
-        "desc": "Las oraciones privadas están cifradas de extremo a extremo. Tú decides qué compartir."
-      }
-    ],
-    "stepsTitle": "Cómo funciona",
-    "steps": [
-      {
-        "emoji": "✍️",
-        "title": "Presenta una oración",
-        "desc": "Unas pocas palabras bastan. Puedes añadir detalles después."
-      },
-      {
-        "emoji": "🙏",
-        "title": "Vuelve a orar",
-        "desc": "Cada oración vuelve los días que eliges, para que regreses a ella en oración."
-      },
-      {
-        "emoji": "🎉",
-        "title": "Escribe un testimonio",
-        "desc": "Cuando algo suceda, escribe cómo has visto a Dios obrar."
-      }
-    ],
-    "calloutBadge": "Sugerencias de versículos",
-    "calloutTitle": "Ora con la Palabra",
-    "calloutDesc": "Encuentra pasajes bíblicos relacionados con tu oración y léelos en la app.",
-    "calloutDisclaimer": "Las sugerencias son solo un punto de partida. Lee cada pasaje en su contexto.",
-    "calloutPreviewLabel": "Sugerencias de versículos",
     "faqTitle": "Preguntas frecuentes",
     "faqs": [
       {
@@ -96,8 +14,20 @@ export default {
         "a": "No. Tu primera oración no necesita cuenta y se queda en este dispositivo. Con una cuenta gratuita guardas tus oraciones y las usas en todos tus dispositivos."
       },
       {
+        "q": "¿La IA habla en nombre de Dios?",
+        "a": "No. La IA es una ayuda opcional. Si se lo pides, puede sugerir referencias bíblicas o palabras con las que podrías orar. Nunca profetiza, nunca declara respondida una oración y nunca reemplaza las Escrituras. Tú decides qué se aplica."
+      },
+      {
         "q": "¿Cómo funcionan las sugerencias de versículos?",
         "a": "Cuando pides sugerencias, el título y los detalles de la oración se envían a un servicio de IA, que propone pasajes bíblicos. Tú lees cada pasaje y disciernes qué se aplica."
+      },
+      {
+        "q": "¿Qetoret es una red social?",
+        "a": "No. No hay feeds, «me gusta» ni rankings. Los grupos existen para que compartas una petición con personas de confianza y oren unos por otros."
+      },
+      {
+        "q": "¿Para qué iglesias es Qetoret?",
+        "a": "Para cristianos de todas las tradiciones de la Iglesia. Qetoret te ayuda a orar; nunca reemplaza a tu iglesia local, a sus pastores ni a su comunión."
       },
       {
         "q": "¿Qué idiomas están disponibles?",
@@ -111,59 +41,57 @@ export default {
     "ctaTitle": "¿Qué hay en tu corazón hoy?",
     "footerBuilt": "Hecho con fe · Código abierto · Licencia MIT"
   },
-  "explore": {
-    "more": "Explorar todas las funciones",
-    "less": "Mostrar menos"
-  },
   "beginLabel": "Comienza con una oración",
   "playStore": {
-    "announcement": "Ya disponible en Google Play",
     "cta": "Descárgala en Google Play"
   },
   "languageMenuLabel": "Idioma",
   "translationInProgress": "Traducción en curso",
   "heroReassurance": "No necesitas una cuenta. Tu primera oración se queda en este dispositivo, a menos que decidas guardarla.",
   "hero": {
-    "title": "Construye una vida de oración delante de Dios.",
-    "promise": "Que tus oraciones se eleven.",
-    "subtitle": "Presenta a Dios lo que hay en tu corazón. Lleva en oración a tu familia, tus amigos, tu iglesia y las naciones. Crea ritmos fieles de oración y recuerda su fidelidad."
+    "gloss": "«incienso» en hebreo",
+    "title": "Que tus oraciones se eleven.",
+    "subtitle": "Construye una vida de oración delante de Dios: por ti, tu familia, la Iglesia y las naciones."
   },
-  "samplePrayerTitle": "Paz para nuestra familia",
-  "scripturePreviewPoints": [
-    "La paz que supera todo entendimiento",
-    "Confiar en el tiempo de Dios"
-  ],
-  "scriptureReferences": [
-    "Filipenses 4:7",
-    "Isaías 40:31"
-  ],
   "todayLabel": "Hoy",
   "prayNowLabel": "Orar ahora",
+  "samplePrayerTitle": "Paz para nuestra familia",
   "preview": {
     "altarToday": "Tu altar hoy",
-    "carriedLabel": "En oración desde marzo de 2025",
-    "carriedTitle": "Sanidad para papá",
-    "rememberLabel": "Testimonio",
-    "rememberText": "Recuerda lo que Dios ha hecho."
+    "rows": [
+      {
+        "title": "Sabiduría para los líderes de nuestra ciudad",
+        "meta": "Cada lunes"
+      },
+      {
+        "title": "La evangelización de nuestra iglesia",
+        "meta": "Cada domingo"
+      }
+    ]
   },
   "movements": [
-    {
-      "title": "Presentar",
-      "desc": "Presenta a Dios lo que hay en tu corazón, con tus propias palabras."
-    },
-    {
-      "title": "Interceder",
-      "desc": "Intercede por las personas y los lugares que Dios te ha confiado."
-    },
-    {
-      "title": "Volver",
-      "desc": "Crea ritmos que te traigan de vuelta a la oración, día tras día."
-    },
-    {
-      "title": "Recordar",
-      "desc": "Escribe testimonios y recuerda la fidelidad de Dios."
-    }
+    "Venir",
+    "Presentar",
+    "Interceder",
+    "Volver",
+    "Escuchar",
+    "Responder",
+    "Recordar"
   ],
+  "come": {
+    "title": "Acércate a Dios por medio de Cristo",
+    "body": "Zacarías entró en el templo para ofrecer el incienso mientras el pueblo oraba afuera. Hoy el camino al Padre está abierto para todo creyente por medio de Jesucristo, nuestro gran sumo sacerdote.",
+    "nameTitle": "El nombre",
+    "nameBody": "Qetoret es la palabra hebrea para el incienso que se ofrecía delante de Dios. En la Escritura, el incienso que sube se convierte en una imagen de las oraciones del pueblo de Dios. Qetoret toma su nombre de esta imagen: una vida de oración presentada continuamente delante de Dios.",
+    "christTitle": "Por medio de Cristo",
+    "christBody": "Qetoret es una herramienta para la oración, nunca un intermediario. Venimos al Padre por medio de Jesucristo, nuestro gran sumo sacerdote. En él, los creyentes son llamados real sacerdocio: invitados a acercarse, a interceder por otros y a vivir como sus testigos — bajo su autoridad, nunca por encima de los demás."
+  },
+  "bring": {
+    "title": "Presenta lo que hay en tu corazón",
+    "body": "No necesitas palabras perfectas. Una necesidad, un temor, una acción de gracias, un nombre: unas líneas bastan, y puedes añadir detalles después.",
+    "question": "¿Qué hay en tu corazón?",
+    "placeholder": "Unas pocas palabras bastan…"
+  },
   "circles": {
     "title": "De tu corazón a las naciones",
     "subtitle": "La oración se amplía con el tiempo. No son niveles que alcanzar, sino las personas y los lugares que puedes llevar delante de Dios.",
@@ -199,16 +127,77 @@ export default {
       }
     ]
   },
-  "why": {
-    "title": "¿Por qué Qetoret?",
-    "body": "Qetoret es la palabra hebrea para el incienso que se ofrecía delante de Dios. En la Escritura, el incienso que sube se convierte en una imagen de las oraciones del pueblo de Dios. Qetoret toma su nombre de esta imagen: una vida de oración presentada continuamente delante de Dios.",
-    "referencesLabel": "Léelo en la Escritura",
-    "references": [
-      "Salmo 141:2",
-      "Apocalipsis 5:8",
-      "Apocalipsis 8:3-4",
-      "Lucas 1:5-25"
-    ],
-    "note": "Qetoret es una herramienta para la oración, nunca un intermediario. Venimos al Padre por medio de Jesucristo."
+  "together": {
+    "label": "Juntos",
+    "title": "Unos por otros en oración",
+    "body": "Mientras Zacarías servía en el altar, el pueblo oraba afuera. Comparte una petición con amigos o con un grupo, y oren unos por otros. Sin feeds, sin «me gusta», sin rankings.",
+    "group": "Grupo en casa",
+    "request": "Sabiduría para un nuevo trabajo",
+    "answeredRequest": "Un regreso seguro a casa",
+    "answered": "Respondida",
+    "carry": "Llevar esta oración",
+    "carrying": "La llevas"
+  },
+  "rhythm": {
+    "title": "Vuelve, mañana y tarde",
+    "body": "El incienso se ofrecía cada mañana y cada tarde. Elige cuándo vuelve cada oración, sigue un plan guiado y ora con las Escrituras. Un día perdido nunca es un fracaso: siempre puedes volver.",
+    "planTitle": "21 días de oración por mi familia",
+    "planDay": "Día 4 de 21",
+    "rowTitle": "Sabiduría para mis decisiones",
+    "rowMeta": "Cada mañana",
+    "stillTitle": "Permanecer con Dios",
+    "stillBody": "Tómate un momento para estar quieto delante de Él. Nada que leer, nada que hacer."
+  },
+  "remember": {
+    "title": "Recuerda lo que Dios ha hecho",
+    "body": "Zacarías había llevado su oración durante mucho tiempo. Qetoret recuerda cuánto tiempo llevas la tuya. Cuando veas a Dios obrar, registra un testimonio y pregúntate si la respuesta te llama a un siguiente paso de fidelidad.",
+    "prayerTitle": "Sanidad para papá",
+    "carriedSince": "En oración desde marzo de 2025",
+    "testimonyLabel": "Testimonio",
+    "testimony": "Papá ya está en casa. Damos gracias a Dios por los médicos y por todos los que oraron con nosotros.",
+    "answered": "Marcaste esta oración como respondida.",
+    "nextTitle": "¿Hay un siguiente paso de fidelidad?",
+    "nextSteps": [
+      "Animar a alguien",
+      "Dar gracias",
+      "Servir"
+    ]
+  },
+  "letter": {
+    "title": "Unas palabras personales",
+    "quote": "Tu oración no es en vano.",
+    "storyBody": "Hace un tiempo me comprometí a orar por una hermana en la fe que estaba pasando por momentos difíciles. Con el tiempo y las ocupaciones, me di cuenta de que no lograba orar por ella con constancia. De ahí nació la idea de una aplicación que me ayudara a recordar los motivos de oración de unos y otros, para orar con fidelidad. Al principio se llamaba Pray4Me, y luego Praystead.\n\nUnos tres meses después, mientras meditaba en mi Biblia, el Señor llamó mi atención sobre la historia de Zacarías. Él y Elisabet eran irreprensibles, pero seguían sin hijos en su vejez. Un día, cuando Dios lo había escogido para ofrecer el incienso en el Templo, un ángel le anunció que su oración había sido oída. Sin duda había llevado esa oración durante mucho tiempo. No fue en vano: Dios la había escuchado y, en el momento que Él consideró oportuno, respondió más allá de lo que esperaba.\n\nEsto me animó a perseverar en la oración, aun cuando una situación se prolonga. También me recordó mi papel: en Cristo somos un real sacerdocio, llamados a ponernos en la brecha por quienes nos rodean. Ese día también recibí una visión más clara para la aplicación: Praystead pasó a llamarse Qetoret y fue completamente rediseñada para ayudarnos, como sacerdotes reales, a presentar delante de Dios nuestros motivos de oración y los de los demás.\n\nQuizás tú también llevas mucho tiempo cargando una oración, por ti o por alguien a quien amas. Quiero animarte a perseverar: tu oración no es en vano. El Señor la escucha y, en el momento que Él considere oportuno, puede responder mucho más allá de lo que esperas, porque la oración eficaz del justo puede mucho.",
+    "prayer": "Padre, ayúdanos a permanecer fieles en la oración.",
+    "readMore": "Leer toda la carta",
+    "readLess": "Mostrar menos"
+  },
+  "facts": {
+    "title": "Privado, sencillo y gratuito",
+    "items": [
+      {
+        "title": "Privada por defecto",
+        "desc": "Las oraciones privadas están cifradas de extremo a extremo. Tú decides qué compartir."
+      },
+      {
+        "title": "Funciona sin conexión",
+        "desc": "Ora sin conexión. Todo se sincroniza cuando vuelves a estar en línea."
+      },
+      {
+        "title": "Instálala donde quieras",
+        "desc": "La app de Android en Google Play, o instálala desde tu navegador en el teléfono o la computadora."
+      },
+      {
+        "title": "16 idiomas",
+        "desc": "Cambia de idioma cuando quieras."
+      },
+      {
+        "title": "Recordatorios discretos",
+        "desc": "Un recordatorio diario para orar, y otro para preguntar por las personas que llevas en oración."
+      },
+      {
+        "title": "Gratuito y de código abierto",
+        "desc": "Sin suscripción y sin anuncios."
+      }
+    ]
   }
 };

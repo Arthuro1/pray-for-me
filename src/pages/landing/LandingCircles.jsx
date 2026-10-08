@@ -1,23 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import { CIRCLES } from '../../lib/circles';
-import CircleGlyph from '../../components/shared/CircleGlyph';
+import { CIRCLE_ICONS } from '../../components/shared/circleIcons';
 import CircleRings from '../../components/circles/CircleRings';
 import { reducedMotion, useRingReveal } from '../../hooks/useRingReveal';
 import CircleTeaching from '../../components/circles/CircleTeaching';
 import { useCircleTeaching } from '../../hooks/useCircleTeaching';
 import { EVENTS, track } from '../../lib/analytics';
 import ScriptureRefButton from '../../components/circles/ScriptureRefButton';
+import { BeatLabel } from './LandingBeat';
 
 // The seven Intercession Circles on the public page: the ring model and the
 // list are ONE control. Hovering or focusing a circle previews its reach on the
 // rings; choosing one opens its teaching beneath, without leaving the page. The
 // ordered list is the accessible control; the rings (CircleRings) are a drawing
-// of the same state, so a screen reader hears each circle once.
+// of the same state, so a screen reader hears each circle once. Each circle
+// wears its icon tile in its own tone, as on a prayer's row inside the app.
 
 const PANEL_ID = 'landing-circle-panel';
 const SWAP_MS = 140; // fade the old circle's words out before the new ones rise in
 
-export default function LandingCircles({ lang, copy, onBeginPrayer }) {
+export default function LandingCircles({ lang, label, copy, onBeginPrayer }) {
   const teaching = useCircleTeaching(lang);
   const sectionRef = useRef(null);
   const panelRef = useRef(null);
@@ -68,11 +70,12 @@ export default function LandingCircles({ lang, copy, onBeginPrayer }) {
   const shownIndex = CIRCLES.indexOf(shown);
 
   return (
-    <section ref={sectionRef} className="landing__band landing__circles" aria-labelledby="landing-circles-title">
+    <section ref={sectionRef} id="carry" className="landing__circles" aria-labelledby="landing-circles-title">
       <div className="landing__rings">
         <CircleRings active={active} stage={stage} onPreview={setPreview} onSelect={select} />
       </div>
       <div>
+        <BeatLabel>{label}</BeatLabel>
         <h2 id="landing-circles-title" className="landing__heading">{copy.title}</h2>
         <p className="landing__text">{copy.subtitle}</p>
         {teaching && <p className="landing__circles-hint">{teaching.ui.choose}</p>}
@@ -80,6 +83,7 @@ export default function LandingCircles({ lang, copy, onBeginPrayer }) {
           {CIRCLES.map((circle, i) => {
             const item = copy.items[i];
             const isSelected = selected === circle;
+            const Icon = CIRCLE_ICONS[circle];
             return (
               <li key={circle}>
                 <button
@@ -93,7 +97,7 @@ export default function LandingCircles({ lang, copy, onBeginPrayer }) {
                   onBlur={() => setPreview(null)}
                   className={`landing__circle-option pressable${active === circle ? ' is-active' : ''}`}
                 >
-                  <CircleGlyph circle={circle} size={24} selected={isSelected} />
+                  <span className={`icon-tile tone-${circle}`} aria-hidden="true"><Icon size={18} strokeWidth={1.8} /></span>
                   <span className="min-w-0">
                     <span className="landing__circle-name">{item.name}</span>
                     <span className="landing__circle-desc">{item.desc}</span>
