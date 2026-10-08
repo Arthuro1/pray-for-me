@@ -138,15 +138,11 @@ describe('PlansTab', () => {
 describe('PlansTab — Intercession Circles', () => {
   const nameOf = (circle) => t(lang, circleLabelKey(circle));
 
-  // Plans are browsed by what they are for; the circles are a second, quieter
-  // way in — one folded row, not seven doors high on the page.
-  it('folds the circles behind one row that opens onto the seven circle pages', () => {
+  // Plans are browsed by what they are for; the circles are the second way
+  // in — one open row of seven doors at the top, never behind a fold.
+  it('opens the page with one row of doors onto the seven circle pages', () => {
     renderPlans();
-    expect(screen.queryByRole('navigation', { name: t(lang, 'exploreByCircle') })).toBeNull();
-    const toggle = screen.getByRole('button', { name: t(lang, 'exploreByCircle') });
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-
-    fireEvent.click(toggle);
+    expect(screen.queryByRole('button', { name: t(lang, 'exploreByCircle') })).toBeNull();
     const explore = screen.getByRole('navigation', { name: t(lang, 'exploreByCircle') });
     const links = within(explore).getAllByRole('link');
     expect(links.map((link) => link.textContent)).toEqual(CIRCLES.map(nameOf));
@@ -156,8 +152,9 @@ describe('PlansTab — Intercession Circles', () => {
 
   it('names no circle on catalogue rows', () => {
     renderPlans();
-    const catalogue = document.querySelector('.phase-content');
-    for (const circle of CIRCLES) expect(within(catalogue).queryByText(nameOf(circle)), circle).toBeNull();
+    for (const list of document.querySelectorAll('.plan-list')) {
+      for (const circle of CIRCLES) expect(within(list).queryByText(nameOf(circle)), circle).toBeNull();
+    }
   });
 
   it('says once, in a plan\'s details, where it forms prayer — never every circle it touches', () => {

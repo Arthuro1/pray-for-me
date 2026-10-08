@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 //
-// The intercession queue: only explicitly-carried requests enter it, filters
-// appear only with more than one source, sessions resume with the first
+// The intercession queue: only explicitly-carried requests enter it, a circle
+// row appears only once carried prayers sit in more than one place, sessions
+// resume with the first
 // unfinished request, and completion updates the UI immediately (optimistic,
 // via the ordinary per-prayer completion log — offline included).
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -51,66 +52,50 @@ describe('IntercessionQueue — membership', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('counts only committed requests, and offers no filter with a single source', () => {
-    usePrayerStore.setState({ prayers: [base('a'), forOther('b')] });
-    render(<IntercessionQueue lang={lang} />);
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
-    expect(screen.queryByRole('button', { name: new RegExp(t(lang, 'filterLabel')) })).toBeNull();
-    expect(screen.queryByText(t(lang, 'srcGroups'))).toBeNull();
-  });
-
-  it('folds source filters behind one Filter, without touching completions', () => {
-    usePrayerStore.setState({ prayers: [forOther('b'), saved('c')] });
+  it('counts only committed requests, with nothing to configure before praying', () => {
+    usePrayerStore.setState({ prayers: [base('a'), forOther('b'), saved('c')] });
     render(<IntercessionQueue lang={lang} />);
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 2 }))).toBeTruthy();
-    // Praying needs no setup: nothing to configure is in view.
-    expect(screen.queryByText(t(lang, 'srcGroups'))).toBeNull();
-    const toggle = filterToggle();
-    expect(toggle.getAttribute('aria-expanded')).toBe('false');
-
-    fireEvent.click(toggle);
-    fireEvent.click(screen.getByText(t(lang, 'srcGroups')));
-    expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
-    // Folded again, the Filter still says what is narrowing the walk.
-    fireEvent.click(filterToggle());
-    expect(filterToggle().textContent).toBe(`${t(lang, 'filterLabel')} · ${t(lang, 'srcGroups')}`);
-    expect(usePrayerStore.getState().completions).toEqual({});
+    // No source switch and no folded Filter: each request names its group.
+    expect(screen.queryByRole('button', { name: new RegExp(t(lang, 'filterLabel')) })).toBeNull();
+    expect(screen.queryByText(t(lang, 'srcPersonal'))).toBeNull();
+    expect(screen.queryByRole('group', { name: t(lang, 'circleFieldLabel') })).toBeNull();
   });
 });
 
-const filterToggle = () => screen.getByRole('button', { name: new RegExp(t(lang, 'filterLabel')) });
-
 describe('IntercessionQueue — by the carrier’s own circles', () => {
   const placed = (id, circle) => ({ ...saved(id), circle });
-  const chip = (name) => screen.getByRole('button', { name });
+  const circleRow = () => screen.getByRole('group', { name: t(lang, 'circleFieldLabel') });
+  const chip = (name) => within(circleRow()).getByRole('button', { name });
 
-  it('offers no circle filter until carried prayers are placed', () => {
+  it('offers no circle row until carried prayers are placed', () => {
     usePrayerStore.setState({ prayers: [saved('a'), forOther('b')] });
     render(<IntercessionQueue lang={lang} />);
-    fireEvent.click(filterToggle());
     expect(screen.queryByRole('group', { name: t(lang, 'circleFieldLabel') })).toBeNull();
   });
 
-  it('narrows what the session walks to one circle, and back', () => {
+  it('shows All and the circles in use in one visible row that narrows the walk, and back', () => {
     usePrayerStore.setState({ prayers: [placed('a', 'people'), placed('b', 'nations'), saved('c')] });
     render(<IntercessionQueue lang={lang} />);
-    // The circles wait behind the one Filter.
-    expect(screen.queryByRole('group', { name: t(lang, 'circleFieldLabel') })).toBeNull();
-    fireEvent.click(filterToggle());
-    expect(screen.getByRole('group', { name: t(lang, 'circleFieldLabel') })).toBeTruthy();
+    // Visible straight away — no fold to open first.
+    expect(within(circleRow()).getAllByRole('button').map((b) => b.textContent))
+      .toEqual([t(lang, 'all'), t(lang, 'circle_people'), t(lang, 'circle_nations')]);
+    expect(chip(t(lang, 'all')).getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
 
     fireEvent.click(chip(t(lang, 'circle_nations')));
     expect(chip(t(lang, 'circle_nations')).getAttribute('aria-pressed')).toBe('true');
+    expect(chip(t(lang, 'all')).getAttribute('aria-pressed')).toBe('false');
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 1 }))).toBeTruthy();
     fireEvent.click(screen.getByText(t(lang, 'prayNow')));
     expect(screen.getByText('Sujet b')).toBeTruthy();
     fireEvent.click(screen.getByLabelText(t(lang, 'close')));
 
-    // "All" is said once (by the source switch): a pressed circle toggles off.
-    expect(within(screen.getByRole('group', { name: t(lang, 'circleFieldLabel') })).queryByRole('button', { name: t(lang, 'all') })).toBeNull();
+    // A pressed circle toggles back to All; so does All itself.
     fireEvent.click(chip(t(lang, 'circle_nations')));
-    expect(chip(t(lang, 'circle_nations')).getAttribute('aria-pressed')).toBe('false');
+    expect(chip(t(lang, 'all')).getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(chip(t(lang, 'circle_people')));
+    fireEvent.click(chip(t(lang, 'all')));
     expect(screen.getByText(t(lang, 'intercessionRemaining', { n: 3 }))).toBeTruthy();
     expect(usePrayerStore.getState().completions).toEqual({});
   });

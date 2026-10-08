@@ -3,7 +3,7 @@
 // the ordinary per-prayer completion records, so filters can never corrupt them.
 import { describe, it, expect } from 'vitest';
 import {
-  intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, queueCircles, filterQueueByCircle, remainingInQueue,
+  intercessionQueue, dueIntercessionQueue, queueCircles, filterQueueByCircle, remainingInQueue,
 } from './intercession';
 
 const own = (id) => ({ id, status: 'active', for_other: false });
@@ -27,21 +27,6 @@ describe('intercessionQueue — explicit commitments only', () => {
 
   it('is empty for a user with only ordinary personal prayers (Grace never sees it)', () => {
     expect(intercessionQueue([own('a'), own('b')])).toEqual([]);
-  });
-});
-
-describe('queueSources / filterQueue', () => {
-  it('reports a single source when only one kind feeds the queue — no filters needed', () => {
-    expect(queueSources([forOther('b')]).count).toBe(1);
-    expect(queueSources([saved('c')]).count).toBe(1);
-    expect(queueSources([forOther('b'), saved('c')]).count).toBe(2);
-  });
-
-  it('filters by source without touching the prayers themselves', () => {
-    const queue = [forOther('b'), saved('c')];
-    expect(filterQueue(queue, 'personal').map((p) => p.id)).toEqual(['b']);
-    expect(filterQueue(queue, 'groups').map((p) => p.id)).toEqual(['c']);
-    expect(filterQueue(queue, 'all')).toEqual(queue);
   });
 });
 

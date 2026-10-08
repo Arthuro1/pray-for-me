@@ -1,7 +1,7 @@
 /* Together — praying with others. Not a feed: a shared place of intercession.
-   Groups, people and requests are rows on the page divided by hairlines; the
-   only filled action is the one that prays. Layout only; colour, type and
-   controls come from tokens and primitives. */
+   Groups, people and requests each sit on a soft card of their own; the only
+   filled action is the one that prays. Layout only; colour, type and controls
+   come from tokens and primitives. */
 
 /* ── Sections and rows ──────────────────────────────────────────────────── */
 .together-section { margin-block-end: var(--q-space-10); }
@@ -9,8 +9,12 @@
 
 .together-list { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
 
+/* A list of cards: spaced by a gap, not divided by rules. */
+.together-list--cards { display: grid; gap: var(--q-space-2); border: 0; }
+
 @media (min-width: 768px) {
   .together-list--split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--q-space-8); }
+  .together-list--cards.together-list--split { column-gap: var(--q-space-3); }
 }
 
 .together-row {
@@ -27,6 +31,8 @@
 
 button.together-row { transition: background-color var(--q-motion-micro) var(--q-ease); }
 button.together-row:hover { background: var(--q-hover); }
+.together-row.q-card { padding-inline: var(--q-space-4); border: 1px solid var(--q-card-border); }
+button.together-row.q-card:hover { border-color: var(--q-border-strong); background: var(--q-card-hover); }
 
 .together-row__body { min-width: 0; flex: 1 1 auto; }
 .together-row__name { display: block; overflow: hidden; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
@@ -64,13 +70,12 @@ button.together-row:hover { background: var(--q-hover); }
 
 /* ── Prayers you're carrying ────────────────────────────────────────────── */
 .carried-queue { margin-block-end: var(--q-space-10); }
+.carried-queue__card { display: grid; gap: var(--q-space-4); margin-block-start: var(--q-space-3); padding: var(--q-space-5); }
 .carried-queue__status { display: flex; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text-secondary); font-size: 0.9375rem; }
 .carried-queue__status svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
-.carried-queue__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); margin-block-start: var(--q-space-4); }
-.carried-queue__remaining { color: var(--q-text-tertiary); font-size: var(--q-type-meta); }
-.carried-queue__filter { margin-block-start: var(--q-space-1); }
-.carried-queue__filters { display: grid; gap: var(--q-space-3); padding-block: var(--q-space-2) var(--q-space-1); }
-.carried-queue__all { margin-block-start: var(--q-space-3); }
+.carried-queue__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); }
+.carried-queue__remaining { color: var(--q-text-secondary); font-size: 0.9375rem; }
+.carried-queue__all { margin-block: calc(-1 * var(--q-space-2)); }
 .carried-queue__list { margin: 0; padding: 0; list-style: none; }
 
 .carried-queue__item {
@@ -120,11 +125,15 @@ button.together-row:hover { background: var(--q-hover); }
 .together-status > svg { flex: 0 0 auto; color: var(--q-royal-text); }
 
 .together-plans { margin-block-end: var(--q-space-8); }
+/* A plan's name and status wrap rather than being cut short beside its Join
+   button. */
+.together-plans .together-row__name,
+.together-plans .together-row__meta { white-space: normal; overflow-wrap: anywhere; }
 
 .together-tabs { display: flex; width: 100%; margin-block-end: var(--q-space-5); }
 .together-tabs button { flex: 1 1 0; min-height: 44px; }
 
-.together-tools { display: grid; gap: var(--q-space-3); margin-block-end: var(--q-space-4); }
+.together-tools { margin-block-end: var(--q-space-4); }
 .together-new { margin-block-end: var(--q-space-6); }
 
 @media (max-width: 480px) {
@@ -132,13 +141,16 @@ button.together-row:hover { background: var(--q-hover); }
 }
 
 /* ── A request on the wall ──────────────────────────────────────────────── */
-.together-wall { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
+.together-wall { display: grid; gap: var(--q-space-3); margin: 0; padding: 0; list-style: none; }
 
 .together-prayer {
   position: relative;
-  padding-block: var(--q-space-5) var(--q-space-3);
-  border-block-end: 1px solid var(--q-border);
+  padding: var(--q-space-4) var(--q-space-5) var(--q-space-2);
 }
+
+/* An answered request keeps its card, marked by a thin gold line on its
+   starting edge — remembrance, never a strike-through. */
+.together-prayer--answered { border-inline-start: 3px solid color-mix(in srgb, var(--q-gold) 70%, var(--q-card-border)); }
 
 .together-prayer__author {
   display: flex;
@@ -156,7 +168,7 @@ button.together-row:hover { background: var(--q-hover); }
 .together-prayer__open::after { position: absolute; inset: 0; content: ''; }
 .together-prayer__open:focus-visible { outline: none; }
 .together-prayer:has(.together-prayer__open:focus-visible) { outline: 2px solid var(--q-focus); outline-offset: 2px; }
-.together-prayer:hover { background: var(--q-hover); }
+.together-prayer:hover { background: var(--q-card-hover); }
 
 .together-prayer__title {
   display: block;

@@ -112,11 +112,37 @@
 .plan-detail__sub { margin: var(--q-space-2) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.5; }
 .plan-detail__circle { display: inline-flex; align-items: center; gap: var(--q-space-2); margin: var(--q-space-3) 0 0; color: var(--q-gold-text); font-size: var(--q-type-meta); font-weight: 600; }
 
-/* "Explore plans by circle" on the Plans page (folded until asked for) and the
-   circle switcher on a circle page: seven doors in the chip voice, never a
-   second catalogue. */
+/* The circle switcher on a circle page: seven doors in the chip voice. */
 .circle-links { margin: 0; padding: 0; list-style: none; }
-.plan-circles { padding-block: var(--q-space-2) var(--q-space-4); }
+
+/* "Explore plans by circle", open at the top of the Plans page: one row of
+   seven small cards, each with its circle's icon in its tone (as on prayer
+   rows). They share the width where there is room and scroll sideways on a
+   phone — never a second catalogue. */
+.circle-doors {
+  display: flex;
+  gap: var(--q-space-2);
+  margin: 0;
+  padding: 2px 2px var(--q-space-2);
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  list-style: none;
+}
+.circle-doors::-webkit-scrollbar { display: none; }
+.circle-doors > li { display: flex; flex: 1 0 6.25rem; scroll-snap-align: start; }
+.circle-door {
+  display: flex;
+  width: 100%;
+  min-height: 92px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--q-space-2);
+  padding: var(--q-space-3);
+  color: var(--q-text);
+}
+.circle-door__name { font-size: 0.8125rem; font-weight: 600; line-height: 1.25; }
 .circle-page__nav { margin-block-end: var(--q-space-8); }
 /* On a phone the switcher is one row that scrolls sideways, not four rows of
    chips above the teaching. */

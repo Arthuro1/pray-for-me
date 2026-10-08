@@ -5,7 +5,7 @@
 // with another Join button. Once groups exist, the list leads and creating /
 // befriending shrink into header actions.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 
 import CommunityTab from './CommunityTab';
@@ -124,21 +124,39 @@ describe('GroupView — progressive list tools', () => {
     </MemoryRouter>
   );
 
-  it('a tiny all-active group shows neither search nor status filters', async () => {
+  const wallSwitch = () => screen.getByRole('group', { name: 'Groupe' });
+
+  it('a tiny group shows one switch — Active, Answered, Testimonies — and no search', async () => {
     stubGroupView([wallPrayer('a'), wallPrayer('b')]);
     renderGroup();
     expect(await screen.findByText('Sujet a')).toBeTruthy();
+    expect(within(wallSwitch()).getAllByRole('button').map((b) => b.textContent))
+      .toEqual([t(lang, 'active'), t(lang, 'answered'), t(lang, 'testimonies')]);
+    expect(within(wallSwitch()).getByRole('button', { name: t(lang, 'active') }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.queryByPlaceholderText(t(lang, 'searchRequests'))).toBeNull();
-    expect(screen.queryByRole('button', { name: t(lang, 'answered') })).toBeNull();
+    // No second row of filters under the switch.
+    expect(screen.queryByRole('button', { name: t(lang, 'all') })).toBeNull();
   });
 
-  it('status filters appear once BOTH active and answered requests exist', async () => {
+  it('the switch splits active from answered requests, and only Active offers a new request', async () => {
     stubGroupView([wallPrayer('a'), wallPrayer('b', { is_answered: true })]);
     renderGroup();
     expect(await screen.findByText('Sujet a')).toBeTruthy();
-    expect(screen.getByRole('button', { name: t(lang, 'answered') })).toBeTruthy();
-    // Still too few requests for search.
-    expect(screen.queryByPlaceholderText(t(lang, 'searchRequests'))).toBeNull();
+    expect(screen.queryByText('Sujet b')).toBeNull();
+    expect(screen.getByRole('button', { name: t(lang, 'newRequest') })).toBeTruthy();
+
+    fireEvent.click(within(wallSwitch()).getByRole('button', { name: t(lang, 'answered') }));
+    expect(screen.getByText('Sujet b')).toBeTruthy();
+    expect(screen.queryByText('Sujet a')).toBeNull();
+    expect(screen.queryByRole('button', { name: t(lang, 'newRequest') })).toBeNull();
+  });
+
+  it('says so quietly when a switch position is empty', async () => {
+    stubGroupView([wallPrayer('a', { is_answered: true })]);
+    renderGroup();
+    expect(await screen.findByText(t(lang, 'groupNoActive'))).toBeTruthy();
+    // A request can still be added from Active.
+    expect(screen.getByRole('button', { name: t(lang, 'newRequest') })).toBeTruthy();
   });
 
   it('search appears once the wall is long enough to need it', async () => {

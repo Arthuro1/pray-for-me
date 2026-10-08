@@ -25,9 +25,11 @@
 
 .prayer-row__match svg { flex: 0 0 auto; margin-block-start: 2px; }
 
-/* A swipeable row needs an opaque face to slide over its actions. */
-.journal__swipe-row,
-.journal__swipe-row > div:last-child { background: var(--q-canvas); }
+/* A swipeable card: the wrapper takes the card's shape and lift (its own
+   overflow would clip the card's shadow); the opaque card slides over the
+   actions beneath it. */
+.swipe-card { border-radius: var(--q-radius-surface); box-shadow: var(--q-card-shadow); }
+.swipe-card .q-card { box-shadow: none; }
 
 /* ── Today ──────────────────────────────────────────────────────────────── */
 .today-focus {
@@ -115,7 +117,8 @@
 
 .today-complete__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--q-space-2); }
 
-.today-list { margin-block-end: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
+.today-list { margin-block-end: var(--q-space-8); }
+.today-list__group { display: grid; gap: var(--q-space-2); }
 .today-list__slot { margin-block: var(--q-space-6) var(--q-space-1); }
 
 .today-fold { margin-block-end: var(--q-space-6); border-block: 1px solid var(--q-border); }
@@ -446,7 +449,7 @@
 
 .journal__tend-title { flex: 1 1 auto; color: var(--q-text); font-size: 0.9375rem; font-weight: 600; }
 .journal__content { padding-block-start: var(--q-space-4); }
-.journal__list { display: flex; flex-direction: column; }
+.journal__list { display: flex; flex-direction: column; gap: var(--q-space-2); }
 .journal__ended { margin-block-start: var(--q-space-6); border-block: 1px solid var(--q-border); }
 .journal__no-match { padding-block: var(--q-space-12); text-align: center; }
 .journal-filter-status { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-2); margin-block-end: var(--q-space-1); }
@@ -650,8 +653,9 @@
   .prayer-activity-item__header { flex-wrap: wrap; }
 }
 
-/* ── Testimony: remembrance in the devotional voice ────────────────────── */
-.testimony-flow__title {
+/* ── Entry flows: an update or a testimony, in the devotional voice ─────
+   A small label, a serif question, one line on what it is for, the field. */
+.entry-flow__title {
   margin: var(--q-space-2) 0 0;
   color: var(--q-text);
   font-family: var(--q-font-editorial);
@@ -662,10 +666,10 @@
   line-height: 1.2;
 }
 
-.testimony-flow__body { margin: var(--q-space-2) 0 var(--q-space-4); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
+.entry-flow__body { margin: var(--q-space-2) 0 var(--q-space-4); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.55; }
 
-/* What God has done is written in the serif, like the prayer itself. */
-.testimony-flow .update-composer__input {
+/* What is written there is set in the serif, like the prayer itself. */
+.entry-flow .update-composer__input {
   font-family: var(--q-font-editorial);
   font-optical-sizing: auto;
   font-size: 1.125rem;
@@ -801,7 +805,7 @@
    label voice, a plain count, a way to bring a prayer straight into it — then
    the same rows as everywhere. Unplaced prayers come last, as "Your prayers". */
 .journal-circles { display: grid; gap: var(--q-space-8); }
-.journal-circle__header { display: flex; min-height: 44px; align-items: center; gap: var(--q-space-3); padding-block-end: var(--q-space-2); border-block-end: 1px solid var(--q-border); }
+.journal-circle__header { display: flex; min-height: 44px; align-items: center; gap: var(--q-space-3); padding-block-end: var(--q-space-1); }
 .journal-circle__title { display: inline-flex; min-width: 0; flex: 1 1 auto; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text); font-family: var(--q-font-ui); font-size: var(--q-type-label); font-weight: 650; letter-spacing: var(--q-tracking-label); text-transform: uppercase; }
 .journal-circle__title > span,
 .journal-circle__link { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

@@ -9,11 +9,10 @@ import { circleLabelKey, circleOf } from '../lib/circles';
 import PrayerMark from './shared/PrayerMark';
 import { StatusLabel } from './shared/Primitives';
 
-// One prayer in a list, read like a line in a prayer book: a leading mark (the
-// person, group, circle or plan it is about — see PrayerMark), a serif title
-// and ONE quiet detail line beneath it. A small icon says what each detail is,
-// so "Prayer Buddies" (a group) and "Pour Anatole" (a person) can never be
-// confused. No card, no chips.
+// One prayer in a list, on a soft card of its own: a leading mark (its circle
+// or plan — see PrayerMark), a serif title and ONE quiet detail line beneath
+// it. A small icon says what each detail is, so "Prayer Buddies" (a group) and
+// "Pour Anatole" (a person) can never be confused. No chips.
 //
 // variant 'today'   — what to pray now: the plan day's theme, or who it is for.
 // variant 'journal' — the record: its rhythm or how long it has been carried.
@@ -57,9 +56,14 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
       ? [planRow.dayLabel, planRow.paused ? t(lang, 'planPacePausedNote') : ''].filter(Boolean).join(' · ')
       : '';
     const carried = showsCarriedSince(prayer) ? t(lang, 'carriedSince', { date: carriedSinceLabel(prayer, lang) }) : '';
-    context = [isAnswered ? person : isEnded
-      ? lead('ended', t(lang, 'seriesEnded'))
-      : lead('rhythm', planRhythm || scheduleSummary(prayer.schedule, lang) || carried) || person];
+    // Who it is for (or the group it came from) first — the mark shows only
+    // the circle — then where it stands: its rhythm, or that its series ended.
+    context = [
+      person || group,
+      !isAnswered && (isEnded
+        ? lead('ended', t(lang, 'seriesEnded'))
+        : lead('rhythm', planRhythm || scheduleSummary(prayer.schedule, lang) || carried)),
+    ];
   }
 
   const details = [
@@ -80,7 +84,7 @@ export default function PrayerListItem({ prayer, lang, tr, shares, onClick, vari
     <button
       type="button"
       onClick={onClick}
-      className={`journal-row prayer-row prayer-row--marked pressable ${isAnswered ? 'prayer-row--answered' : ''}`}
+      className={`journal-row prayer-row prayer-row--marked q-card pressable ${isAnswered ? 'prayer-row--answered' : ''}`}
     >
       <PrayerMark prayer={prayer} planCategory={planRow?.category} />
       <span className="min-w-0">

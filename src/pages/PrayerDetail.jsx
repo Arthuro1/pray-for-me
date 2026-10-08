@@ -1580,13 +1580,10 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             (recurrence) is edited via SchedulePlanner near the top; the old
             "prayer days" toggle here was redundant with it and has been removed. */}
         {!isCommunity && <>
-        {/* Updates: titled only once there is one, and the field only while
-            the reader is writing one — no empty heading, no standing input. */}
-        {(allUpdates.length > 0 || showUpdateComposer) && (
+        {/* Updates: titled only once there is one — no empty heading. */}
+        {allUpdates.length > 0 && (
         <div className="prayer-activity-panel">
-          {allUpdates.length > 0 && (
-            <p className="prayer-activity-panel__title">{t(lang, 'evolutions')}</p>
-          )}
+          <p className="prayer-activity-panel__title">{t(lang, 'evolutions')}</p>
 
           <div className="prayer-activity-list">
             {allUpdates.map(u => (
@@ -1652,21 +1649,28 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             ))}
           </div>
 
-          {showUpdateComposer && (
-            <div className="prayer-activity-composer">
-              <UpdateComposer
-                inputId="pd-updates"
-                lang={lang}
-                rows={1}
-                placeholder={t(lang, 'newUpdate')}
-                onSend={handleAddUpdate}
-              />
-              <QuietButton onClick={() => setUpdateComposerOpen(false)} className="-ms-3 mt-1">
-                {t(lang, 'cancel')}
-              </QuietButton>
-            </div>
-          )}
         </div>
+        )}
+
+        {/* Adding an update is its own titled flow, like a testimony: a word
+            on what it is for, then the field — opened only when asked for and
+            folded away once sent or cancelled. */}
+        {showUpdateComposer && (
+          <div className="prayer-activity-panel entry-flow">
+            <p className="section-label">{t(lang, 'updateFlowLabel')}</p>
+            <h2 className="entry-flow__title">{t(lang, 'updateFlowTitle')}</h2>
+            <p className="entry-flow__body">{t(lang, 'updateFlowBody')}</p>
+            <UpdateComposer
+              inputId="pd-updates"
+              lang={lang}
+              rows={2}
+              placeholder={t(lang, 'newUpdate')}
+              onSend={handleAddUpdate}
+            />
+            <QuietButton onClick={() => setUpdateComposerOpen(false)} className="mt-2 w-full" style={{ color: 'var(--q-text-secondary)' }}>
+              {t(lang, 'cancel')}
+            </QuietButton>
+          </div>
         )}
 
 
@@ -1748,9 +1752,9 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             without changing the answered date */}
         {isAnswered && canManage && (
           showThanks ? (
-            <div className="prayer-activity-panel testimony-flow">
+            <div className="prayer-activity-panel entry-flow">
               <p className="section-label section-label--sacred">{t(lang, 'rememberLabel')}</p>
-              <h2 className="testimony-flow__title">{t(lang, 'testimony')}</h2>
+              <h2 className="entry-flow__title">{t(lang, 'testimony')}</h2>
               <UpdateComposer
                 lang={lang}
                 rows={3}
@@ -1772,12 +1776,12 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             optional testimony and the confirm step, together in the disclosure
             they belong to. Nothing is marked answered without this confirm. */}
         {!isAnswered && showTestimony && canManage && (
-          <div id="pd-answer" className="prayer-activity-panel testimony-flow">
+          <div id="pd-answer" className="prayer-activity-panel entry-flow">
             {/* The person testifies; the app only records. It asks what
                 happened — it never declares on its own that God answered. */}
             <p className="section-label section-label--sacred">{t(lang, 'rememberLabel')}</p>
-            <h2 className="testimony-flow__title">{t(lang, 'answerWhatHappened')}</h2>
-            <p className="testimony-flow__body">{t(lang, 'answerHowGodWorked')}</p>
+            <h2 className="entry-flow__title">{t(lang, 'answerWhatHappened')}</h2>
+            <p className="entry-flow__body">{t(lang, 'answerHowGodWorked')}</p>
             {/* The testimony is OPTIONAL — allowEmpty keeps Confirm available
                 with nothing written, exactly like the old flow. */}
             <UpdateComposer

@@ -293,7 +293,7 @@ export default function HomeTab({ onAdd, onEdit }) {
           />
         )}
 
-        {/* The rest of today, as flat rows — no cards. */}
+        {/* The rest of today, one soft card per prayer. */}
         {otherEntries.length > 0 && (
           <section className="today-list" aria-label={t(lang, 'today')}>
             {/* Grouped by prayer-time slot once any prayer uses one; flat list otherwise */}
@@ -301,14 +301,14 @@ export default function HomeTab({ onAdd, onEdit }) {
               const slotEntries = (useSlots ? slotGroups[slot] : otherEntries)?.filter((e) => e.prayer.id !== focusPrayer?.id);
               if (!slotEntries || slotEntries.length === 0) return null;
               return (
-                <div key={slot}>
+                <div key={slot} className="today-list__group">
                   {useSlots && (
                     <p className="section-label today-list__slot">
                       {t(lang, slot === 'anytime' ? 'slotAnytime' : `slot_${slot}`)}
                     </p>
                   )}
                   {slotEntries.map(({ prayer }) => (
-                    <SwipeableRow key={prayer.id} actions={swipeActions(prayer)}>
+                    <SwipeableRow key={prayer.id} actions={swipeActions(prayer)} className="swipe-card">
                       <PrayerListItem
                         prayer={prayer}
                         lang={lang}

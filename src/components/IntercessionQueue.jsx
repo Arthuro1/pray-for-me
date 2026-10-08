@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Check, SlidersHorizontal } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useCommunityStore from '../store/communityStore';
@@ -10,9 +10,9 @@ import { t } from '../i18n';
 import { todayKey } from '../lib/prayedLog';
 import { circleLabelKey } from '../lib/circles';
 import {
-  intercessionQueue, dueIntercessionQueue, queueSources, filterQueue, queueCircles, filterQueueByCircle, remainingInQueue,
+  intercessionQueue, dueIntercessionQueue, queueCircles, filterQueueByCircle, remainingInQueue,
 } from '../lib/intercession';
-import { Disclosure, PrimaryButton, QuietButton, SecondaryButton, SectionHeader, SegmentedControl } from './shared/Primitives';
+import { Disclosure, PrimaryButton, QuietButton, SecondaryButton, SectionHeader } from './shared/Primitives';
 import CircleGlyph from './shared/CircleGlyph';
 import RiseMark from './shared/RiseMark';
 
@@ -24,9 +24,10 @@ import RiseMark from './shared/RiseMark';
 // collapsed disclosure. It reuses the ordinary PrayerSession and per-prayer
 // completions — leaving midway keeps real progress, and reopening resumes with
 // the first unfinished request. Renders nothing when the queue is empty, so
-// Grace never sees it. One folded "Filter" can narrow the walk by source and,
-// once carried prayers sit in different circles, by circle — the carrier's own
-// placement, never anything the person who asked chose.
+// Grace never sees it. Once carried prayers sit in different circles, one
+// visible row of chips (All, then those circles) narrows the walk to a circle —
+// the carrier's own placement, never anything the person who asked chose.
+// Each request still names the group it came from, so no source filter.
 export default function IntercessionQueue({ lang }) {
   const { prayers, categories, completions, markPrayedOn } = usePrayerStore(
     useShallow((s) => ({
@@ -41,9 +42,7 @@ export default function IntercessionQueue({ lang }) {
   );
   const userId = useAuthStore((s) => s.user?.id);
   const { tr } = useTranslationStore();
-  const [filter, setFilter] = useState('all');
   const [circle, setCircle] = useState('all');
-  const [filtersOpen, setFiltersOpen] = useState(false);
   // Snapshot of the session's prayers, fixed when it starts — completions
   // recorded while praying must not reshuffle the walk mid-session.
   const [session, setSession] = useState(null);
@@ -64,27 +63,14 @@ export default function IntercessionQueue({ lang }) {
   if (carried.length === 0) return null;
 
   const due = dueIntercessionQueue(prayers, categories, dayKey, myCommitments);
-  const sources = queueSources(due);
   const circles = queueCircles(carried);
   const activeCircle = circles.includes(circle) ? circle : 'all';
-  // Both filters change only what the session walks, never completion data.
-  const narrow = (queue) => filterQueueByCircle(filterQueue(queue, filter), activeCircle);
-  const filtered = narrow(due);
-  const listed = narrow(carried);
+  // The circle changes only what the session walks, never completion data.
+  const filtered = filterQueueByCircle(due, activeCircle);
+  const listed = filterQueueByCircle(carried, activeCircle);
   const remaining = remainingInQueue(filtered, completions, dayKey);
   const allRemaining = remainingInQueue(listed, completions, dayKey);
   const dueDone = due.length > 0 && remainingInQueue(due, completions, dayKey).length === 0;
-
-  const FILTERS = [
-    { value: 'all', label: t(lang, 'all') },
-    { value: 'personal', label: t(lang, 'srcPersonal') },
-    { value: 'groups', label: t(lang, 'srcGroups') },
-  ];
-  const canFilter = sources.count > 1 || circles.length > 0;
-  const activeFilters = [
-    filter !== 'all' ? FILTERS.find((f) => f.value === filter)?.label : null,
-    activeCircle !== 'all' ? t(lang, circleLabelKey(activeCircle)) : null,
-  ].filter(Boolean);
 
   const sessionOverlay = session && session.length > 0 && (
     <PrayerSession
@@ -120,101 +106,87 @@ export default function IntercessionQueue({ lang }) {
 
       <SectionHeader id="carried-queue-title" as="h2" eyebrow={t(lang, 'intercessionTitle')} />
 
-      {/* The action comes first: praying needs no setup. */}
-      {remaining.length > 0 ? (
-        <div className="carried-queue__actions">
-          <PrimaryButton onClick={() => setSession(remaining)}>{t(lang, 'prayNow')}</PrimaryButton>
-          <span className="carried-queue__remaining">{t(lang, 'intercessionRemaining', { n: remaining.length })}</span>
-        </div>
-      ) : due.length === 0 ? (
-        // Nothing is due today at all — schedules carry the load on other days.
-        <p className="carried-queue__status mt-4" role="status">{t(lang, 'intercessionNoneDue')}</p>
-      ) : (
-        <div className="carried-queue__actions">
-          <p className="carried-queue__status" role="status">
-            <RiseMark motion="still" size={20} /> {t(lang, 'intercessionDone')}
-          </p>
-          {/* Quiet Pray again over today's due queue — completions are
-              idempotent per day, so walking it again never double-counts. */}
-          <QuietButton onClick={() => setSession(filtered)}>{t(lang, 'prayAgainBtn')}</QuietButton>
-        </div>
-      )}
+      <div className="carried-queue__card q-card">
+        {/* The action comes first: praying needs no setup. */}
+        {remaining.length > 0 ? (
+          <div className="carried-queue__actions">
+            <PrimaryButton onClick={() => setSession(remaining)}>{t(lang, 'prayNow')}</PrimaryButton>
+            <span className="carried-queue__remaining">{t(lang, 'intercessionRemaining', { n: remaining.length })}</span>
+          </div>
+        ) : due.length === 0 ? (
+          // Nothing is due today at all — schedules carry the load on other days.
+          <p className="carried-queue__status" role="status">{t(lang, 'intercessionNoneDue')}</p>
+        ) : (
+          <div className="carried-queue__actions">
+            <p className="carried-queue__status" role="status">
+              <RiseMark motion="still" size={20} /> {t(lang, 'intercessionDone')}
+            </p>
+            {/* Quiet Pray again over today's due queue — completions are
+                idempotent per day, so walking it again never double-counts. */}
+            <QuietButton onClick={() => setSession(filtered)}>{t(lang, 'prayAgainBtn')}</QuietButton>
+          </div>
+        )}
 
-      {/* The session walks everything due unless the person asks to narrow
-          it. Source and circle wait behind ONE quiet "Filter" under the
-          action, offered only when there is something to choose between; its
-          label says what is narrowing the walk while it is folded. A circle
-          chip toggles off again, so "All" is said once, by the source switch.
-          Filtering changes only what the session walks, never completion data. */}
-      {canFilter && (
-        <div className="carried-queue__filter">
-          <QuietButton
-            icon={SlidersHorizontal}
-            iconSize={16}
-            aria-expanded={filtersOpen}
-            aria-controls="carried-queue-filters"
-            onClick={() => setFiltersOpen((open) => !open)}
-            className="-ms-3"
+        {/* One visible row, offered only when the carried prayers sit in more
+            than one place: All, then each circle in use. A pressed circle
+            toggles back to All. It changes only what the session walks. */}
+        {circles.length > 0 && (
+          <div className="q-chips" role="group" aria-label={t(lang, 'circleFieldLabel')}>
+            <button
+              type="button"
+              aria-pressed={activeCircle === 'all'}
+              onClick={() => setCircle('all')}
+              className="q-chip pressable"
+            >
+              {t(lang, 'all')}
+            </button>
+            {circles.map((c) => (
+              <button
+                key={c}
+                type="button"
+                aria-pressed={activeCircle === c}
+                onClick={() => setCircle(activeCircle === c ? 'all' : c)}
+                className="q-chip circle-chip pressable"
+              >
+                <CircleGlyph circle={c} size={16} selected={activeCircle === c} />
+                <span>{t(lang, circleLabelKey(c))}</span>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Every carried request stays one tap away — but it is never the
+            default session. */}
+        {carried.length > due.length && (
+          <Disclosure
+            id="intercession-all"
+            label={t(lang, 'intercessionAllCarried', { n: listed.length })}
+            open={allOpen}
+            onToggle={() => setAllOpen((v) => !v)}
+            className="carried-queue__all"
           >
-            {[t(lang, 'filterLabel'), ...activeFilters].join(' · ')}
-          </QuietButton>
-          {filtersOpen && (
-            <div id="carried-queue-filters" className="carried-queue__filters">
-              {sources.count > 1 && (
-                <SegmentedControl label={t(lang, 'journalSource')} value={filter} onChange={setFilter} options={FILTERS} />
-              )}
-              {circles.length > 0 && (
-                <div className="q-chips" role="group" aria-label={t(lang, 'circleFieldLabel')}>
-                  {circles.map((c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      aria-pressed={activeCircle === c}
-                      onClick={() => setCircle(activeCircle === c ? 'all' : c)}
-                      className="q-chip circle-chip pressable"
-                    >
-                      <CircleGlyph circle={c} size={16} selected={activeCircle === c} />
-                      <span>{t(lang, circleLabelKey(c))}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Every carried request stays one tap away — but it is never the
-          default session. */}
-      {carried.length > due.length && (
-        <Disclosure
-          id="intercession-all"
-          label={t(lang, 'intercessionAllCarried', { n: listed.length })}
-          open={allOpen}
-          onToggle={() => setAllOpen((v) => !v)}
-          className="carried-queue__all"
-        >
-          <ul className="carried-queue__list">
-            {listed.map((p) => {
-              const prayedToday = (completions[p.id] || []).includes(dayKey);
-              return (
-                <li key={p.id} className="carried-queue__item">
-                  {prayedToday
-                    ? <Check size={14} aria-label={t(lang, 'prayedTodayLabel')} />
-                    : <span className="w-[14px]" aria-hidden="true" />}
-                  <span className="min-w-0 flex-1 truncate">{tr(p.title, lang)}</span>
-                  {p.origin_group_name && <span className="carried-queue__item-from">{p.origin_group_name}</span>}
-                </li>
-              );
-            })}
-          </ul>
-          {allRemaining.length > 0 && (
-            <SecondaryButton onClick={() => setSession(allRemaining)} className="mt-3 w-full">
-              {t(lang, 'prayAllCarriedBtn', { n: allRemaining.length })}
-            </SecondaryButton>
-          )}
-        </Disclosure>
-      )}
+            <ul className="carried-queue__list">
+              {listed.map((p) => {
+                const prayedToday = (completions[p.id] || []).includes(dayKey);
+                return (
+                  <li key={p.id} className="carried-queue__item">
+                    {prayedToday
+                      ? <Check size={14} aria-label={t(lang, 'prayedTodayLabel')} />
+                      : <span className="w-[14px]" aria-hidden="true" />}
+                    <span className="min-w-0 flex-1 truncate">{tr(p.title, lang)}</span>
+                    {p.origin_group_name && <span className="carried-queue__item-from">{p.origin_group_name}</span>}
+                  </li>
+                );
+              })}
+            </ul>
+            {allRemaining.length > 0 && (
+              <SecondaryButton onClick={() => setSession(allRemaining)} className="mt-3 w-full">
+                {t(lang, 'prayAllCarriedBtn', { n: allRemaining.length })}
+              </SecondaryButton>
+            )}
+          </Disclosure>
+        )}
+      </div>
     </section>
   );
 }

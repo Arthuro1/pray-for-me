@@ -9,8 +9,9 @@ import RichText from '../../components/rich/RichText';
 import { StatusLabel } from '../../components/shared/Primitives';
 import useCommunityPrayerActions from '../prayerDetail/useCommunityPrayerActions';
 
-// One request on a group's wall, read as intercession rather than a post: who
-// asked, what they asked, and the one thing to do with it — carry it. The
+// One request on a group's wall, on a soft card of its own, read as
+// intercession rather than a post: who asked, what they asked, and the one
+// thing to do with it — carry it. The
 // count of those carrying stays secondary; nothing here is a like, a rank or a
 // reaction. Carrying from the list is the same act as on the prayer's page
 // (it joins "Prayers you're carrying"), and stays ONE action: the carrier's own
@@ -31,10 +32,10 @@ export default function GroupPrayerRow({ prayer, user, lang, avatar, onOpen }) {
   const titleId = `group-prayer-${prayer.id}`;
 
   return (
-    <li className="together-prayer">
+    <li className={`together-prayer q-card ${prayer.is_answered ? 'together-prayer--answered' : ''}`}>
       {/* A div, not a <p>: the avatar renders a block element. */}
       <div className="together-prayer__author">
-        <Avatar name={prayer.is_anonymous ? '?' : prayer.author_name} avatar={prayer.is_anonymous ? null : avatar} size={24} anonymous={prayer.is_anonymous} />
+        <Avatar name={prayer.is_anonymous ? '?' : prayer.author_name} avatar={prayer.is_anonymous ? null : avatar} size={28} anonymous={prayer.is_anonymous} />
         <span className="min-w-0 truncate">{communityAuthor(prayer, user.id, lang)} · {timeAgo(prayer.created_at, lang)}</span>
       </div>
 

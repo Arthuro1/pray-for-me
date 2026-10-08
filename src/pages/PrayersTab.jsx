@@ -238,7 +238,7 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
     <SwipeableRow
       key={prayer.id}
       actions={swipeActions(prayer)}
-      className="journal__swipe-row"
+      className="swipe-card"
     >
       <PrayerListItem
         prayer={prayer}
@@ -560,7 +560,7 @@ export default function PrayersTab({ onAdd, onAddInCircle }) {
                   key={person.name.toLowerCase()}
                   type="button"
                   onClick={() => setSelectedPerson(person.name)}
-                  className="prayer-row prayer-row--marked journal-person-card pressable"
+                  className="prayer-row prayer-row--marked journal-person-card q-card pressable"
                 >
                   <PersonMark name={person.name} />
                   <span className="min-w-0">

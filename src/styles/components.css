@@ -242,6 +242,26 @@ a.prayer-row:hover { background: var(--q-hover); }
 .prayer-row--marked { grid-template-columns: auto minmax(0, 1fr); gap: var(--q-space-3); }
 .prayer-row--marked.journal-person-card { grid-template-columns: auto minmax(0, 1fr) auto; }
 
+/* ── Soft card: one item on a quiet surface of its own ───────────────────
+   A hairline, a soft lift and room to breathe — for list items (prayers,
+   requests, groups), never for the page itself. Lists of cards space them
+   with a gap instead of dividing them with rules. */
+.q-card {
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  box-shadow: var(--q-card-shadow);
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease);
+}
+button.q-card:hover,
+a.q-card:hover {
+  border-color: var(--q-border-strong);
+  background: var(--q-card-hover);
+}
+.prayer-row.q-card { min-height: 68px; padding: var(--q-space-3) var(--q-space-4); }
+.prayer-row.q-card .prayer-mark { width: 42px; height: 42px; border-radius: 12px; }
+.prayer-row.q-card .prayer-mark.icon-tile--round { border-radius: 50%; }
+
 /* ── Icon tile: a small icon on a soft ground of one hue ──────────────────
    The hue (`--tone`) is mixed into the ground and the ink, so it reads in
    every theme. Prayer rows (PrayerMark), the More page and Settings share it.

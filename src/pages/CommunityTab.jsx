@@ -61,7 +61,7 @@ function formatPlanDate(key, lang) {
 // and the two answers — never more.
 function ActionRow({ label, sublabel, avatarName, avatar, avatarKind = 'user', primaryText, onPrimary, onSecondary, secondaryText, busy }) {
   return (
-    <li className="together-row together-row--decide">
+    <li className="together-row together-row--decide q-card">
       {avatarName && <Avatar name={avatarName} avatar={avatar} kind={avatarKind} size={36} />}
       <span className="together-row__body">
         <span className="together-row__name">{label}</span>
@@ -77,12 +77,12 @@ function ActionRow({ label, sublabel, avatarName, avatar, avatarKind = 'user', p
   );
 }
 
-// A titled list on the page: a small label and rows divided by hairlines.
+// A titled list on the page: a small label and one soft card per row.
 function Section({ title, split = false, children }) {
   return (
     <section className="together-section">
       <h2 className="section-label">{title}</h2>
-      <ul className={`together-list ${split ? 'together-list--split' : ''}`}>{children}</ul>
+      <ul className={`together-list together-list--cards ${split ? 'together-list--split' : ''}`}>{children}</ul>
     </section>
   );
 }
@@ -258,7 +258,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
           <Section title={t(lang, 'myGroups')} split>
             {groups.map(g => (
               <li key={g.id}>
-                <button type="button" onClick={() => onViewGroup(g.id)} className="together-row pressable">
+                <button type="button" onClick={() => onViewGroup(g.id)} className="together-row q-card pressable">
                   <Avatar kind="group" name={g.name} avatar={avatarConfigFrom(g)} size={40} />
                   {/* The name alone: a role is said inside the group, and
                       "N new" below is the only thing worth a glance here. */}
@@ -278,7 +278,7 @@ function CommunityHub({ lang, userId, onViewGroup }) {
             {/* Removing someone is rare: it waits in each row's menu instead of
                 repeating a "Remove" on every line (Undo still follows). */}
             {friends.map(f => (
-              <li key={f.id} className="together-row">
+              <li key={f.id} className="together-row q-card">
                 <Avatar name={f.name} avatar={f.avatar} size={32} />
                 <span className="together-row__body"><span className="together-row__name">{f.name}</span></span>
                 {busyId === f.id
@@ -624,7 +624,8 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const { group, isAdmin, prayers, testimonies, loading, hasPrayedInGroup, handleToggleAutoAdd, avatarFor } = useGroupWall({ groupId, user });
   const categories = usePrayerStore(s => s.categories);
   const tr = useTranslationStore(s => s.tr);
-  const [subTab, setSubTab] = useState('requests');
+  // The wall's one switch: 'active' | 'answered' requests, or 'testimonies'.
+  const [subTab, setSubTab] = useState('active');
   const [showNewRequest, setShowNewRequest] = useState(false);
   const [showAdmin, setShowAdmin] = useState(false);
   const [showLeave, setShowLeave] = useState(false);
@@ -632,7 +633,6 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
   const [showMembers, setShowMembers] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [search, setSearch] = useState('');
-  const [reqFilter, setReqFilter] = useState('all');
   // Bumped when an invite action records a checklist flag, so the checklist
   // behind an open modal re-derives its steps.
   const [, setChecklistVersion] = useState(0);
@@ -662,15 +662,13 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     setChecklistVersion((v) => v + 1);
   };
 
-  // Search and status filters appear only when the group's data earns them;
-  // a hidden control's state is inert so nothing filters invisibly.
+  // Search appears only once the wall is long enough to need it; a hidden
+  // field's text is inert so nothing filters invisibly.
   const controls = groupListControls(prayers);
-  const effectiveFilter = controls.statusFilter ? reqFilter : 'all';
   const effectiveSearch = controls.search ? search : '';
 
   const filteredPrayers = prayers.filter(p => {
-    if (effectiveFilter === 'active' && p.is_answered) return false;
-    if (effectiveFilter === 'answered' && !p.is_answered) return false;
+    if (!!p.is_answered !== (subTab === 'answered')) return false;
     if (effectiveSearch) {
       const q = effectiveSearch.toLowerCase();
       const hay = `${p.title} ${p.description || ''} ${p.is_anonymous ? '' : p.author_name || ''}`.toLowerCase();
@@ -870,7 +868,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         {groupPlans.length > 0 && (
           <section className="together-plans">
             <h2 className="section-label mb-2">{t(lang, 'groupPlansHeading')}</h2>
-            <ul className="together-list">
+            <ul className="together-list together-list--cards">
               {sortGroupPlans(groupPlans, todayKey()).map((gp) => {
                 const plan = planById(gp.plan_id);
                 if (!plan) return null;
@@ -881,7 +879,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 if (gp.joinedByMe) menuItems.push({ key: 'leave', icon: LogOut, label: t(lang, 'groupPlanLeave'), onClick: () => handleLeaveGroupPlan(gp) });
                 if (canEnd) menuItems.push({ key: 'end', icon: Trash2, label: t(lang, 'groupPlanEnd'), danger: true, onClick: () => setConfirmEndPlan(gp) });
                 return (
-                  <li key={gp.id} className="together-row">
+                  <li key={gp.id} className="together-row q-card">
                     <span className="together-row__body">
                       <span className="together-row__name together-row__name--editorial">{t(lang, plan.titleKey)}</span>
                       <span className="together-row__meta">
@@ -908,55 +906,44 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           </section>
         )}
 
+        {/* ONE switch for the whole wall — what is still carried, what was
+            answered, and the testimonies — instead of tabs over filters. */}
         <SegmentedControl
           className="together-tabs"
           label={group?.name || t(lang, 'together')}
           value={subTab}
           onChange={setSubTab}
           options={[
-            { value: 'requests', label: t(lang, 'prayerRequests') },
+            { value: 'active', label: t(lang, 'active') },
+            { value: 'answered', label: t(lang, 'answered') },
             { value: 'testimonies', label: t(lang, 'testimonies') },
           ]}
         />
 
-        {subTab === 'requests' && (
+        {subTab !== 'testimonies' && (
           <>
             {/* One visible action keeps the group focused on prayer. Invitations,
                 journeys, members, and administration stay in the group menu. */}
-            {prayers.length > 0 && (
+            {subTab === 'active' && prayers.length > 0 && (
               <PrimaryButton icon={Plus} onClick={() => setShowNewRequest(true)} className="together-new">
                 {t(lang, 'newRequest')}
               </PrimaryButton>
             )}
 
-            {/* List tools appear progressively: search once the wall is long
-                enough to need it, status filters once both states exist. A
-                small young group keeps a clean page. */}
-            {(controls.search || controls.statusFilter) && (
-              <div className="together-tools">
-                {controls.search && (
-                  <div className="journal-search">
-                    <Search size={16} className="journal-search__icon" aria-hidden="true" />
-                    <input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
-                      aria-label={t(lang, 'searchRequests')}
-                      className="q-input" />
-                  </div>
-                )}
-                {controls.statusFilter && (
-                  <div className="journal__tool-row" role="group" aria-label={t(lang, 'prayerRequests')}>
-                    {['all', 'active', 'answered'].map((value) => (
-                      <button key={value} type="button" onClick={() => setReqFilter(value)} aria-pressed={reqFilter === value} className="journal__tool pressable">
-                        {t(lang, value)}
-                      </button>
-                    ))}
-                  </div>
-                )}
+            {/* Search appears once the wall is long enough to need it; a small
+                young group keeps a clean page. */}
+            {controls.search && (
+              <div className="together-tools journal-search">
+                <Search size={16} className="journal-search__icon" aria-hidden="true" />
+                <input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder={t(lang, 'searchRequests')}
+                  aria-label={t(lang, 'searchRequests')}
+                  className="q-input" />
               </div>
             )}
 
             {loading ? (
               <PrayerListSkeleton />
-            ) : prayers.length === 0 ? (
+            ) : subTab === 'active' && prayers.length === 0 ? (
               // ONE contextual action for an empty group — no competing buttons.
               <div className="journal__no-match">
                 <p className="mb-1 text-sm" style={{ color: 'var(--q-text-secondary)' }}>{t(lang, 'noRequests')}</p>
@@ -964,7 +951,9 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
                 <PrimaryButton icon={Plus} onClick={() => setShowNewRequest(true)}>{t(lang, 'newRequest')}</PrimaryButton>
               </div>
             ) : filteredPrayers.length === 0 ? (
-              <p className="journal__no-match q-meta">{t(lang, 'noMatch')}</p>
+              <p className="journal__no-match q-meta">
+                {t(lang, effectiveSearch ? 'noMatch' : subTab === 'active' ? 'groupNoActive' : 'noAnsweredYet')}
+              </p>
             ) : (
               <ul className="together-wall">
                 {filteredPrayers.map(p => (

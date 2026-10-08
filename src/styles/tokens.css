@@ -84,7 +84,11 @@
   --q-radius-dialog: 20px;
   --q-radius-pill: 999px;
 
-  /* Elevation — level 1 only; everything else is flat */
+  /* Elevation — a card's soft lift, and level 1 for what floats (dialogs,
+     menus); everything else is flat */
+  --q-card-border: color-mix(in srgb, var(--q-border) 78%, var(--q-surface));
+  --q-card-shadow: 0 1px 2px rgb(32 27 45 / 4%), 0 6px 18px rgb(32 27 45 / 4%);
+  --q-card-hover: color-mix(in srgb, var(--q-text) 3%, var(--q-surface));
   --q-elevation: 0 16px 40px rgb(32 27 45 / 8%);
 
   /* Spacing — 4px base */
@@ -161,6 +165,8 @@
   --q-border-strong: #423C4C;
   --q-focus: var(--q-royal-text);
   --q-overlay: rgb(8 7 12 / 72%);
+  --q-card-border: var(--q-border);
+  --q-card-shadow: 0 1px 2px rgb(0 0 0 / 24%);
   --q-elevation: 0 16px 40px rgb(0 0 0 / 28%);
 }
 
@@ -200,6 +206,8 @@
   --q-selected-border: rgb(247 245 239 / 30%);
   --q-tile-ground: 30%;
   --q-tile-mark: 40%;
+  --q-card-border: var(--q-border);
+  --q-card-shadow: none;
   --q-hover: rgb(247 245 239 / 7%);
   --q-focus: #F7F5EF;
   --q-mark: #F7F5EF;

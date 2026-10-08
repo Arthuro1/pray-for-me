@@ -38,21 +38,6 @@ export function dueIntercessionQueue(prayers, categories, dayKey, commitments = 
   );
 }
 
-// Which sources feed the queue — used to show filters ONLY when there is more
-// than one kind of source to filter between.
-export function queueSources(queue) {
-  const personal = queue.some((p) => !p.community_origin_id);
-  const groups = queue.some((p) => !!p.community_origin_id);
-  return { personal, groups, count: (personal ? 1 : 0) + (groups ? 1 : 0) };
-}
-
-// 'all' | 'personal' | 'groups' — filtering never touches completion data.
-export function filterQueue(queue, filter) {
-  if (filter === 'personal') return queue.filter((p) => !p.community_origin_id);
-  if (filter === 'groups') return queue.filter((p) => !!p.community_origin_id);
-  return queue;
-}
-
 // The circles the user placed their carried prayers in, inner to outer — the
 // carrier's own placement, never the author's. Offered as a filter only when
 // choosing one would narrow the list.
@@ -63,7 +48,7 @@ export function queueCircles(queue) {
   return narrows ? circles : [];
 }
 
-// 'all' | one circle — like the source filter, it never touches completion data.
+// 'all' | one circle — filtering never touches completion data.
 export function filterQueueByCircle(queue, circle) {
   if (!circle || circle === 'all') return queue;
   return queue.filter((p) => circleOf(p) === circle);
