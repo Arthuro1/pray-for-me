@@ -1,4 +1,4 @@
-// Dev-only screen previews for the design gallery: /__design/today, /journal,
+// Dev-only screen previews for the design gallery: /__design/today (?done=1), /journal,
 // /detail, /session, /bring, /circles, /tend, /carry, /together, /group,
 // /plans, /plan, /plan-day, /plan-share, /plan-tailor, /grow, /guide, /more,
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
@@ -343,6 +343,20 @@ function CarryPreview({ lang, open: initiallyOpen }) {
   );
 }
 
+// Today, or (?done=1) Today once every prayer of the day is prayed, with the
+// daily reminder on so the altar card says when it next rings.
+function TodayPreview({ done }) {
+  useState(() => {
+    if (!done) return;
+    const today = todayKey();
+    usePrayerStore.setState((s) => ({
+      completions: { ...s.completions, d1: [today], d2: [today], d3: [today] },
+      settings: { ...s.settings, dailyReminderEnabled: true, dailyReminderTime: '06:00' },
+    }));
+  });
+  return <HomeTab onAdd={() => {}} onEdit={() => {}} />;
+}
+
 export default function DesignScreens({ screen }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -438,7 +452,9 @@ export default function DesignScreens({ screen }) {
       {screen === 'tend' && (
         <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />
       )}
-      {(screen === 'today' || screen === 'bring' || screen === 'circles' || !SCREENS.includes(screen)) && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
+      {(screen === 'today' || screen === 'bring' || screen === 'circles' || !SCREENS.includes(screen)) && (
+        <TodayPreview done={screen === 'today' && searchParams.get('done') === '1'} />
+      )}
       {screen === 'plan-done' && planById(searchParams.get('p') || 'kingdomCome14') && (
         <div className="phase-page"><div className="phase-content">
           <PlanCompletionCard plan={planById(searchParams.get('p') || 'kingdomCome14')} lang={lang} onKeepCarrying={() => navigate('/__design/bring-circle')} onShare={() => {}} />

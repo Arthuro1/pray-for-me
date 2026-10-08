@@ -1,8 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  ArrowDown, ArrowRight, BookOpen, ChevronDown, Flame, HandHeart, Hourglass, Lock, MessageCircleOff, Quote, Scale,
-} from 'lucide-react';
+import { ArrowDown, ArrowRight, BookOpen, ChevronDown, Flame, HandHeart, Quote } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
@@ -21,21 +19,14 @@ import { PageHeader, PrimaryButton } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 import VerseAccordion from '../components/VerseAccordion';
 
-// "About Qetoret": the name, the access it rests on, the circles and the
-// promises the app keeps, then the author's own word on how it began — a short
+// "About Qetoret": the name, the access it rests on and the circles, then the
+// author's own word on how it began — a short
 // biblical foundation (docs/QETORET_IDENTITY.md), never a substitute for
 // Scripture. Scripture is cited by reference only; tapping one unfolds the
 // passage from the reader's Bible sources in place. No verse text is authored here.
 const FOUNDATIONS = [
   { id: 'name', icon: Flame, tone: 'amber', titleKey: 'aboutNameTitle', bodyKey: 'aboutNameBody', refs: NAME_REFS },
   { id: 'access', icon: LatinCross, tone: 'plum', titleKey: 'aboutAccessTitle', bodyKey: 'aboutAccessBody', refs: ACCESS_REFS },
-];
-
-const PROMISES = [
-  { key: 'aboutPromiseVoice', icon: MessageCircleOff },
-  { key: 'aboutPromiseOutcome', icon: Hourglass },
-  { key: 'aboutPromiseRank', icon: Scale },
-  { key: 'aboutPromiseAi', icon: BookOpen },
 ];
 
 const LETTER_ID = 'about-letter';
@@ -163,27 +154,6 @@ function Foundations({ lang }) {
         </section>
       ))}
     </div>
-  );
-}
-
-// What the app will never do, one line each, then the one thing it always
-// keeps: private prayers stay private.
-function Promises({ lang }) {
-  return (
-    <Section title={t(lang, 'aboutPromisesTitle')} labelledBy="about-promises">
-      <ul className="about-promises">
-        {PROMISES.map(({ key, icon: Icon }) => (
-          <li key={key}>
-            <span className="icon-tile icon-tile--round" aria-hidden="true"><Icon size={17} strokeWidth={1.8} /></span>
-            <span>{t(lang, key)}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="about-promises__private">
-        <Lock size={15} aria-hidden="true" />
-        <span>{t(lang, 'aboutPromisePrivate')}</span>
-      </p>
-    </Section>
   );
 }
 
@@ -319,7 +289,6 @@ export default function AboutTab({ onPrayInCircle }) {
         <Hero lang={lang} />
         <Foundations lang={lang} />
         <AboutCircles lang={lang} onPrayInCircle={onPrayInCircle} />
-        <Promises lang={lang} />
         <AuthorWord lang={lang} />
       </div>
     </div>

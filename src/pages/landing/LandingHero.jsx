@@ -1,4 +1,4 @@
-import { ChevronDown, Lock, Smartphone } from 'lucide-react';
+import { ChevronDown, Smartphone } from 'lucide-react';
 import { HEBREW_NAME, TRANSLITERATION } from '../../content/identity';
 import { PrimaryButton, QuietButton, SecondaryButton } from '../../components/shared/Primitives';
 import RiseMark from '../../components/shared/RiseMark';
@@ -13,7 +13,7 @@ export const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=sp
 // under the rising stroke, how it sounds and what it means — then the line the
 // app lives by, the one first step (pray), and the real Today beside it.
 export default function LandingHero({ copy, onBeginPrayer, onSignIn }) {
-  const { hero, content: c, beginLabel, heroReassurance, playStore } = copy;
+  const { hero, content: c, beginLabel, playStore } = copy;
 
   const showStory = () => document.getElementById('come')
     ?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth' });
@@ -37,9 +37,6 @@ export default function LandingHero({ copy, onBeginPrayer, onSignIn }) {
             <PrimaryButton onClick={() => onBeginPrayer()} className="landing__cta">{beginLabel}</PrimaryButton>
             <SecondaryButton onClick={onSignIn} className="landing__cta">{c.signIn}</SecondaryButton>
           </div>
-          <p className="landing__reassurance">
-            <Lock size={14} aria-hidden="true" /> {heroReassurance}
-          </p>
           <div className="landing__links">
             <QuietButton onClick={showStory} className="-ms-3">
               {c.howItWorks} <ChevronDown size={16} aria-hidden="true" />

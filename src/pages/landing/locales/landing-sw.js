@@ -4,6 +4,7 @@ export default {
     "signIn": "Ingia",
     "howItWorks": "Angalia jinsi inavyofanya kazi",
     "faqTitle": "Maswali",
+    "faqIntro": "Unachoweza kutaka kujua kabla ya kuanza.",
     "faqs": [
       {
         "q": "Je, maombi yangu ni ya faragha?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Lugha",
   "translationInProgress": "Tafsiri inaendelea",
-  "heroReassurance": "Huhitaji akaunti. Ombi lako la kwanza linabaki kwenye kifaa hiki hadi utakapochagua kulihifadhi.",
   "hero": {
     "gloss": "“uvumba” kwa Kiebrania",
     "title": "Maombi yako na yapande juu kama uvumba.",

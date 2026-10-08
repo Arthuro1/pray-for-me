@@ -4,6 +4,7 @@ export default {
     "signIn": "ログイン",
     "howItWorks": "使い方を見る",
     "faqTitle": "よくある質問",
+    "faqIntro": "始める前に知っておきたいこと。",
     "faqs": [
       {
         "q": "私の祈りは非公開ですか？",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "言語",
   "translationInProgress": "翻訳作業中",
-  "heroReassurance": "アカウントは不要です。最初の祈りは、保存を選ぶまでこの端末にだけ残ります。",
   "hero": {
     "gloss": "ヘブライ語で「香」",
     "title": "あなたの祈りが立ち上りますように。",

@@ -4,6 +4,7 @@ export default {
     "signIn": "Anmelden",
     "howItWorks": "Wie es funktioniert",
     "faqTitle": "Fragen",
+    "faqIntro": "Was du vielleicht wissen möchtest, bevor du beginnst.",
     "faqs": [
       {
         "q": "Sind meine Gebete privat?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Sprache",
   "translationInProgress": "Übersetzung in Arbeit",
-  "heroReassurance": "Kein Konto nötig. Dein erstes Gebet bleibt auf diesem Gerät, außer du entscheidest dich, es zu speichern.",
   "hero": {
     "gloss": "hebräisch für „Räucherwerk“",
     "title": "Lass deine Gebete aufsteigen.",

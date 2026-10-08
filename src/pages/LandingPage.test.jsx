@@ -106,6 +106,9 @@ describe('LandingPage — the story', () => {
     for (const q of ['Is Qetoret a social network?', 'Which churches is Qetoret for?']) {
       expect(within(faq).getByRole('button', { name: q })).toBeTruthy();
     }
+    expect(within(faq).getByText('What you may want to know before you begin.')).toBeTruthy();
+    // Every question wears a mark of its own.
+    for (const question of within(faq).getAllByRole('button')) expect(question.querySelector('.icon-tile')).toBeTruthy();
   });
 
   it('keeps the practical facts in one visible strip instead of a folded feature grid', async () => {

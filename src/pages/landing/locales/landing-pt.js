@@ -4,6 +4,7 @@ export default {
     "signIn": "Entrar",
     "howItWorks": "Ver como funciona",
     "faqTitle": "Perguntas",
+    "faqIntro": "O que você talvez queira saber antes de começar.",
     "faqs": [
       {
         "q": "Minhas orações são privadas?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Idioma",
   "translationInProgress": "Tradução em andamento",
-  "heroReassurance": "Não precisa de conta. Sua primeira oração fica neste dispositivo, a menos que você escolha salvá-la.",
   "hero": {
     "gloss": "“incenso” em hebraico",
     "title": "Que suas orações se elevem.",

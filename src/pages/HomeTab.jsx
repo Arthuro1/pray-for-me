@@ -7,9 +7,9 @@ import useTranslationStore from '../store/translationStore';
 import useCommunityStore from '../store/communityStore';
 import { format } from 'date-fns';
 import { fr, enUS, de, ptBR } from 'date-fns/locale';
-import { Loader2, Plus, Share2, ExternalLink } from 'lucide-react';
+import { Check, Clock, ExternalLink, Loader2, Plus, Quote, RotateCcw, Share2 } from 'lucide-react';
 import { bibleLink } from '../utils/bibleLink';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 import PrayerListSkeleton from '../components/shared/Skeleton';
 import PrayerListItem from '../components/PrayerListItem';
 import SwipeableRow from '../components/shared/SwipeableRow';
@@ -22,13 +22,13 @@ import { groupBySlot, SLOT_ORDER } from '../lib/planner';
 import { planRowContext, planRowSummary } from '../lib/planRow';
 import { PLAN_SOURCES } from '../lib/planAnalytics';
 import { parseKey } from '../lib/schedule';
-import { Clock, Check } from 'lucide-react';
 import { verseOfDay } from '../content/dailyVerses';
 import { fetchScriptureText } from '../lib/verseText';
 import VerseVersion from '../components/VerseVersion';
 import VerseShareModal from '../components/VerseShareModal';
 import EmptyState from '../components/shared/EmptyState';
-import { Disclosure, PageHeader, PrimaryButton, QuietButton, SecondaryButton, SectionHeader } from '../components/shared/Primitives';
+import { Disclosure, PageHeader, PrimaryButton, QuietButton, SecondaryButton } from '../components/shared/Primitives';
+import PrayerMark from '../components/shared/PrayerMark';
 import RiseMark from '../components/shared/RiseMark';
 import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
@@ -45,11 +45,40 @@ const DAY_NAMES = {
 
 const DATE_LOCALES = { fr, en: enUS, de, pt: ptBR, zh: enUS, es: enUS, hi: enUS, ja: enUS, sw: enUS, am: enUS, id: enUS, tl: enUS, ko: enUS, ru: enUS, ar: enUS, fa: enUS };
 
-// Today is "your altar today": built for one thing, coming before God. Compact
-// greeting → what REMAINS today → one large "Begin prayer" → the list itself → add. Completed prayers fold into a
-// quiet "Prayed today" row, catch-up sits AFTER the list, collapsed (grace, not
-// guilt), and the daily verse closes the page as a small card. Statistics live
-// in the Journal; planning and everything else in More.
+// When the next daily reminder rings, as one quiet line.
+function TodayReminder({ reminder, lang, className }) {
+  if (!reminder) return null;
+  return (
+    <p className={className}>
+      <Clock size={12} aria-hidden="true" /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
+    </p>
+  );
+}
+
+// A prayer inside one of Today's folds: its mark, its name and an optional
+// detail line. A guided plan run reads by its plan's name, not the name it was
+// started under (see lib/planRow.js) — the folds are a receipt and a to-do,
+// not a place to read the day's theme.
+function FoldPrayer({ prayer, lang, dayKey, tr, detail }) {
+  const plan = planRowSummary(prayer, lang, dayKey);
+  return (
+    <>
+      <PrayerMark prayer={prayer} planCategory={plan?.category} />
+      <span className="today-folds__text">
+        <span className="today-folds__name">{plan?.name || tr(prayer.title, lang)}</span>
+        {detail && <span className="q-meta today-folds__detail">{detail}</span>}
+      </span>
+    </>
+  );
+}
+
+// Today is the altar for one day, built for one thing: coming before God. A
+// compact greeting, then one deep-violet altar card — the prayer that comes
+// next with one "Begin prayer", or, once the day is prayed, a calm word and two
+// ways to stay. The rest of the day follows as soft cards; what was prayed and
+// what was missed fold into one quiet panel (grace, not guilt); the verse of
+// the day closes the page. Statistics live in the Journal; planning and
+// everything else in More.
 export default function HomeTab({ onAdd, onEdit }) {
   const navigate = useNavigate();
   const { getEntriesForDay, getCompletedPrayersForDay, getCatchUp, markPrayedOn, completions, categories, prayers, settings, loading } = usePrayerStore(
@@ -147,10 +176,6 @@ export default function HomeTab({ onAdd, onEdit }) {
   const hour = today.getHours();
   const greeting = hour < 12 ? t(lang, 'greetingMorning') : hour < 18 ? t(lang, 'greetingAfternoon') : t(lang, 'greetingEvening');
 
-  // A guided plan run reads by its day, not by the name it was started under
-  // (see lib/planRow.js). The compact lists below want only the plan's name —
-  // they are a receipt and a to-do, not a place to read the day's theme.
-  const planName = (prayer) => planRowSummary(prayer, lang, dayKey)?.name || tr(prayer.title, lang);
   // The hero leads the page, so when a plan day is what remains it says which
   // plan and which day, and headlines the day's theme — the same reading as the
   // row beneath it and the session its button opens.
@@ -207,42 +232,40 @@ export default function HomeTab({ onAdd, onEdit }) {
       </div>
 
       <div className="phase-content">
-        {/* "Your altar today" names what this page is for, once, and only when
-            there is something to bring — an empty day has its own invitation.
-            Three words; the page itself shows what coming before God means. */}
-        {!dayEmpty && (!loading || prayers.length > 0) && (
-          <SectionHeader eyebrow={t(lang, 'altarTodayTitle')} sacred className="mb-5" />
-        )}
-
-        {/* One doorway into prayer: a deep-violet space, one prayer, one action. */}
+        {/* One doorway into prayer: a deep-violet space, one prayer, one action.
+            The incense rises once as the page opens; the glow beneath it is
+            the only ornament. */}
         {showFocus && (
           <section className="today-focus q-immersive" aria-labelledby="today-focus-title">
             <RiseMark motion="still" size={180} className="today-focus__rise" />
             <p className="today-focus__context">
               {planRowContext(heroPlan) || t(lang, 'todayRemainingLabel', { n: remainingPrayers.length })}
             </p>
-            <h2 id="today-focus-title" className="today-focus__title">
-              {heroPlan?.theme || heroPlan?.name || tr(focusPrayer.title, lang)}
-            </h2>
-            {focusDetail && <p className="today-focus__detail">{focusDetail}</p>}
+            <div className="today-focus__heading">
+              <PrayerMark prayer={focusPrayer} planCategory={heroPlan?.category} />
+              <div className="min-w-0">
+                <h2 id="today-focus-title" className="today-focus__title">
+                  {heroPlan?.theme || heroPlan?.name || tr(focusPrayer.title, lang)}
+                </h2>
+                {focusDetail && <p className="today-focus__detail">{focusDetail}</p>}
+              </div>
+            </div>
             <PrimaryButton onClick={() => openSession(remainingPrayers)} className="today-focus__begin">
               {t(lang, 'beginPrayer')}
             </PrimaryButton>
-            {reminder && (
-              <p className="today-focus__reminder">
-                <Clock size={12} aria-hidden="true" /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
-              </p>
-            )}
+            <TodayReminder reminder={reminder} lang={lang} className="today-focus__reminder" />
           </section>
         )}
 
-        {/* All of today prayed: a calm status — not a reward, not a green card —
-            and two optional ways to stay: be still, or walk the day once more. */}
+        {/* All of today prayed: the same altar, now at rest — a calm status,
+            not a reward — and two optional ways to stay: be still, or walk the
+            day once more. */}
         {dayComplete && (
-          <section className="today-complete">
-            <RiseMark motion="still" size={40} />
-            <p className="today-complete__title" role="status">{t(lang, 'todayCompleteTitle')}</p>
-            <div className="today-complete__actions">
+          <section className="today-focus today-focus--complete q-immersive" aria-labelledby="today-complete-title">
+            <RiseMark motion="still" size={180} className="today-focus__rise" />
+            <p className="today-focus__context">{tp(lang, 'todayPrayedCount', completedToday.length)}</p>
+            <p id="today-complete-title" className="today-focus__title" role="status">{t(lang, 'todayCompleteTitle')}</p>
+            <div className="today-focus__actions">
               <SecondaryButton onClick={() => setRemaining(true)}>
                 {t(lang, 'remainWithGod')}
               </SecondaryButton>
@@ -252,13 +275,12 @@ export default function HomeTab({ onAdd, onEdit }) {
                 </QuietButton>
               )}
             </div>
+            <TodayReminder reminder={reminder} lang={lang} className="today-focus__reminder" />
           </section>
         )}
 
-        {reminder && remainingPrayers.length === 0 && (
-          <p className="q-meta mb-6 flex items-center justify-center gap-1.5">
-            <Clock size={12} aria-hidden="true" /> {t(lang, 'nextReminder')} · {reminder.tomorrow ? t(lang, 'tomorrow') : t(lang, 'today')} {reminder.time}
-          </p>
+        {remainingPrayers.length === 0 && !dayComplete && (
+          <TodayReminder reminder={reminder} lang={lang} className="q-meta mb-6 flex items-center justify-center gap-1.5" />
         )}
 
         {!loading && prayers.length > 0 && (
@@ -326,98 +348,91 @@ export default function HomeTab({ onAdd, onEdit }) {
           </section>
         )}
 
-        {/* Prayed today — completed prayers fold into one quiet, collapsed row
-            so the main list only ever shows what remains. */}
-        {completedToday.length > 0 && (
-          <div className="today-fold">
-            <Disclosure
-              id="today-prayed"
-              label={t(lang, 'prayedTodayLabel')}
-              count={completedToday.length}
-              open={prayedOpen}
-              onToggle={() => setPrayedOpen((v) => !v)}
-            >
-              <ul className="today-fold__list">
-                {completedToday.map((prayer) => (
-                  <li key={prayer.id}>
-                    <button type="button" onClick={() => navigate(`/prayers/${prayer.id}`)} className="today-fold__row pressable">
-                      <Check size={14} aria-hidden="true" />
-                      <span>{planName(prayer)}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </Disclosure>
-          </div>
-        )}
-
-        {/* Return to prayer — prayers missed the last few days, AFTER today's
-            list and collapsed by default. Grace, not guilt: never an "overdue"
-            count up front; one tap marks them prayed, or they quietly age out. */}
-        {catchUp.length > 0 && (
-          <div className="today-fold">
-            <Disclosure
-              id="today-catch-up"
-              label={t(lang, 'catchUpTitle')}
-              count={catchUp.length}
-              open={catchUpOpen}
-              onToggle={() => setCatchUpOpen((v) => !v)}
-            >
-              <div className="pb-4">
-                <p className="q-meta mb-3">{t(lang, 'catchUpSub')}</p>
-                {/* Pray through all the missed requests in one walk, the same
-                    immersive session as Today — each is recorded on the day it
-                    was missed. The per-item checkmarks below stay for catching
-                    up one at a time. */}
-                <SecondaryButton onClick={startCatchUpSession} className="mb-2 w-full">
-                  {t(lang, 'prayNow')}
-                </SecondaryButton>
-                <ul className="today-fold__list">
-                  {catchUp.map(({ prayer, day }) => (
-                    <li key={prayer.id} className="today-fold__catch-up">
-                      <button type="button" onClick={() => navigate(`/prayers/${prayer.id}`)} className="min-w-0 flex-1 text-start">
-                        <span className="block truncate text-sm font-medium" style={{ color: 'var(--q-text)' }}>{planName(prayer)}</span>
-                        <span className="q-meta block">
-                          {t(lang, 'missedOn', { date: parseKey(day).toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' }) })}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => markPrayedOn(prayer.id, day)}
-                        title={t(lang, 'markPrayed')}
-                        aria-label={t(lang, 'markPrayed')}
-                        className="icon-button pressable"
-                      >
-                        <Check size={16} aria-hidden="true" />
+        {/* What was prayed and what was missed, folded into one quiet panel so
+            the page only ever leads with what remains. "Return to prayer" holds
+            prayers missed the last few days, collapsed by default — grace, not
+            guilt: never an "overdue" count up front; one tap marks them prayed,
+            or they quietly age out. */}
+        {(completedToday.length > 0 || catchUp.length > 0) && (
+          <div className="today-folds">
+            {completedToday.length > 0 && (
+              <Disclosure
+                id="today-prayed"
+                icon={Check}
+                label={t(lang, 'prayedTodayLabel')}
+                count={completedToday.length}
+                open={prayedOpen}
+                onToggle={() => setPrayedOpen((v) => !v)}
+              >
+                <ul className="today-folds__list">
+                  {completedToday.map((prayer) => (
+                    <li key={prayer.id}>
+                      <button type="button" onClick={() => navigate(`/prayers/${prayer.id}`)} className="today-folds__row pressable">
+                        <FoldPrayer prayer={prayer} lang={lang} dayKey={dayKey} tr={tr} />
                       </button>
                     </li>
                   ))}
                 </ul>
-              </div>
-            </Disclosure>
+              </Disclosure>
+            )}
+
+            {catchUp.length > 0 && (
+              <Disclosure
+                id="today-catch-up"
+                icon={RotateCcw}
+                label={t(lang, 'catchUpTitle')}
+                count={catchUp.length}
+                open={catchUpOpen}
+                onToggle={() => setCatchUpOpen((v) => !v)}
+              >
+                <div className="today-folds__body">
+                  <p className="q-meta mb-3">{t(lang, 'catchUpSub')}</p>
+                  {/* Pray through all the missed requests in one walk, the same
+                      immersive session as Today — each is recorded on the day it
+                      was missed. The per-item checkmarks below stay for catching
+                      up one at a time. */}
+                  <SecondaryButton onClick={startCatchUpSession} className="mb-2 w-full">
+                    {t(lang, 'prayNow')}
+                  </SecondaryButton>
+                  <ul className="today-folds__list">
+                    {catchUp.map(({ prayer, day }) => (
+                      <li key={prayer.id} className="today-folds__catch-up">
+                        <button type="button" onClick={() => navigate(`/prayers/${prayer.id}`)} className="today-folds__row pressable">
+                          <FoldPrayer
+                            prayer={prayer}
+                            lang={lang}
+                            dayKey={dayKey}
+                            tr={tr}
+                            detail={t(lang, 'missedOn', { date: parseKey(day).toLocaleDateString(lang, { weekday: 'short', day: 'numeric', month: 'short' }) })}
+                          />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => markPrayedOn(prayer.id, day)}
+                          title={t(lang, 'markPrayed')}
+                          aria-label={t(lang, 'markPrayed')}
+                          className="icon-button pressable"
+                        >
+                          <Check size={16} aria-hidden="true" />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </Disclosure>
+            )}
           </div>
         )}
 
-        {/* Verse of the day — Scripture closes the page, quoted, never generated. */}
-        <section className="today-verse" aria-labelledby="today-verse-label">
-          <div className="today-verse__head">
-            <p id="today-verse-label" className="section-label section-label--sacred">{t(lang, 'verseOfDay')}</p>
-            {verse && (
-              <button
-                type="button"
-                onClick={() => setSharingVerse(true)}
-                aria-label={t(lang, 'shareVerse')}
-                title={t(lang, 'shareVerse')}
-                className="icon-button pressable"
-              >
-                <Share2 size={16} aria-hidden="true" />
-              </button>
-            )}
-          </div>
+        {/* Verse of the day — Scripture closes the page, quoted, never
+            generated, on a card of its own so it never reads as a prayer. */}
+        <section className="today-verse q-card" aria-labelledby="today-verse-label">
+          <p id="today-verse-label" className="section-label section-label--sacred">{t(lang, 'verseOfDay')}</p>
           {verse ? (
-            <div className="scripture-block">
+            <>
+              <Quote className="today-verse__mark rtl-mirror" size={28} strokeWidth={1.4} aria-hidden="true" />
               {verse.text
-                ? <p className="scripture-block__text">“{verse.text}”</p>
+                ? <p className="today-verse__text">{verse.text}</p>
                 : verseResolving
                   ? (
                     <p className="q-meta flex items-center gap-2">
@@ -428,7 +443,7 @@ export default function HomeTab({ onAdd, onEdit }) {
               {/* The reference itself opens the chapter in the reader's Bible
                   (the Bible App on a phone, Bible.com elsewhere). */}
               <div className="today-verse__foot">
-                <p className="scripture-block__reference">
+                <p className="today-verse__reference">
                   <a
                     href={bibleLink(verse.ref, lang)}
                     target="_blank"
@@ -442,8 +457,17 @@ export default function HomeTab({ onAdd, onEdit }) {
                   </a>
                   {verse.source && <VerseVersion source={verse.source} reference={verse.ref} lang={lang} />}
                 </p>
+                <button
+                  type="button"
+                  onClick={() => setSharingVerse(true)}
+                  aria-label={t(lang, 'shareVerse')}
+                  title={t(lang, 'shareVerse')}
+                  className="icon-button pressable"
+                >
+                  <Share2 size={16} aria-hidden="true" />
+                </button>
               </div>
-            </div>
+            </>
           ) : (
             <p className="q-meta flex items-center gap-2">
               <Loader2 size={14} className="animate-spin" aria-hidden="true" /> …

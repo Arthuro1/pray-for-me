@@ -83,8 +83,6 @@ html.landing-root body { background: var(--q-canvas); }
 .landing__actions { display: flex; flex-wrap: wrap; gap: var(--q-space-3); margin-block-start: var(--q-space-8); }
 .landing__actions--center { justify-content: center; }
 .landing__cta { min-height: 52px; padding-inline: var(--q-space-6); }
-.landing__reassurance { display: flex; max-width: 28rem; align-items: flex-start; gap: var(--q-space-2); margin: var(--q-space-4) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
-.landing__reassurance > svg { flex: 0 0 auto; margin-block-start: 2px; }
 .landing__links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--q-space-5); margin-block-start: var(--q-space-3); }
 .landing__link { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; color: var(--q-royal-text); font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
 .landing__link:hover { text-decoration: underline; text-underline-offset: 4px; }
@@ -293,27 +291,57 @@ html.landing-root body { background: var(--q-canvas); }
   .landing-facts__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-.landing-faq { max-width: 48rem; margin-inline: auto; padding: var(--q-space-20) var(--q-space-6); scroll-margin-block-start: var(--q-space-6); }
-.landing__faq { display: grid; gap: var(--q-space-2); margin-block-start: var(--q-space-6); }
-.landing__faq-item.is-open { border-color: var(--q-selected-border); }
+/* The questions: a heading and one line beside them where there is room, and
+   each question a card with its own mark — the answer opens beneath it,
+   aligned with the question's words. */
+.landing-faq { max-width: 72rem; margin-inline: auto; padding: var(--q-space-20) var(--q-space-6); scroll-margin-block-start: var(--q-space-6); }
+.landing-faq__intro { max-width: 22rem; margin: var(--q-space-3) 0 0; color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.6; }
+.landing__faq { display: grid; gap: var(--q-space-3); margin-block-start: var(--q-space-8); }
+.landing__faq-item:hover { border-color: var(--q-border-strong); }
+.landing__faq-item.is-open { border-color: var(--q-selected-border); background: color-mix(in srgb, var(--q-royal) 4%, var(--q-surface)); }
 
 .landing__faq-question {
   display: flex;
   width: 100%;
-  min-height: 56px;
+  min-height: 64px;
   align-items: center;
-  justify-content: space-between;
   gap: var(--q-space-4);
-  padding: var(--q-space-4) var(--q-space-5);
+  padding-block: var(--q-space-3);
+  padding-inline: var(--q-space-4) var(--q-space-5);
   color: var(--q-text);
   font-family: var(--q-font-editorial);
   font-size: 1.125rem;
+  line-height: 1.35;
   text-align: start;
 }
+.landing__faq-q { min-width: 0; flex: 1 1 auto; }
 
 .landing__faq-question > svg { flex: 0 0 auto; color: var(--q-text-tertiary); transition: transform var(--q-motion-standard) var(--q-ease); }
 .landing__faq-question[aria-expanded="true"] > svg { color: var(--q-royal-text); transform: rotate(180deg); }
-.landing__faq-answer { margin: 0; padding: 0 var(--q-space-5) var(--q-space-5); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.75; }
+.landing__faq-answer {
+  margin: 0;
+  /* Aligned with the question's words: the tile's width and both gaps in. */
+  padding-block: 0 var(--q-space-5);
+  padding-inline: calc(var(--q-space-4) + 36px + var(--q-space-4)) var(--q-space-5);
+  color: var(--q-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  animation: q-faq-open var(--q-motion-reflective) var(--q-ease) both;
+}
+
+@keyframes q-faq-open {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+
+@media (max-width: 480px) {
+  .landing__faq-answer { padding-inline-start: var(--q-space-5); }
+}
+
+@media (min-width: 900px) {
+  .landing-faq { display: grid; grid-template-columns: minmax(0, 20rem) minmax(0, 1fr); align-items: start; gap: var(--q-space-16); }
+  .landing-faq__head { position: sticky; inset-block-start: var(--q-space-8); }
+  .landing__faq { margin-block-start: 0; }
+}
 
 /* ── The last invitation, in the deep violet, and the footer ────────────── */
 .landing__final {

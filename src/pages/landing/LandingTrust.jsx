@@ -1,5 +1,7 @@
 import { useId, useState } from 'react';
-import { Bell, ChevronDown, Globe, HeartHandshake, Lock, Smartphone, WifiOff } from 'lucide-react';
+import {
+  Bell, BookOpen, ChevronDown, Church, Globe, HeartHandshake, Lightbulb, Lock, Smartphone, UserRound, Users, WifiOff,
+} from 'lucide-react';
 
 // What a visitor needs to trust the place before praying in it: the practical
 // facts in one strip, always visible, then the questions people ask. The
@@ -16,7 +18,21 @@ const FACTS = [
   { icon: HeartHandshake, tone: 'rose' },
 ];
 
-function Question({ q, a }) {
+// One icon and hue per question, in the order of `content.faqs` in the
+// locale: private, account, AI, Scripture suggestions, social network,
+// churches, languages, free. A question a fact also answers wears its mark.
+const FAQ_MARKS = [
+  { icon: Lock, tone: 'plum' },
+  { icon: UserRound, tone: 'indigo' },
+  { icon: Lightbulb, tone: 'amber' },
+  { icon: BookOpen, tone: 'teal' },
+  { icon: Users, tone: 'clay' },
+  { icon: Church, tone: 'church' },
+  { icon: Globe, tone: 'sky' },
+  { icon: HeartHandshake, tone: 'rose' },
+];
+
+function Question({ q, a, mark: { icon: Icon, tone } }) {
   const [open, setOpen] = useState(false);
   const answerId = useId();
   return (
@@ -28,7 +44,8 @@ function Question({ q, a }) {
         className="landing__faq-question"
         onClick={() => setOpen((o) => !o)}
       >
-        <span>{q}</span>
+        <span className={`icon-tile tone-${tone}`} aria-hidden="true"><Icon size={18} strokeWidth={1.8} /></span>
+        <span className="landing__faq-q">{q}</span>
         <ChevronDown size={18} aria-hidden="true" />
       </button>
       {open && <p id={answerId} className="landing__faq-answer">{a}</p>}
@@ -58,10 +75,15 @@ export default function LandingTrust({ copy }) {
         </ul>
       </section>
 
+      {/* The heading beside the questions where there is room; above them on a
+          phone. */}
       <section id="questions" className="landing-faq" aria-labelledby="landing-faq-title">
-        <h2 id="landing-faq-title" className="landing__heading">{c.faqTitle}</h2>
+        <div className="landing-faq__head">
+          <h2 id="landing-faq-title" className="landing__heading">{c.faqTitle}</h2>
+          <p className="landing-faq__intro">{c.faqIntro}</p>
+        </div>
         <div className="landing__faq">
-          {c.faqs.map((faq) => <Question key={faq.q} {...faq} />)}
+          {c.faqs.map((faq, i) => <Question key={faq.q} {...faq} mark={FAQ_MARKS[i]} />)}
         </div>
       </section>
     </>

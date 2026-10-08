@@ -4,6 +4,7 @@ export default {
     "signIn": "登录",
     "howItWorks": "查看如何使用",
     "faqTitle": "常见问题",
+    "faqIntro": "开始之前，你可能想知道这些。",
     "faqs": [
       {
         "q": "我的祷告是私密的吗？",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "语言",
   "translationInProgress": "翻译进行中",
-  "heroReassurance": "无需注册账户。你的第一个祷告只保存在这台设备上，除非你选择保存。",
   "hero": {
     "gloss": "希伯来文的“香”",
     "title": "愿你的祷告如香升起。",

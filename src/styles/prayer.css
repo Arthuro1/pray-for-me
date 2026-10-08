@@ -32,6 +32,9 @@
 .swipe-card .q-card { box-shadow: none; }
 
 /* ── Today ──────────────────────────────────────────────────────────────── */
+/* The altar card: deep violet, one soft gold glow rising from beneath, a faint
+   violet edge so it stands apart from a dark canvas too. The same card holds
+   the next prayer and, once the day is prayed, the day at rest. */
 .today-focus {
   position: relative;
   display: flex;
@@ -41,27 +44,42 @@
   margin-block-end: var(--q-space-8);
   padding: clamp(var(--q-space-6), 6vw, var(--q-space-10));
   overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--q-royal-text) 18%, transparent);
   border-radius: var(--q-radius-surface);
+  background:
+    radial-gradient(90% 70% at 50% 125%, color-mix(in srgb, var(--q-gold) 24%, transparent), transparent 72%),
+    var(--q-canvas);
+  box-shadow: 0 18px 40px -24px rgb(41 33 63 / 55%);
 }
 
-/* One almost invisible Rise line in the corner — the only ornament. */
+/* The incense line in the corner, rising once into place as the card appears
+   and staying there (the Rise Mark's own `rise` ends invisible — that one is
+   for a prayer lifting away). */
 .today-focus__rise {
   position: absolute;
   inset-block-start: -18px;
   inset-inline-end: clamp(16px, 8vw, 56px);
-  opacity: 0.14;
+  opacity: 0.3;
   pointer-events: none;
+}
+.today-focus__rise path { animation: q-rise-in 1600ms var(--q-ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .today-focus__rise path { animation: none; }
 }
 
 .today-focus__context {
   position: relative;
   margin: 0 0 var(--q-space-4);
-  color: var(--q-text-tertiary);
+  color: var(--q-gold-text);
   font-size: var(--q-type-label);
   font-weight: 650;
   letter-spacing: var(--q-tracking-label);
   text-transform: uppercase;
 }
+
+.today-focus__heading { position: relative; display: flex; align-items: flex-start; gap: var(--q-space-4); }
+.today-focus__heading > .prayer-mark { width: 44px; height: 44px; margin-block-start: 2px; border-radius: 12px; }
 
 .today-focus__title {
   position: relative;
@@ -91,71 +109,92 @@
   font-size: 0.75rem;
 }
 
+/* The day at rest: a calm word where the next prayer stood, then two ways to
+   stay. */
+.today-focus--complete { min-height: 13rem; }
+.today-focus__actions { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); margin-block-start: var(--q-space-8); }
+
 @media (max-width: 480px) {
   .today-focus__begin { align-self: stretch; }
 }
-
-.today-complete {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--q-space-4);
-  padding-block: var(--q-space-8) var(--q-space-10);
-  text-align: center;
-}
-
-.today-complete__title {
-  max-width: 26rem;
-  margin: 0;
-  color: var(--q-text);
-  font-family: var(--q-font-editorial);
-  font-size: var(--q-type-section);
-  font-weight: 450;
-  line-height: 1.25;
-  text-wrap: balance;
-}
-
-.today-complete__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--q-space-2); }
 
 .today-list { margin-block-end: var(--q-space-8); }
 .today-list__group { display: grid; gap: var(--q-space-2); }
 .today-list__slot { margin-block: var(--q-space-6) var(--q-space-1); }
 
-.today-fold { margin-block-end: var(--q-space-6); border-block: 1px solid var(--q-border); }
-.today-fold + .today-fold { margin-block-start: calc(-1 * var(--q-space-6) - 1px); }
-.today-fold__list { margin: 0; padding: 0 0 var(--q-space-3); list-style: none; }
+/* What was prayed and what was missed: one soft panel, a row each. */
+.today-folds {
+  margin-block-end: var(--q-space-8);
+  overflow: hidden;
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  box-shadow: var(--q-card-shadow);
+}
+.today-folds > * + * { border-block-start: 1px solid var(--q-border); }
+.today-folds .q-disclosure { min-height: 56px; padding-inline: var(--q-space-4); }
+.today-folds__list { margin: 0; padding: 0 var(--q-space-2) var(--q-space-2); list-style: none; }
+.today-folds__body { padding: 0 var(--q-space-4) var(--q-space-3); }
+.today-folds__body .today-folds__list { padding: 0; }
 
-.today-fold__row {
+.today-folds__row {
   display: flex;
   width: 100%;
-  min-height: 44px;
+  min-width: 0;
+  min-height: 52px;
   align-items: center;
   gap: var(--q-space-3);
-  color: var(--q-text-secondary);
+  padding: var(--q-space-1) var(--q-space-2);
+  border-radius: var(--q-radius-control);
+  color: var(--q-text);
   font-size: 0.9375rem;
   text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease);
+}
+.today-folds__row:hover { background: var(--q-hover); }
+.today-folds__row > .prayer-mark { width: 32px; height: 32px; border-radius: 9px; }
+.today-folds__row > .prayer-mark svg { width: 17px; height: 17px; }
+.today-folds__text { display: grid; min-width: 0; }
+.today-folds__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.today-folds__catch-up { display: flex; align-items: center; gap: var(--q-space-1); border-block-start: 1px solid var(--q-border); }
+.today-folds__catch-up > .today-folds__row { flex: 1 1 auto; padding-inline: 0; }
+.today-folds__catch-up > .today-folds__row:hover { background: none; }
+
+/* The verse of the day: Scripture on a card of its own, warmed with a trace
+   of gold so it never reads as one more prayer. */
+.today-verse {
+  margin-block-end: var(--q-space-12);
+  padding: var(--q-space-6);
+  border-color: color-mix(in srgb, var(--q-gold) 24%, var(--q-card-border));
+  background: linear-gradient(180deg, color-mix(in srgb, var(--q-gold) 7%, var(--q-surface)), var(--q-surface) 65%);
+}
+.today-verse > .section-label { margin: 0; }
+.today-verse__mark { display: block; margin-block: var(--q-space-4) var(--q-space-2); color: var(--q-gold); }
+.today-verse__text {
+  margin: 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-optical-sizing: auto;
+  font-size: clamp(1.1875rem, 2.4vw, 1.3125rem);
+  line-height: 1.6;
+  text-wrap: pretty;
 }
 
-.today-fold__row svg { flex: 0 0 auto; color: var(--q-text-tertiary); }
-
-.today-fold__catch-up {
+/* The reference closes the quotation, and is itself the way into the whole
+   chapter: gold like every reference, underlined on hover. Sharing sits
+   across from it. */
+.today-verse__foot {
   display: flex;
-  min-height: 56px;
   align-items: center;
-  gap: var(--q-space-2);
+  justify-content: space-between;
+  gap: var(--q-space-3);
+  margin-block-start: var(--q-space-4);
+  padding-block-start: var(--q-space-2);
   border-block-start: 1px solid var(--q-border);
 }
-
-
-.today-verse { margin-block: var(--q-space-4) var(--q-space-12); padding-block-start: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
-/* A fold right above already closes with a hairline: one line, not two. */
-.today-fold + .today-verse { margin-block-start: calc(-1 * var(--q-space-6)); border-block-start: 0; }
-.today-verse__head { display: flex; align-items: center; justify-content: space-between; margin-block-end: var(--q-space-3); }
-
-/* The reference closes the quotation at its end, and is itself the way into
-   the whole chapter: gold like every reference, underlined on hover. */
-.today-verse__foot { display: flex; justify-content: flex-end; margin-block-start: var(--q-space-2); }
-.today-verse__foot .scripture-block__reference { margin: 0; text-align: end; }
+.today-verse__foot > .icon-button { margin-inline-end: calc(-1 * var(--q-space-3)); }
+.today-verse__reference { margin: 0; color: var(--q-gold-text); font-size: var(--q-type-meta); font-weight: 650; letter-spacing: 0.04em; }
 .today-verse__ref {
   display: inline-flex;
   min-height: 44px;

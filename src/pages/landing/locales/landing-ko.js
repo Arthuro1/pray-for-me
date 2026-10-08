@@ -4,6 +4,7 @@ export default {
     "signIn": "로그인",
     "howItWorks": "어떻게 작동하는지 보기",
     "faqTitle": "자주 묻는 질문",
+    "faqIntro": "시작하기 전에 알아 두면 좋은 것들입니다.",
     "faqs": [
       {
         "q": "제 기도는 비공개인가요?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "언어",
   "translationInProgress": "번역 진행 중",
-  "heroReassurance": "계정이 필요 없습니다. 첫 기도는 저장하기로 선택하기 전까지 이 기기에만 남습니다.",
   "hero": {
     "gloss": "히브리어로 ‘향’",
     "title": "당신의 기도가 향처럼 올라가기를.",

@@ -444,6 +444,23 @@ a.q-card:hover {
 .q-disclosure > svg { flex: 0 0 auto; color: var(--q-text-tertiary); transition: transform var(--q-motion-standard) var(--q-ease); }
 .q-disclosure[aria-expanded="true"] > svg { transform: rotate(180deg); }
 
+/* With an icon, a disclosure is a row: icon, name, count pill, chevron. */
+.q-disclosure--row { justify-content: flex-start; color: var(--q-text); font-size: 0.9375rem; }
+.q-disclosure__icon { display: inline-flex; flex: 0 0 auto; color: var(--q-royal-text); }
+.q-disclosure__label { min-width: 0; flex: 1 1 auto; }
+.q-disclosure__count {
+  min-width: 26px;
+  padding: 2px var(--q-space-2);
+  border-radius: var(--q-radius-pill);
+  background: var(--q-surface-muted);
+  color: var(--q-text-secondary);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  line-height: 1.5;
+  text-align: center;
+}
+
 /* A setting folded behind its current value — drawn as a field, because it
    is one: the value reads without opening anything. */
 .disclosure-row {

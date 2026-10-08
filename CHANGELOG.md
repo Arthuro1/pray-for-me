@@ -6,6 +6,33 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Changed — Today as one altar card; a warmer FAQ; two lines removed
+
+- **Today** drops the "Your altar today" eyebrow: the deep-violet card says it.
+  The card now has a soft gold glow rising from beneath, a gold context line,
+  the prayer's circle (or plan) mark beside its title, an incense line that
+  rises once into place, and a faint violet edge that holds it apart from the
+  dark theme.
+- **A prayed day rests in the same card**: "{n} prayers today", then
+  "Your prayers for today are before God." (was "You have prayed through what
+  you planned for today", which read like a to-do list), Remain with God, Pray
+  again and the next reminder.
+- **"Prayed today" and "Return to prayer"** sit in one soft panel, a row each
+  with an icon and a count pill; opened rows show each prayer's mark. The
+  `Disclosure` primitive takes an optional `icon` for this row form.
+- **The verse of the day** is a Scripture card: a gold quotation mark, larger
+  serif text, the reference and Share in one footer row.
+- **Landing FAQ**: each question has its own icon tile; on wide screens the
+  heading and a new intro line sit beside the list; answers open with a short
+  rise.
+- **Removed:** the landing hero's "No account needed…" line (`heroReassurance`)
+  and the About page's "What Qetoret will never do" section with its privacy
+  line (`aboutPromisesTitle`, `aboutPromiseVoice|Outcome|Rank|Ai|Private`), and
+  `altarTodayTitle`.
+- Keys: `todayCompleteTitle` reworded, `todayPrayedCount_one|other` new (app
+  ×16); `content.faqIntro` new (landing ×16). New wording is AI-drafted in 15
+  languages and needs a native pass. No SQL, no server change.
+
 ### Changed — the landing page tells Zechariah's story (`docs/QETORET_IDENTITY.md` §2)
 
 - **One story, top to bottom**, beside the app that serves each step: the

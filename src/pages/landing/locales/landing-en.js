@@ -4,6 +4,7 @@ export default {
     "signIn": "Sign in",
     "howItWorks": "See how it works",
     "faqTitle": "Questions",
+    "faqIntro": "What you may want to know before you begin.",
     "faqs": [
       {
         "q": "Are my prayers private?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Language",
   "translationInProgress": "Translation in progress",
-  "heroReassurance": "No account needed. Your first prayer stays on this device unless you choose to save it.",
   "hero": {
     "gloss": "Hebrew for “incense”",
     "title": "Let your prayers rise.",

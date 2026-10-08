@@ -115,26 +115,6 @@
   .about-foundations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* What Qetoret will never do, one line each, then the privacy it keeps. */
-.about-promises { display: grid; gap: var(--q-space-3); margin: 0; padding: 0; list-style: none; }
-.about-promises > li { display: flex; align-items: center; gap: var(--q-space-3); color: var(--q-text); font-size: 0.9375rem; line-height: 1.45; }
-.about-promises__private {
-  display: flex;
-  align-items: center;
-  gap: var(--q-space-3);
-  margin: var(--q-space-5) 0 0;
-  padding: var(--q-space-3) var(--q-space-4);
-  border-radius: var(--q-radius-surface);
-  background: color-mix(in srgb, var(--q-royal) 7%, var(--q-surface));
-  color: var(--q-text-secondary);
-  font-size: 0.9375rem;
-  line-height: 1.45;
-}
-.about-promises__private > svg { flex: 0 0 auto; color: var(--q-royal-text); }
-@media (min-width: 600px) {
-  .about-promises { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--q-space-4) var(--q-space-6); }
-}
-
 .about__section { padding-block: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
 .about__section > .q-section-title { margin-block-end: var(--q-space-3); color: var(--q-text); }
 .about__body { margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }

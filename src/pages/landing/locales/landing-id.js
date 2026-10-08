@@ -4,6 +4,7 @@ export default {
     "signIn": "Masuk",
     "howItWorks": "Lihat cara kerjanya",
     "faqTitle": "Pertanyaan",
+    "faqIntro": "Hal yang mungkin ingin Anda ketahui sebelum mulai.",
     "faqs": [
       {
         "q": "Apakah doa saya bersifat pribadi?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Bahasa",
   "translationInProgress": "Terjemahan sedang berlangsung",
-  "heroReassurance": "Tidak perlu akun. Doa pertama Anda tetap di perangkat ini sampai Anda memilih untuk menyimpannya.",
   "hero": {
     "gloss": "bahasa Ibrani untuk “ukupan”",
     "title": "Biarlah doa-doa Anda naik seperti dupa.",

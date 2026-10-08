@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 //
-// Today is driven by COMPLETION state: the header counts what remains, "Pray
-// now" opens only unfinished prayers (resume, never repeat), completed prayers
-// fold into a collapsed "Prayed today" row, and a fully-prayed day shows a calm
-// complete status with an explicit "Pray again" that walks the whole day.
+// Today is driven by COMPLETION state: the altar card counts what remains,
+// "Pray now" opens only unfinished prayers (resume, never repeat), completed
+// prayers fold into a collapsed "Prayed today" row, and a fully-prayed day
+// rests in the same card with a calm status and an explicit "Pray again" that
+// walks the whole day.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
@@ -35,7 +36,7 @@ import useCommunityStore from '../store/communityStore';
 import useLayoutStore from '../store/layoutStore';
 import { todayKey } from '../lib/prayedLog';
 import { addDays } from '../lib/schedule';
-import { t } from '../i18n';
+import { t, tp } from '../i18n';
 
 const lang = 'fr';
 const DAY = todayKey();
@@ -109,9 +110,27 @@ describe('HomeTab — remaining vs completed', () => {
     expect(within(screen.getByRole('dialog')).getByText('Prière un')).toBeTruthy();
   });
 
-  it('names the page "your altar today" once there is something to bring', () => {
+  it('a completed day rests in the same altar card: how many were prayed, then the ways to stay', () => {
+    usePrayerStore.setState({
+      completions: { p1: [DAY], p2: [DAY], p3: [DAY] },
+      settings: { language: lang, dailyReminderEnabled: true, dailyReminderTime: '06:00' },
+    });
     renderHome();
-    expect(screen.getByText(t(lang, 'altarTodayTitle'))).toBeTruthy();
+    const altar = screen.getByRole('region', { name: t(lang, 'todayCompleteTitle') });
+    expect(within(altar).getByText(tp(lang, 'todayPrayedCount', 3))).toBeTruthy();
+    expect(within(altar).getByText(t(lang, 'remainWithGod'))).toBeTruthy();
+    expect(within(altar).getByText(new RegExp(t(lang, 'nextReminder')))).toBeTruthy();
+    // The reminder is said once, inside the card.
+    expect(screen.getAllByText(new RegExp(t(lang, 'nextReminder')))).toHaveLength(1);
+  });
+
+  it('what was prayed and what was missed fold into one panel, each row naming its count', () => {
+    const missed = { ...prayer('m1', 'Prière manquée'), schedule: { type: 'once', date: addDays(DAY, -1) } };
+    usePrayerStore.setState((s) => ({ prayers: [...s.prayers, missed], completions: { p1: [DAY] } }));
+    renderHome();
+    const prayed = screen.getByRole('button', { name: `${t(lang, 'prayedTodayLabel')} 1` });
+    const catchUp = screen.getByRole('button', { name: `${t(lang, 'catchUpTitle')} 1` });
+    expect(prayed.closest('.today-folds')).toBe(catchUp.closest('.today-folds'));
   });
 
   // Today answers "what am I bringing before God today?", not "how is my

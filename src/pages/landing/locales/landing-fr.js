@@ -4,6 +4,7 @@ export default {
     "signIn": "Se connecter",
     "howItWorks": "Voir comment ça marche",
     "faqTitle": "Questions",
+    "faqIntro": "Ce que vous voudrez peut-être savoir avant de commencer.",
     "faqs": [
       {
         "q": "Mes prières sont-elles privées ?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Langue",
   "translationInProgress": "Traduction en cours",
-  "heroReassurance": "Aucun compte requis. Votre première prière reste sur cet appareil, sauf si vous choisissez de l'enregistrer.",
   "hero": {
     "gloss": "« encens » en hébreu",
     "title": "Que vos prières s'élèvent.",

@@ -4,6 +4,7 @@ export default {
     "signIn": "ግባ",
     "howItWorks": "እንዴት እንደሚሰራ ይመልከቱ",
     "faqTitle": "ጥያቄዎች",
+    "faqIntro": "ከመጀመርዎ በፊት ማወቅ የሚፈልጉት።",
     "faqs": [
       {
         "q": "ጸሎቶቼ ግላዊ ናቸው?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "ቋንቋ",
   "translationInProgress": "ትርጉሙ በሂደት ላይ ነው",
-  "heroReassurance": "መለያ አያስፈልግም። የመጀመሪያ ጸሎትዎ ለማስቀመጥ እስኪመርጡ ድረስ በዚህ መሣሪያ ላይ ብቻ ይቆያል።",
   "hero": {
     "gloss": "በዕብራይስጥ «ዕጣን»",
     "title": "ጸሎቶችዎ እንደ ዕጣን ወደ ላይ ይውጡ።",

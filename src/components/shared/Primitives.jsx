@@ -108,7 +108,10 @@ export function SegmentedControl({ label, value, options, onChange, className = 
   );
 }
 
-export function Disclosure({ id, label, count, open, onToggle, children, className = '' }) {
+// A folded section: its name, how many it holds, a chevron. With an `icon` it
+// reads as a row of its own — the icon, the name, the count in a pill.
+export function Disclosure({ id, label, count, icon: Icon, open, onToggle, children, className = '' }) {
+  const counted = typeof count === 'number';
   return (
     <div className={className}>
       <button
@@ -116,9 +119,19 @@ export function Disclosure({ id, label, count, open, onToggle, children, classNa
         onClick={onToggle}
         aria-expanded={open}
         aria-controls={id}
-        className="q-disclosure pressable"
+        className={`q-disclosure pressable${Icon ? ' q-disclosure--row' : ''}`}
       >
-        <span>{label}{typeof count === 'number' ? ` · ${count}` : ''}</span>
+        {Icon ? (
+          <>
+            <span className="q-disclosure__icon" aria-hidden="true"><Icon size={16} strokeWidth={1.9} /></span>
+            <span className="q-disclosure__label">{label}</span>
+            {/* The space is never drawn between flex items, but keeps the
+                name read as "label 3", not "label3". */}
+            {counted && <>{' '}<span className="q-disclosure__count">{count}</span></>}
+          </>
+        ) : (
+          <span>{label}{counted ? ` · ${count}` : ''}</span>
+        )}
         <ChevronDown size={16} aria-hidden="true" />
       </button>
       {open && <div id={id}>{children}</div>}

@@ -4,6 +4,7 @@ export default {
     "signIn": "تسجيل الدخول",
     "howItWorks": "اطلع على طريقة العمل",
     "faqTitle": "أسئلة",
+    "faqIntro": "ما قد ترغب في معرفته قبل أن تبدأ.",
     "faqs": [
       {
         "q": "هل صلواتي خاصة؟",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "اللغة",
   "translationInProgress": "الترجمة قيد العمل",
-  "heroReassurance": "لا حاجة إلى حساب. تبقى صلاتك الأولى على هذا الجهاز ما لم تختر حفظها.",
   "hero": {
     "gloss": "«بخور» بالعبرية",
     "title": "لتصعد صلواتك كالبخور.",

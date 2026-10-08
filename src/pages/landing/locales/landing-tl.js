@@ -4,6 +4,7 @@ export default {
     "signIn": "Mag-sign in",
     "howItWorks": "Tingnan kung paano gumagana",
     "faqTitle": "Mga tanong",
+    "faqIntro": "Mga maaaring gusto mong malaman bago ka magsimula.",
     "faqs": [
       {
         "q": "Pribado ba ang aking mga panalangin?",
@@ -47,7 +48,6 @@ export default {
   },
   "languageMenuLabel": "Wika",
   "translationInProgress": "Isinasalin pa",
-  "heroReassurance": "Hindi kailangan ng account. Mananatili sa device na ito ang iyong unang panalangin hangga't hindi mo piniling i-save ito.",
   "hero": {
     "gloss": "salitang Hebreo para sa “insenso”",
     "title": "Pumailanlang nawa ang iyong mga panalangin.",
