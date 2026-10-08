@@ -8,8 +8,6 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { act, render, screen, fireEvent, cleanup, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 
-vi.mock('react-router-dom', async (orig) => ({ ...(await orig()), useNavigate: () => vi.fn() }));
-
 import PrayersTab from './PrayersTab';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
@@ -175,7 +173,42 @@ describe('PrayersTab — By circle', () => {
     expect(within(row('Prière carried')).getByText(t(lang, 'testimony'))).toBeTruthy();
   });
 
-  it('names each circle as a way into its teaching, and is reopened when that page sends the reader back', () => {
+  it('filters prayer subjects when a circle heading is selected, without opening teaching or plans', () => {
+    render(
+      <MemoryRouter initialEntries={['/prayers']}>
+        <Routes>
+          <Route path="/prayers" element={<PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />} />
+          <Route path="/circles/:circleId" element={<LandedOnCircle />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circle_household') }));
+
+    expect(screen.getByText('Prière home')).toBeTruthy();
+    expect(screen.getByText('Prière home2')).toBeTruthy();
+    expect(screen.queryByText('Prière heart')).toBeNull();
+    expect(screen.queryByText('Prière nation')).toBeNull();
+    expect(screen.queryByText('Prière loose')).toBeNull();
+    expect(screen.queryByTestId('circle-page')).toBeNull();
+    expect(screen.queryByText(t(lang, 'goDeeper'))).toBeNull();
+    expect(screen.getByRole('button', { name: t(lang, 'circle_household') }).getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'clearFiltersBtn') }));
+    expect(screen.getByText('Prière heart')).toBeTruthy();
+    expect(screen.getByText('Prière nation')).toBeTruthy();
+    expect(screen.getByText('Prière loose')).toBeTruthy();
+  });
+
+  it('lets a selected heading show all circles again', () => {
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circle_household') }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circle_household') }));
+    expect(screen.getByText('Prière heart')).toBeTruthy();
+    expect(screen.getByText('Prière home')).toBeTruthy();
+    expect(screen.queryByText(t(lang, 'filtersOnLabel'))).toBeNull();
+  });
+
+  it('keeps circle teaching behind an explicitly named secondary link', () => {
     render(
       <MemoryRouter initialEntries={['/prayers']}>
         <Routes>
@@ -185,31 +218,53 @@ describe('PrayersTab — By circle', () => {
       </MemoryRouter>,
     );
     byCircle();
-    fireEvent.click(within(screen.getByRole('region', { name: t(lang, 'circle_household') })).getByRole('link', { name: t(lang, 'circle_household') }));
-    expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/prayers","fromState":{"journalView":"circles","filter":"active"}}');
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circle_household') }));
+    fireEvent.click(screen.getByRole('link', { name: t(lang, 'circleLearnAbout', { circle: t(lang, 'circle_household') }) }));
+    expect(screen.getByTestId('circle-page').textContent).toBe('/circles/household {"from":"/prayers","fromState":{"journalView":"circles","filter":"active","journalCircle":"household"}}');
     cleanup();
 
     render(
-      <MemoryRouter initialEntries={[{ pathname: '/prayers', state: { journalView: 'circles' } }]}>
+      <MemoryRouter initialEntries={[{ pathname: '/prayers', state: { journalView: 'circles', journalCircle: 'household' } }]}>
         <PrayersTab onAdd={() => {}} onAddInCircle={vi.fn()} />
       </MemoryRouter>,
     );
     expect(showsByCircle()).toBe(true);
-    expect(groupTitles()[0]).toBe(t(lang, 'circle_self'));
-    // The unplaced group has no circle page to open.
-    expect(within(screen.getByRole('region', { name: t(lang, 'circleUnplaced') })).queryByRole('link', { name: t(lang, 'circleUnplaced') })).toBeNull();
+    expect(groupTitles()).toEqual([t(lang, 'circle_household')]);
+    expect(screen.getByText('Prière home')).toBeTruthy();
+    expect(screen.queryByText('Prière heart')).toBeNull();
   });
 
-  // One circle-oriented way to find prayers: the filter sheet holds no
-  // second, competing circle selector.
-  it('is the only circle tool — the filters have no circle selector', () => {
-    usePrayerStore.setState({ categories: [{ id: 'cat1', name: 'Famille', emoji: '' }] });
+  it('offers circle filtering in the List view using the same prayer entries', () => {
     renderJournal();
+    chooseView('journalViewList');
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'filterLabel') }));
     const sheet = screen.getByRole('dialog', { name: t(lang, 'journalFilters') });
-    expect(within(sheet).queryByText(t(lang, 'circleFieldLabel'))).toBeNull();
-    for (const select of within(sheet).queryAllByRole('combobox')) {
-      expect(select.textContent).not.toContain(t(lang, 'circle_household'));
-    }
+    fireEvent.change(within(sheet).getByRole('combobox', { name: t(lang, 'circleFieldLabel') }), { target: { value: 'household' } });
+    fireEvent.click(within(sheet).getByRole('button', { name: t(lang, 'close') }));
+    expect(screen.getByText('Prière home')).toBeTruthy();
+    expect(screen.getByText('Prière home2')).toBeTruthy();
+    expect(screen.queryByText('Prière heart')).toBeNull();
+    expect(screen.queryByText('Prière done')).toBeNull();
+    expect(screen.queryByText(t(lang, 'goDeeper'))).toBeNull();
+  });
+
+  it('filters answered prayer subjects and preserves the filter when changing segments', () => {
+    usePrayerStore.setState((s) => ({ prayers: [...s.prayers, prayer('answered-home', { circle: 'household', status: 'answered' })] }));
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'answered')} 2` }));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circle_household') }));
+    expect(screen.getByText('Prière answered-home')).toBeTruthy();
+    expect(screen.queryByText('Prière done')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: `${t(lang, 'active')} 5` }));
+    expect(screen.getByText('Prière home')).toBeTruthy();
+    expect(screen.queryByText('Prière heart')).toBeNull();
+  });
+
+  it('retrieves unplaced subjects when their heading is selected', () => {
+    renderJournal();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'circleUnplaced') }));
+    expect(screen.getByText('Prière loose')).toBeTruthy();
+    expect(screen.queryByText('Prière home')).toBeNull();
+    expect(screen.queryByRole('link', { name: t(lang, 'circleLearnAbout', { circle: t(lang, 'circleUnplaced') }) })).toBeNull();
   });
 });

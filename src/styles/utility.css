@@ -732,45 +732,46 @@
   .notif-panel { width: 24rem; max-height: 70vh; border-block-end: 1px solid var(--q-border); border-radius: var(--q-radius-dialog); }
 }
 
-/* ── Sign in: the logo, one line, one clean sheet ───────────────────────── */
+/* ── Sign in: a quiet welcome and one focused form ──────────────────────── */
 html.auth-root body { background: var(--q-canvas); }
 
 .auth-experience {
   position: relative;
-  display: grid;
+  display: flex;
   min-height: 100dvh;
-  place-items: center;
-  padding: 9rem var(--q-space-4) var(--q-space-8);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--q-space-6);
+  padding: max(var(--q-space-20), env(safe-area-inset-top)) var(--q-space-4) max(var(--q-space-10), env(safe-area-inset-bottom));
   background: var(--q-canvas);
   color: var(--q-text);
 }
 
-.auth-back { position: fixed; z-index: 10; inset-block-start: max(var(--q-space-3), env(safe-area-inset-top)); inset-inline-start: var(--q-space-3); }
+.auth-back { position: absolute; inset-block-start: max(var(--q-space-3), env(safe-area-inset-top)); inset-inline-start: var(--q-space-3); }
 
 .auth-brand {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: max(2.25rem, env(safe-area-inset-top));
-  inset-inline: 0;
   display: flex;
+  width: min(100%, 27rem);
   flex-direction: column;
   align-items: center;
-  gap: var(--q-space-2);
-  padding-inline: var(--q-space-4);
-  pointer-events: none;
+  gap: var(--q-space-3);
   text-align: center;
 }
 
-.auth-brand__line { margin: var(--q-space-1) 0 0; color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.4; }
+.auth-brand__lockup { display: flex; align-items: center; justify-content: center; gap: var(--q-space-3); }
+.auth-brand__lockup h1 { display: flex; align-items: center; }
+.auth-brand__line { max-width: 24rem; margin: 0; color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1.25rem; line-height: 1.4; text-wrap: balance; }
 
 .auth-sheet {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 29rem);
-  padding: var(--q-space-6) clamp(var(--q-space-5), 5vw, var(--q-space-8)) max(var(--q-space-6), env(safe-area-inset-bottom));
-  border: 1px solid var(--q-border);
+  width: min(100%, 27rem);
+  min-inline-size: 0;
+  margin: 0;
+  padding: var(--q-space-8);
+  border: 1px solid var(--q-card-border);
   border-radius: var(--q-radius-dialog);
   background: var(--q-surface);
+  box-shadow: var(--q-elevation);
 }
 
 .auth-sheet__title { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.5rem; font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
@@ -786,18 +787,14 @@ html.auth-root body { background: var(--q-canvas); }
 .auth-or::after { height: 1px; flex: 1 1 auto; background: var(--q-border); content: ''; }
 
 .auth-form { display: grid; gap: var(--q-space-4); }
-.auth-privacy { margin: var(--q-space-5) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; text-align: center; }
+.auth-forgot { justify-self: end; margin-block: calc(-1 * var(--q-space-2)); margin-inline-end: calc(-1 * var(--q-space-3)); }
+.auth-privacy { display: flex; max-width: 27rem; align-items: center; justify-content: center; gap: var(--q-space-2); margin: 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; text-align: center; }
+.auth-privacy svg { flex: 0 0 auto; }
 
 @media (max-width: 639px) {
-  .auth-experience { place-items: end center; padding: 8rem 0 0; }
-  .auth-sheet { border-inline: 0; border-block-end: 0; border-radius: var(--q-radius-dialog) var(--q-radius-dialog) 0 0; }
-}
-
-/* A short phone: a smaller mark, and the sheet starts higher. */
-@media (max-width: 639px) and (max-height: 720px) {
-  .auth-experience { place-items: start center; padding-block-start: 7rem; }
-  .auth-brand { inset-block-start: max(var(--q-space-3), env(safe-area-inset-top)); gap: var(--q-space-1); }
-  .auth-brand .brand-mark { width: 36px; height: 36px; }
+  .auth-experience { gap: var(--q-space-5); padding-block: max(var(--q-space-16), env(safe-area-inset-top)) max(var(--q-space-6), env(safe-area-inset-bottom)); }
+  .auth-sheet { padding: var(--q-space-6) var(--q-space-5); box-shadow: var(--q-card-shadow); }
+  .auth-brand__line { font-size: 1.125rem; }
 }
 
 /* ── The vault and the account key ──────────────────────────────────────── */

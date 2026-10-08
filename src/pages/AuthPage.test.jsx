@@ -220,4 +220,84 @@ describe('AuthPage', () => {
     fireEvent.click(resend);
     await waitFor(() => expect(useAuthStore.getState().resendConfirmation).toHaveBeenCalledWith('new@user.com'));
   });
+
+  it('uses the correct browser autofill hints for login and registration', () => {
+    const { container } = render(<AuthPage />);
+    expect(screen.getByLabelText(t('fr', 'authEmail')).getAttribute('autocomplete')).toBe('email');
+    expect(container.querySelector('#auth-password').getAttribute('autocomplete')).toBe('current-password');
+    fireEvent.click(screen.getByRole('button', { name: t('fr', 'authSignUp') }));
+    expect(screen.getByLabelText(t('fr', 'authNamePlaceholder')).getAttribute('autocomplete')).toBe('name');
+    expect(container.querySelector('#auth-password').getAttribute('autocomplete')).toBe('new-password');
+  });
+
+  it.each([
+    ['login', 'signInWithEmail'],
+    ['register', 'signUpWithEmail'],
+    ['link', 'signInWithEmailLink'],
+    ['forgot', 'resetPassword'],
+    ['google', 'signInWithGoogle'],
+    ['resend', 'resendConfirmation'],
+  ])('allows retry after a rejected %s request', async (path, action) => {
+    useAuthStore.setState({ [action]: vi.fn().mockRejectedValueOnce(new Error('Failed to fetch private internals')).mockResolvedValue({ error: null }) });
+    const { container } = render(<AuthPage intent={path === 'link' ? 'save-prayer' : undefined} />);
+    if (path === 'register' || path === 'resend') {
+      fireEvent.click(screen.getByRole('button', { name: t('fr', 'authSignUp') }));
+    } else if (path === 'forgot') {
+      fireEvent.click(screen.getByText(t('fr', 'authForgotPassword')));
+    }
+    fireEvent.change(screen.getByPlaceholderText(t('fr', 'authEmail')), { target: { value: 'a@b.com' } });
+    const password = container.querySelector('#auth-password');
+    if (password) fireEvent.change(password, { target: { value: 'secret1' } });
+
+    if (path === 'resend') {
+      submitForm(container);
+      await screen.findByText(t('fr', 'authConfirmSent'));
+    }
+    const invoke = () => {
+      if (path === 'google') fireEvent.click(screen.getByRole('button', { name: t('fr', 'authContinueGoogle') }));
+      else if (path === 'resend') fireEvent.click(screen.getByRole('button', { name: t('fr', 'authResend') }));
+      else submitForm(container);
+    };
+
+    invoke();
+    await screen.findByRole('alert');
+    expect(screen.getByRole('alert').textContent).toBe(t('fr', 'errorGeneric'));
+    expect(screen.queryByText(/private internals/)).toBeNull();
+    await waitFor(() => expect(container.querySelector('.auth-sheet').disabled).toBe(false));
+    expect(screen.queryByText(t('fr', 'authResetSent'))).toBeNull();
+    invoke();
+    await waitFor(() => expect(useAuthStore.getState()[action]).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(container.querySelector('.auth-sheet').disabled).toBe(false));
+  });
+
+  it('sends one request and holds the current mode while sign-in is pending', async () => {
+    let finish;
+    const signIn = vi.fn(() => new Promise((resolve) => { finish = resolve; }));
+    useAuthStore.setState({ signInWithEmail: signIn });
+    const { container } = render(<AuthPage />);
+    fireEvent.change(screen.getByPlaceholderText(t('fr', 'authEmail')), { target: { value: 'a@b.com' } });
+    fireEvent.change(screen.getByPlaceholderText(t('fr', 'authPassword')), { target: { value: 'secret1' } });
+
+    submitForm(container);
+    submitForm(container);
+    fireEvent.click(screen.getByRole('button', { name: t('fr', 'authSignUp') }));
+    expect(signIn).toHaveBeenCalledTimes(1);
+    expect(container.querySelector('.auth-sheet').disabled).toBe(true);
+    expect(screen.queryByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeNull();
+
+    finish({ error: { message: 'Invalid login credentials' } });
+    await screen.findByText(t('fr', 'authErrInvalid'));
+    await waitFor(() => expect(document.activeElement).toBe(container.querySelector('#auth-password')));
+    expect(container.querySelector('.auth-sheet').disabled).toBe(false);
+  });
+
+  it('shows a reset transport failure without claiming that the email was sent', async () => {
+    useAuthStore.setState({ resetPassword: vi.fn(async () => ({ error: { status: 503, message: 'Service unavailable' } })) });
+    const { container } = render(<AuthPage />);
+    fireEvent.click(screen.getByText(t('fr', 'authForgotPassword')));
+    fireEvent.change(screen.getByPlaceholderText(t('fr', 'authEmail')), { target: { value: 'a@b.com' } });
+    submitForm(container);
+    await screen.findByText(t('fr', 'errorGeneric'));
+    expect(screen.queryByText(t('fr', 'authResetSent'))).toBeNull();
+  });
 });

@@ -79,6 +79,8 @@ export default function AuthPage({ onBack, intent }) {
   const [canResend, setCanResend] = useState(false);
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const pendingRequest = useRef(false);
+  const mounted = useRef(true);
 
   const lang = usePrayerStore((s) => s.settings.language) || 'en';
   const {
@@ -87,9 +89,19 @@ export default function AuthPage({ onBack, intent }) {
   } = useAuthStore();
 
   useEffect(() => {
+    mounted.current = true;
     document.documentElement.classList.add('auth-root');
-    return () => document.documentElement.classList.remove('auth-root');
+    return () => {
+      mounted.current = false;
+      document.documentElement.classList.remove('auth-root');
+    };
   }, []);
+
+  useEffect(() => {
+    if (!loading && errorField) {
+      (errorField === 'password' ? passwordRef : emailRef).current?.focus();
+    }
+  }, [errorField, loading]);
 
   const patch = (updates) => setForm((f) => ({ ...f, ...updates }));
   const patchField = (field, value) => {
@@ -107,7 +119,12 @@ export default function AuthPage({ onBack, intent }) {
     setSuccess(null);
     setCanResend(false);
   };
-  const switchMode = (m) => { setMode(m); resetFeedback(); };
+  const switchMode = (m) => {
+    if (pendingRequest.current) return;
+    setMode(m);
+    setShowPassword(false);
+    resetFeedback();
+  };
 
   const focusField = (field) => {
     const target = field === 'password' ? passwordRef : emailRef;
@@ -128,8 +145,26 @@ export default function AuthPage({ onBack, intent }) {
     if (resend) setCanResend(true);
   };
 
+  // Every auth path releases the form after a transport failure. The ref also
+  // prevents a second submit before React has rendered the disabled controls.
+  const runAuthRequest = async (action, onResult) => {
+    if (pendingRequest.current) return;
+    pendingRequest.current = true;
+    setLoading(true);
+    try {
+      const result = await action();
+      if (mounted.current) onResult(result || {});
+    } catch (caught) {
+      if (mounted.current) showError(caught);
+    } finally {
+      pendingRequest.current = false;
+      if (mounted.current) setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (pendingRequest.current) return;
     resetFeedback();
     const email = form.email.trim();
 
@@ -138,62 +173,72 @@ export default function AuthPage({ onBack, intent }) {
     if (!form.password) { showFieldError('password', 'authErrInvalid'); return; }
     if (mode === 'register' && form.password.length < 6) { showFieldError('password', 'authErrWeakPass'); return; }
 
-    setLoading(true);
     if (mode === 'login') {
-      const { error } = await signInWithEmail(email, form.password);
-      if (error) showError(error);
+      await runAuthRequest(() => signInWithEmail(email, form.password), ({ error }) => {
+        if (error) showError(error);
+      });
     } else {
-      const { error } = await signUpWithEmail(email, form.password, form.fullName.trim());
-      if (error) showError(error);
-      else { setSuccess(t(lang, 'authConfirmSent')); setCanResend(true); }
+      await runAuthRequest(() => signUpWithEmail(email, form.password, form.fullName.trim()), ({ error }) => {
+        if (error) showError(error);
+        else { setSuccess(t(lang, 'authConfirmSent')); setCanResend(true); }
+      });
     }
-    setLoading(false);
   };
 
   // Passwordless: one email that both creates the account and signs in. The
   // prayer waits, encrypted, on this device until the link is followed back here.
   const handleEmailLink = async (e) => {
     e.preventDefault();
+    if (pendingRequest.current) return;
     resetFeedback();
     const email = form.email.trim();
     if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
-    setLoading(true);
-    const { error } = await signInWithEmailLink(email);
-    if (error) showError(error);
-    else setSuccess(t(lang, 'authEmailLinkSent'));
-    setLoading(false);
+    await runAuthRequest(() => signInWithEmailLink(email), ({ error }) => {
+      if (error) showError(error);
+      else setSuccess(t(lang, 'authEmailLinkSent'));
+    });
   };
 
   const handleForgot = async (e) => {
     e.preventDefault();
+    if (pendingRequest.current) return;
     resetFeedback();
     const email = form.email.trim();
     if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
-    setLoading(true);
-    const { error } = await resetPassword(email);
-    // Don't reveal whether the address has an account — always confirm generically.
-    if (error && error.status === 429) showError(error);
-    else setSuccess(t(lang, 'authResetSent'));
-    setLoading(false);
+    await runAuthRequest(() => resetPassword(email), ({ error }) => {
+      // Supabase deliberately returns success for unknown accounts. Keep that
+      // generic confirmation, but do not claim an email was sent on failure.
+      if (error) showError(error);
+      else setSuccess(t(lang, 'authResetSent'));
+    });
   };
 
   const handleResend = async () => {
+    if (pendingRequest.current) return;
     const email = form.email.trim();
     if (!email || !EMAIL_RE.test(email)) { showFieldError('email', 'authErrEmail'); return; }
     resetFeedback();
-    setLoading(true);
-    const { error } = await resendConfirmation(email);
-    if (error) showError(error);
-    else setSuccess(t(lang, 'authResendDone'));
-    setLoading(false);
+    await runAuthRequest(() => resendConfirmation(email), ({ error }) => {
+      if (error) showError(error);
+      else setSuccess(t(lang, 'authResendDone'));
+    });
+    if (mounted.current) setCanResend(true);
   };
 
   const handleGoogle = async () => {
+    if (pendingRequest.current) return;
     resetFeedback();
-    setLoading(true);
-    const { error } = await signInWithGoogle();
-    if (error) { showError(error); setLoading(false); }
+    await runAuthRequest(() => signInWithGoogle(), ({ error }) => {
+      if (error) showError(error);
+    });
   };
+
+  const formLabel = t(lang, {
+    login: 'authLogIn',
+    register: 'authSignUp',
+    link: 'authKeepPrayerTitle',
+    forgot: 'authResetTitle',
+  }[mode]);
 
   const notices = (
     <>
@@ -216,6 +261,10 @@ export default function AuthPage({ onBack, intent }) {
       icon={Mail}
       inputRef={emailRef}
       type="email"
+      autoComplete="email"
+      inputMode="email"
+      autoCapitalize="none"
+      spellCheck={false}
       value={form.email}
       onChange={(e) => patchField('email', e.target.value)}
       placeholder={t(lang, 'authEmail')}
@@ -234,14 +283,15 @@ export default function AuthPage({ onBack, intent }) {
         </QuietButton>
       )}
 
-      {/* The logo and one line — then the sheet. */}
-      <div className="auth-brand">
-        <BrandMark size={48} />
-        <h1 className="m-0"><Wordmark height={28} title={APP_NAME} /></h1>
+      <header className="auth-brand">
+        <div className="auth-brand__lockup">
+          <BrandMark size={56} />
+          <h1 className="m-0"><Wordmark height={32} title={APP_NAME} /></h1>
+        </div>
         <p className="auth-brand__line">{t(lang, 'authTagline')}</p>
-      </div>
+      </header>
 
-      <div className="auth-sheet">
+      <fieldset className="auth-sheet" disabled={loading} aria-busy={loading} aria-label={formLabel}>
         {mode === 'forgot' ? (
           <form onSubmit={handleForgot} noValidate className="auth-form">
             <div>
@@ -315,6 +365,7 @@ export default function AuthPage({ onBack, intent }) {
                     label={t(lang, 'authNamePlaceholder')}
                     icon={User}
                     type="text"
+                    autoComplete="name"
                     value={form.fullName}
                     onChange={(e) => patchField('fullName', e.target.value)}
                     placeholder={t(lang, 'authNamePlaceholder')}
@@ -329,6 +380,7 @@ export default function AuthPage({ onBack, intent }) {
                   icon={Lock}
                   inputRef={passwordRef}
                   type={showPassword ? 'text' : 'password'}
+                  autoComplete={mode === 'register' ? 'new-password' : 'current-password'}
                   value={form.password}
                   onChange={(e) => patchField('password', e.target.value)}
                   placeholder={t(lang, 'authPassword')}
@@ -352,7 +404,7 @@ export default function AuthPage({ onBack, intent }) {
                 />
 
                 {mode === 'login' && (
-                  <QuietButton onClick={() => switchMode('forgot')} className="-me-3 justify-self-end">{t(lang, 'authForgotPassword')}</QuietButton>
+                  <QuietButton onClick={() => switchMode('forgot')} className="auth-forgot">{t(lang, 'authForgotPassword')}</QuietButton>
                 )}
 
                 {notices}
@@ -381,8 +433,8 @@ export default function AuthPage({ onBack, intent }) {
           </>
         )}
 
-        <p className="auth-privacy">{t(lang, 'authPrivacyNote')}</p>
-      </div>
+      </fieldset>
+      <p className="auth-privacy"><Lock size={14} aria-hidden="true" />{t(lang, 'authPrivacyNote')}</p>
     </div>
   );
 }

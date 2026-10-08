@@ -16,10 +16,17 @@ afterEach(() => { vi.unstubAllEnvs(); vi.restoreAllMocks(); });
 
 describe('AI provider disclosure acknowledgement', () => {
   it('preserves private-service consent without requiring an external-provider acknowledgement', () => {
-    vi.stubEnv('VITE_AI_PROVIDER', '');
+    vi.stubEnv('VITE_AI_PROVIDER', 'ollama');
     expect(getAiProvider()).toBe('ollama');
     expect(getAiProviderLabel()).toBe('Qetoret');
     expect(hasAiProviderAcknowledgement('account-a', 'prayer')).toBe(true);
+  });
+
+  it('matches the direct server default and requires Claude disclosure when the build variable is omitted', () => {
+    vi.stubEnv('VITE_AI_PROVIDER', '');
+    expect(getAiProvider()).toBe('anthropic');
+    expect(getAiProviderLabel()).toBe('Claude (Anthropic)');
+    expect(hasAiProviderAcknowledgement('account-a', 'prayer')).toBe(false);
   });
 
   it('scopes the external-provider acknowledgement to the account and consent context', () => {
