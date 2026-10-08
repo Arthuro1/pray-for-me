@@ -1,76 +1,53 @@
-/* The front door: a quiet violet welcome above one focused form. Keep this
-   in normal flow so translated copy and enlarged type can grow on any screen. */
+/* Authentication leads; the small brand lockup and footer stay quiet. Normal
+   flow lets translations, enlarged type and the on-screen keyboard scroll. */
 .auth-experience.auth-experience {
   gap: var(--q-space-5);
-  padding-block: max(var(--q-space-20), env(safe-area-inset-top)) max(var(--q-space-10), env(safe-area-inset-bottom));
-  background:
-    radial-gradient(48rem 34rem at 0% 0%, color-mix(in srgb, var(--q-royal) 7%, transparent), transparent 75%),
-    radial-gradient(40rem 36rem at 100% 100%, color-mix(in srgb, var(--q-gold) 7%, transparent), transparent 75%),
-    var(--q-canvas);
+  padding-block: max(var(--q-space-16), env(safe-area-inset-top)) max(var(--q-space-8), env(safe-area-inset-bottom));
+  background: var(--q-canvas);
 }
 
 .auth-experience .auth-back {
-  inset-block-start: max(var(--q-space-4), env(safe-area-inset-top));
+  inset-block-start: max(var(--q-space-3), env(safe-area-inset-top));
   inset-inline-start: clamp(var(--q-space-3), 3vw, var(--q-space-10));
 }
 
 .auth-experience .auth-brand {
-  width: min(100%, 29rem);
-  gap: var(--q-space-4);
-  padding: var(--q-space-6) var(--q-space-8) var(--q-space-8);
-  border: 1px solid color-mix(in srgb, var(--q-gold) 22%, var(--q-royal-deep));
-  border-radius: var(--q-radius-dialog);
-  background: var(--q-royal-deep);
-  color: var(--q-text-inverse);
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: none;
 }
 
 .auth-experience .auth-brand__lockup {
-  max-width: 100%;
-  gap: var(--q-space-4);
-}
-
-.auth-brand__rule {
-  width: 2rem;
-  height: 1px;
-  background: var(--q-gold-inverse);
-}
-
-.auth-experience .auth-brand__line {
-  max-width: 22ch;
-  color: var(--q-text-inverse);
-  font-size: clamp(1.5rem, 4vw, 1.75rem);
-  font-weight: 400;
-  letter-spacing: -0.015em;
-  line-height: 1.22;
+  gap: var(--q-space-2);
 }
 
 .auth-experience .auth-sheet {
-  width: min(100%, 29rem);
+  width: min(100%, 27rem);
   padding: var(--q-space-8);
-  border-color: var(--q-card-border);
-  box-shadow: var(--q-elevation);
+  box-shadow: var(--q-card-shadow);
 }
 
-.auth-experience .auth-mode-switch {
-  margin-block-end: var(--q-space-6);
+.auth-experience .auth-sheet__title {
+  font-family: var(--q-font-ui);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
 }
 
-.auth-experience .auth-google {
-  min-height: 48px;
-}
-
-.auth-experience .auth-or {
-  gap: var(--q-space-4);
-  margin-block: var(--q-space-5);
-}
-
+.auth-heading,
 .auth-experience .auth-intent {
   margin-block-end: var(--q-space-6);
 }
 
-.auth-experience .auth-sheet__title {
-  font-size: 1.625rem;
-  text-wrap: balance;
+.auth-experience .auth-google {
+  min-height: 44px;
+}
+
+.auth-experience .auth-or {
+  gap: var(--q-space-3);
+  margin-block: var(--q-space-4);
 }
 
 .auth-experience .auth-sheet__intro {
@@ -78,43 +55,23 @@
   line-height: 1.6;
 }
 
-.auth-experience .auth-privacy {
-  max-width: 29rem;
-  padding-inline: var(--q-space-4);
-  color: var(--q-text-secondary);
+.auth-secondary {
+  margin-block-start: var(--q-space-4);
+  padding-block-start: var(--q-space-2);
+  border-block-start: 1px solid var(--q-border);
 }
 
-.auth-experience .auth-privacy svg {
-  color: var(--q-gold-text);
+.auth-secondary .quiet-button {
+  color: var(--q-text-secondary);
+  font-weight: 400;
 }
 
 @media (max-width: 639px) {
   .auth-experience.auth-experience {
-    padding-block: max(var(--q-space-16), env(safe-area-inset-top)) max(var(--q-space-6), env(safe-area-inset-bottom));
-  }
-
-  .auth-experience .auth-brand {
-    gap: var(--q-space-3);
-    padding: var(--q-space-5) var(--q-space-5) var(--q-space-6);
-  }
-
-  .auth-experience .auth-brand__lockup {
-    gap: var(--q-space-3);
+    padding-block-end: max(var(--q-space-6), env(safe-area-inset-bottom));
   }
 
   .auth-experience .auth-sheet {
-    padding: var(--q-space-6) var(--q-space-5);
-  }
-}
-
-@media (max-width: 359px) {
-  .auth-experience .auth-brand__lockup .brand-mark {
-    width: auto;
-    height: 44px;
-  }
-
-  .auth-experience .auth-brand__lockup .brand-wordmark-art {
-    width: auto;
-    height: 28px;
+    padding: var(--q-space-6) var(--q-space-5) var(--q-space-4);
   }
 }

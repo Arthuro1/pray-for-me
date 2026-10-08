@@ -4,7 +4,7 @@
 // preserve the language chosen earlier, and expose forgot-password / resend /
 // back-to-home with friendly, specific validation.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, fireEvent, cleanup, waitFor, within } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 
 // Supabase builds realtime at construct time; stub it so the stores import cleanly.
 vi.mock('../lib/supabase', () => {
@@ -78,17 +78,14 @@ describe('AuthPage', () => {
 
   it('presents registration as a secondary option (name field + create account)', () => {
     const { container } = render(<AuthPage />);
-    const switcher = container.querySelector('.auth-mode-switch');
-    const login = within(switcher).getByRole('button', { name: t('fr', 'authLogIn') });
-    const signUp = within(switcher).getByRole('button', { name: t('fr', 'authSignUp') });
-    expect(login.getAttribute('aria-pressed')).toBe('true');
-    expect(signUp.getAttribute('aria-pressed')).toBe('false');
-    expect(login.closest('.auth-mode-switch')).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: t('fr', 'authLogIn') })).toBeTruthy();
+    const signUp = screen.getByRole('button', { name: t('fr', 'authSignUp') });
+    expect(signUp.closest('.auth-secondary')).toBeTruthy();
 
     fireEvent.click(signUp);
 
-    expect(login.getAttribute('aria-pressed')).toBe('false');
-    expect(signUp.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('heading', { level: 1, name: t('fr', 'authSignUp') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t('fr', 'authBackToLogin') })).toBeTruthy();
     expect(screen.getByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
     expect(screen.getByLabelText(t('fr', 'authNamePlaceholder'))).toBeTruthy();
     expect(screen.getByLabelText(t('fr', 'authEmail'))).toBeTruthy();
@@ -204,8 +201,8 @@ describe('AuthPage', () => {
     render(<AuthPage onBack={() => {}} />);
     expect(screen.queryByText(t('fr', 'authKeepPrayerTitle'))).toBeNull();
     expect(screen.queryByPlaceholderText(t('fr', 'authNamePlaceholder'))).toBeNull();
-    // The tab switch is untouched for everyone else.
-    expect(document.querySelector('.auth-mode-switch')).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: t('fr', 'authLogIn') })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t('fr', 'authSignUp') })).toBeTruthy();
     expect(screen.queryByRole('button', { name: t('fr', 'authEmailLinkCta') })).toBeNull();
   });
 

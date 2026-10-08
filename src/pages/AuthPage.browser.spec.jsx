@@ -1,5 +1,4 @@
-// The original auth header was absolutely positioned and could sit behind the
-// form. Verify real layout with long German copy, RTL, and short phone screens.
+// Verify the compact brand and focused form with German copy, RTL and short phones.
 // These fixtures make no auth or network requests.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
@@ -35,7 +34,7 @@ afterEach(() => {
 describe('AuthPage responsive layout', () => {
   it.each([
     ['de', 1440, 900, 'login', 'light'],
-    ['de', 808, 812, 'login', 'light'],
+    ['de', 808, 812, 'login', 'dark'],
     ['de', 390, 844, 'login', 'light'],
     ['de', 320, 568, 'login', 'dark'],
     ['de', 390, 568, 'register', 'light'],
@@ -53,18 +52,21 @@ describe('AuthPage responsive layout', () => {
 
     const brand = document.querySelector('.auth-brand').getBoundingClientRect();
     const sheet = document.querySelector('.auth-sheet').getBoundingClientRect();
-    const privacy = document.querySelector('.auth-privacy').getBoundingClientRect();
     expect(brand.bottom).toBeLessThanOrEqual(sheet.top - 16);
-    expect(sheet.bottom).toBeLessThanOrEqual(privacy.top - 16);
     expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth);
     for (const input of document.querySelectorAll('input')) {
       const bounds = input.getBoundingClientRect();
       expect(bounds.left).toBeGreaterThanOrEqual(sheet.left);
       expect(bounds.right).toBeLessThanOrEqual(sheet.right);
     }
-    if (lang === 'de' && (width === 1440 || width === 390) && mode === 'login') {
+    if (mode === 'login' && height >= 812) {
+      const submit = screen.getByRole('button', { name: t(lang, 'authLogIn'), exact: true }).getBoundingClientRect();
+      expect(submit.bottom).toBeLessThanOrEqual(height);
+      expect(brand.height).toBeLessThanOrEqual(40);
+    }
+    if (lang === 'de' && (width === 1440 || width === 390 || width === 808) && mode === 'login') {
       await page.screenshot({
-        path: `../../design-qa/login-${width === 1440 ? 'desktop' : 'mobile'}.png`,
+        path: `../../design-qa/login-${width === 1440 ? 'desktop' : width === 808 ? 'dark' : 'mobile'}.png`,
         element: document.querySelector('.auth-experience'),
       });
     }

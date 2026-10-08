@@ -1,0 +1,100 @@
+.prayer-music {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.prayer-music__trigger {
+  display: flex;
+  min-height: 44px;
+  max-width: 8.5rem;
+  align-items: center;
+  gap: 6px;
+  padding-inline: 10px;
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-pill);
+  background: var(--q-hover);
+  color: var(--q-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.prayer-music__trigger:hover,
+.prayer-music__trigger[aria-expanded="true"] {
+  background: var(--q-selected);
+  color: var(--q-text);
+}
+
+.prayer-music__current {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.prayer-music__trigger > svg,
+.prayer-music__option > svg { flex: 0 0 auto; }
+
+.prayer-music__chevron { transition: transform var(--q-motion-micro) var(--q-ease); }
+.prayer-music__trigger[aria-expanded="true"] .prayer-music__chevron { transform: rotate(180deg); }
+
+.prayer-music__menu {
+  position: fixed;
+  z-index: 30;
+  inset-block-start: calc(4.25rem + env(safe-area-inset-top));
+  inset-inline: 20px;
+  max-height: calc(100dvh - 5.5rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--q-border-strong);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  color: var(--q-text);
+  box-shadow: var(--q-elevation);
+}
+
+.prayer-music__description {
+  margin: 0;
+  padding: 8px 12px 12px;
+  color: var(--q-text-secondary);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.prayer-music__options { display: grid; gap: 4px; }
+
+.prayer-music__option {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--q-radius-control);
+  color: var(--q-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease);
+}
+
+.prayer-music__option > svg { color: var(--q-text-secondary); }
+.prayer-music__option:hover { background: var(--q-hover); }
+.prayer-music__option[aria-pressed="true"] { border-color: var(--q-selected-border); background: var(--q-selected); }
+.prayer-music__option[aria-pressed="true"] .prayer-music__check { color: var(--q-gold-text); }
+.prayer-music__option:focus-visible { outline: 2px solid var(--q-focus); outline-offset: -2px; }
+.prayer-music__label { min-width: 0; flex: 1 1 auto; overflow-wrap: anywhere; }
+
+@media (min-width: 640px) {
+  .prayer-music__trigger { max-width: none; padding-inline: 12px; }
+  .prayer-music__menu {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
+    width: min(19.5rem, calc(100vw - 2.5rem));
+    margin-block-start: 8px;
+  }
+}

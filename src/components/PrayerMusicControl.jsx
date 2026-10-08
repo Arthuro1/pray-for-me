@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown, Music, VolumeX } from 'lucide-react';
 import { t } from '../i18n';
 import {
@@ -8,6 +8,7 @@ import {
   startBackgroundInstrumental,
   stopBackgroundAudio,
 } from '../lib/audio/backgroundAudio';
+import './PrayerMusicControl.css';
 
 const AUDIO_STORAGE_KEY = 'pfm_prayer_audio_track';
 
@@ -23,7 +24,31 @@ function initialAudioTrack() {
 export default function PrayerMusicControl({ lang, active = true }) {
   const [trackId, setTrackId] = useState(initialAudioTrack);
   const [open, setOpen] = useState(false);
+  const controlRef = useRef(null);
+  const triggerRef = useRef(null);
+  const menuId = useId();
   const track = resolveTrack(trackId) || resolveTrack('silence');
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const dismissOutside = (event) => {
+      if (!controlRef.current?.contains(event.target)) setOpen(false);
+    };
+    const dismissOnEscape = (event) => {
+      if (event.key !== 'Escape') return;
+      // Close this disclosure before the surrounding prayer dialog handles Esc.
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(false);
+      triggerRef.current?.focus();
+    };
+    document.addEventListener('pointerdown', dismissOutside);
+    document.addEventListener('keydown', dismissOnEscape, true);
+    return () => {
+      document.removeEventListener('pointerdown', dismissOutside);
+      document.removeEventListener('keydown', dismissOnEscape, true);
+    };
+  }, [open]);
 
   // Auto-resume a remembered atmosphere when a session opens, and fade out when
   // it closes. On iOS a start from here is blocked (no user gesture), which is
@@ -49,6 +74,7 @@ export default function PrayerMusicControl({ lang, active = true }) {
     localStorage.setItem(AUDIO_STORAGE_KEY, nextTrackId);
     setOpen(false);
     setTrackId(nextTrackId);
+    triggerRef.current?.focus();
 
     // Also start/stop directly from THIS tap. iOS unlocks the audio element and
     // resumes the Web Audio graph only inside a real user gesture, so the
@@ -60,47 +86,47 @@ export default function PrayerMusicControl({ lang, active = true }) {
   };
 
   return (
-    <div className="relative shrink-0">
+    <div ref={controlRef} className="prayer-music">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
+        aria-controls={open ? menuId : undefined}
         aria-label={`${t(lang, 'prayerMusic')}: ${t(lang, track.labelKey)}`}
         title={t(lang, 'prayerMusic')}
-        className="pressable flex min-h-11 max-w-[8.5rem] items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold sm:max-w-none sm:px-3"
-        style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,.82)', border: '1px solid rgba(255,255,255,.1)' }}
+        className="prayer-music__trigger pressable"
       >
-        {trackId === 'silence' ? <VolumeX size={13} /> : <Music size={13} />}
-        <span className="min-w-0 truncate">{t(lang, track.labelKey)}</span>
-        <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+        {trackId === 'silence' ? <VolumeX size={14} aria-hidden="true" /> : <Music size={14} aria-hidden="true" />}
+        <span className="prayer-music__current">{t(lang, track.labelKey)}</span>
+        <ChevronDown size={12} className="prayer-music__chevron" aria-hidden="true" />
       </button>
 
       {open && (
         <div
-          className="fixed left-5 right-5 top-[calc(4.25rem+env(safe-area-inset-top))] z-30 w-auto rounded-xl p-1.5 shadow-2xl sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 sm:w-[min(26rem,calc(100vw-2.5rem))]"
-          style={{ background: 'var(--q-surface-inverse)', border: '1px solid rgba(255,255,255,.14)' }}
-          role="radiogroup"
+          id={menuId}
+          className="prayer-music__menu"
+          role="group"
           aria-label={t(lang, 'prayerMusic')}
+          aria-describedby={`${menuId}-description`}
         >
-          <p className="px-3 pb-1.5 pt-1 text-[11px]" style={{ color: 'rgba(255,255,255,0.68)' }}>
+          <p id={`${menuId}-description`} className="prayer-music__description">
             {t(lang, 'prayerMusicSub')}
           </p>
-          <div className="grid gap-1 sm:grid-cols-2">
+          <div className="prayer-music__options">
             {AUDIO_TRACKS.map((option) => {
               const selected = option.id === trackId;
               return (
                 <button
                   key={option.id}
                   type="button"
-                  role="radio"
-                  aria-checked={selected}
+                  aria-pressed={selected}
                   onClick={() => selectTrack(option.id)}
-                  className="pressable flex min-h-11 w-full items-center gap-2 rounded-lg px-3 py-2 text-left"
-                  style={selected ? { background: 'rgba(255,255,255,0.12)' } : {}}
+                  className="prayer-music__option pressable"
                 >
-                  {option.id === 'silence' ? <VolumeX size={13} /> : <Music size={13} />}
-                  <span className="flex-1 text-xs font-semibold text-white">{t(lang, option.labelKey)}</span>
-                  {selected && <Check size={12} />}
+                  {option.id === 'silence' ? <VolumeX size={16} aria-hidden="true" /> : <Music size={16} aria-hidden="true" />}
+                  <span className="prayer-music__label">{t(lang, option.labelKey)}</span>
+                  {selected && <Check size={16} className="prayer-music__check" aria-hidden="true" />}
                 </button>
               );
             })}

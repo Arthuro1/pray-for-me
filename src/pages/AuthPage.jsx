@@ -6,7 +6,7 @@ import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
 
 import { BrandMark, Wordmark } from '../components/shared/Brand';
-import { Input, PrimaryButton, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
+import { Input, PrimaryButton, QuietButton, SecondaryButton } from '../components/shared/Primitives';
 import '../styles/auth.css';
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -286,18 +286,16 @@ export default function AuthPage({ onBack, intent }) {
 
       <header className="auth-brand">
         <div className="auth-brand__lockup">
-          <BrandMark size={52} tone="inverse" />
-          <h1 className="m-0"><Wordmark height={32} tone="inverse" title={APP_NAME} /></h1>
+          <BrandMark size={30} />
+          <Wordmark height={20} title={APP_NAME} />
         </div>
-        <span className="auth-brand__rule" aria-hidden="true" />
-        <p className="auth-brand__line">{t(lang, 'authTagline')}</p>
       </header>
 
       <fieldset className="auth-sheet" disabled={loading} aria-busy={loading} aria-label={formLabel}>
         {mode === 'forgot' ? (
           <form onSubmit={handleForgot} noValidate className="auth-form">
             <div>
-              <h2 className="auth-sheet__title">{t(lang, 'authResetTitle')}</h2>
+              <h1 className="auth-sheet__title">{t(lang, 'authResetTitle')}</h1>
               <p className="auth-sheet__intro">{t(lang, 'authResetIntro')}</p>
             </div>
             {emailField('auth-reset-email', { autoFocus: true })}
@@ -311,34 +309,20 @@ export default function AuthPage({ onBack, intent }) {
                 and the account is explained as what makes that possible. */}
             {savePrayerIntent && (
               <div className="auth-intent">
-                <h2 className="auth-sheet__title">{t(lang, 'authKeepPrayerTitle')}</h2>
+                <h1 className="auth-sheet__title">{t(lang, 'authKeepPrayerTitle')}</h1>
                 <p className="auth-sheet__intro">{t(lang, 'authKeepPrayerBody')}</p>
               </div>
             )}
 
             {joinPlanIntent && (
               <div className="auth-intent">
-                <h2 className="auth-sheet__title">{t(lang, 'authJoinPlanTitle')}</h2>
+                <h1 className="auth-sheet__title">{t(lang, 'authJoinPlanTitle')}</h1>
                 <p className="auth-sheet__intro">{t(lang, 'authJoinPlanBody')}</p>
               </div>
             )}
 
-            {/* Tabs — login first (default), register secondary. Deliberately
-                absent when the visitor is saving a prayer: a Log in / Sign up
-                switch is the moment the screen stops being about their prayer
-                and starts being about an app. That path is still one tap away,
-                as a plain sentence under the form. */}
-            {!savePrayerIntent && (
-              <SegmentedControl
-                className="auth-mode-switch segmented-control--fill"
-                label={`${t(lang, 'authLogIn')} / ${t(lang, 'authSignUp')}`}
-                value={mode === 'register' ? 'register' : 'login'}
-                onChange={switchMode}
-                options={[
-                  { value: 'login', label: t(lang, 'authLogIn') },
-                  { value: 'register', label: t(lang, 'authSignUp') },
-                ]}
-              />
+            {!savePrayerIntent && !joinPlanIntent && (
+              <h1 className="auth-sheet__title auth-heading">{formLabel}</h1>
             )}
 
             {/* Google */}
@@ -427,6 +411,14 @@ export default function AuthPage({ onBack, intent }) {
               </form>
             )}
 
+            {!savePrayerIntent && (
+              <div className="auth-secondary">
+                <QuietButton onClick={() => switchMode(mode === 'login' ? 'register' : 'login')} className="w-full">
+                  {t(lang, mode === 'login' ? 'authSignUp' : 'authBackToLogin')}
+                </QuietButton>
+              </div>
+            )}
+
             {/* Always one tap away, in every save-prayer sub-view — the prayer
                 is waiting on this device either way. */}
             {savePrayerIntent && mode !== 'login' && (
@@ -436,7 +428,6 @@ export default function AuthPage({ onBack, intent }) {
         )}
 
       </fieldset>
-      <p className="auth-privacy"><Lock size={14} aria-hidden="true" />{t(lang, 'authPrivacyNote')}</p>
     </div>
   );
 }
