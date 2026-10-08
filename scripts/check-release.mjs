@@ -62,9 +62,15 @@ await check('Qetoret canonical metadata and public legal resources', async () =>
   for (const path of ['privacy.html', 'terms.html', 'delete-account.html', 'robots.txt', 'sitemap.xml']) await access(join(root, 'public', path));
 });
 await check('Play graphics and screenshots', async () => {
-  for (const [name, width, height] of [['icon-512.png', 512, 512], ['feature-graphic-1024x500.png', 1024, 500]]) {
-    const image = await sharp(join(root, 'docs/play-store/assets', name)).metadata();
-    assert.equal(image.width, width); assert.equal(image.height, height); assert.equal(image.hasAlpha, false);
+  for (const [name, width, height, hasAlpha] of [['icon-512.png', 512, 512, true], ['feature-graphic-1024x500.png', 1024, 500, false]]) {
+    const bytes = await readFile(join(root, 'docs/play-store/assets', name));
+    const image = await sharp(bytes).metadata();
+    assert.equal(image.width, width); assert.equal(image.height, height); assert.equal(image.hasAlpha, hasAlpha);
+    if (hasAlpha) {
+      assert.equal(image.channels, 4, 'Store icon must be 32-bit RGBA PNG');
+      assert.equal(image.bitsPerSample, 8, 'Store icon must have 8 bits per channel');
+      assert(bytes.length <= 1024 * 1024, 'Store icon must be at most 1024 KB');
+    }
   }
   const files = (await readdir(join(root, 'docs/play-store/assets/screenshots/en-US'))).filter((file) => file.endsWith('.png'));
   assert(files.length >= 2, 'At least two phone screenshots required');

@@ -38,7 +38,7 @@ export default function CircleTeaching({
         </SectionLabel>
         <Heading id={headingId} className="circle-teaching__heading">{teaching.heading}</Heading>
         <p className="circle-teaching__formation">{teaching.formation}</p>
-        {/* An AI-drafted language says so until a native reviewer signs it
+        {/* An AI-drafted language says so until a named human approves it
             (content/intercessionCircles/review.js). */}
         {isCircleTranslationDraft(lang) && (
           <StatusLabel tone="sacred" className="circle-teaching__draft">{ui.draftTranslation}</StatusLabel>

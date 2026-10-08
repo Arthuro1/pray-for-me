@@ -1,8 +1,8 @@
 # Validation record — 8 October 2026
 
-This records local release preparation, isolated database tests and read-only
-production checks. No production deployment, production database migration or
-Play submission was performed.
+This records local release preparation, isolated database tests and production
+follow-up. The user-authorized feedback migration and event-notification function
+are deployed. No frontend deployment or Play submission was performed.
 Passing a local check does not confirm production configuration or device behavior.
 
 ## Completed local checks
@@ -21,9 +21,16 @@ Passing a local check does not confirm production configuration or device behavi
 | Final focused release follow-up | PASS: 9 files, 67 tests | Single worker, 33.97 seconds; detailed scope below |
 | Android artifact identity/signing | PASS | Signed AAB and APK metadata/signatures; final paths and SHA-256 in [release-artifacts.md](release-artifacts.md) |
 | Android release lint | PASS: 0 errors, 10 warnings | Read `android-twa/releases/1.0.3/lint-results-release.txt`; warnings remain documented |
-| Isolated database reset and migrations | PASS: all 20 migrations | Independent local project; no production reset or migration |
+| Isolated database reset and migrations | PASS: all 20 migrations | Independent local project; no production reset |
 | Full database pgTAP suite | PASS: 8 files, 138 assertions | Includes 15 feedback ownership/account-erasure assertions |
 | Local database advisor error gate | PASS: 0 error-level issues | Error gate only; see production warning triage in [database-verification.md](database-verification.md) |
+| Production ownership migration | APPLIED: `20261008151537` | 20 remote migrations; restrictive guard, RLS and role grants verified; live account smoke pending |
+| Event notification deployment | PASS: active version 40 | Remote files exactly match local; unauthenticated POST returns 401 `unauthorized`; no real push triggered |
+| Notification/brand/push/preview follow-up | PASS: 5 files, 34 tests | Pure payload/privacy, push helpers, brand and preview freshness checks |
+| `npm run build:plan-og` | PASS: 27 PNGs regenerated | Existing signed wrapper unchanged |
+| Play store icon format | PASS: 512 × 512, 32-bit RGBA PNG | Generator/preflight corrected to require icon alpha; artwork unchanged |
+| Paul content approval integration | PASS: 12 files, 93 tests | Explicit dated approval, production publication/start gates, preserved history, future unsigned content denial and preview freshness |
+| Existing four shelf guards after approvals | 62 PASS, 4 FAIL | Same previously documented failures; no clean full-suite result claimed |
 
 The focused rows overlap; do not add their counts together as distinct coverage.
 Strict lint and the six-check local release preflight were also rerun successfully
@@ -86,7 +93,7 @@ Deploy the reviewed frontend/legal release, then rerun
 recovery and safety smoke tests. Keep old-origin recovery access available during
 the cutover, as described in [domain-migration.md](domain-migration.md).
 
-## Database verification passed locally; production application pending
+## Database verification and production application
 
 The initial CLI/Docker limitation was resolved. With pinned Supabase CLI 2.111.0,
 the isolated `qetoret_db_verify_20261008` database started and reset successfully,
@@ -95,19 +102,32 @@ passed, including **15 feedback ownership assertions**. The local advisor error
 gate reported no error-level issues. Metadata confirms the restrictive guard,
 denied `anon` INSERT and allowed authenticated INSERT; synthetic rows rolled back.
 
-Read-only production inspection found a healthy project with 19 migrations
-through `20260922230622`; **the feedback guard remains unapplied there**. Its
-existing feedback INSERT policy/grants still require the new restriction. No
-production changes were made. Apply the verified additive migration and verify
-production access/account-erasure behavior before deploying the reporter-enabled
-client. [database-verification.md](database-verification.md) records evidence,
-production metadata, advisor warnings and the remaining operational gate.
+The subsequent user-approved production migration is **applied** as
+`20261008151537`. Production has 20 migrations. Post-apply metadata confirms the
+restrictive authenticated ownership guard, enabled RLS, revoked `anon` INSERT
+and retained authenticated INSERT. Account-deletion SQL still removes attributed
+feedback. The local filename now matches the connector-assigned production
+version; tested SQL bytes are unchanged. Live synthetic-account mutation/erasure
+checks remain pending. [database-verification.md](database-verification.md)
+records evidence, advisor warnings and that remaining operational gate.
 
-## Owner release gates still open
+## Paul’s recorded approval and remaining operational gates
+
+The user explicitly approved all pending human review and supplied **Paul** as
+reviewer on **2026-10-08**. The closed records cover the pending plan, seven deep
+circle layers, fourteen translated short presentations, five resource
+content/safety records and six wording re-reviews. Current release materials and
+an exact editorial hash snapshot have owner approval. Earlier records remain
+preserved; no native-speaker audit or unperformed operational result is claimed.
+See [paul-approval-2026-10-08.md](paul-approval-2026-10-08.md).
+
+Strict lint, type checking, locales, content audit and production build passed
+after these changes. All 27 approved plans have refreshed preview metadata/images.
+The operational gates below still require actual evidence.
 
 - Deploy the intended Qetoret site and legal pages; resolve all five live checks.
-- Apply the locally verified ownership migration to production and verify its
-  access/account-erasure behavior before the new client deploys.
+- Run controlled production synthetic-account access/account-erasure checks;
+  migration application and policy/grant metadata verification are complete.
 - Resolve or disposition the remaining unit/content failures with actual evidence.
 - Confirm versionCode `4` is unused in Console and publish its real Play
   app-signing fingerprint; install the internal-track release from Play.

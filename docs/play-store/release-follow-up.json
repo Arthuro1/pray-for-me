@@ -1,0 +1,262 @@
+{
+  "checkedAt": "2026-10-08 15:21:32 UTC",
+  "authorization": "User requested event-function redeployment, a version bump if missing, plan OG regeneration, listing updates and approval of pending reviewable release work.",
+  "notifications": {
+    "projectId": "pfybdjcapexqmffojuie",
+    "function": "send-event-notifications",
+    "previousVersion": 39,
+    "version": 40,
+    "status": "ACTIVE",
+    "deployedAt": "2026-10-08T15:15:54.514Z",
+    "verifyJwt": false,
+    "authentication": "Existing internal bearer gate retained; no gateway JWT verification change.",
+    "deploymentSha256": "842663838736f84f5999928cda72ba67a2aaa9bcc78c996c31472cefae78ad26",
+    "change": "17 existing Praystead title strings replaced by Qetoret in the digest/fallback payload module. Entrypoint and internal-auth helper unchanged.",
+    "remoteSourceMatchesLocal": true,
+    "unauthenticatedPost": {
+      "status": 401,
+      "error": "unauthorized"
+    },
+    "realPushTriggered": false
+  },
+  "database": {
+    "appliedMigration": "20261008151537_feedback_report_ownership.sql",
+    "productionMigrationCount": 20,
+    "sqlSha256": "13ffe68f12c4723b0d6ff973069caad945c3d7cf4578f4a1a078124a29746475",
+    "postApplyMetadata": {
+      "policies": [
+        {
+          "name": "Admins read feedback",
+          "check": null,
+          "roles": [
+            "public"
+          ],
+          "command": "SELECT",
+          "permissive": "PERMISSIVE"
+        },
+        {
+          "name": "Anyone can insert feedback",
+          "check": "true",
+          "roles": [
+            "public"
+          ],
+          "command": "INSERT",
+          "permissive": "PERMISSIVE"
+        },
+        {
+          "name": "Feedback inserts belong to caller",
+          "check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND ((user_id = ( SELECT auth.uid() AS uid)) OR ((user_id IS NULL) AND (name IS NULL) AND (email IS NULL))))",
+          "roles": [
+            "authenticated"
+          ],
+          "command": "INSERT",
+          "permissive": "RESTRICTIVE"
+        }
+      ],
+      "migration": {
+        "name": "feedback_report_ownership",
+        "version": "20261008151537"
+      },
+      "rlsEnabled": true,
+      "migrationCount": 20,
+      "anonymousFeedbackInsert": false,
+      "authenticatedFeedbackInsert": true,
+      "accountDeletionRemovesFeedback": true
+    },
+    "advisors": [
+      {
+        "type": "security",
+        "levels": {
+          "INFO": 8,
+          "WARN": 38
+        },
+        "findings": [
+          {
+            "name": "rls_enabled_no_policy",
+            "level": "INFO",
+            "count": 8,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+          },
+          {
+            "name": "function_search_path_mutable",
+            "level": "WARN",
+            "count": 1,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0011_function_search_path_mutable"
+          },
+          {
+            "name": "anon_security_definer_function_executable",
+            "level": "WARN",
+            "count": 1,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable"
+          },
+          {
+            "name": "authenticated_security_definer_function_executable",
+            "level": "WARN",
+            "count": 35,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+          },
+          {
+            "name": "auth_leaked_password_protection",
+            "level": "WARN",
+            "count": 1,
+            "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+          }
+        ]
+      },
+      {
+        "type": "performance",
+        "levels": {
+          "INFO": 39,
+          "WARN": 80
+        },
+        "findings": [
+          {
+            "name": "unindexed_foreign_keys",
+            "level": "INFO",
+            "count": 32,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys"
+          },
+          {
+            "name": "auth_rls_initplan",
+            "level": "WARN",
+            "count": 61,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0003_auth_rls_initplan"
+          },
+          {
+            "name": "unused_index",
+            "level": "INFO",
+            "count": 7,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+          },
+          {
+            "name": "multiple_permissive_policies",
+            "level": "WARN",
+            "count": 19,
+            "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies"
+          }
+        ]
+      }
+    ],
+    "liveSyntheticAccountSmokeTest": "PENDING"
+  },
+  "android": {
+    "result": "Already rebuilt and signed; no redundant version bump or rebuild.",
+    "packageName": "space.praystead.twa",
+    "versionName": "1.0.3",
+    "versionCode": 4,
+    "previousRepositoryVersionCode": 3,
+    "targetSdk": 36,
+    "aab": "android-twa/releases/1.0.3/qetoret-1.0.3-4.aab",
+    "aabSha256": "898db491517b6a948a4d76c86a5d34e70e06250f910a1adc7d5d7f4a9fbd6e74",
+    "apk": "android-twa/releases/1.0.3/qetoret-1.0.3-4.apk",
+    "apkSha256": "d4087bb88239e017896401ac0275d876a6983a52a4e2c031055c5b70bd6f603c",
+    "signatures": "PASS",
+    "consoleVersionAvailability": "NOT VERIFIED"
+  },
+  "planPreviewImages": {
+    "command": "npm run build:plan-og",
+    "result": "PASS",
+    "count": 27
+  },
+  "listings": {
+    "locales": [
+      "en-US",
+      "fr-FR"
+    ],
+    "text": "Prepared and character limits verified",
+    "screenshots": 6,
+    "screenshotDimensions": "1080x1920",
+    "icon": "512x512 32-bit RGBA PNG; 21894 bytes; artwork pixel comparison PASS",
+    "featureGraphic": "1024x500 RGB PNG",
+    "consoleUpdated": false,
+    "uploadHandling": "User selected the prepared submission pack for manual upload.",
+    "consoleAccess": "No callable Play Console/Android Publisher integration or publishing configuration found. Enabled computer-use browser inventory empty; IAB unavailable.",
+    "installedDeviceComparison": "PENDING"
+  },
+  "checks": {
+    "focusedVitest": {
+      "files": 5,
+      "tests": 34,
+      "result": "PASS"
+    },
+    "staticRelease": {
+      "checks": 6,
+      "result": "PASS"
+    },
+    "scriptEslint": "PASS",
+    "liveRelease": {
+      "failures": 5,
+      "digitalAssetLinks": "PASS for local configured fingerprints",
+      "manifest": "Praystead"
+    },
+    "fullUnitSuite": "No clean complete run claimed; four existing resource guard failures remain",
+    "humanApprovalIntegration": {
+      "files": 12,
+      "tests": 93,
+      "result": "PASS"
+    },
+    "approvalFollowup": {
+      "strictLint": "PASS",
+      "typecheck": "PASS",
+      "locales": "PASS",
+      "content": "PASS: 0 new findings / 0 metadata errors",
+      "productionBuild": "PASS",
+      "staticRelease": "PASS: 6 checks",
+      "existingShelfGuards": {
+        "passing": 62,
+        "failing": 4
+      }
+    }
+  },
+  "approvals": {
+    "technicalUserAuthorization": "Recorded and used for verified migration and notification deployment.",
+    "namedHumanContentSignoffs": {
+      "status": "approved",
+      "reviewer": "Paul",
+      "reviewedAt": "2026-10-08",
+      "source": "Explicit human user instruction: approve all that needed human review and sign with Paul",
+      "record": "docs/play-store/paul-approval-2026-10-08.json"
+    },
+    "consoleDeclarations": "Not attested; owner operational facts and account access required.",
+    "productionPlayRollout": "Not performed.",
+    "currentInventory": {
+      "plans": {
+        "total": 27,
+        "approved": 27,
+        "pending": [],
+        "wordingReviewsPending": []
+      },
+      "circleDeep": {
+        "total": 7,
+        "approved": 7
+      },
+      "circleTranslations": {
+        "total": 14,
+        "approved": 14,
+        "nativeAuditClaims": 0
+      },
+      "resources": {
+        "total": 520,
+        "approvedForDisplay": 512,
+        "withRenderableEdition": 508,
+        "awaitingHumanApproval": [],
+        "heldForEditionAvailability": [
+          "berger-garten-der-liebe",
+          "trobisch-mit-freuden-frau-sein",
+          "trobisch-allein-leben-lernen",
+          "trobisch-du-bist-mir-wichtig",
+          "ruthe-so-stell-ich-mir-die-liebe-vor",
+          "ruthe-mimosen-und-dickhaeuter",
+          "ruthe-intim-gefragt"
+        ],
+        "approvedButNoUsableEdition": [
+          "solomon-breaking-evil-altars",
+          "olukoya-prayer-rain",
+          "zivi-shinko-gyakutai-kaiho",
+          "mcknight-kingdom-conspiracy"
+        ]
+      }
+    }
+  },
+  "humanApprovalCheckedAt": "2026-10-08"
+}

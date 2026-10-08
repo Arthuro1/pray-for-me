@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-10-08 15:04:42 UTC",
-  "scope": "Isolated local rebuild and transactional tests; production metadata/advisors read only",
+  "scope": "Isolated local rebuild and transactional tests; approved additive production migration and post-apply metadata verification",
   "local": {
     "projectId": "qetoret_db_verify_20261008",
     "port": 55322,
@@ -20,13 +20,16 @@
     "ownershipGuardPresent": true,
     "remainingFixtureUsers": 0,
     "remainingFixtureFeedback": 0,
-    "cleanup": "Removed only the isolated test project's container and volumes"
+    "cleanup": "Removed only the isolated test project's container and volumes",
+    "testedMigrationVersion": "20261008160000",
+    "migrationFilenameReconciledTo": "20261008151537",
+    "migrationRenameNote": "The connector assigned the production timestamp; local filename reconciled afterward. SQL SHA-256 unchanged; local log timestamps retain the original tested version."
   },
   "production": {
     "projectId": "pfybdjcapexqmffojuie",
     "projectName": "Pray for me",
     "postgresVersion": "17.6.1.127",
-    "changesMade": false,
+    "changesMade": true,
     "migrations": [
       {
         "version": "20260731000000",
@@ -103,6 +106,10 @@
       {
         "version": "20260922230622",
         "name": "wording_reports"
+      },
+      {
+        "name": "feedback_report_ownership",
+        "version": "20261008151537"
       }
     ],
     "metadata": {
@@ -197,7 +204,51 @@
         "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies"
       }
     ],
-    "pendingMigration": "20261008160000_feedback_report_ownership.sql"
+    "pendingMigration": null,
+    "appliedMigration": "20261008151537_feedback_report_ownership.sql",
+    "postApplyVerification": {
+      "policies": [
+        {
+          "name": "Admins read feedback",
+          "check": null,
+          "roles": [
+            "public"
+          ],
+          "command": "SELECT",
+          "permissive": "PERMISSIVE"
+        },
+        {
+          "name": "Anyone can insert feedback",
+          "check": "true",
+          "roles": [
+            "public"
+          ],
+          "command": "INSERT",
+          "permissive": "PERMISSIVE"
+        },
+        {
+          "name": "Feedback inserts belong to caller",
+          "check": "((( SELECT auth.uid() AS uid) IS NOT NULL) AND ((user_id = ( SELECT auth.uid() AS uid)) OR ((user_id IS NULL) AND (name IS NULL) AND (email IS NULL))))",
+          "roles": [
+            "authenticated"
+          ],
+          "command": "INSERT",
+          "permissive": "RESTRICTIVE"
+        }
+      ],
+      "migration": {
+        "name": "feedback_report_ownership",
+        "version": "20261008151537"
+      },
+      "rlsEnabled": true,
+      "migrationCount": 20,
+      "anonymousFeedbackInsert": false,
+      "authenticatedFeedbackInsert": true,
+      "accountDeletionRemovesFeedback": true
+    },
+    "authorization": "Human user in this chat: approve all that needed review",
+    "advisorsCheckedAt": "2026-10-08 15:21:32 UTC",
+    "postApplyAdvisorErrorCount": 0
   },
   "evidenceDirectory": "android-twa/releases/1.0.3/db-verification",
   "logs": [
@@ -209,10 +260,10 @@
     "cleanup.log"
   ],
   "limits": [
-    "No production migration was applied",
     "No physical-device or production account-deletion smoke test was performed",
     "Existing advisory warnings require review; zero ERROR findings does not mean no risk",
-    "No full production schema diff or live authorization mutation tests were performed"
+    "No full production schema diff or live authorization mutation tests were performed",
+    "Production ownership policy/grants verified from metadata; live synthetic-account mutation/erasure smoke test remains pending"
   ],
   "sourceFiles": [
     {
@@ -292,8 +343,9 @@
       "sha256": "6961fe8ed6bd19e5678b6c50d48b725b9bd662c97c6a1854f5312ce539778f5a"
     },
     {
-      "path": "supabase/migrations/20261008160000_feedback_report_ownership.sql",
-      "sha256": "13ffe68f12c4723b0d6ff973069caad945c3d7cf4578f4a1a078124a29746475"
+      "path": "supabase/migrations/20261008151537_feedback_report_ownership.sql",
+      "sha256": "13ffe68f12c4723b0d6ff973069caad945c3d7cf4578f4a1a078124a29746475",
+      "testedPath": "supabase/migrations/20261008160000_feedback_report_ownership.sql"
     },
     {
       "path": "supabase/tests/account_deletion.test.sql",
@@ -327,5 +379,6 @@
       "path": "supabase/tests/wording_reports.test.sql",
       "sha256": "9bac5342cd67c4151a79d6aace46eeb68542e083431cf975122ce8e4d6fd44c9"
     }
-  ]
+  ],
+  "productionCheckedAt": "2026-10-08 15:18:17 UTC"
 }

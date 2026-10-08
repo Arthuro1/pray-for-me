@@ -11,6 +11,7 @@ import {
 } from './paul20260903';
 import { DISCERNMENT_REREVIEW_PENDING } from './paulDiscernment20260903';
 import { WISDOM_REREVIEW_PENDING } from './paulWisdom20260908';
+import { RESOURCE_APPROVALS_20261008 } from './paulResources20261008';
 
 afterEach(() => vi.unstubAllEnvs());
 
@@ -34,11 +35,15 @@ describe('Paul’s explicit 2026-09-03 approval', () => {
     expect(PLANS.filter((plan) => REVIEWED_PLAN_IDS.includes(plan.id)).every(isPlanReviewed)).toBe(true);
   });
 
-  it('keeps every signed plan live beside its open re-review note, without touching the sign-off', () => {
+  it('preserves earlier sign-offs and the wording notes resolved by the explicit October approval', () => {
     const notes = { ...PAUL_REREVIEW_PENDING, discernment28: DISCERNMENT_REREVIEW_PENDING, wisdom42: WISDOM_REREVIEW_PENDING };
     for (const [id, note] of Object.entries(notes)) {
       const plan = getPlan(id);
-      expect(plan.review.rereviewPending, id).toBe(note);
+      expect(plan.review.rereviewPending, id).toBeUndefined();
+      expect(plan.review.rereviewHistory, id).toContainEqual(expect.objectContaining({
+        ...note, status: 'approved', reviewer: 'Paul', reviewedAt: '2026-10-08',
+        approvalId: 'plan-reviews-2026-10-08',
+      }));
       expect(note.since).toBe('2026-09-23');
       expect(note.changed.length).toBeGreaterThan(10);
       expect(plan.review.theology.reviewer).toBe('Paul');
@@ -96,7 +101,7 @@ describe('Paul’s explicit 2026-09-03 approval', () => {
     expect(newlySigned).toEqual([...APPROVED_RESOURCE_IDS, ...CONTENT_ONLY_RESOURCE_IDS].sort());
   });
 
-  it('keeps five unavailable editions, out-of-scope candidates and retired material hidden', () => {
+  it('keeps unavailable and retired material hidden while preserving later approval scope', () => {
     expect(CONTENT_ONLY_RESOURCE_IDS).toHaveLength(5);
     for (const id of CONTENT_ONLY_RESOURCE_IDS) {
       const resource = RESOURCES.find((entry) => entry.id === id);
@@ -105,9 +110,12 @@ describe('Paul’s explicit 2026-09-03 approval', () => {
       expect(resource.safetyReview).toEqual(PAUL_RESOURCE_SIGNOFF);
       expect(resolveResources({ topics: resource.topics, languages: Object.keys(resource.editions), catalogue: [resource] })).toEqual([]);
     }
-    const outside = RESOURCES.find((entry) => entry.id === 'jouvet-du-celibat-vie-couple');
-    expect(outside.status).toBe('needs_review');
-    expect(outside.contentReview).toBeUndefined();
+    const later = RESOURCES.find((entry) => entry.id === 'jouvet-du-celibat-vie-couple');
+    expect(APPROVED_RESOURCE_IDS).not.toContain(later.id);
+    expect(CONTENT_ONLY_RESOURCE_IDS).not.toContain(later.id);
+    expect(later.status).toBe('approved');
+    expect(later.contentReview).toEqual(RESOURCE_APPROVALS_20261008[later.id].contentReview);
+    expect(later.safetyReview).toEqual(RESOURCE_APPROVALS_20261008[later.id].safetyReview);
     expect(RESOURCES.find((entry) => entry.id === 'berger-mit-offenen-augen-lieben').status).toBe('retired');
   });
 });

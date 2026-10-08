@@ -34,7 +34,9 @@ export const SHORT_LAYER_LANGS = Object.freeze(['en', 'fr']);
 
 // Is the short-layer teaching in `lang` still a machine draft? It ships (the
 // landing must never mix languages), but says so with a visible "Draft
-// translation" label until a native reviewer's dated, named sign-off exists.
+// translation" label until a dated, named publication sign-off exists. The
+// approval's provenance records whether a native-language audit occurred;
+// accepting an explicit owner's presentation approval does not assert one.
 export const isCircleTranslationDraft = (lang, reviews = CIRCLE_TRANSLATION_REVIEWS) => (
   !SHORT_LAYER_LANGS.includes(lang) && !hasReviewSignoff(reviews[lang])
 );

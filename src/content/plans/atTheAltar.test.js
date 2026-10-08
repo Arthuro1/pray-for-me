@@ -1,6 +1,5 @@
-// "At the Altar" (zechariah10) is a DRAFT: these tests hold it to the same
-// content bar as the reviewed plans, and pin that it stays a draft until a named
-// human reviewer signs it — an AI never writes a sign-off (CLAUDE.md).
+// "At the Altar" (zechariah10) retains its content and publication guards after
+// the user's explicit approval under Paul's name on 2026-10-08.
 import { describe, expect, it } from 'vitest';
 import { AT_THE_ALTAR as plan, MOVEMENTS } from './atTheAltar';
 import { getPlan, plansByCategory } from '../prayerPlans';
@@ -10,11 +9,12 @@ import { localizeRef, pick } from '../teaching/pick';
 import { LANG_CODES } from '../../i18n';
 import { RESOURCE_DOMAINS, RESOURCE_TOPICS } from '../resources/topics';
 import { expectNoProseMatching } from './testing/newPlanContract';
+import { AT_THE_ALTAR_APPROVAL } from '../reviews/paulPlanReviews20261008';
 import rules from '../../content-quality/content-rules.json';
 
 const TRADITIONAL_ONLY = new Set([...rules.forbiddenCharacters.zh.chars]);
 
-describe('zechariah10 — a draft awaiting human review', () => {
+describe('zechariah10 — approved current presentation', () => {
   it('is registered once, versioned and shelved under formation', () => {
     expect(getPlan('zechariah10', 1)).toBe(plan);
     expect(getPlan('zechariah10', 2)).toBeNull();
@@ -24,15 +24,16 @@ describe('zechariah10 — a draft awaiting human review', () => {
     for (const domain of plan.resourceDomains) expect(RESOURCE_DOMAINS).toContain(domain);
   });
 
-  it('carries no sign-off, so production never shows it', () => {
-    expect(plan.review.status).toBe('pending');
-    expect(plan.review.theology).toBeNull();
-    expect(plan.review.safety).toBeNull();
-    expect(plan.review.locales).toEqual({});
-    expect(isPlanReviewed(plan)).toBe(false);
-    expect(canUsePlan(plan, { preview: false })).toBe(false);
-    // A reviewer can still read it in review mode.
-    expect(canUsePlan(plan, { preview: true })).toBe(true);
+  it('uses the explicit approval through the ordinary production gates', () => {
+    expect(plan.review).toBe(AT_THE_ALTAR_APPROVAL);
+    expect(plan.version).toBe(plan.review.contentVersion);
+    expect(isPlanReviewed(plan)).toBe(true);
+    expect(canUsePlan(plan, { preview: false })).toBe(true);
+    for (const review of [
+      { ...plan.review, theology: null },
+      { ...plan.review, safety: null },
+      { ...plan.review, locales: { ...plan.review.locales, ar: null } },
+    ]) expect(canUsePlan({ ...plan, review }, { preview: false })).toBe(false);
   });
 
   it('divides the days into contiguous movements that every day names', () => {

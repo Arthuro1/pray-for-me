@@ -761,6 +761,63 @@ export default {
         "fa": "42 روز"
       }
     },
+    "zechariah10": {
+      "count": 10,
+      "title": {
+        "fr": "À l'autel : apprendre à porter la prière",
+        "en": "At the Altar: Learning to Carry Prayer",
+        "de": "Am Altar: Gebet tragen lernen",
+        "pt": "No altar: aprendendo a levar a oração",
+        "zh": "在坛前：学习背负祷告",
+        "es": "Ante el altar: aprender a llevar la oración",
+        "hi": "वेदी के सामने: प्रार्थना को उठाए रखना सीखना",
+        "ja": "祭壇の前で：祈りを抱え続けることを学ぶ",
+        "sw": "Madhabahuni: kujifunza kubeba maombi",
+        "am": "በመሠዊያው ፊት፦ ጸሎትን መሸከም መማር",
+        "id": "Di depan mezbah: belajar menanggung doa",
+        "tl": "Sa harap ng altar: pag-aaral magpasan ng panalangin",
+        "ko": "제단 앞에서: 기도를 품는 법 배우기",
+        "ru": "У алтаря: учиться нести молитву",
+        "ar": "عند المذبح: أن نتعلّم حمل الصلاة",
+        "fa": "در برابر مذبح: آموختن حمل دعا"
+      },
+      "sub": {
+        "fr": "Avec Zacharie à l'autel des parfums",
+        "en": "With Zechariah at the altar of incense",
+        "de": "Mit Zacharias am Räucheraltar",
+        "pt": "Com Zacarias no altar do incenso",
+        "zh": "与撒迦利亚在香坛前",
+        "es": "Con Zacarías en el altar del incienso",
+        "hi": "धूप की वेदी पर जकर्याह के साथ",
+        "ja": "香の祭壇でザカリヤと共に",
+        "sw": "Pamoja na Zakaria kwenye madhabahu ya uvumba",
+        "am": "በዕጣን መሠዊያ ፊት ከዘካርያስ ጋር",
+        "id": "Bersama Zakharia di mezbah ukupan",
+        "tl": "Kasama si Zacarias sa dambana ng insenso",
+        "ko": "분향단 앞의 사가랴와 함께",
+        "ru": "С Захарией у жертвенника курения",
+        "ar": "مع زكريا عند مذبح البخور",
+        "fa": "با زکریا کنار مذبح بخور"
+      },
+      "days": {
+        "fr": "10 jours",
+        "en": "10 days",
+        "de": "10 Tage",
+        "pt": "10 dias",
+        "zh": "10 天",
+        "es": "10 días",
+        "hi": "10 दिन",
+        "ja": "10日間",
+        "sw": "siku 10",
+        "am": "10 ቀናት",
+        "id": "10 hari",
+        "tl": "10 araw",
+        "ko": "10일",
+        "ru": "10 дней",
+        "ar": "10 يومًا",
+        "fa": "10 روز"
+      }
+    },
     "identity21": {
       "count": 21,
       "title": {

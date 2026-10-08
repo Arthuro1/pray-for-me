@@ -6,6 +6,7 @@
 // editions and resources outside that scope retain their prior status.
 import { PAUL_RESOURCE_SIGNOFF } from '../reviews/paul20260903';
 import { DISCERNMENT_RESOURCE_SIGNOFF } from '../reviews/paulDiscernment20260903';
+import { RESOURCE_APPROVALS_20261008 } from '../reviews/paulResources20261008';
 
 const VERIFIED_AT = '2026-08-28';
 
@@ -33,6 +34,11 @@ function relationshipBook({
   // the collection stamps `relationships` on everything else.
   domains,
 }) {
+  // A later explicit approval applies only to the closed dated record. Existing
+  // sign-offs and retired publication state remain authoritative.
+  const approval = RESOURCE_APPROVALS_20261008[id];
+  const currentContentReview = contentReview || approval?.contentReview;
+  const currentSafetyReview = safetyReview || approval?.safetyReview;
   return {
     id,
     type: 'book',
@@ -40,10 +46,10 @@ function relationshipBook({
     ...(domains ? { domains } : {}),
     topics,
     lifeStages,
-    status,
+    status: status === 'retired' ? status : approval?.status || status,
     ...(reviewLevel ? { reviewLevel } : {}),
-    ...(contentReview ? { contentReview } : {}),
-    ...(safetyReview ? { safetyReview } : {}),
+    ...(currentContentReview ? { contentReview: currentContentReview } : {}),
+    ...(currentSafetyReview ? { safetyReview: currentSafetyReview } : {}),
     ...(replacementResourceId ? { replacementResourceId } : {}),
     description,
     editions: {

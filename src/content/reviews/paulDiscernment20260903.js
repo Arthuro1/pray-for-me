@@ -2,6 +2,8 @@
 // This approval is separate from the earlier four-plan approval on the same day.
 // It covers the current discernment28 v1 text, all sixteen complete translations
 // and the named resource selection. It is not an independent native-language audit.
+import { withApprovedPlanRereview } from './paulPlanReviews20261008';
+
 export const DISCERNMENT_REVIEWED_LOCALES = [
   'fr', 'en', 'de', 'pt', 'zh', 'es', 'hi', 'ja', 'sw', 'am', 'id', 'tl', 'ko', 'ru', 'ar', 'fa',
 ];
@@ -9,12 +11,13 @@ export const DISCERNMENT_PLAN_SIGNOFF = {
   status: 'approved', reviewer: 'Paul', reviewedAt: '2026-09-03',
 };
 // The 2026-09-23 wording pass changed text after Paul signed. The plan stays
-// live on his sign-off; only Paul re-approving clears this note.
+// live on his sign-off. Preserve this original note; the 2026-10-08 explicit
+// user approval moves the current note into dated re-review history.
 export const DISCERNMENT_REREVIEW_PENDING = {
   since: '2026-09-23',
   changed: 'EN and FR reading prompts on days 4 and 7; 93 DE corrections (two truncated entries completed, calques, „“ quotes, du-form prayers ending „Im Namen Jesu“); DE label for the reflection section.',
 };
-export const DISCERNMENT_PLAN_APPROVAL = {
+export const DISCERNMENT_PLAN_APPROVAL = withApprovedPlanRereview('discernment28', {
   status: 'approved', contentVersion: 1,
   rereviewPending: DISCERNMENT_REREVIEW_PENDING,
   theology: { ...DISCERNMENT_PLAN_SIGNOFF },
@@ -22,7 +25,7 @@ export const DISCERNMENT_PLAN_APPROVAL = {
   locales: Object.fromEntries(DISCERNMENT_REVIEWED_LOCALES.map((lang) => [lang, {
     ...DISCERNMENT_PLAN_SIGNOFF, scope: 'current-complete-translation',
   }])),
-};
+});
 
 export const DISCERNMENT_RESOURCE_SIGNOFF = {
   status: 'approved', reviewedBy: 'Paul', reviewedAt: '2026-09-03',

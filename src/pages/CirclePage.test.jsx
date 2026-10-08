@@ -59,16 +59,16 @@ describe('CirclePage', () => {
     expect(track).toHaveBeenCalledWith(EVENTS.CIRCLE_TEACHING_OPENED, { source: 'app' });
   });
 
-  // The short teaching ships in 16 languages; the 14 AI-drafted ones say so
-  // until a native reviewer signs them (content/intercessionCircles/review.js).
-  it('labels an AI-drafted language as a draft translation, never an authored one', async () => {
+  // Paul approved the current presentations; this does not claim native review.
+  it('shows the approved short teaching without a pending translation label', async () => {
     renderCircle('household');
     expect(screen.queryByText(CIRCLE_UI.draftTranslation.fr)).toBeNull();
     cleanup();
 
     usePrayerStore.setState({ settings: { language: 'de' } });
     renderCircle('household');
-    expect(await screen.findByText('Vorläufige Übersetzung')).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Lass Christus dein Zuhause prägen.' })).toBeTruthy();
+    expect(screen.queryByText('Vorläufige Übersetzung')).toBeNull();
   });
 
   it('offers all seven circles, marking the one on screen', () => {

@@ -1,0 +1,98 @@
+{
+  "approvalId": "paul-content-release-2026-10-08",
+  "status": "approved",
+  "reviewer": "Paul",
+  "reviewedAt": "2026-10-08",
+  "source": "Explicit human user instruction in this project conversation",
+  "instruction": "approve all that needed human review and sign with Paul",
+  "scope": "Owner approval of current authored presentation, theology/safety publication gates, pending wording changes and release materials on 2026-10-08; no future additions automatically approved.",
+  "contentReviewRecords": [
+    "src/content/reviews/paulPlanReviews20261008.js",
+    "src/content/reviews/paulCircles20261008.js",
+    "src/content/reviews/paulResources20261008.js"
+  ],
+  "editorialSnapshot": {
+    "bundleCount": 1184,
+    "reviewMetadataSha256": "591144f40e0ebb8a2fb647f772a342a64fe0ea91797ed8b6c0e9b04fa7d0f5b2",
+    "bundleManifestSha256": "86782f0adcf24374d49475ee596d502e7e36ceea9aeb6c005aa354d3fcb6f5fe",
+    "glossary": {
+      "am": "1e6852c6471f54ef1b4e0ed9d29d99cfc6c46ec982b1ef3a17d8b7fb10b6713e",
+      "ar": "37853b55fd5d5081de9ab008017c9002804684077494aa12d7fff393abbcb313",
+      "de": "9529808bcd2dee6ac8740beabe57996b57b6f9e519159a0f867f580848552d49",
+      "en": "9a402ff17b83d11ac0de9953a6c8a25be157eab1ae136c8dc87d1fdfd1c1ac0b",
+      "es": "18b2a0f18910c80e157a747ab7719721aa110ae0afa31d6ab38603419d930ec9",
+      "fa": "8ac8e519a00f2b02e3a347252d5840136c61081bd8247b51c23fb8edee407286",
+      "fr": "a3f94c6691eeff3192347fe485cb8f578abea9ee52062bbec5b29f0ed07b2ab1",
+      "hi": "7e2e5c04ef6f105b79dd201f78d999fb60a10c5ee24afce4e10ad7aeb76ee362",
+      "id": "2016da641828fa3b6512e2ee11fd0031aad642a4f95af8b6d3e3a9294ee01007",
+      "ja": "fbc193cb410753f0d888bf25fcd48098e4aecab66cfb240a95be4bfabbc88621",
+      "ko": "5dd837ebfed3394749a6f41a3f10cb2c013074fe7ffd0d4d1e44ddc1736587d2",
+      "pt": "6256a76fe6d1efb20074d9fea03270444dbed0531c552e3ab4c95b3c832f8c09",
+      "ru": "f6236bd1980b890140ae37b0f1db44cf2a7c51548a1cf549e8a23fdf74c16309",
+      "sw": "59b81b6f7265a3ef285c0e011291a7fb7419e05dcf66855a043a954666461344",
+      "tl": "12be0d9a394ae189db9c089f7fc79bbadc55c8bcb30e783ddb8bb16091b2bf93",
+      "zh": "3c12ef0da7cdc17afbf7002e97776bfcde08c5496995156c4286ce3da7ce2a1b"
+    },
+    "nativeLanguageReview": false,
+    "independentAudit": false,
+    "note": "Owner release approval of the current presentation. Specialist native-language/editorial evidence is tracked separately and is not asserted by this instruction."
+  },
+  "operationalEvidence": "Approval does not change observed test, deployed website, edition availability, Console, moderation staffing, provider, storage-erasure or physical-device facts.",
+  "releaseMaterials": "Owner approval recorded for current EN/FR listing copy, local artwork, privacy/Data safety source inventory and prepared release documentation; final Console attestation remains tied to actual operational evidence.",
+  "inventory": {
+    "plans": {
+      "total": 27,
+      "approved": 27,
+      "pending": [],
+      "wordingReviewsPending": []
+    },
+    "circleDeep": {
+      "total": 7,
+      "approved": 7
+    },
+    "circleTranslations": {
+      "total": 14,
+      "approved": 14,
+      "nativeAuditClaims": 0
+    },
+    "resources": {
+      "total": 520,
+      "approvedForDisplay": 512,
+      "withRenderableEdition": 508,
+      "awaitingHumanApproval": [],
+      "heldForEditionAvailability": [
+        "berger-garten-der-liebe",
+        "trobisch-mit-freuden-frau-sein",
+        "trobisch-allein-leben-lernen",
+        "trobisch-du-bist-mir-wichtig",
+        "ruthe-so-stell-ich-mir-die-liebe-vor",
+        "ruthe-mimosen-und-dickhaeuter",
+        "ruthe-intim-gefragt"
+      ],
+      "approvedButNoUsableEdition": [
+        "solomon-breaking-evil-altars",
+        "olukoya-prayer-rain",
+        "zivi-shinko-gyakutai-kaiho",
+        "mcknight-kingdom-conspiracy"
+      ]
+    }
+  },
+  "verification": {
+    "approvalIntegration": {
+      "files": 12,
+      "tests": 93,
+      "result": "PASS"
+    },
+    "strictLint": "PASS",
+    "typecheck": "PASS",
+    "localeCheck": "PASS",
+    "contentCheck": "PASS: 0 new findings / 0 metadata errors",
+    "productionBuild": "PASS",
+    "staticRelease": "PASS: 6 checks",
+    "planPreviewCount": 27,
+    "existingShelfGuards": {
+      "passed": 62,
+      "failed": 4
+    }
+  }
+}

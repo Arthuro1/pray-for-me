@@ -1,13 +1,15 @@
 # Database verification — 8 October 2026
 
-**Local verification: PASS. Production ownership migration: PENDING.** The
+**Local verification: PASS. Production ownership migration: APPLIED.** The
 isolated database applied all 20 repository migrations, passed all 138 pgTAP
-assertions across 8 files, and passed the advisor error gate. Production was
-inspected read-only; no production migration, DDL, data write or deployment was
-performed. This closes the local database-test gate, not the production-apply gate.
+assertions across 8 files, and passed the advisor error gate. After the user's
+approval in this chat, the additive feedback ownership migration was applied to
+production and its restrictive policy, RLS and role grants were verified.
+Live synthetic-account authorization and erasure smoke tests remain open.
 The machine-readable record is
 [database-verification.json](database-verification.json), checked at
-**2026-10-08 15:04:42 UTC**.
+**2026-10-08 15:04:42 UTC** locally, with production post-apply metadata
+verified at **2026-10-08 15:18:17 UTC**.
 
 ## Isolated local verification
 
@@ -27,7 +29,7 @@ were removed; unrelated Docker containers were left alone.
 | Full pgTAP suite | PASS; 8 files, 138 assertions |
 | Feedback ownership pgTAP coverage | PASS; 15 assertions included in that full run |
 | `db advisors --type all --level error --fail-on error` | PASS; no error-level issues reported locally |
-| Migration history | 20 versions, matching the repository through `20261008160000` |
+| Migration history | 20 versions, originally tested through `20261008160000`; same SQL reconciled to production version `20261008151537` |
 | Feedback metadata | Restrictive ownership guard present; `anon` INSERT false; `authenticated` INSERT true |
 | Synthetic data after suite | Zero `auth.users` rows and zero feedback rows; test transactions rolled back |
 
@@ -61,37 +63,44 @@ every warning or information-level finding is absent, and passing schema tests
 does not verify production storage cleanup, edge functions, gateway behavior,
 moderator operations or the installed Android app.
 
-## Production read-only findings
+## Production application and metadata findings
 
 Supabase MCP inspection identified project **`pfybdjcapexqmffojuie`**, matching
 the configured application project URL. Its status was **ACTIVE_HEALTHY**, with
-PostgreSQL **17.6.1.127**. Only migration history, schema/access metadata and
-advisors were inspected; no user-content export was needed.
+PostgreSQL **17.6.1.127**. Initial migration history, schema/access metadata and advisor inspection used
+read-only queries; no user-content export was needed. The user's subsequent
+approval authorized the verified additive migration.
 No full production schema diff, live authorization writes or production-account
 smoke test was performed. Local behavior tests and remote metadata inspection
 provide different evidence; neither establishes those unperformed checks.
 
 | Item | Observed production state |
 | --- | --- |
-| Applied migration history | 19 versions, matching the repository through `20260922230622` |
-| `20261008160000_feedback_report_ownership.sql` | **Not applied** |
+| Applied migration history | 20 versions, matching the repository through `20261008151537` |
+| `20261008151537_feedback_report_ownership.sql` | **Applied**, then policy/grants verified |
 | Public table RLS | Enabled on every public table inspected |
 | `delete_account`, `submit_community_report`, `set_user_block` | SECURITY DEFINER, pinned empty search path; execute allowed for `authenticated`, denied for `anon` |
-| Existing feedback access | SELECT policy false; permissive INSERT policy true; `anon` INSERT privilege still present |
+| Feedback access | SELECT policy false; older permissive INSERT constrained by restrictive authenticated ownership guard; `anon` INSERT false; `authenticated` INSERT true |
 | Account deletion | `delete_account` explicitly deletes the caller's attributed feedback |
 
-RLS being enabled does not close the feedback gap: the existing permissive insert
-policy and grants still allow the behavior the new restrictive guard is designed
-to constrain. Apply the verified additive migration before deploying the new
-reporter-enabled client. Its source is
-[`20261008160000_feedback_report_ownership.sql`](../../supabase/migrations/20261008160000_feedback_report_ownership.sql),
+The new restrictive insert policy constrains the existing permissive policy.
+Authenticated requests require a JWT subject and either matching ownership or
+deliberately unlinked feedback with no claimed name/email. The signed-out
+`anon` role no longer has INSERT. Source:
+[`20261008151537_feedback_report_ownership.sql`](../../supabase/migrations/20261008151537_feedback_report_ownership.sql),
 with regression coverage in
 [`feedback_report_ownership.test.sql`](../../supabase/tests/feedback_report_ownership.test.sql).
-The migration does not rewrite historical feedback.
+The migration does not rewrite historical feedback. Supabase assigned production
+version `20261008151537`; the local filename was reconciled to that version after
+application. SQL SHA-256 remains
+`13ffe68f12c4723b0d6ff973069caad945c3d7cf4578f4a1a078124a29746475`.
+The local test logs retain the original `20261008160000` timestamp; only the
+filename changed after those passing tests.
 
 ## Production advisor triage
 
-Both production advisor categories reported **0 ERROR** findings. Warnings still
+Both production advisor categories reported **0 ERROR** findings, including the
+post-apply recheck at **2026-10-08 15:21:32 UTC**. Existing counts are unchanged. Warnings still
 need review; a zero-error result is not an independent security assessment.
 Official remediation guidance below was checked on **8 October 2026**. Supabase
 explains that advisors inspect schema metadata and that some flagged access is
@@ -119,11 +128,10 @@ performance changes into its deployment without review and testing.
 
 ## Production release gate still open
 
-1. The owner/operator reviews the verified migration, confirms the intended
-   production project and current history, and applies it through the normal
-   migration process. Do not run a production database reset.
-2. Record the production migration version and verify the restrictive policy,
-   `anon` INSERT denial and authenticated INSERT grant after application.
+1. Completed: user-authorized additive production migration `20261008151537`.
+   No production reset or historical data rewrite was performed.
+2. Completed: restrictive policy, enabled RLS, `anon` INSERT denial,
+   authenticated INSERT grant and account-deletion feedback statement verified.
 3. Run a controlled synthetic-account smoke test: owned reporting succeeds,
    forged ownership fails, reports are not client-readable, and account erasure
    removes attributed feedback. Resolve the synthetic records afterward.
@@ -131,5 +139,5 @@ performance changes into its deployment without review and testing.
    the resulting evidence. Storage/provider deletion and live privacy checks
    remain separate gates in [console-checklist.md](console-checklist.md).
 
-Do not mark production migrated, live deletion verified or the Play release ready
-on the basis of this local verification record.
+Production migration application is verified. Live deletion, storage/provider
+cleanup and Play readiness still require the remaining checks.

@@ -44,12 +44,11 @@ provide; prayer text/conversation is not automatically attached. They are linked
 to the authenticated reporter for ownership/deletion, with no automatically
 attached name/email. General feedback can still be submitted without attribution;
 such unlinked messages cannot be automatically located by account deletion.
-The public policy explains its retention/request handling. Apply and verify
-`20261008160000_feedback_report_ownership.sql` before deploying this client;
-its isolated database checks now pass, including all 15 feedback assertions in
-the full 138-assertion pgTAP run. Read-only production inspection confirms the
-migration remains pending there. See
-[database-verification.md](database-verification.md) before the production apply.
+The public policy explains its retention/request handling. Migration
+`20261008151537_feedback_report_ownership.sql` is applied to production, with restrictive policy and
+role grants verified. Isolated database checks passed all 15 feedback assertions
+in the full 138-assertion pgTAP run. Live synthetic-account reporting and erasure
+smoke tests remain open. See [database-verification.md](database-verification.md).
 
 ## AI topology must be verified
 

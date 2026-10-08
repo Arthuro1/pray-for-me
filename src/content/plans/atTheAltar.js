@@ -20,13 +20,14 @@
 //   • Nothing promises an outcome, and Qetoret never speaks for God. No Bible
 //     text is stored here — references only, resolved by the verse pipeline.
 //
-// REVIEW: this is a DRAFT. It is visible only in development builds or with
-// `?planPreview=1`. Only a named human reviewer may write its theology, safety
-// and locale sign-offs (CLAUDE.md, "Guided plans") — never an AI.
+// REVIEW: the user's explicit approval under Paul's name on 2026-10-08 covers
+// this v1 presentation, theology, safety and all sixteen language presentations.
+// Provenance is recorded in reviews/paulPlanReviews20261008.js.
 //
 // LOCALIZATION: day titles in all 16 languages; prose in en + fr, falling back
 // through pick() elsewhere (`proseTranslations: []`).
 import { DAYS } from './atTheAltarDays';
+import { AT_THE_ALTAR_APPROVAL } from '../reviews/paulPlanReviews20261008';
 
 export const MOVEMENTS = [
   { id: 'altar', from: 1, to: 3, titleKey: 'planZechariahMovementAltar' },
@@ -34,17 +35,7 @@ export const MOVEMENTS = [
   { id: 'purpose', from: 8, to: 10, titleKey: 'planZechariahMovementPurpose' },
 ];
 
-// No sign-off exists yet, so every gate in lib/planReview.js stays closed.
-export const AT_THE_ALTAR_REVIEW = Object.freeze({
-  status: 'pending',
-  contentVersion: 1,
-  draftedAt: '2026-10-06',
-  draftedWith: 'ai-assisted',
-  sensitive: false,
-  theology: null,
-  safety: null,
-  locales: {},
-});
+export const AT_THE_ALTAR_REVIEW = AT_THE_ALTAR_APPROVAL;
 
 export const AT_THE_ALTAR = {
   id: 'zechariah10',

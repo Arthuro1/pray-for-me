@@ -19,7 +19,14 @@ terms and deletion responses did not contain the intended Qetoret identity.
 Digital Asset Links matched the local certificate entries, but that alone does
 not confirm the real Play app-signing certificate or a Play-installed TWA.
 **The prepared web release still needs deployment and live verification before
-Play review.** No production deployment or Play submission was performed.
+Play review.** The feedback ownership migration and event-notification function
+have now been deployed; no frontend deployment or Play submission was performed.
+See [release-follow-up.md](release-follow-up.md) for the requested follow-up status.
+Paul's **8 October 2026** approval is now recorded for all pending content
+publication gates and the current release materials. All 27 plans, seven deep
+circle layers and fourteen short-circle presentations are approved; resource
+content/safety approvals and six wording re-reviews are complete. See
+[paul-approval-2026-10-08.md](paul-approval-2026-10-08.md) for scope and provenance.
 
 Terms acceptance and update/testimony report/block controls are implemented in
 source; their focused regression run passed **46 tests across 5 files**. Narrow
@@ -33,8 +40,9 @@ The initial full unit run had **10 failing tests across 9 files**; follow-up
 verification passed **67 tests across 9 files**, including the key-manager rerun.
 Four resource guard suites remain under review, so no clean complete unit run is
 claimed. Isolated database verification passed all 20 migrations and 138 pgTAP
-assertions across 8 files. Read-only production inspection confirms the ownership
-migration remains pending there. Read [validation.md](validation.md) and
+assertions across 8 files. Production now has all 20 migrations, including the
+verified ownership guard. Event notifications are active as version 40 with
+Qetoret digest titles; 34 focused tests passed. Read [validation.md](validation.md) and
 [database-verification.md](database-verification.md) for exact evidence, live
 failures and the remaining release limits.
 
@@ -50,12 +58,13 @@ failures and the remaining release limits.
 | [policy-sources.md](policy-sources.md) | Official policies checked on 8 October 2026 |
 | [release-artifacts.md](release-artifacts.md) | Final signed AAB/APK paths, hashes, verified identity and remaining release limits |
 | [validation.md](validation.md) | Actual local/browser/Android/database results, full-unit failures and live preflight |
-| [database-verification.md](database-verification.md) | Passing isolated database tests, read-only production findings and the pending production migration |
+| [database-verification.md](database-verification.md) | Passing isolated tests, applied production ownership migration and verified policy/grants |
 | [database-verification.json](database-verification.json) | Machine-readable database evidence and recorded production migration/advisor metadata |
 
 Listing artwork is in `assets/`: the 512px store icon, 1024 × 500 feature
-graphic and phone screenshot drafts in `assets/screenshots/en-US/`. Check the
-asset manifest and final installed app before submitting the screenshots.
+graphic and six phone screenshot drafts in `assets/screenshots/en-US/`. Check the
+asset manifest and final installed app before submitting the screenshots. The
+store icon is 32-bit RGBA PNG; feature graphic and screenshots remain RGB.
 
 Prepared Android artifacts and verification records are in
 [`android-twa/releases/1.0.3/`](../../android-twa/releases/1.0.3):
@@ -65,7 +74,7 @@ the hashes in those records. A direct APK installation does not test Play signin
 
 The shareable `qetoret-google-play-1.0.3-submission-pack.zip` in that release
 folder contains these Android artifacts, this complete listing/asset pack and
-the pending feedback-ownership migration/tests. Paths inside the archive retain
+the applied feedback-ownership migration/tests and deployment evidence. Paths inside the archive retain
 their repository structure. It excludes signing keys, passwords, environment
 files and reviewer credentials. It is a preparation archive, not an approval to
 publish; follow [validation.md](validation.md) and the Console checklist first.
@@ -89,10 +98,10 @@ prove they are live.
 | Source commit and deployment ID | OWNER REQUIRED |
 | Live domain/TLS/auth/deletion smoke tests | Live preflight has 5 identity/content failures; auth/deletion smoke checks remain pending |
 | AAB path, SHA-256 and signature verification | Verified locally; see release-artifacts.md and release-verification.json |
-| Unit/browser/static/database verification | Local database tests passed; production migration and full-unit follow-up remain open. See validation.md and database-verification.md |
+| Unit/browser/static/database verification | Local tests and production migration metadata passed; live account smoke tests and full-unit follow-up remain open. See validation.md and database-verification.md |
 | Play app-signing SHA-256 certificate in live assetlinks | OWNER REQUIRED |
 | Internal-track installed-app test results | NOT RECORDED |
-| Final store screenshots checked against installed release | NOT RECORDED |
+| Final store screenshots checked against installed release | Source artwork approved by Paul; installed-release comparison NOT RECORDED |
 | Data safety/privacy/UGC/AI operational review | OWNER REQUIRED |
 | Developer account type and production access | OWNER REQUIRED |
 | Rollout countries, audience, support owner and launch approval | OWNER REQUIRED |

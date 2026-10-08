@@ -21,7 +21,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500" v
   <text x="374" y="348" font-family="Arial, sans-serif" font-size="21" fill="#C6A15C">Build a life of prayer before God.</text>
 </svg>`;
 await sharp(Buffer.from(svg)).flatten({ background: '#29213F' }).removeAlpha().png().toFile(join(output, 'feature-graphic-1024x500.png'));
-await sharp(join(root, 'android-twa/store_icon.png')).flatten({ background: '#3A2D5C' }).removeAlpha().png().toFile(join(output, 'icon-512.png'));
+await sharp(join(root, 'android-twa/store_icon.png')).flatten({ background: '#3A2D5C' }).ensureAlpha().png().toFile(join(output, 'icon-512.png'));
 await copyFile(join(output, 'feature-graphic-1024x500.png'), join(root, 'android-twa/store_feature_graphic.png'));
 console.log('Store icon (512×512) and feature graphic (1024×500) generated.');
 if (process.argv.includes('--graphics-only')) process.exit(0);

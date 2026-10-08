@@ -104,23 +104,24 @@ describe('LandingCircles', () => {
     const onBeginPrayer = vi.fn();
     render(<LandingCircles lang="en" copy={copy} onBeginPrayer={onBeginPrayer} />);
     fireEvent.click(option(0));
-    // A development build shows the draft deep layer (lib/circleReview.js).
+    // The current deep layer has Paul's explicit publication approval.
     fireEvent.click(screen.getByRole('button', { name: CIRCLE_UI.explore.en }));
-    expect(await screen.findByText(CIRCLE_UI.draft.en)).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: /Seven foundations/ }));
+    const foundations = await screen.findByRole('button', { name: /Seven foundations/ });
+    expect(screen.queryByText(CIRCLE_UI.draft.en)).toBeNull();
+    fireEvent.click(foundations);
     fireEvent.click(screen.getByRole('button', { name: 'Communion with God' }));
     const prompt = 'Teach me to seek You before I seek answers.';
     fireEvent.click(screen.getAllByRole('button', { name: CIRCLE_UI.prayThis.en })[0]);
     expect(onBeginPrayer).toHaveBeenCalledWith({ circle: 'self', prompt });
   });
 
-  it('keeps an unsigned deep layer out of a production build', () => {
+  it('offers the approved deep layer in a production build without review mode', () => {
     vi.stubEnv('DEV', false);
     try {
       render(<LandingCircles lang="en" copy={copy} onBeginPrayer={vi.fn()} />);
       fireEvent.click(option(6));
       expect(screen.getByRole('heading', { name: heading('kingdom') })).toBeTruthy();
-      expect(screen.queryByRole('button', { name: CIRCLE_UI.explore.en })).toBeNull();
+      expect(screen.getByRole('button', { name: CIRCLE_UI.explore.en })).toBeTruthy();
     } finally {
       vi.unstubAllEnvs();
     }

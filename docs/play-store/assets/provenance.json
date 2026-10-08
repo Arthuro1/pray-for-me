@@ -39,5 +39,11 @@
     }
   ],
   "graphics": "Composed from existing Qetoret vector brand; no AI-generated images",
-  "review": "Confirm each screenshot still represents the submitted production app; on-device Play-signed smoke testing is separate."
+  "review": "Confirm each screenshot still represents the submitted production app; on-device Play-signed smoke testing is separate.",
+  "graphicsEncodingCheckedAt": "2026-10-08 15:18:17 UTC",
+  "graphicsEncoding": {
+    "icon": "512x512 32-bit RGBA PNG with opaque alpha; existing artwork",
+    "featureGraphic": "1024x500 RGB PNG without alpha",
+    "screenshots": "Six existing 1080x1920 RGB PNG captures; not regenerated in this follow-up"
+  }
 }

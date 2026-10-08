@@ -2,7 +2,9 @@
 
 Repository review and official-policy checks: **8 October 2026**. Check off items
 only after recording evidence. This checklist supersedes historical Praystead
-listing text; it does not certify production readiness.
+listing text; it does not certify production readiness. Paul’s explicit
+**8 October 2026** content and release-material approval is recorded in
+[paul-approval-2026-10-08.md](paul-approval-2026-10-08.md).
 
 ## Resolve these launch gates first
 
@@ -46,11 +48,12 @@ listing text; it does not certify production readiness.
   account-erasure process. Verify avatar cleanup and attachment deletion through
   the Storage API, provider/log/backup retention, and the external email request
   workflow. Do not promise immediate deletion from all backups.
-- [ ] **Apply the verified feedback ownership migration:** local database reset,
+- [x] **Apply the verified feedback ownership migration:** local database reset,
   all 20 migrations, 138 pgTAP assertions and the advisor error gate passed.
-  Read-only production inspection found only 19 migrations; the new guard is
-  still pending. Apply it before the new client, then verify access and attributed
-  report erasure. See [database-verification.md](database-verification.md).
+  Production version `20261008151537` is applied; restrictive ownership guard,
+  RLS and role grants are verified. See [database-verification.md](database-verification.md).
+- [ ] **Production account smoke test:** verify owned reporting, forged-owner
+  denial and attributed report erasure using controlled synthetic accounts.
 - [ ] **Analytics audit:** automatic Vercel Analytics/SpeedInsights mounting and
   custom-event transmission are disabled for this release in source. Verify the
   deployed network trace and older active Play versions. Hosting/provider request
@@ -62,17 +65,17 @@ listing text; it does not certify production readiness.
   [test-plan.md](test-plan.md), review the Play pre-launch report and capture the
   real installed app for the final listing.
 
-The source review is supplemented by isolated database tests and read-only
-production metadata/advisor inspection; no production changes were made. Recheck
-the final source and deployment after fixes.
+The source review is supplemented by isolated database tests, the user-approved
+production ownership migration and event-notification deployment (version 40).
+See [release-follow-up.md](release-follow-up.md). Recheck final source and deployment.
 The focused terms/UGC/edit/delete regression run passed 46 tests in five files;
 narrow ESLint checks passed. These results do not test actual moderator staffing,
 production RPC migrations or Play-installed behavior.
 Strict repository lint, type checking, locales, content baseline, production build
 and the 13-file/44-test browser suite also passed. The initial full unit run still
 had 10 failing tests across 9 files; see the follow-up result below. Database
-verification now passes locally, but the ownership migration remains unapplied
-on production. Do not treat the combined verification as all green. See
+verification passes locally and the ownership migration is applied to production.
+Live account smoke tests and the unit failures remain open. See
 [validation.md](validation.md) for the exact record and final follow-up status.
 
 The final focused release follow-up passed 67 tests in nine files; the key-manager
@@ -109,12 +112,10 @@ engagement, feedback and fixes. [Official testing requirements](https://support.
 1. Complete additive database migrations and edge-function deployments required by
    the selected web release; see `docs/MIGRATIONS.md` and `docs/OPERATIONS.md`.
    Record exact versions and perform a synthetic account/group/deletion smoke test.
-   This release includes `20261008160000_feedback_report_ownership.sql`: apply it
-   before the reporter-enabled client, verify authenticated feedback cannot forge
-   another user's ID and anonymous-role inserts are revoked. Run its pgTAP checks
-   on an isolated/local Supabase database before production. This local gate is
-   complete: all 20 migrations and all 138 pgTAP assertions passed, including 15
-   feedback assertions. Production still has 19 migrations and needs this guard.
+   This release includes `20261008151537_feedback_report_ownership.sql`, already applied before the
+   reporter-enabled client. Production has 20 migrations; policy/grants verified.
+   The isolated local gate passed all 138 pgTAP assertions, including 15 feedback
+   assertions. Live synthetic-account mutation and erasure checks remain open.
    Retain the apply/verification record; see
    [database-verification.md](database-verification.md).
 2. Deploy and verify the web release and legal URLs on `qetoret.com`. Finish DNS,
@@ -151,7 +152,8 @@ engagement, feedback and fixes. [Official testing requirements](https://support.
 
 ## Listing assets
 
-- [ ] App icon: 512 × 512, 32-bit PNG, no more than 1 MB.
+- [x] Local app icon: 512 × 512, 32-bit RGBA PNG with alpha, 21,894 bytes;
+  generator and preflight enforce the format. Console upload remains pending.
 - [ ] Feature graphic: 1024 × 500 JPEG or 24-bit PNG without alpha.
 - [ ] At least 2 phone screenshots, up to 8 for the phone listing; JPEG or
   24-bit PNG without alpha, 320–3840 px per side, longest side at most twice the
@@ -172,15 +174,16 @@ engagement, feedback and fixes. [Official testing requirements](https://support.
 
 | Gate | Evidence | Owner / date |
 | --- | --- | --- |
+| Human content and source release-material approval | APPROVED from explicit user instruction; closed records and history preserved | Paul / 2026-10-08 |
 | Final signed AAB + package/version/SDK | VERIFIED LOCALLY; Console version history/signing association pending | |
 | Full unit follow-up / resource content guard failures | OPEN; see validation.md | |
 | Isolated ownership migration and database tests | PASS: 20 migrations, 8 files / 138 assertions; local advisor error gate passed | |
-| Production ownership migration and smoke test | PENDING: production has 19 migrations; no production writes made | |
+| Production ownership migration and smoke test | APPLIED `20261008151537`; policy/grants verified; live account smoke pending | |
 | Live site, auth and old-origin recovery | PENDING | |
 | Play-installed trust + Android 15/16 layout | PENDING | |
 | Privacy/deletion/Data safety | PENDING | |
 | Terms, UGC moderation and AI reporting | PENDING | |
 | Reviewer credentials and new-device vault | PENDING | |
-| Listing copy + actual installed screenshots | PENDING | |
+| Listing copy + actual installed screenshots | Current local copy/artwork APPROVED; installed comparison pending | Paul / 2026-10-08 |
 | Pre-launch report and required closed test | PENDING | |
-| Production approval and rollout choice | PENDING | |
+| Production approval and rollout choice | Human approval recorded; unresolved technical gates and actual rollout choice remain | Paul / 2026-10-08 |
