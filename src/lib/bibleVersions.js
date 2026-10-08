@@ -37,23 +37,25 @@ export const YOUVERSION_VERSIONS = {
   am: { abbr: 'NASV', name: 'New Amharic Standard Version 2024' },
 };
 
-// Offline public-domain editions, one per language that ships a bundle. Languages
-// without a bundle (id, am, sw) are absent — their verses only ever resolve via
-// YouVersion, so they never need a bundle label.
+// Offline editions. The attribution and redistribution terms for each source
+// live beside the generated bundles in src/content/verses/README.md.
 export const BUNDLE_VERSIONS = {
   fr: { abbr: 'LSG', name: 'Louis Segond 1910' },
   en: { abbr: 'WEB', name: 'World English Bible' },
   de: { abbr: 'LUT', name: 'Lutherbibel 1912' },
-  zh: { abbr: '和合本', name: 'Chinese Union Version (Simplified) 1988' },
+  zh: { abbr: '和合本', name: 'Chinese Union Version (Simplified) 1919' },
   ko: { abbr: '개역한글', name: 'Korean Revised Version' },
   ar: { abbr: 'SVD', name: 'Smith & Van Dyke (فان دايك)' },
   fa: { abbr: 'POV', name: 'Persian Old Version (ترجمه قدیم)' },
-  hi: { abbr: 'HIOV', name: 'Hindi Old Version' },
+  hi: { abbr: 'IRV', name: 'Hindi Indian Revised Version 2019' },
   ja: { abbr: '口語訳', name: 'Japanese Kougo-yaku 1954/55' },
   es: { abbr: 'RVR1909', name: 'Reina-Valera 1909' },
   pt: { abbr: 'Livre', name: 'Bíblia Livre' },
   ru: { abbr: 'Синод.', name: 'Синодальный перевод 1876' },
   tl: { abbr: 'ADB', name: 'Ang Dating Biblia 1905' },
+  id: { abbr: 'AYT', name: 'Alkitab Yang Terbuka' },
+  am: { abbr: 'ULB', name: 'Amharic Unlocked Literal Bible' },
+  sw: { abbr: 'ULB', name: 'Swahili Unlocked Literal Bible' },
 };
 
 // The version label for a resolved verse, given the source that produced its text.

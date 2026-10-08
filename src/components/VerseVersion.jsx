@@ -48,14 +48,17 @@ function useBibleVersion(reference, lang, source) {
 export default function VerseVersion({ reference, lang, source, className = '', style, separator = ' · ' }) {
   const version = useBibleVersion(reference, lang, source);
   if (!version) return null;
+  const bundled = version === BUNDLE_VERSIONS[lang];
+  const Tag = bundled ? 'a' : 'span';
   return (
-    <span
+    <Tag
+      {...(bundled ? { href: `/scripture-sources.html#${lang}`, target: '_blank', rel: 'noopener noreferrer' } : {})}
       className={className}
       style={{ opacity: 0.65, fontWeight: 400, ...style }}
       title={version.name}
       aria-label={version.name}
     >
       {separator}{version.abbr}
-    </span>
+    </Tag>
   );
 }

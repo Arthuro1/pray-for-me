@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Smartphone } from 'lucide-react';
+import { LANDING_BEAT_REFS } from '../content/landingBeatRefs.js';
 import { dirFor } from '../i18n';
 import { applyTheme, normalizeTheme, resolveTheme } from '../utils/theme';
 import {
@@ -25,14 +26,6 @@ import { BringVignette, RememberVignette, RhythmVignette, TogetherVignette } fro
 // cards and tiles, so the first page and the product read as one place.
 //
 // Scripture is cited by reference only (CLAUDE.md, Scripture rule).
-
-// The passages under each step of the story, localized at render.
-const REFS = {
-  bring: ['Psalm 62:8', '1 Samuel 1:15'],
-  together: ['Luke 1:10', 'Galatians 6:2'],
-  rhythm: ['Exodus 30:7-8', 'Luke 18:1', 'Psalm 46:10'],
-  remember: ['Luke 1:13-17', 'Psalm 103:2'],
-};
 
 // Where each of the seven movements sits in the locale's `movements` list.
 const MOVEMENT = { come: 0, bring: 1, carry: 2, return: 3, listen: 4, respond: 5, remember: 6 };
@@ -118,7 +111,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
   const movement = (...names) => names.map((name) => movements[MOVEMENT[name]]).join(' · ');
   // A step of the story: its words and the passages under them.
   const beat = (id, label) => ({
-    id, label, lang: rendered.lang, title: copy[id].title, body: copy[id].body, refs: REFS[id],
+    id, label, lang: rendered.lang, title: copy[id].title, body: copy[id].body, refs: LANDING_BEAT_REFS[id],
   });
 
   return (

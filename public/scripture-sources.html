@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bible editions, sources, and attribution for Scripture excerpts in Qetoret.">
+  <title>Scripture sources · Qetoret</title>
+  <style>
+    :root { color-scheme: light dark; --background: #faf8f4; --surface: #fff; --text: #28232e; --muted: #625b6a; --line: #dfd9e4; --link: #65508a; --highlight: #f2edf9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--background); color: var(--text); font: 1rem/1.65 system-ui, sans-serif; }
+    main { max-width: 76rem; margin: auto; padding: 3rem 1.25rem; }
+    h1, h2 { font-family: Georgia, serif; line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 5vw, 3rem); margin: .5rem 0 1rem; }
+    h2 { font-size: 1.5rem; margin-top: 0; }
+    p { max-width: 75ch; }
+    a { color: var(--link); text-underline-offset: .15em; }
+    a:focus-visible { outline: 3px solid var(--link); outline-offset: 3px; }
+    .intro { color: var(--muted); margin-bottom: 2rem; }
+    .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: .75rem; background: var(--surface); }
+    table { width: 100%; border-collapse: collapse; min-width: 42rem; }
+    caption { text-align: left; font-weight: 700; padding: 1rem; }
+    th, td { padding: .9rem 1rem; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+    th { font-size: .875rem; color: var(--muted); }
+    td:first-child { width: 12%; font-weight: 600; }
+    td:nth-child(2) { width: 26%; }
+    td:nth-child(3) { width: 23%; }
+    tr:target { background: var(--highlight); }
+    tr, section { scroll-margin-top: 1rem; }
+    small { display: block; color: var(--muted); }
+    section { margin-top: 2rem; border: 1px solid var(--line); border-radius: .75rem; padding: 1.5rem; background: var(--surface); }
+    section:target { border-color: var(--link); }
+    li + li { margin-top: .35rem; }
+    footer { margin-top: 2rem; color: var(--muted); }
+    @media (prefers-color-scheme: dark) { :root { --background: #19161f; --surface: #211d28; --text: #eee9f2; --muted: #b8afc2; --line: #3c3447; --link: #c4a9ed; --highlight: #332943; } }
+  </style>
+</head>
+<body>
+<main>
+  <a href="/">← Qetoret</a>
+  <h1>Scripture sources</h1>
+  <p class="intro">These Bible editions supply the Scripture excerpts included in Qetoret. Their original copyright and license terms continue to apply.</p>
+
+  <div class="table-scroll" role="region" aria-label="Bible editions and source credits" tabindex="0">
+    <table>
+      <caption>Bible editions and credits</caption>
+      <thead><tr><th scope="col">Language</th><th scope="col">Edition</th><th scope="col">Text source</th><th scope="col">Attribution and terms</th></tr></thead>
+      <tbody>
+        <tr id="fr"><td>French</td><td>Louis Segond 1910 <small>LSG</small></td><td><a href="https://bolls.life/get-text/FRLSG/">Bolls Bible · FRLSG</a></td><td>Louis Segond 1910 text. <a href="https://ebible.org/fraLSG/copyright.htm">Public domain edition</a>.</td></tr>
+        <tr id="en"><td>English</td><td>World English Bible <small>WEB</small></td><td><a href="https://bolls.life/get-text/WEB/">Bolls Bible · WEB</a></td><td>Public domain text. The World English Bible name identifies faithful copies of the translation. <a href="https://worldenglish.bible/">Edition information</a>.</td></tr>
+        <tr id="de"><td>German</td><td>Lutherbibel 1912 <small>LUT</small></td><td><a href="https://bolls.life/get-text/LUT/">Bolls Bible · LUT</a></td><td>Luther 1912 text. <a href="https://ebible.org/deu1912/copyright.htm">Public domain edition</a>.</td></tr>
+        <tr id="zh"><td>Chinese</td><td>Chinese Union Version, Simplified, 1919 <small lang="zh">和合本</small></td><td><a href="https://api.getbible.net/v2/cus.json">GetBible · cus</a></td><td>Public domain, as identified in the <a href="https://api.getbible.net/v2/translations.json">source catalog</a>.</td></tr>
+        <tr id="ko"><td>Korean</td><td>Korean Revised Version <small lang="ko">개역한글</small></td><td><a href="https://bolls.life/get-text/KRV/">Bolls Bible · KRV</a></td><td>Korean Revised Version text. The <a href="https://api.getbible.net/v2/translations.json">GetBible edition catalog</a> identifies this translation as public domain.</td></tr>
+        <tr id="ar"><td>Arabic</td><td>Smith &amp; Van Dyke <small>SVD · <span lang="ar" dir="rtl">فان دايك</span></small></td><td><a href="https://bolls.life/get-text/SVD/">Bolls Bible · SVD</a></td><td>Smith &amp; Van Dyke text. The <a href="https://ebible.org/arb-vd/copyright.htm">Van Dyck edition notice</a> identifies the translation as public domain.</td></tr>
+        <tr id="fa"><td>Persian</td><td>Persian Old Version 1895 <small>POV · <span lang="fa" dir="rtl">ترجمه قدیم</span></small></td><td><a href="https://ebible.org/pesOPV/">eBible.org · pesOPV</a></td><td><a href="https://ebible.org/pesOPV/copyright.htm">Public domain</a>.</td></tr>
+        <tr id="hi"><td>Hindi</td><td>Hindi Indian Revised Version 2019 <small>IRV</small></td><td><a href="https://ebible.org/hin2017/">eBible.org · hin2017</a></td><td>© 2017, 2018, 2019 Bridge Connectivity Solutions. <a href="#notice-hi">CC BY-SA 4.0 and full credit</a>.</td></tr>
+        <tr id="ja"><td>Japanese</td><td>Japanese Kougo-yaku 1954/55 <small lang="ja">口語訳</small></td><td><a href="https://ekotoba.org/">eKotoba</a> · <a href="https://ekotoba.org/data/Kougo1955_Japanese.txt">1955 text</a></td><td>The source identifies the 1955 edition as public domain.</td></tr>
+        <tr id="es"><td>Spanish</td><td>Reina-Valera 1909 <small>RVR1909</small></td><td><a href="https://api.getbible.net/v2/valera.json">GetBible · valera</a></td><td>The <a href="https://api.getbible.net/v2/translations.json">source catalog</a> identifies the Scripture text as public domain. Strong's-number annotations are excluded.</td></tr>
+        <tr id="pt"><td>Portuguese</td><td>Bíblia Livre <small>Livre · BLIVRE</small></td><td><a href="https://api.getbible.net/v2/livre.json">GetBible · livre</a> · <a href="https://sites.google.com/site/biblialivre/">Bíblia Livre project</a></td><td>© Diego Santos, Mario Sérgio, e Marco Teles. <a href="#notice-pt">CC BY 3.0 Brazil and full credit</a>.</td></tr>
+        <tr id="ru"><td>Russian</td><td>Synodal Translation 1876 <small lang="ru">Синодальный перевод · Синод.</small></td><td><a href="https://api.getbible.net/v2/synodal.json">GetBible · synodal</a></td><td>Public domain, as identified in the <a href="https://api.getbible.net/v2/translations.json">source catalog</a>.</td></tr>
+        <tr id="tl"><td>Tagalog</td><td>Ang Dating Biblia 1905 <small>ADB</small></td><td><a href="https://api.getbible.net/v2/tagalog.json">GetBible · tagalog</a></td><td>Philippine Bible Society (1905). E-text typed by Richard and Dolores Long. Public domain, as identified in the <a href="https://api.getbible.net/v2/translations.json">source catalog</a>.</td></tr>
+        <tr id="id"><td>Indonesian</td><td>Alkitab Yang Terbuka <small>AYT</small></td><td><a href="https://ebible.org/indayt/">eBible.org · indayt</a></td><td>© 2011-2024 YLSA-AYT. <a href="#notice-id">Noncommercial redistribution with attribution; full notice</a>.</td></tr>
+        <tr id="am"><td>Amharic</td><td>Unlocked Literal Bible, version 7.2 <small>ULB</small></td><td><a href="https://git.door43.org/STR/am_ulb">Door43 · STR/am_ulb</a></td><td>Door43 World Missions Community. <a href="#notice-am">CC BY-SA 4.0 and full credit</a>.</td></tr>
+        <tr id="sw"><td>Swahili</td><td>Unlocked Literal Bible, version 7.6 <small>ULB</small></td><td><a href="https://git.door43.org/Door43-Catalog/sw_ulb">Door43 · Door43-Catalog/sw_ulb</a></td><td>Door43 World Missions Community. <a href="#notice-sw">CC BY-SA 4.0 and full credit</a>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section id="notice-id" aria-labelledby="title-id">
+    <h2 id="title-id">Indonesian · Alkitab Yang Terbuka</h2>
+    <p>Copyright © 2011-2024 YLSA-AYT. Publisher: <a href="https://ylsa.org/">Yayasan Lembaga SABDA (YLSA)</a>. Source: <a href="https://ebible.org/indayt/">Alkitab Yang Terbuka on eBible.org</a>.</p>
+    <p>The <a href="https://ebible.org/indayt/copyright.htm">complete source copyright notice</a> expressly permits sharing and redistribution of this translation or extracts in any format provided the copyright and source information are included and the work is not used for commercial purposes. It identifies <a href="https://creativecommons.org/licenses/by-nd/4.0/">Creative Commons Attribution-NoDerivatives 4.0</a> and separately states the noncommercial condition.</p>
+    <p>Qetoret includes these excerpts under that noncommercial redistribution permission. Scripture wording is preserved; presentation normalization is described below. AYT and Alkitab Yang Terbuka are trademarks associated with YLSA-AYT.</p>
+  </section>
+
+  <section id="notice-am" aria-labelledby="title-am">
+    <h2 id="title-am">Amharic · Unlocked Literal Bible 7.2</h2>
+    <p>Creator: Door43 World Missions Community. Publisher: Door43. Source edition issued and modified 2020-12-27. Original work available at <a href="https://door43.org/">Door43</a>.</p>
+    <p>Text and credits: <a href="https://git.door43.org/STR/am_ulb">Amharic ULB repository</a>. The <a href="https://git.door43.org/STR/am_ulb/src/branch/master/LICENSE.md">source license</a> is <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>.</p>
+    <p>Copying, redistribution and adaptation, including commercial use, are permitted under these conditions:</p>
+    <ul>
+      <li>Give appropriate credit, identify the source, link to the license, and indicate changes without implying endorsement.</li>
+      <li>Distribute applicable contributions under the same license.</li>
+      <li>Do not add legal restrictions or technological measures that restrict the licensed freedoms.</li>
+    </ul>
+    <p>The Scripture excerpts retain CC BY-SA 4.0. Qetoret applies only the presentation normalization described below. Inclusion does not imply endorsement by Door43.</p>
+  </section>
+
+  <section id="notice-sw" aria-labelledby="title-sw">
+    <h2 id="title-sw">Swahili · Unlocked Literal Bible 7.6</h2>
+    <p>Creator: Door43 World Missions Community. Publisher: Door43. Source edition issued and modified 2020-06-15. Original work available at <a href="https://door43.org/">Door43</a>.</p>
+    <p>Text and credits: <a href="https://git.door43.org/Door43-Catalog/sw_ulb">Swahili ULB repository</a>. The <a href="https://git.door43.org/Door43-Catalog/sw_ulb/src/branch/master/LICENSE.md">source license</a> is <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>. The <a href="https://ebible.org/swhulb/copyright.htm">eBible.org edition notice</a> credits copyright © 2019 Door43 World Missions Community.</p>
+    <p>Copying, redistribution and adaptation, including commercial use, are permitted under these conditions:</p>
+    <ul>
+      <li>Give appropriate credit, identify the source, link to the license, and indicate changes without implying endorsement.</li>
+      <li>Distribute applicable contributions under the same license.</li>
+      <li>Do not add legal restrictions or technological measures that restrict the licensed freedoms.</li>
+    </ul>
+    <p>The Scripture excerpts retain CC BY-SA 4.0. Qetoret applies only the presentation normalization described below. Inclusion does not imply endorsement by Door43.</p>
+  </section>
+
+  <section id="notice-hi" aria-labelledby="title-hi">
+    <h2 id="title-hi">Hindi · Indian Revised Version 2019</h2>
+    <p>Copyright © 2017, 2018, 2019 <a href="https://bridgeconn.com/">Bridge Connectivity Solutions</a>. Translation by Bridge Connectivity Solutions. Contributor: Bridge Connectivity Solutions Pvt. Ltd. Source: <a href="https://ebible.org/hin2017/">eBible.org · hin2017</a>.</p>
+    <p>The <a href="https://ebible.org/hin2017/copyright.htm">source permissions</a> provide the text under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>. Redistribution must include copyright and source information. Changes must be identified without implying endorsement, and applicable contributions must retain the same license.</p>
+    <p>The Scripture excerpts retain CC BY-SA 4.0. Qetoret applies only presentation normalization, including omission of marked editorial cross-references. The resource identifier contains “2017”; the edition title identifies 2019.</p>
+  </section>
+
+  <section id="notice-pt" aria-labelledby="title-pt">
+    <h2 id="title-pt">Portuguese · Bíblia Livre</h2>
+    <p>Bíblia Livre (BLIVRE), © Diego Santos, Mario Sérgio, e Marco Teles. Original project: <a href="https://sites.google.com/site/biblialivre/">Bíblia Livre</a>. Source: <a href="https://api.getbible.net/v2/livre.json">GetBible · livre</a>.</p>
+    <p>The source identifies <a href="https://creativecommons.org/licenses/by/3.0/br/">Creative Commons Attribution 3.0 Brazil</a>. Redistribution and adaptation require appropriate credit, the license link, and identification of changes without implying endorsement. The excerpts retain these attribution terms; Qetoret applies only the presentation normalization below.</p>
+  </section>
+
+  <section id="formatting" aria-labelledby="title-formatting">
+    <h2 id="title-formatting">Presentation of excerpts</h2>
+    <p>Scripture wording is preserved. Formatting conversion removes presentation markup, headings, notes, editorial cross-references and printed alternative verse labels, and normalizes whitespace. It does not translate, paraphrase or rewrite verses.</p>
+    <p>References use Western chapter and verse numbering. Verified mappings account for edition-specific Psalm numbering. When an edition combines adjacent verses, its complete wording appears once with the full verse range.</p>
+    <p>These Scripture excerpts retain their source licenses. The application's MIT license does not replace the terms above.</p>
+  </section>
+
+  <footer><a href="/">Return to Qetoret</a></footer>
+</main>
+</body>
+</html>
