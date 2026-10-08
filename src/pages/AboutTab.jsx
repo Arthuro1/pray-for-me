@@ -1,6 +1,8 @@
 import { useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BookOpen, ChevronDown, HandHeart, Quote } from 'lucide-react';
+import {
+  ArrowDown, ArrowRight, BookOpen, ChevronDown, Flame, HandHeart, Hourglass, Lock, MessageCircleOff, Quote, Scale,
+} from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
@@ -16,21 +18,50 @@ import { PageHeader, PrimaryButton } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 import VerseAccordion from '../components/VerseAccordion';
 
-// "About Qetoret": the name, the access it rests on, the author's own word on
-// how it began, the circles and the promises the app keeps — a short biblical
-// foundation (docs/QETORET_IDENTITY.md), never a substitute for Scripture.
-// Scripture is cited by reference only; tapping one unfolds the passage from
-// the reader's Bible sources in place. No verse text is authored here.
-const SECTIONS = [
-  { id: 'name', titleKey: 'aboutNameTitle', bodyKey: 'aboutNameBody', refs: ['Exodus 30:7-8', 'Psalm 141:2', 'Revelation 5:8', 'Revelation 8:3-4'] },
-  { id: 'access', titleKey: 'aboutAccessTitle', bodyKey: 'aboutAccessBody', refs: ['Hebrews 4:14-16', 'Hebrews 10:19-22', '1 Peter 2:9', 'Revelation 1:6'] },
+// "About Qetoret": the name, the access it rests on, the circles and the
+// promises the app keeps, then the author's own word on how it began — a short
+// biblical foundation (docs/QETORET_IDENTITY.md), never a substitute for
+// Scripture. Scripture is cited by reference only; tapping one unfolds the
+// passage from the reader's Bible sources in place. No verse text is authored here.
+const HEBREW_NAME = 'קְטֹרֶת';
+const TRANSLITERATION = 'qetoret';
+
+// A Latin cross in the icon set's stroke: lucide's own "Cross" has equal arms
+// and reads as a plus sign.
+function LatinCross({ size = 24, strokeWidth = 2 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={strokeWidth}
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M12 3v18M6.5 8.5h11" />
+    </svg>
+  );
+}
+
+const FOUNDATIONS = [
+  { id: 'name', icon: Flame, tone: 'amber', titleKey: 'aboutNameTitle', bodyKey: 'aboutNameBody', refs: ['Exodus 30:7-8', 'Psalm 141:2', 'Revelation 5:8', 'Revelation 8:3-4'] },
+  { id: 'access', icon: LatinCross, tone: 'plum', titleKey: 'aboutAccessTitle', bodyKey: 'aboutAccessBody', refs: ['Hebrews 4:14-16', 'Hebrews 10:19-22', '1 Peter 2:9', 'Revelation 1:6'] },
+];
+
+const PROMISES = [
+  { key: 'aboutPromiseVoice', icon: MessageCircleOff },
+  { key: 'aboutPromiseOutcome', icon: Hourglass },
+  { key: 'aboutPromiseRank', icon: Scale },
+  { key: 'aboutPromiseAi', icon: BookOpen },
 ];
 
 // The author's testimony is theirs: first person, signed with their name and
 // portrait (public/authors/). The name is not translated.
 const AUTHOR = { name: 'Paul', photo: '/authors/paul.webp' };
-const AUTHOR_REFS = ['Luke 1:5-17', '1 Peter 2:9', 'Ezekiel 22:30'];
-const PORTRAIT_SIZE = 64;
+const AUTHOR_REFS = ['Luke 1:5-17', '1 Peter 2:9', 'Ezekiel 22:30', 'James 5:16'];
+const LETTER_ID = 'about-letter';
 
 // A section's references in one row; the one tapped opens beneath the row (a
 // second tap, or another reference, closes it). One passage open at a time
@@ -69,9 +100,9 @@ function References({ refs, lang }) {
   );
 }
 
-function Section({ title, children, labelledBy, className = '' }) {
+function Section({ title, children, labelledBy, id, className = '' }) {
   return (
-    <section className={`about__section ${className}`} aria-labelledby={labelledBy}>
+    <section id={id} tabIndex={id ? -1 : undefined} className={`about__section ${className}`} aria-labelledby={labelledBy}>
       <h2 id={labelledBy} className="q-section-title">{title}</h2>
       {children}
     </section>
@@ -80,17 +111,17 @@ function Section({ title, children, labelledBy, className = '' }) {
 
 // The author's portrait over their initial: the initial is already right if
 // the picture never arrives (offline, blocked), so nothing breaks or shifts.
-function AuthorPortrait() {
+function AuthorPortrait({ size }) {
   const [failed, setFailed] = useState(false);
   return (
     <span className="about-letter__portrait">
-      <Avatar name={AUTHOR.name} size={PORTRAIT_SIZE} />
+      <Avatar name={AUTHOR.name} size={size} />
       {!failed && (
         <img
           src={AUTHOR.photo}
           alt=""
-          width={PORTRAIT_SIZE}
-          height={PORTRAIT_SIZE}
+          width={size}
+          height={size}
           decoding="async"
           draggable={false}
           onError={() => setFailed(true)}
@@ -100,12 +131,91 @@ function AuthorPortrait() {
   );
 }
 
-// How Qetoret began, in the author's own words, as a short letter: the story,
-// the passages it rests on straight after it, then the prayer it closes on and
-// the signature, set at the end of the page like a letter's sign-off.
+// The name before anything explains it: the Hebrew word under the rising
+// stroke, how it sounds and what it means, the line the app lives by — then one
+// line of the author's letter, which waits at the foot of the page.
+function Hero({ lang }) {
+  const openLetter = (event) => {
+    const letter = document.getElementById(LETTER_ID);
+    if (!letter) return;
+    event.preventDefault();
+    letter.scrollIntoView?.({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+    letter.focus({ preventScroll: true });
+  };
+
+  return (
+    <div className="about-hero">
+      <RiseMark motion="still" size={34} className="about-hero__mark" />
+      <p className="about-hero__word" lang="he" dir="rtl">{HEBREW_NAME}</p>
+      <p className="about-hero__gloss">
+        <span className="about-hero__sound" lang="he-Latn">{TRANSLITERATION}</span>
+        <span aria-hidden="true"> · </span>
+        <span>{t(lang, 'aboutHebrewGloss')}</span>
+      </p>
+      <p className="about-hero__tagline">{t(lang, 'aboutTagline')}</p>
+
+      <figure className="about-hero__quote">
+        <blockquote>
+          <Quote className="rtl-mirror" size={16} strokeWidth={1.6} aria-hidden="true" />
+          <p>{t(lang, 'aboutPullQuote')}</p>
+        </blockquote>
+        <figcaption>
+          <AuthorPortrait size={28} />
+          <span className="about-hero__author">{AUTHOR.name}</span>
+          <a href={`#${LETTER_ID}`} onClick={openLetter} className="about-hero__read">
+            {t(lang, 'aboutReadLetter')}
+            <ArrowDown size={14} aria-hidden="true" />
+          </a>
+        </figcaption>
+      </figure>
+    </div>
+  );
+}
+
+// The name and the access it rests on, as two cards side by side where there
+// is room: what Qetoret means, and why anyone may come at all.
+function Foundations({ lang }) {
+  return (
+    <div className="about-foundations">
+      {FOUNDATIONS.map(({ id, icon: Icon, tone, titleKey, bodyKey, refs }) => (
+        <section key={id} className="about-card" aria-labelledby={`about-${id}`}>
+          <span className={`icon-tile tone-${tone}`} aria-hidden="true"><Icon size={18} strokeWidth={1.8} /></span>
+          <h2 id={`about-${id}`} className="q-section-title">{t(lang, titleKey)}</h2>
+          <p className="about__body">{t(lang, bodyKey)}</p>
+          <References refs={refs} lang={lang} />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+// What the app will never do, one line each, then the one thing it always
+// keeps: private prayers stay private.
+function Promises({ lang }) {
+  return (
+    <Section title={t(lang, 'aboutPromisesTitle')} labelledBy="about-promises">
+      <ul className="about-promises">
+        {PROMISES.map(({ key, icon: Icon }) => (
+          <li key={key}>
+            <span className="icon-tile icon-tile--round" aria-hidden="true"><Icon size={17} strokeWidth={1.8} /></span>
+            <span>{t(lang, key)}</span>
+          </li>
+        ))}
+      </ul>
+      <p className="about-promises__private">
+        <Lock size={15} aria-hidden="true" />
+        <span>{t(lang, 'aboutPromisePrivate')}</span>
+      </p>
+    </Section>
+  );
+}
+
+// How Qetoret began, in the author's own words, as a short letter that closes
+// the page: the story, the passages it rests on straight after it, then the
+// prayer it ends on and the signature, set at the end like a letter's sign-off.
 function AuthorWord({ lang }) {
   return (
-    <Section title={t(lang, 'aboutStoryTitle')} labelledBy="about-story" className="about-letter">
+    <Section title={t(lang, 'aboutStoryTitle')} labelledBy="about-story" id={LETTER_ID} className="about-letter">
       <article className="about-letter__card">
         <Quote className="about-letter__mark rtl-mirror" size={30} strokeWidth={1.4} aria-hidden="true" />
         <div className="about-letter__body">
@@ -116,10 +226,10 @@ function AuthorWord({ lang }) {
         <References refs={AUTHOR_REFS} lang={lang} />
         <footer className="about-letter__close">
           <p className="about-letter__prayer">{t(lang, 'aboutStoryPrayer')}</p>
-          <p className="about-letter__signature">
+          <div className="about-letter__signature">
             <span>{AUTHOR.name}</span>
-            <AuthorPortrait />
-          </p>
+            <AuthorPortrait size={64} />
+          </div>
         </footer>
       </article>
     </Section>
@@ -229,25 +339,11 @@ export default function AboutTab({ onPrayInCircle }) {
       </div>
 
       <div className="phase-content max-w-2xl">
-        <p className="about__tagline">
-          <RiseMark motion="still" size={28} />
-          <span>{t(lang, 'aboutTagline')}</span>
-        </p>
-
-        {SECTIONS.map(({ id, titleKey, bodyKey, refs }) => (
-          <Section key={id} title={t(lang, titleKey)} labelledBy={`about-${id}`}>
-            <p className="about__body">{t(lang, bodyKey)}</p>
-            <References refs={refs} lang={lang} />
-          </Section>
-        ))}
-
-        <AuthorWord lang={lang} />
-
+        <Hero lang={lang} />
+        <Foundations lang={lang} />
         <AboutCircles lang={lang} onPrayInCircle={onPrayInCircle} />
-
-        <Section title={t(lang, 'aboutPromisesTitle')} labelledBy="about-promises">
-          <p className="about__body">{t(lang, 'aboutPromisesBody')}</p>
-        </Section>
+        <Promises lang={lang} />
+        <AuthorWord lang={lang} />
       </div>
     </div>
   );

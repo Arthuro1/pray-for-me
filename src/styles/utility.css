@@ -26,18 +26,115 @@
 .menu-row__description { color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.45; }
 
 /* ── About Qetoret ──────────────────────────────────────────────────────── */
-.about__tagline {
-  display: flex;
-  align-items: center;
-  gap: var(--q-space-3);
-  margin: 0 0 var(--q-space-10);
+/* The hero: the name in Hebrew under the rising stroke, how it sounds and what
+   it means, the tagline, then one line of the author's letter that leads down
+   to it. Centred on a soft wash of the royal hue with a trace of gold. */
+.about-hero {
+  display: grid;
+  justify-items: center;
+  margin-block-end: var(--q-space-8);
+  padding: var(--q-space-8) var(--q-space-5) var(--q-space-6);
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-dialog);
+  background:
+    radial-gradient(80% 70% at 50% 0%, color-mix(in srgb, var(--q-royal) 14%, transparent), transparent 70%),
+    radial-gradient(70% 50% at 50% 100%, color-mix(in srgb, var(--q-gold) 10%, transparent), transparent 70%),
+    var(--q-surface);
+  box-shadow: var(--q-card-shadow);
+  text-align: center;
+}
+.about-hero__mark { color: var(--q-gold); }
+.about-hero__word {
+  margin: var(--q-space-3) 0 0;
+  color: var(--q-text);
+  font-family: 'Noto Serif Hebrew', 'Frank Ruehl CLM', 'SBL Hebrew', 'Times New Roman', var(--q-font-editorial);
+  font-size: clamp(2.75rem, 11vw, 3.5rem);
+  line-height: 1.25;
+}
+.about-hero__gloss { margin: var(--q-space-1) 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.5; }
+.about-hero__sound { color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1rem; font-style: italic; }
+.about-hero__tagline {
+  margin: var(--q-space-4) 0 0;
   color: var(--q-royal-text);
   font-family: var(--q-font-editorial);
-  font-size: 1.25rem;
+  font-size: 1.3125rem;
   line-height: 1.4;
 }
 
-.about__tagline > svg { flex: 0 0 auto; }
+.about-hero__quote {
+  display: grid;
+  justify-items: center;
+  gap: var(--q-space-3);
+  width: min(100%, 26rem);
+  margin: var(--q-space-6) 0 0;
+  padding-block-start: var(--q-space-5);
+  border-block-start: 1px solid color-mix(in srgb, var(--q-gold) 45%, var(--q-border));
+}
+.about-hero__quote blockquote { display: flex; align-items: flex-start; gap: var(--q-space-2); margin: 0; }
+.about-hero__quote blockquote > svg { flex: 0 0 auto; margin-block-start: 4px; color: var(--q-gold); }
+.about-hero__quote blockquote > p {
+  margin: 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: 1.125rem;
+  font-style: italic;
+  line-height: 1.45;
+}
+.about-hero__quote figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--q-space-2) var(--q-space-3); }
+.about-hero__author { color: var(--q-text-secondary); font-family: var(--q-font-editorial); font-size: 1rem; font-style: italic; }
+.about-hero__read {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--q-space-1);
+  color: var(--q-royal-text);
+  font-size: var(--q-type-meta);
+  font-weight: 600;
+  text-decoration: none;
+}
+.about-hero__read:hover { text-decoration: underline; text-underline-offset: 3px; }
+.about-hero__read:focus-visible { outline: 2px solid var(--q-focus); outline-offset: 2px; border-radius: 6px; }
+
+/* The name and the access it rests on: two cards, side by side where there
+   is room for both to read comfortably. */
+.about-foundations { display: grid; gap: var(--q-space-4); padding-block-end: var(--q-space-8); }
+.about-card {
+  display: grid;
+  align-content: start;
+  gap: var(--q-space-3);
+  min-width: 0;
+  padding: var(--q-space-5);
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  box-shadow: var(--q-card-shadow);
+}
+.about-card > .q-section-title { margin: 0; color: var(--q-text); }
+.about-card .about__refs { margin-block-start: 0; }
+@media (min-width: 720px) {
+  .about-foundations { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* What Qetoret will never do, one line each, then the privacy it keeps. */
+.about-promises { display: grid; gap: var(--q-space-3); margin: 0; padding: 0; list-style: none; }
+.about-promises > li { display: flex; align-items: center; gap: var(--q-space-3); color: var(--q-text); font-size: 0.9375rem; line-height: 1.45; }
+.about-promises__private {
+  display: flex;
+  align-items: center;
+  gap: var(--q-space-3);
+  margin: var(--q-space-5) 0 0;
+  padding: var(--q-space-3) var(--q-space-4);
+  border-radius: var(--q-radius-surface);
+  background: color-mix(in srgb, var(--q-royal) 7%, var(--q-surface));
+  color: var(--q-text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.about-promises__private > svg { flex: 0 0 auto; color: var(--q-royal-text); }
+@media (min-width: 600px) {
+  .about-promises { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--q-space-4) var(--q-space-6); }
+}
+
 .about__section { padding-block: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
 .about__section > .q-section-title { margin-block-end: var(--q-space-3); color: var(--q-text); }
 .about__body { margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
@@ -48,7 +145,10 @@
 /* The author's word: a letter on its own paper — a soft card washed with the
    royal hue at its head and a trace of gold at its foot, the story set in the
    serif, its passages straight after it, then the closing prayer and the
-   signature at the end of the line, as a letter is signed. */
+   signature at the end of the line, as a letter is signed. The hero's quote
+   brings focus here; the scroll already shows where it landed. */
+.about-letter { scroll-margin-block-start: calc(4rem + env(safe-area-inset-top)); }
+.about-letter:focus { outline: none; }
 .about-letter__card {
   position: relative;
   display: grid;

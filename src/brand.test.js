@@ -38,7 +38,10 @@ describe('the public brand is Qetoret', () => {
       ...filesUnder('src/pages/landing/locales', (p) => p.endsWith('.js')),
     ];
     expect(locales.length).toBe(32);
-    for (const path of locales) expect(read(path), path).not.toMatch(/Praystead/);
+    // The one exception: the author's letter on the About page tells how the
+    // app came by its name, so it names the old one. Nothing else may.
+    const withoutAuthorLetter = (source) => source.replace(/^\s*"aboutStoryBody":.*$/m, '');
+    for (const path of locales) expect(withoutAuthorLetter(read(path)), path).not.toMatch(/Praystead/);
   });
 
   it('never renders the old name from a component', () => {

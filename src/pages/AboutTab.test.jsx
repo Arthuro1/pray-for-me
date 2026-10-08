@@ -73,6 +73,27 @@ describe('AboutTab — the author’s word', () => {
     expect(follows(luke, prayer)).toBe(true);
     expect(follows(prayer, signature)).toBe(true);
     expect(within(section).getByRole('button', { name: localizeRef('Ezekiel 22:30', lang) })).toBeTruthy();
+    expect(within(section).getByRole('button', { name: localizeRef('James 5:16', lang) })).toBeTruthy();
+  });
+
+  it('closes the page, after the promises', () => {
+    render(<MemoryRouter><AboutTab /></MemoryRouter>);
+    const promises = screen.getByRole('region', { name: t(lang, 'aboutPromisesTitle') });
+    const letter = screen.getByRole('region', { name: t(lang, 'aboutStoryTitle') });
+    expect(follows(promises, letter)).toBe(true);
+    const sections = [...document.querySelectorAll('section')];
+    expect(sections.at(-1)).toBe(letter);
+  });
+
+  it('is reached from the line of it quoted at the top of the page', () => {
+    render(<MemoryRouter><AboutTab /></MemoryRouter>);
+    const letter = screen.getByRole('region', { name: t(lang, 'aboutStoryTitle') });
+    const quote = screen.getByText(t(lang, 'aboutPullQuote'));
+    expect(follows(quote, letter)).toBe(true);
+    const read = screen.getByRole('link', { name: t(lang, 'aboutReadLetter') });
+    expect(read.getAttribute('href')).toBe(`#${letter.id}`);
+    fireEvent.click(read);
+    expect(document.activeElement).toBe(letter);
   });
 
   it('signs with the author’s portrait, over the initial it falls back to', () => {
@@ -84,6 +105,25 @@ describe('AboutTab — the author’s word', () => {
     fireEvent.error(portrait);
     expect(section.querySelector('img')).toBeNull();
     expect(within(section).getByText('P')).toBeTruthy();
+  });
+});
+
+describe('AboutTab — the name and the promises', () => {
+  it('opens on the Hebrew word and what it means', () => {
+    render(<MemoryRouter><AboutTab /></MemoryRouter>);
+    const word = screen.getByText('קְטֹרֶת');
+    expect(word.getAttribute('lang')).toBe('he');
+    expect(word.getAttribute('dir')).toBe('rtl');
+    expect(screen.getByText(t(lang, 'aboutHebrewGloss'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'aboutTagline'))).toBeTruthy();
+  });
+
+  it('lists what Qetoret will never do, then the privacy it keeps', () => {
+    render(<MemoryRouter><AboutTab /></MemoryRouter>);
+    const section = screen.getByRole('region', { name: t(lang, 'aboutPromisesTitle') });
+    const items = within(section).getAllByRole('listitem').map((item) => item.textContent);
+    expect(items).toEqual(['aboutPromiseVoice', 'aboutPromiseOutcome', 'aboutPromiseRank', 'aboutPromiseAi'].map((key) => t(lang, key)));
+    expect(within(section).getByText(t(lang, 'aboutPromisePrivate'))).toBeTruthy();
   });
 });
 
