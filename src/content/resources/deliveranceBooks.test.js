@@ -25,10 +25,14 @@ describe('the worksheet is well-formed', () => {
     for (const entry of DELIVERANCE_BOOKS) expect(shipped, entry.id).toContain(entry.id);
   });
 
-  it('ships every candidate on the freedom shelf and no other', () => {
+  it('ships every candidate on freedom, sharing only the curated Holy Spirit title with formation', () => {
     for (const entry of DELIVERANCE_BOOKS) {
       const shipped = RESOURCES.find((r) => r.id === entry.id);
-      expect(shipped.domains, entry.id).toEqual(['freedom']);
+      // The 2026-09-30 curation also placed this discipleship book on holySpirit21.
+      const domains = entry.id === 'prince-holy-spirit-in-you'
+        ? ['freedom', 'christian-living']
+        : ['freedom'];
+      expect(shipped.domains, entry.id).toEqual(domains);
     }
   });
 

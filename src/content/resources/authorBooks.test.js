@@ -1,7 +1,8 @@
 // The books requested by author on 2026-09-23. What this file proves: every
 // book either reaches a day of a current plan or waits for a plan that does
 // not use its subject yet, the christian-living shelf reaches only the
-// formation plans, approval comes only from the closed review record, and
+// formation plans unless a book also names another curated domain, approval
+// comes only from the closed review record, and
 // every approved book can actually be shown.
 import { describe, it, expect } from 'vitest';
 import { AUTHOR_BOOKS } from './authorBooks.js';
@@ -68,20 +69,28 @@ describe('where they land', () => {
     }
   });
 
-  // The christian-living shelf is read by the "Growing in Christ" plans and by
-  // nothing else, so a general discipleship book can never crowd a
-  // relationship, deliverance or Bible-study day.
+  // Only the "Growing in Christ" plans read the christian-living domain.
+  // Books scoped solely to it cannot crowd another plan's shelf; separately
+  // curated cross-domain titles retain their place on both shelves.
   it('keep the christian-living shelf to the formation plans', () => {
     const formation = new Set(PLANS.filter((plan) => plan.category === 'formation').map((plan) => plan.id));
     for (const plan of PLANS) {
       expect((plan.resourceDomains || []).includes('christian-living'), plan.id).toBe(formation.has(plan.id));
     }
-    for (const book of AUTHOR_BOOKS.filter(({ domains }) => domains.includes('christian-living'))) {
+    for (const book of AUTHOR_BOOKS.filter(({ domains }) => domains.includes('christian-living') && domains.length === 1)) {
       expect(book.domains, book.id).toEqual(['christian-living']);
       for (const shelf of shelves.filter(({ domains, plan }) => domains.length && !formation.has(plan))) {
         expect(fits(book, shelf), `${book.id} on ${shelf.plan}`).toBe(false);
       }
     }
+  });
+
+  it('shares only the curated titles with other shelves', () => {
+    const shared = AUTHOR_BOOKS.filter(({ domains }) => domains.includes('christian-living') && domains.length > 1);
+    expect(shared.map(({ id, domains }) => ({ id, domains }))).toEqual([
+      { id: 'poonen-living-as-jesus-lived', domains: ['freedom', 'christian-living'] },
+      { id: 'poonen-the-real-truth', domains: ['christian-living', 'mission'] },
+    ]);
   });
 
   it('are live on a fitting day of a current plan when approved', () => {
