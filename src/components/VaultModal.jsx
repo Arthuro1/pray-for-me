@@ -183,7 +183,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
   };
 
   const titleKey = {
-    setup: 'vaultSetupTitle', recovery: 'vaultRecoveryTitle', unlock: 'vaultUnlockTitle',
+    setup: 'protectionRecovery', recovery: 'protectionEmergency', unlock: 'protectionLegacyAccess',
     reset: 'vaultResetTitle', change: 'vaultChangeTitle', rotate: 'vaultRotateTitle', sync: 'protectionRecovery',
   }[mode];
 

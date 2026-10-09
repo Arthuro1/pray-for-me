@@ -119,4 +119,12 @@ describe('RecoveryPromptBanner', () => {
     await waitFor(() => expect(getProtectionStatus).toHaveBeenCalledWith('account-a'));
     expect(screen.queryByText(t(lang, 'backupKeyTitle'))).toBeNull();
   });
+
+  it('recognizes active passkey recovery even when new enrollment is disabled', async () => {
+    vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false');
+    getProtectionStatus.mockResolvedValue({ ok: true, methods: [{ type: 'passkey', status: 'active' }] });
+    render(<RecoveryPromptBanner lang={lang} userId="account-a" />);
+    await waitFor(() => expect(screen.queryByText(t(lang, 'backupKeyTitle'))).toBeNull());
+    expect(getProtectionStatus).toHaveBeenCalledWith('account-a');
+  });
 });

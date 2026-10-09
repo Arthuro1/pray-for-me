@@ -1574,4 +1574,5 @@ export default {
   "protectionRecoveryReady": "Método de recuperación comprobado",
   "protectionLockUnavailable": "Añade un método de recuperación antes de bloquear tus oraciones.",
   "protectionRetry": "Comprobar de nuevo",
+  "protectionLegacyReady": "Tu método de recuperación anterior sigue disponible",
 };

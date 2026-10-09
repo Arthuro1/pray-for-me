@@ -1579,4 +1579,5 @@ export default {
   "protectionRecoveryReady": "Recovery method checked",
   "protectionLockUnavailable": "Add a recovery method before locking your prayers.",
   "protectionRetry": "Check again",
+  "protectionLegacyReady": "Your previous recovery method is still available",
 };

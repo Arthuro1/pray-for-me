@@ -39,7 +39,7 @@ export default function RecoveryPromptBanner({ lang, userId }) {
     let current = true;
     setProtection(null);
     setHidden(isDismissed(userId));
-    if (protectionEnabled && userId) {
+    if (userId) {
       getProtectionStatus(userId).then((result) => {
         if (current) setProtection({ userId, result });
       }).catch(() => { /* Unknown health must not be presented as missing recovery. */ });
@@ -86,7 +86,7 @@ export default function RecoveryPromptBanner({ lang, userId }) {
       </div>}
       {showSetup && (
         <Modal label={t(lang, 'protectionTitle')} onClose={() => setShowSetup(false)}>
-          <PrayerProtection userId={userId} lang={lang} onReady={() => { complete(); setHidden(true); setShowSetup(false); }} />
+          <PrayerProtection key={userId} userId={userId} lang={lang} onReady={() => { complete(); setHidden(true); setShowSetup(false); }} />
           <QuietButton onClick={() => setShowSetup(false)}>{t(lang, 'close')}</QuietButton>
         </Modal>
       )}

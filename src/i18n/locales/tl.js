@@ -1574,4 +1574,5 @@ export default {
   "protectionRecoveryReady": "Nasuri ang paraan ng pagbawi",
   "protectionLockUnavailable": "Magdagdag ng paraan ng pagbawi bago i-lock ang iyong mga panalangin.",
   "protectionRetry": "Suriin muli",
+  "protectionLegacyReady": "Magagamit pa rin ang dati mong paraan ng pagbawi",
 };

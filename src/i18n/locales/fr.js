@@ -1579,4 +1579,5 @@ export default {
   "protectionRecoveryReady": "Méthode de récupération vérifiée",
   "protectionLockUnavailable": "Ajoutez une méthode de récupération avant de verrouiller vos prières.",
   "protectionRetry": "Vérifier à nouveau",
+  "protectionLegacyReady": "Votre méthode de récupération existante reste disponible",
 };

@@ -1574,4 +1574,5 @@ export default {
   "protectionRecoveryReady": "Njia ya kurejesha imekaguliwa",
   "protectionLockUnavailable": "Ongeza njia ya kurejesha kabla ya kufunga maombi yako.",
   "protectionRetry": "Kagua tena",
+  "protectionLegacyReady": "Njia yako ya awali ya kurejesha bado inapatikana",
 };

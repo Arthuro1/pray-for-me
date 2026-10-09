@@ -26,15 +26,15 @@ export default function VaultLockScreen({ lang = 'fr' }) {
   return (
     <AccountGate
       lang={lang}
-      title={t(lang, 'vaultLockedHeading')}
-      body={t(lang, 'vaultLockedBody')}
-      reassure={t(lang, 'vaultLockedReassure')}
+      title={t(lang, 'keyMissingHeading')}
+      body={t(lang, 'keyMissingBody')}
+      reassure={t(lang, 'keyMissingReassure')}
       exitLabel={t(lang, 'signOut')}
       onExit={signOut}
     >
       <PrayerRecoveryChoices key={user?.id} lang={lang} userId={user?.id} />
       {(initialized || legacyCandidate) && (
-        <details className="prayer-protection__details">
+        <details className="protection-details">
           <summary>{t(lang, 'protectionLegacyAccess')}</summary>
           <VaultModal lang={lang} initialMode="unlock" userId={user?.id} dismissable={false} embedded />
         </details>

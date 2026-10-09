@@ -1575,4 +1575,5 @@ export default {
   "protectionRecoveryReady": "Wiederherstellungsmethode geprüft",
   "protectionLockUnavailable": "Füge eine Wiederherstellungsmethode hinzu, bevor du deine Gebete sperrst.",
   "protectionRetry": "Erneut prüfen",
+  "protectionLegacyReady": "Deine bisherige Wiederherstellung bleibt verfügbar",
 };
