@@ -112,6 +112,7 @@ describe('content_language — creation and offline replay', () => {
 describe('content_language — correcting it later', () => {
   it('an edit writes the new language, in memory and through the queue', async () => {
     await usePrayerStore.getState().addPrayer({ title: 'Oración' }); // stamped 'sw'
+    await drainQueue(); // finish creating the row before observing its later edit
     const id = usePrayerStore.getState().prayers[0].id;
     rec.writes.length = 0;
 

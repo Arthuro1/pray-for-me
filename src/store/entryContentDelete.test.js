@@ -47,7 +47,7 @@ describe('update content deletion cascades', () => {
     await usePrayerStore.getState().removeUpdateText('p1', 'u1');
     expect(prayer().prayer_updates).toHaveLength(1);
     expect(prayer().prayer_updates[0].text).toBe('');
-    expect(enqueue).toHaveBeenCalledWith('removeUpdateText', { updateId: 'u1' });
+    expect(enqueue).toHaveBeenCalledWith('removeUpdateText', { updateId: 'u1', accountId: null });
   });
 
   it('deletes the whole row when the text was its last content', async () => {
@@ -79,7 +79,7 @@ describe('testimony content deletion cascades', () => {
     await usePrayerStore.getState().removeTestimonyText('p1', 't1');
     expect(prayer().prayer_testimonies).toHaveLength(1);
     expect(prayer().prayer_testimonies[0].content).toBe('');
-    expect(enqueue).toHaveBeenCalledWith('setTestimonyContent', { testimonyId: 't1', content: '' });
+    expect(enqueue).toHaveBeenCalledWith('setTestimonyContent', { testimonyId: 't1', content: '', accountId: null });
   });
 
   it('deletes the whole row when the content was its last piece', async () => {

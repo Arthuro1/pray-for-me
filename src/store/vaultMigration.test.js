@@ -60,7 +60,7 @@ vi.mock('../lib/supabase', () => {
   };
 });
 
-import { createVault, lock, getMasterKey } from '../lib/crypto/keyManager';
+import { createVault, destroyVault, getMasterKey } from '../lib/crypto/keyManager';
 import { decryptJson } from '../lib/crypto/e2ee';
 import usePrayerStore from './prayerStore';
 
@@ -116,7 +116,7 @@ const writesTo = (table) => db.writes.filter((w) => w.table === table);
 const allWritesJson = () => db.writes.map((w) => JSON.stringify(w.payload)).join('\n');
 
 beforeEach(async () => {
-  lock();
+  await destroyVault();
   db.writes.length = 0;
   seed();
   usePrayerStore.setState({ userId: 'user-1', prayers: [] });

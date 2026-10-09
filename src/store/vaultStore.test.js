@@ -34,9 +34,9 @@ installStorage();
 
 const { default: useVaultStore } = await import('./vaultStore.js');
 
-beforeEach(() => {
+beforeEach(async () => {
   installStorage();
-  useVaultStore.getState().lock();
+  await useVaultStore.getState().destroy();
   useVaultStore.setState({ initialized: false, unlocked: false });
 });
 

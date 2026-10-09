@@ -79,7 +79,7 @@ function installStorage() {
 // are imported after the mock is in place (vi.mock is hoisted above all imports).
 import '../lib/mutationExecutors';
 import { pendingCount, flushQueue } from '../lib/mutationQueue';
-import { createVault, lock, autoInitAccountKey } from '../lib/crypto/keyManager';
+import { createVault, destroyVault, autoInitAccountKey } from '../lib/crypto/keyManager';
 import { decryptJson } from '../lib/crypto/e2ee';
 import { getMasterKey } from '../lib/crypto/keyManager';
 import usePrayerStore from './prayerStore';
@@ -128,9 +128,9 @@ function childContext(entityType, row, prayerId) {
   };
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   installStorage();
-  lock();
+  await destroyVault();
   rec.writes.length = 0;
   rec.rpcs.length = 0;
   usePrayerStore.setState({ prayers: [] });

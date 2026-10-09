@@ -4,19 +4,20 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { handleAiRequest, MAX_REQUEST_BYTES } from './api/ai.js'
+import { handleRecoveryRequest, MAX_RECOVERY_REQUEST_BYTES } from './api/recovery.js'
 
 // Single source of truth for the app version: package.json. Injected as the
 // compile-time constant __APP_VERSION__ so the UI (Settings/About) and any docs
 // never drift from the published version.
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url)))
 
-async function readJsonBody(req) {
+async function readJsonBody(req, maxBytes = MAX_REQUEST_BYTES) {
   const chunks = []
   let bytes = 0
   for await (const chunk of req) {
     const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)
     bytes += buffer.length
-    if (bytes > MAX_REQUEST_BYTES) {
+    if (bytes > maxBytes) {
       const error = new Error('Request too large')
       error.statusCode = 413
       throw error
@@ -72,6 +73,32 @@ function aiApiPlugin(env) {
   }
 }
 
+function recoveryApiPlugin(env) {
+  return {
+    name: 'qetoret-recovery-api',
+    configureServer(server) {
+      server.middlewares.use('/api/recovery', async (req, res) => {
+        const apiRes = {
+          setHeader(name, value) { res.setHeader(name, value); return apiRes },
+          status(code) { res.statusCode = code; return apiRes },
+          json(value) {
+            res.setHeader('Content-Type', 'application/json; charset=utf-8')
+            res.setHeader('Cache-Control', 'no-store')
+            res.end(JSON.stringify(value))
+            return apiRes
+          },
+        }
+        try { req.body = await readJsonBody(req, MAX_RECOVERY_REQUEST_BYTES) }
+        catch (error) {
+          apiRes.status(error?.statusCode === 413 ? 413 : 400).json({ error: 'invalid_request' })
+          return
+        }
+        await handleRecoveryRequest(req, apiRes, { env })
+      })
+    },
+  }
+}
+
 export default defineConfig(({ mode }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
   // server-only Anthropic credentials. This is read in the Node server only and is
@@ -99,6 +126,7 @@ export default defineConfig(({ mode }) => {
   plugins: [
     react(),
     aiApiPlugin(env),
+    recoveryApiPlugin(env),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.svg', 'logo-dark.svg', 'icons/*.png'],

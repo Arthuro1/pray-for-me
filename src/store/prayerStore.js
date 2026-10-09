@@ -5,7 +5,8 @@ import { prayersForDay, sortEntries, catchUpPrayers, migrateLegacySchedules } fr
 import { resolveCategoryColor } from '../lib/categoryColor';
 import { addDays, planDayNumber } from '../lib/schedule';
 import { todayKey } from '../lib/prayedLog';
-import { enqueue, pendingPrayerIds } from '../lib/mutationQueue';
+import { enqueue, pendingPrayerIds, initQueue, queueReadiness, getPendingMutations } from '../lib/mutationQueue';
+import { applyPendingPrayerMutations, mergePendingMutationSnapshots, snapshotRowsForPendingOverlay } from '../lib/pendingPrayerReconciliation';
 import { removeAttachmentFiles } from '../lib/attachments';
 import { loadSnapshot, saveSnapshot } from '../lib/dataCache';
 import { fetchUserSettings, saveUserSettings, touchesSyncedSettings } from '../lib/settingsSync';
@@ -30,7 +31,7 @@ import {
   POINT_SENSITIVE_FIELDS,
   TESTIMONY_SENSITIVE_FIELDS,
 } from '../lib/crypto/prayerCrypto';
-import { isUnlocked } from '../lib/crypto/keyManager';
+import { isUnlocked, getLifecycleToken, isLifecycleCurrent, isAccountContextConfigured, onLockChange } from '../lib/crypto/keyManager';
 import { groupKeyResolver } from '../lib/crypto/groupKeys';
 import { decryptCommunityRow } from '../lib/crypto/communityCrypto';
 import { clearPlanPersonalization } from '../lib/planPersonalizationStorage';
@@ -40,6 +41,25 @@ import { isCircle } from '../lib/circles';
 // level so it survives store re-renders; an "Undo" toast clears the timer.
 const pendingDeletes = new Map();
 const UNDO_WINDOW_MS = 6000;
+let dataGeneration = 0;
+let journalReconciliationContext = null;
+
+function captureDataContext(userId, generation = dataGeneration) {
+  return { userId, generation, token: getLifecycleToken(),
+    reconciliationPending: journalReconciliationContext?.userId === userId };
+}
+
+function dataContextCurrent(context, currentUserId, requireUnlocked = true) {
+  return (!isAccountContextConfigured() || !!context.userId) && context.userId === currentUserId
+    && (!context.mutation || !context.reconciliationPending)
+    && (context.mutation || context.generation === dataGeneration) && isLifecycleCurrent(context.token)
+    && (!isAccountContextConfigured() || (context.token.accountId === context.userId
+      && (!requireUnlocked || isUnlocked())));
+}
+
+function ownsPrayer(prayer, userId) {
+  return !!prayer && (!isAccountContextConfigured() || prayer.user_id === userId);
+}
 
 // Snap every category's stored colour to the theme-safe palette on the way into
 // state, so a label saved with a legacy web colour still reads on both grounds
@@ -167,14 +187,17 @@ async function fetchOwnedForMigration(userId) {
 }
 
 // Encrypt any still-plaintext child rows of one collection, in place.
-async function encryptChildRows(table, rows, fields, ownerId) {
+async function encryptChildRows(table, rows, fields, ownerId, isCurrent = () => true) {
   for (const row of rows || []) {
+    if (!isCurrent()) throw new Error('stale_account');
     if (isRowEncrypted(row)) continue;
     const enc = await encryptChildForStorage(row, fields, ownerId);
+    if (!isCurrent()) throw new Error('stale_account');
     const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
     for (const f of fields) patch[f] = enc[f]; // redacted plaintext ('' / [])
     const { error } = await supabase.from(table).update(patch).eq('id', row.id);
     if (error) throw error;
+    if (!isCurrent()) throw new Error('stale_account');
   }
 }
 
@@ -183,25 +206,30 @@ async function encryptChildRows(table, rows, fields, ownerId) {
 // then each plaintext child row is encrypted in place. Parts already encrypted
 // are left untouched (e.g. a formerly-shared prayer whose parent is encrypted but
 // whose child rows were kept plaintext for fan-out).
-async function encryptExistingPrayer(p) {
+async function encryptExistingPrayer(p, isCurrent = () => true) {
+  if (!isCurrent()) throw new Error('stale_account');
   if (!isRowEncrypted(p)) {
     const patch = await encryptedSensitiveFields(p);
+    if (!isCurrent()) throw new Error('stale_account');
     const { error } = await supabase.from('prayers').update(patch).eq('id', p.id);
     if (error) throw error;
+    if (!isCurrent()) throw new Error('stale_account');
   }
-  await encryptChildRows('prayer_updates', p.prayer_updates, UPDATE_SENSITIVE_FIELDS, p.user_id);
-  await encryptChildRows('prayer_points', p.prayer_points, POINT_SENSITIVE_FIELDS, p.user_id);
-  await encryptChildRows('prayer_testimonies', p.prayer_testimonies, TESTIMONY_SENSITIVE_FIELDS, p.user_id);
+  await encryptChildRows('prayer_updates', p.prayer_updates, UPDATE_SENSITIVE_FIELDS, p.user_id, isCurrent);
+  await encryptChildRows('prayer_points', p.prayer_points, POINT_SENSITIVE_FIELDS, p.user_id, isCurrent);
+  await encryptChildRows('prayer_testimonies', p.prayer_testimonies, TESTIMONY_SENSITIVE_FIELDS, p.user_id, isCurrent);
 }
 
 // After a version-1 ciphertext has authenticated and decrypted successfully,
 // rewrite it with version-2 contextual AAD. A failed/locked decrypt never sets
 // the marker, so this path can never overwrite unverifiable ciphertext.
-async function queueContextBindingMigrations(prayers) {
+async function queueContextBindingMigrations(prayers, context, isCurrent) {
   for (const prayer of prayers || []) {
+    if (!isCurrent() || prayer.user_id !== context.userId) return;
     if (prayer._encryptionMigrationNeeded && canEncrypt(prayer)) {
       const payload = await encryptedSensitiveFields(prayer);
-      enqueue('updatePrayer', { id: prayer.id, payload });
+      if (!isCurrent()) return;
+      enqueue('updatePrayer', { id: prayer.id, payload, accountId: context.userId });
     }
     const collections = [
       ['prayer_updates', UPDATE_SENSITIVE_FIELDS, 'updateUpdateEncrypted', 'updateId'],
@@ -212,12 +240,13 @@ async function queueContextBindingMigrations(prayers) {
       for (const row of prayer[collection] || []) {
         if (!row._encryptionMigrationNeeded || !canEncryptNested(prayer)) continue;
         const encrypted = await encryptChildForStorage(row, fields, prayer.user_id);
+        if (!isCurrent()) return;
         const patch = {
           encrypted_payload: encrypted.encrypted_payload,
           encryption_version: encrypted.encryption_version,
         };
         for (const field of fields) patch[field] = encrypted[field];
-        enqueue(mutation, { [idField]: row.id, row: patch });
+        enqueue(mutation, { [idField]: row.id, row: patch, accountId: context.userId });
       }
     }
   }
@@ -264,25 +293,64 @@ const usePrayerStore = create((set, get) => ({
 
   // ─── Load all data ───────────────────────────────────────────
   loadData: async (userId) => {
-    set({ loading: true, userId });
+    const context = captureDataContext(userId, ++dataGeneration);
+    if (!dataContextCurrent(context, userId)) return;
+    journalReconciliationContext = context;
+    // Clear the previous journal before any snapshot/network await. Repeated
+    // same-account loads retain optimistic entries for reconciliation.
+    set(get().userId === userId ? { loading: true, userId }
+      : { loading: true, userId, prayers: [], categories: [], completions: {} });
+    const isCurrent = () => dataContextCurrent(context, get().userId);
 
     // Account-level settings (language, reminder prefs) sync in parallel —
     // fire-and-forget so an offline settings fetch never blocks prayers.
     get().syncSettings(userId);
 
-    // 1. Hydrate instantly from the local snapshot (works offline and includes
-    //    any prayers created offline that aren't on the server yet).
+    // 1. Read the local snapshot without exposing an older editable bundle.
+    // Pending ciphertext may contain newer fields absent from this snapshot.
     const snap = await loadSnapshot(userId);
-    if (snap) set({ categories: withCatColors(snap.categories), prayers: snap.prayers || [], completions: snap.completions || {}, loading: false });
+    if (!isCurrent()) return;
+
+    await initQueue();
+    if (!isCurrent()) return;
+    // An unreadable durable queue may hold newer encrypted work. Keep the
+    // hydrated journal rather than treating that uncertainty as an empty queue.
+    if (queueReadiness() !== 'ready') {
+      if (snap) set({ categories: withCatColors(snap.categories), prayers: snap.prayers || [], completions: snap.completions || {} });
+      // Retain readable cached history, but a new full-bundle edit cannot be
+      // safe while the newer durable queue cannot be inventoried.
+      set({ loading: false });
+      return;
+    }
+    let pendingAtRead = getPendingMutations();
+    const localRows = snapshotRowsForPendingOverlay(snap?.prayers || get().prayers);
+    let hydratedPrayers;
+    while (isCurrent()) {
+      if (queueReadiness() !== 'ready') { set({ loading: false }); return; }
+      pendingAtRead = mergePendingMutationSnapshots(pendingAtRead, getPendingMutations());
+      hydratedPrayers = await decryptPrayers(applyPendingPrayerMutations(localRows, pendingAtRead, userId));
+      if (!isCurrent()) return;
+      const latest = mergePendingMutationSnapshots(pendingAtRead, getPendingMutations());
+      if (latest.length === pendingAtRead.length) break;
+      pendingAtRead = latest;
+    }
+    if (!isCurrent()) return;
+    if (journalReconciliationContext === context) journalReconciliationContext = null;
+    // This publication is safe even if either subsequent network read fails:
+    // the offline journal already includes the durable queue's latest intent.
+    if (snap || pendingAtRead.length) set({ categories: withCatColors(snap?.categories || get().categories),
+      prayers: hydratedPrayers, completions: snap?.completions || get().completions, loading: false });
 
     // 2. Fetch authoritative data. If the network is unreachable, keep the
     //    hydrated snapshot rather than wiping it.
     let cats;
     try {
       const res = await supabase.from('categories').select('*').eq('user_id', userId).order('created_at');
+      if (!isCurrent()) return;
       if (res.error) throw res.error;
       cats = res.data;
     } catch {
+      if (!isCurrent()) return;
       set({ loading: false });
       return;
     }
@@ -299,32 +367,16 @@ const usePrayerStore = create((set, get) => ({
         .select(`*, prayer_updates(*), prayer_points(*), prayer_testimonies(*), prayer_categories(category_id)`)
         .eq('user_id', userId)
         .order('created_at', { ascending: false });
+      if (!isCurrent()) return;
       if (res.error) throw res.error;
       serverPrayers = res.data || [];
     } catch {
+      if (!isCurrent()) return;
       // Categories loaded but prayers didn't — keep hydrated prayers.
       const orderedCats = withCatColors([...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity)));
       set({ categories: orderedCats, loading: false });
       return;
     }
-
-    // 3. Decrypt any encrypted rows (legacy plaintext rows pass through). Then
-    //    merge: server is authoritative. Keep a local-only prayer only if its
-    //    creation is STILL queued — so a prayer whose create was permanently
-    //    dropped (rejected) is reconciled away rather than lingering as a ghost.
-    serverPrayers = await decryptPrayers(serverPrayers);
-    await queueContextBindingMigrations(serverPrayers);
-    const serverIds = new Set(serverPrayers.map((p) => p.id));
-    const creating = pendingPrayerIds();
-    const localPrayers = get().prayers;
-    const pendingLocal = localPrayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id));
-    // Re-attach optimistic testimonies whose server write is still queued, so a
-    // just-written testimony survives this server-authoritative reconcile instead
-    // of vanishing from the reopened answered prayer (mirrors the completions
-    // union below). The hydrated snapshot carries them across a fresh session.
-    const localTestimonies = new Map(localPrayers.map((p) => [p.id, p.prayer_testimonies || []]));
-    const reconciled = serverPrayers.map((p) => mergePendingTestimonies(p, localTestimonies.get(p.id)));
-    const mergedPrayers = [...pendingLocal, ...reconciled];
 
     // Recent per-prayer completions (catch-up + rotation fairness). Best-effort:
     // offline keeps the snapshot's copy, and pending queued completions replay.
@@ -335,6 +387,7 @@ const usePrayerStore = create((set, get) => ({
         .select('prayer_id, day')
         .eq('user_id', userId)
         .gte('day', addDays(todayKey(), -90));
+      if (!isCurrent()) return;
       if (!res.error && res.data) {
         // Union with local state so completions queued offline (not yet
         // flushed) aren't dropped from the UI.
@@ -344,6 +397,36 @@ const usePrayerStore = create((set, get) => ({
         completions = Object.fromEntries(Object.entries(merged).map(([pid, days]) => [pid, [...days]]));
       }
     } catch { /* offline — snapshot completions stand */ }
+    if (!isCurrent()) return;
+
+    // Preserve writes that were pending when the server read began, even if
+    // their flush completes before its old response arrives. Include newer work
+    // queued during decryption before publishing any editable plaintext.
+    const fetchedPrayers = serverPrayers;
+    while (isCurrent()) {
+      if (queueReadiness() !== 'ready') { set({ loading: false }); return; }
+      pendingAtRead = mergePendingMutationSnapshots(pendingAtRead, getPendingMutations());
+      serverPrayers = await decryptPrayers(applyPendingPrayerMutations(fetchedPrayers, pendingAtRead, userId));
+      if (!isCurrent()) return;
+      await queueContextBindingMigrations(serverPrayers, context, isCurrent);
+      if (!isCurrent()) return;
+      if (queueReadiness() !== 'ready') { set({ loading: false }); return; }
+      const latest = mergePendingMutationSnapshots(pendingAtRead, getPendingMutations());
+      if (latest.length === pendingAtRead.length) break;
+      pendingAtRead = latest;
+    }
+    if (!isCurrent()) return;
+    const serverIds = new Set(serverPrayers.map((p) => p.id));
+    const creating = pendingPrayerIds();
+    const localPrayers = get().prayers;
+    const deletedPrayers = new Set(pendingAtRead.filter((item) => item.kind === 'deletePrayer').map((item) => item.args?.id));
+    const pendingLocal = localPrayers.filter((p) => !serverIds.has(p.id) && creating.has(p.id) && !deletedPrayers.has(p.id));
+    const deletedTestimonies = new Set(pendingAtRead.filter((item) => item.kind === 'deleteTestimony')
+      .map((item) => item.args?.testimonyId));
+    const localTestimonies = new Map(localPrayers.map((p) => [p.id,
+      (p.prayer_testimonies || []).filter((row) => !deletedTestimonies.has(row.id))]));
+    const reconciled = serverPrayers.map((p) => mergePendingTestimonies(p, localTestimonies.get(p.id)));
+    const mergedPrayers = [...pendingLocal, ...reconciled];
 
     const ordered = withCatColors([...(cats || [])].sort((a, b) => (a.sort_order ?? Infinity) - (b.sort_order ?? Infinity)));
     // Decision B: convert legacy plan-following prayers to explicit schedules
@@ -354,7 +437,9 @@ const usePrayerStore = create((set, get) => ({
     saveSnapshot(userId, { categories: ordered, prayers: migratedPrayers, completions });
     // Persist only the schedule column (metadata, outside the E2EE envelope) —
     // no re-encryption, offline-queued like any other write.
-    changed.forEach(({ id, schedule }) => enqueue('updatePrayer', { id, payload: { schedule, updated_at: new Date().toISOString() } }));
+    changed.forEach(({ id, schedule }) => {
+      if (isCurrent()) enqueue('updatePrayer', { id, accountId: userId, payload: { schedule, updated_at: new Date().toISOString() } });
+    });
     // Mirror shared content of saved-from-community prayers (fully-shared sync).
     get().refreshSavedCopies();
   },
@@ -363,13 +448,18 @@ const usePrayerStore = create((set, get) => ({
   // Used to reflect community-side edits (two-way sync) back onto the owner's
   // personal copy in-session. No-op for prayers the user can't read (non-owner).
   refreshPrayer: async (prayerId) => {
+    const context = captureDataContext(get().userId);
+    if (!dataContextCurrent(context, get().userId)) return;
     const { data } = await supabase
       .from('prayers')
       .select(`*, prayer_updates(*), prayer_points(*), prayer_testimonies(*), prayer_categories(category_id)`)
       .eq('id', prayerId)
       .maybeSingle();
+    if (!dataContextCurrent(context, get().userId)) return;
     if (data) {
+      if (data.user_id !== context.userId) return;
       const decrypted = await decryptPrayerFromStorage(data);
+      if (!dataContextCurrent(context, get().userId)) return;
       set((state) => ({ prayers: state.prayers.map((p) => (p.id === prayerId ? decrypted : p)) }));
     }
   },
@@ -381,14 +471,17 @@ const usePrayerStore = create((set, get) => ({
   // once the group request is answered — whoever answered it — without opening
   // each one.
   refreshSavedCopies: async () => {
+    const context = captureDataContext(get().userId);
+    if (!dataContextCurrent(context, get().userId)) return;
     const saved = get().prayers.filter((p) => p.community_origin_id);
     if (saved.length === 0) return;
     const { data } = await supabase
       .from('community_prayers')
       .select('id, group_id, title, description, prayer_points, is_answered, encrypted_payload, encryption_version, key_version')
       .in('id', saved.map((p) => p.community_origin_id));
-    if (!data) return;
+    if (!data || !dataContextCurrent(context, get().userId)) return;
     const decrypted = await Promise.all(data.map((c) => decryptCommunityRow(groupKeyResolver(c.group_id), c)));
+    if (!dataContextCurrent(context, get().userId)) return;
     const byId = Object.fromEntries(decrypted.map((c) => [c.id, c]));
     set((state) => ({
       prayers: state.prayers.map((p) => {
@@ -404,6 +497,9 @@ const usePrayerStore = create((set, get) => ({
   // showing group activity, the snapshots provide a display-only fallback when
   // an older personal child row cannot be opened with this device's account key.
   fetchSharedActivity: async (prayer) => {
+    const context = captureDataContext(get().userId);
+    const empty = { prayers: [], testimonies: [], updates: [] };
+    if (!dataContextCurrent(context, get().userId) || (prayer.user_id && prayer.user_id !== context.userId)) return empty;
     // The community copies whose activity we display, each with its group so the
     // rows can be decrypted under the right group key.
     const col = prayer.community_origin_id ? 'id' : 'source_prayer_id';
@@ -412,6 +508,7 @@ const usePrayerStore = create((set, get) => ({
       .from('community_prayers')
       .select('id, group_id, prayer_points, encrypted_payload, encryption_version, key_version')
       .eq(col, val);
+    if (!dataContextCurrent(context, get().userId)) return empty;
     if (!copies || copies.length === 0) return { prayers: [], testimonies: [], updates: [] };
     const ids = copies.map((c) => c.id);
     const groupByCp = Object.fromEntries(copies.map((c) => [c.id, c.group_id]));
@@ -419,9 +516,13 @@ const usePrayerStore = create((set, get) => ({
       supabase.from('testimonies').select('*').in('community_prayer_id', ids).order('created_at'),
       supabase.from('community_updates').select('*').in('community_prayer_id', ids).order('created_at', { ascending: true }),
     ]);
+    if (!dataContextCurrent(context, get().userId)) return empty;
     const prayers = await Promise.all(copies.map((copy) => decryptCommunityRow(groupKeyResolver(copy.group_id), copy)));
+    if (!dataContextCurrent(context, get().userId)) return empty;
     const testimonies = await Promise.all((tRes.data || []).map((t) => decryptCommunityRow(groupKeyResolver(t.group_id), t)));
+    if (!dataContextCurrent(context, get().userId)) return empty;
     const updates = await Promise.all((uRes.data || []).map((u) => decryptCommunityRow(groupKeyResolver(groupByCp[u.community_prayer_id]), u)));
+    if (!dataContextCurrent(context, get().userId)) return empty;
     return { prayers, testimonies, updates };
   },
 
@@ -431,6 +532,8 @@ const usePrayerStore = create((set, get) => ({
   // answered request drops off their active list. Other personal fields
   // (scheduling, categories, testimonies) are left untouched (see mirrorSavedCopy).
   refreshFromCommunity: async (prayerId) => {
+    const context = captureDataContext(get().userId);
+    if (!dataContextCurrent(context, get().userId)) return;
     const p = get().prayers.find((x) => x.id === prayerId);
     if (!p?.community_origin_id) return;
     const { data } = await supabase
@@ -438,8 +541,9 @@ const usePrayerStore = create((set, get) => ({
       .select('group_id, title, description, prayer_points, is_answered, encrypted_payload, encryption_version, key_version')
       .eq('id', p.community_origin_id)
       .maybeSingle();
-    if (!data) return; // not a member anymore / not found → keep the snapshot
+    if (!data || !dataContextCurrent(context, get().userId)) return;
     const c = await decryptCommunityRow(groupKeyResolver(data.group_id), data);
+    if (!dataContextCurrent(context, get().userId)) return;
     set((state) => ({
       prayers: state.prayers.map((x) => (x.id === prayerId ? { ...x, ...mirrorSavedCopy(x, c) } : x)),
     }));
@@ -452,12 +556,15 @@ const usePrayerStore = create((set, get) => ({
   scanVaultCoverage: async () => {
     const { userId } = get();
     if (!userId) return { total: 0, pending: 0 };
+    const context = captureDataContext(userId);
+    if (!dataContextCurrent(context, get().userId, false)) return null;
     let rows, sharedIds;
     try {
       [rows, sharedIds] = await Promise.all([fetchOwnedEncryptionState(userId), fetchSharedPrayerIds(userId)]);
     } catch {
       return null;
     }
+    if (!dataContextCurrent(context, get().userId, false)) return null;
     let total = 0, pending = 0;
     for (const p of rows) {
       if (sharedIds.has(p.id)) continue; // shared to a group: left as it is
@@ -474,17 +581,23 @@ const usePrayerStore = create((set, get) => ({
   migrateToVault: async () => {
     const { userId } = get();
     if (!userId || !isUnlocked()) return { migrated: 0, failed: 0 };
+    const context = captureDataContext(userId);
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return { migrated: 0, failed: 0 };
     let rows, sharedIds;
     try {
       [rows, sharedIds] = await Promise.all([fetchOwnedForMigration(userId), fetchSharedPrayerIds(userId)]);
     } catch {
       return { migrated: 0, failed: 0 };
     }
+    if (!isCurrent()) return { migrated: 0, failed: 0 };
     let migrated = 0, failed = 0;
     for (const p of rows) {
+      if (!isCurrent()) break;
+      if (p.user_id !== userId) continue;
       if (sharedIds.has(p.id) || !prayerNeedsEncryption(p)) continue;
-      try { await encryptExistingPrayer(p); migrated++; }
-      catch { failed++; }
+      try { await encryptExistingPrayer(p, isCurrent); migrated++; }
+      catch { if (isCurrent()) failed++; else break; }
     }
     return { migrated, failed };
   },
@@ -494,10 +607,14 @@ const usePrayerStore = create((set, get) => ({
   // write is queued (replayed on reconnect). A client-generated id keeps the
   // local record and the eventual server row in sync.
   addPrayer: async (prayer) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     // getSession reads the locally-cached session (no network), so this works offline.
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user?.id;
-    if (!userId) return null;
+    if (!userId || !isCurrent() || (isAccountContextConfigured() && context.userId !== userId)) return null;
 
     // Activation signal: was the journal empty before this? (No content is sent —
     // just the fact that a first prayer was created. See lib/analytics.js.)
@@ -530,6 +647,7 @@ const usePrayerStore = create((set, get) => ({
     // optimistic copy so the UI states a fact about this row rather than a
     // guess from the vault.
     const willEncrypt = canEncrypt(row);
+    if (!isCurrent()) return null;
     // The optional Intercession Circle lives only inside the ciphertext, so a
     // prayer that will not be encrypted cannot hold one (lib/circles.js).
     const circle = willEncrypt && isCircle(prayer.circle) ? prayer.circle : null;
@@ -552,7 +670,8 @@ const usePrayerStore = create((set, get) => ({
     // In-memory stays plaintext; only the persisted row is encrypted (if the
     // vault is unlocked). New prayers have no community_origin_id → encryptable.
     const persistRow = willEncrypt ? await encryptPrayerForStorage({ ...row, circle }) : row;
-    enqueue('createPrayer', { row: persistRow, categoryIds });
+    if (!isCurrent()) return null;
+    queueMutation('createPrayer', { row: persistRow, categoryIds });
     if (isFirst) track(EVENTS.FIRST_PRAYER_CREATED);
     return id;
   },
@@ -564,12 +683,15 @@ const usePrayerStore = create((set, get) => ({
   // plaintext. Only a carrier without a key in memory stores it as-is (like any
   // prayer saved then); the vault migration encrypts it later.
   addFromCommunity: async (communityPrayer, groupName = null) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
     const existing = get().prayers.find((p) => p.community_origin_id === communityPrayer.id);
     if (existing) return { prayer: existing, alreadyAdded: true };
 
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user?.id;
-    if (!userId) return { error: 'signed-out' };
+    if (!userId || !isCurrent() || (isAccountContextConfigured() && context.userId !== userId)) return { error: 'signed-out' };
 
     const row = { id: crypto.randomUUID(), ...communityToPersonalInsert(communityPrayer, groupName, userId) };
     // The current prayer points, under fresh ids: the group copy's point ids are
@@ -579,14 +701,19 @@ const usePrayerStore = create((set, get) => ({
     }));
     const willEncrypt = canEncrypt(row);
 
-    const { error } = await supabase.from('prayers').insert(willEncrypt ? await encryptPrayerForStorage(row) : row);
+    const persistRow = willEncrypt ? await encryptPrayerForStorage(row) : row;
+    if (!isCurrent()) return { error: 'account-changed' };
+    const { error } = await supabase.from('prayers').insert(persistRow);
+    if (!isCurrent()) return { error: 'account-changed' };
     if (error) return { error: error.message || 'failed' };
     if (points.length > 0) {
       const persistPoints = willEncrypt
         ? await Promise.all(points.map((point) => encryptChildForStorage(point, POINT_SENSITIVE_FIELDS, userId)))
         : points;
+      if (!isCurrent()) return { error: 'account-changed' };
       // Best effort: a copy without its own points still mirrors the group's on load.
       await supabase.from('prayer_points').insert(persistPoints);
+      if (!isCurrent()) return { error: 'account-changed' };
     }
 
     const prayer = {
@@ -605,6 +732,10 @@ const usePrayerStore = create((set, get) => ({
   // Optimistic + offline-capable. Fields map to snake_case; category links and
   // shared-copy mirroring are handled idempotently by the executor.
   updatePrayer: async (id, updates) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const payload = {};
     if (updates.title !== undefined) payload.title = updates.title;
     if (updates.description !== undefined) payload.description = updates.description;
@@ -621,6 +752,7 @@ const usePrayerStore = create((set, get) => ({
     payload.updated_at = new Date().toISOString();
 
     const current = get().prayers.find((p) => p.id === id);
+    if (isAccountContextConfigured() && !ownsPrayer(current, context.userId)) return;
     // An edit re-encrypts a previously-plaintext row, so the in-memory copy
     // records that this row is now encrypted instead of waiting for a reload.
     // A row this device could not decrypt (`_locked`) is never re-encrypted:
@@ -655,7 +787,7 @@ const usePrayerStore = create((set, get) => ({
       // Never a plaintext content column beside ciphertext this device can't open.
       for (const f of [...SENSITIVE_FIELDS, ...SENSITIVE_JSON_FIELDS]) delete persistPayload[f];
     }
-    enqueue('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds });
+    queueMutation('updatePrayer', { id, payload: persistPayload, categoryIds: updates.categoryIds });
   },
 
   // Persist the Scripture-first AI guidance once fetched, so reopening the step
@@ -663,6 +795,10 @@ const usePrayerStore = create((set, get) => ({
   // encrypted_payload as title/description for PRIVATE prayers; stored as plain
   // jsonb otherwise (mirrors updatePrayer's encryption gating).
   setScriptureGuidance: async (prayerId, guidance) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     set((state) => ({
       prayers: state.prayers.map((p) => (p.id === prayerId ? { ...p, scripture_guidance: guidance } : p)),
     }));
@@ -672,19 +808,25 @@ const usePrayerStore = create((set, get) => ({
     const persistPayload = canEncrypt(current)
       ? await encryptedSensitiveFields(current)
       : { scripture_guidance: guidance };
-    enqueue('updatePrayer', { id: prayerId, payload: persistPayload });
+    queueMutation('updatePrayer', { id: prayerId, payload: persistPayload });
   },
 
   // Reverse direction: when the owner edits categories on a shared community
   // prayer, push them back to the personal source and all its community copies.
   // Owner-only (categories belong to the owner's category set).
   syncCategoriesFromCommunity: async (sourcePrayerId, categoryIds) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
     const ids = categoryIds || [];
     await supabase.from('prayer_categories').delete().eq('prayer_id', sourcePrayerId);
+    if (!isCurrent()) return;
     if (ids.length > 0) {
       await supabase.from('prayer_categories').insert(ids.map((cid) => ({ prayer_id: sourcePrayerId, category_id: cid })));
+      if (!isCurrent()) return;
     }
     await supabase.from('community_prayers').update({ category_ids: ids }).eq('source_prayer_id', sourcePrayerId);
+    if (!isCurrent()) return;
     set((state) => ({
       prayers: state.prayers.map((p) =>
         p.id === sourcePrayerId ? { ...p, prayer_categories: ids.map((cid) => ({ category_id: cid })) } : p
@@ -693,6 +835,10 @@ const usePrayerStore = create((set, get) => ({
   },
 
   markAnswered: async (id, testimony, attachments = []) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const answered_at = new Date().toISOString();
     const trimmed = (testimony || '').trim();
     const prayer = get().prayers.find((p) => p.id === id);
@@ -708,7 +854,7 @@ const usePrayerStore = create((set, get) => ({
         return { ...p, status: 'answered', prayer_testimonies, answered_at };
       }),
     }));
-    enqueue('markAnswered', { id, answered_at });
+    queueMutation('markAnswered', { id, answered_at });
     track(EVENTS.PRAYER_ANSWERED);
     if (row) await get()._persistTestimony(prayer, row);
   },
@@ -717,6 +863,9 @@ const usePrayerStore = create((set, get) => ({
   // own row, so the prayer's status and answered_at are untouched — remembrance,
   // not a re-answer.
   addTestimony: async (id, content, attachments = []) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
     const trimmed = (content || '').trim();
     if (!trimmed && !attachments.length) return;
     const prayer = get().prayers.find((p) => p.id === id);
@@ -734,10 +883,14 @@ const usePrayerStore = create((set, get) => ({
   // plaintext — mirrors _persistEncryptedPoint. Encrypts BEFORE enqueue so the
   // offline queue never holds the plaintext.
   _persistTestimony: async (prayer, row) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent() || !ownsPrayer(prayer, context.userId)) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const persistRow = canEncryptNested(prayer)
       ? await encryptChildForStorage(row, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id)
       : row;
-    enqueue('addTestimonyRow', { row: persistRow });
+    queueMutation('addTestimonyRow', { row: persistRow });
   },
 
   // Delete one attachment from a posted testimony: optimistic local shrink,
@@ -746,6 +899,10 @@ const usePrayerStore = create((set, get) => ({
   // shrunk list — re-encrypted in place for private prayers, plain jsonb
   // otherwise. Testimonies never fan out, so no mirror cleanup is needed.
   removeTestimonyAttachment: async (prayerId, testimonyId, attId) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const prayer = get().prayers.find((p) => p.id === prayerId);
     const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
     const removed = (row?.attachments || []).find((a) => a.id === attId);
@@ -769,9 +926,9 @@ const usePrayerStore = create((set, get) => ({
       const enc = await encryptChildForStorage({ ...row, attachments }, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
-      enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
+      queueMutation('updateTestimonyEncrypted', { testimonyId, row: patch });
     } else {
-      enqueue('setTestimonyAttachments', { testimonyId, attachments });
+      queueMutation('setTestimonyAttachments', { testimonyId, attachments });
     }
   },
 
@@ -779,6 +936,10 @@ const usePrayerStore = create((set, get) => ({
   // whole row is deleted instead. Same encryption split as the attachment
   // shrink above.
   removeTestimonyText: async (prayerId, testimonyId) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const prayer = get().prayers.find((p) => p.id === prayerId);
     const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
     if (!row || !row.content) return;
@@ -795,9 +956,9 @@ const usePrayerStore = create((set, get) => ({
       const enc = await encryptChildForStorage({ ...row, content: '' }, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
-      enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
+      queueMutation('updateTestimonyEncrypted', { testimonyId, row: patch });
     } else {
-      enqueue('setTestimonyContent', { testimonyId, content: '' });
+      queueMutation('setTestimonyContent', { testimonyId, content: '' });
     }
   },
 
@@ -824,6 +985,10 @@ const usePrayerStore = create((set, get) => ({
   // the content column directly. Testimonies never fan out, so no mirror update.
   // An empty or unchanged edit is a no-op (blank is a delete, not a save).
   editTestimony: async (prayerId, testimonyId, content) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const next = (content || '').trim();
     const prayer = get().prayers.find((p) => p.id === prayerId);
     const row = (prayer?.prayer_testimonies || []).find((tm) => tm.id === testimonyId);
@@ -840,9 +1005,9 @@ const usePrayerStore = create((set, get) => ({
       const enc = await encryptChildForStorage({ ...row, content: next }, TESTIMONY_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of TESTIMONY_SENSITIVE_FIELDS) patch[f] = enc[f];
-      enqueue('updateTestimonyEncrypted', { testimonyId, row: patch });
+      queueMutation('updateTestimonyEncrypted', { testimonyId, row: patch });
     } else {
-      enqueue('setTestimonyContent', { testimonyId, content: next });
+      queueMutation('setTestimonyContent', { testimonyId, content: next });
     }
   },
 
@@ -966,15 +1131,18 @@ const usePrayerStore = create((set, get) => ({
   // Optimistically hide a prayer and defer the real delete, so an "Undo" toast
   // can cancel it. Used for low-stakes removals (unfollowing a saved copy).
   softDeletePrayer: (id) => {
+    const context = captureDataContext(get().userId);
+    if (!dataContextCurrent(context, get().userId)) return null;
     const prayer = get().prayers.find((p) => p.id === id);
     if (!prayer) return null;
     set((state) => ({ prayers: state.prayers.filter((p) => p.id !== id) }));
     const timer = setTimeout(() => {
       pendingDeletes.delete(id);
-      enqueue('deletePrayer', { id });
-      clearPlanPersonalization(get().userId, id);
+      if (!dataContextCurrent(context, get().userId)) return;
+      enqueue('deletePrayer', { id, accountId: context.userId });
+      clearPlanPersonalization(context.userId, id);
     }, UNDO_WINDOW_MS);
-    pendingDeletes.set(id, { prayer, timer });
+    pendingDeletes.set(id, { prayer, timer, context });
     return prayer;
   },
 
@@ -984,6 +1152,7 @@ const usePrayerStore = create((set, get) => ({
     if (!entry) return;
     clearTimeout(entry.timer);
     pendingDeletes.delete(id);
+    if (!dataContextCurrent(entry.context, get().userId)) return;
     set((state) => (state.prayers.some((p) => p.id === id)
       ? state
       : { prayers: [entry.prayer, ...state.prayers] }));
@@ -997,6 +1166,12 @@ const usePrayerStore = create((set, get) => ({
   // Re-calling with an id that already exists locally is therefore a no-op
   // rather than a duplicate entry.
   addUpdate: async (prayerId, text, authorName = '', attachments = [], options = {}) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    if (isAccountContextConfigured() && !ownsPrayer(prayer, context.userId)) return;
     const id = options.id || crypto.randomUUID();
     if (options.id && (get().prayers.find((p) => p.id === prayerId)?.prayer_updates || []).some((u) => u.id === id)) return;
     const row = { id, prayer_id: prayerId, text, attachments, author_name: authorName, is_anonymous: false, created_at: new Date().toISOString(), content_language: get().settings.language || null };
@@ -1007,12 +1182,11 @@ const usePrayerStore = create((set, get) => ({
     }));
     // Private prayer → store the update as ciphertext directly; shared prayer →
     // route through sync_add_update so it fans out to the community copies.
-    const prayer = get().prayers.find((p) => p.id === prayerId);
     if (canEncryptNested(prayer)) {
       const encRow = await encryptChildForStorage(row, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
-      enqueue('addUpdateEncrypted', { row: encRow });
+      queueMutation('addUpdateEncrypted', { row: encRow });
     } else {
-      enqueue('addUpdate', { id, prayerId, text, authorName, attachments });
+      queueMutation('addUpdate', { id, prayerId, text, authorName, attachments });
     }
   },
 
@@ -1025,6 +1199,10 @@ const usePrayerStore = create((set, get) => ({
   // that is BOTH still plaintext on the server and encryptable now gets the
   // RPC as well, so any pre-E2EE mirrors don't keep a dead attachment.
   removeUpdateAttachment: async (prayerId, updateId, attId) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const prayer = get().prayers.find((p) => p.id === prayerId);
     const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
     const removed = (row?.attachments || []).find((a) => a.id === attId);
@@ -1045,13 +1223,13 @@ const usePrayerStore = create((set, get) => ({
     }));
     removeAttachmentFiles([removed]);
     if (!isRowEncrypted(row)) {
-      enqueue('removeUpdateAttachment', { updateId, attId, attachments });
+      queueMutation('removeUpdateAttachment', { updateId, attId, attachments });
     }
     if (canEncryptNested(prayer)) {
       const enc = await encryptChildForStorage({ ...row, attachments }, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
-      enqueue('updateUpdateEncrypted', { updateId, row: patch });
+      queueMutation('updateUpdateEncrypted', { updateId, row: patch });
     }
   },
 
@@ -1060,6 +1238,10 @@ const usePrayerStore = create((set, get) => ({
   // removeUpdateAttachment: plaintext rows go through an RPC that also blanks
   // the fanned-out community mirrors, E2EE rows are re-encrypted in place.
   removeUpdateText: async (prayerId, updateId) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const prayer = get().prayers.find((p) => p.id === prayerId);
     const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
     if (!row || !row.text) return;
@@ -1073,13 +1255,13 @@ const usePrayerStore = create((set, get) => ({
       ),
     }));
     if (!isRowEncrypted(row)) {
-      enqueue('removeUpdateText', { updateId });
+      queueMutation('removeUpdateText', { updateId });
     }
     if (canEncryptNested(prayer)) {
       const enc = await encryptChildForStorage({ ...row, text: '' }, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
-      enqueue('updateUpdateEncrypted', { updateId, row: patch });
+      queueMutation('updateUpdateEncrypted', { updateId, row: patch });
     }
   },
 
@@ -1107,6 +1289,10 @@ const usePrayerStore = create((set, get) => ({
   // fallback for a prod that predates the RPC — same split as removeUpdateText).
   // An empty or unchanged edit is a no-op.
   editUpdate: async (prayerId, updateId, text) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const next = (text || '').trim();
     const prayer = get().prayers.find((p) => p.id === prayerId);
     const row = (prayer?.prayer_updates || []).find((u) => u.id === updateId);
@@ -1123,9 +1309,9 @@ const usePrayerStore = create((set, get) => ({
       const enc = await encryptChildForStorage({ ...row, text: next }, UPDATE_SENSITIVE_FIELDS, prayer.user_id);
       const patch = { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version };
       for (const f of UPDATE_SENSITIVE_FIELDS) patch[f] = enc[f];
-      enqueue('updateUpdateEncrypted', { updateId, row: patch });
+      queueMutation('updateUpdateEncrypted', { updateId, row: patch });
     } else {
-      enqueue('setUpdateText', { updateId, text: next });
+      queueMutation('setUpdateText', { updateId, text: next });
     }
   },
 
@@ -1133,6 +1319,12 @@ const usePrayerStore = create((set, get) => ({
   // Routed through sync_add_point so the point also fans out to any shared
   // community copies. For non-shared prayers it just writes prayer_points.
   addPrayerPoint: async (prayerId, point) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
+    const prayer = get().prayers.find((p) => p.id === prayerId);
+    if (isAccountContextConfigured() && !ownsPrayer(prayer, context.userId)) return;
     // Build initial verses array from legacy single-verse fields or provided verses
     const initialVerses = point.verses
       ? point.verses
@@ -1147,12 +1339,11 @@ const usePrayerStore = create((set, get) => ({
         p.id === prayerId ? { ...p, prayer_points: [...(p.prayer_points || []), row] } : p
       ),
     }));
-    const prayer = get().prayers.find((p) => p.id === prayerId);
     if (canEncryptNested(prayer)) {
       const encRow = await encryptChildForStorage(row, POINT_SENSITIVE_FIELDS, prayer.user_id);
-      enqueue('addPointEncrypted', { row: encRow });
+      queueMutation('addPointEncrypted', { row: encRow });
     } else {
-      enqueue('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
+      queueMutation('addPrayerPoint', { id, prayerId, title: point.title, verses: initialVerses });
     }
   },
 
@@ -1216,12 +1407,16 @@ const usePrayerStore = create((set, get) => ({
   // blob and keep the plaintext columns redacted. Encrypts before enqueue so the
   // offline queue never holds the plaintext.
   _persistEncryptedPoint: async (prayerId, pointId, title, verses, ownerId) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent() || (isAccountContextConfigured() && context.userId !== ownerId)) return;
+    const queueMutation = (kind, args) => isCurrent() && enqueue(kind, { ...args, accountId: context.userId });
     const enc = await encryptChildForStorage(
       { id: pointId, prayer_id: prayerId, title, verses },
       POINT_SENSITIVE_FIELDS,
       ownerId,
     );
-    enqueue('updatePointEncrypted', {
+    queueMutation('updatePointEncrypted', {
       pointId,
       row: { encrypted_payload: enc.encrypted_payload, encryption_version: enc.encryption_version, title: '', verses: [] },
     });
@@ -1229,15 +1424,22 @@ const usePrayerStore = create((set, get) => ({
 
   // ─── Categories ───────────────────────────────────────────────
   addCategory: async (category) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
     const { data: { user } } = await supabase.auth.getUser();
+    if (!user || !isCurrent() || (isAccountContextConfigured() && context.userId !== user.id)) return;
     const { data } = await supabase
       .from('categories')
       .insert({ user_id: user.id, name: category.name, emoji: category.emoji, color: category.color, week_days: category.weekDays || [] })
       .select().single();
-    if (data) set((state) => ({ categories: [...state.categories, { ...data, color: resolveCategoryColor(data.color) }] }));
+    if (isCurrent() && data) set((state) => ({ categories: [...state.categories, { ...data, color: resolveCategoryColor(data.color) }] }));
   },
 
   updateCategory: async (id, updates) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
     const payload = {};
     if (updates.name !== undefined) payload.name = updates.name;
     if (updates.emoji !== undefined) payload.emoji = updates.emoji;
@@ -1246,14 +1448,18 @@ const usePrayerStore = create((set, get) => ({
     if (updates.rotation !== undefined) payload.rotation = updates.rotation; // { perDay: n } | null
 
     const { data } = await supabase.from('categories').update(payload).eq('id', id).select().single();
-    if (data) {
+    if (isCurrent() && data) {
       const resolved = { ...data, color: resolveCategoryColor(data.color) };
       set((state) => ({ categories: state.categories.map((c) => c.id === id ? resolved : c) }));
     }
   },
 
   deleteCategory: async (id) => {
+    const context = { ...captureDataContext(get().userId), mutation: true };
+    const isCurrent = () => dataContextCurrent(context, get().userId);
+    if (!isCurrent()) return;
     await supabase.from('categories').delete().eq('id', id);
+    if (!isCurrent()) return;
     set((state) => ({ categories: state.categories.filter((c) => c.id !== id) }));
   },
 
@@ -1289,8 +1495,12 @@ const usePrayerStore = create((set, get) => ({
   // Afterwards, re-align this device's push subscription with whatever won, so
   // reminders enabled elsewhere are delivered here too (permission permitting).
   syncSettings: async (userId) => {
+    const context = captureDataContext(userId);
+    const isCurrent = () => dataContextCurrent(context, get().userId, false);
+    if (!isCurrent()) return;
     try {
       const server = await fetchUserSettings(userId);
+      if (!isCurrent()) return;
       if (server) {
         if (server.language) {
           server.language = resolveLanguage(server.language, navigator.language || navigator.userLanguage);
@@ -1299,12 +1509,14 @@ const usePrayerStore = create((set, get) => ({
         get().updateSettings(server, { sync: false });
       } else {
         await saveUserSettings(userId, get().settings);
+        if (!isCurrent()) return;
       }
       // Also honour the account-level event-push master switch, so turning on
       // "Push notifications" on one device keeps every other permission-granted
       // device subscribed too (not just the reminder toggles).
       let eventPush = false;
       try { eventPush = await isEventPushEnabled(userId); } catch { /* default off */ }
+      if (!isCurrent()) return;
       await ensurePushSubscription(userId, get().settings, eventPush);
     } catch { /* offline — local settings stand */ }
   },
@@ -1328,12 +1540,31 @@ const usePrayerStore = create((set, get) => ({
 // can hydrate instantly and offline — including not-yet-synced prayers.
 let saveTimer;
 usePrayerStore.subscribe((state) => {
-  if (!state.userId) return;
   clearTimeout(saveTimer);
+  if (!state.userId) return;
+  const context = captureDataContext(state.userId);
+  if (!dataContextCurrent(context, state.userId)) return;
   saveTimer = setTimeout(
-    () => saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers, completions: state.completions }),
+    () => {
+      if (dataContextCurrent(context, usePrayerStore.getState().userId)) {
+        saveSnapshot(state.userId, { categories: state.categories, prayers: state.prayers, completions: state.completions });
+      }
+    },
     400
   );
+});
+
+onLockChange((unlocked) => {
+  if (unlocked) return;
+  journalReconciliationContext = null;
+  dataGeneration += 1;
+  clearTimeout(saveTimer);
+  for (const entry of pendingDeletes.values()) clearTimeout(entry.timer);
+  pendingDeletes.clear();
+  const state = usePrayerStore.getState();
+  const activeAccount = getLifecycleToken().accountId;
+  usePrayerStore.setState({ prayers: [], categories: [], completions: {}, loading: false,
+    userId: state.userId === activeAccount ? state.userId : null });
 });
 
 export default usePrayerStore;

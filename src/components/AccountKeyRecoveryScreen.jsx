@@ -8,6 +8,7 @@ import AccountGate from './AccountGate';
 import { SecondaryButton } from './shared/Primitives';
 import { isNewAppOrigin, ORIGINAL_APP_URL, ORIGINAL_WWW_APP_URL } from '../lib/originMigration';
 import { originMigrationCopy } from '../lib/originMigrationCopy';
+import { PrayerRecoveryChoices } from './PrayerProtection';
 
 // Full-screen gate for the ORPHANED crypto state: the server holds prayers
 // encrypted with a key that isn't on this device, and there's no recovery record
@@ -39,6 +40,7 @@ export default function AccountKeyRecoveryScreen({ lang = 'fr', onResolved }) {
       exitLabel={t(lang, 'keyMissingRetry')}
       onExit={signOut}
     >
+      <PrayerRecoveryChoices key={user?.id} userId={user?.id} lang={lang} onRecovered={onResolved} />
       {isNewAppOrigin() && (
         <div lang={copyLang} dir="ltr" className="mb-4">
           <p className="q-body-sm">{copy.returnBody}</p>

@@ -48,6 +48,10 @@ function selectRows(table, filters, order, limit) {
 }
 
 function insert(table, rowOrRows) {
+  if (table === 'user_crypto_keys') {
+    if (db.user_crypto_keys.has(rowOrRows.user_id)) return Promise.resolve({ data: null, error: { code: '23505' } });
+    db.user_crypto_keys.set(rowOrRows.user_id, { ...rowOrRows });
+  }
   const rows = (Array.isArray(rowOrRows) ? rowOrRows : [rowOrRows]).map((r) => ({
     id: r.id || crypto.randomUUID(),
     ...(CONTENT_TABLES.includes(table) ? { created_at: r.created_at || new Date().toISOString() } : {}),

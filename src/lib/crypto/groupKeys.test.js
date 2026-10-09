@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // ── Stateful in-memory Supabase: crypto key tables + membership ───────────────
 // Enough of the query surface for userKeys + groupKeys: chained select/eq/order/
@@ -56,6 +56,10 @@ function resolveSelect(q, single) {
 }
 
 function insertRow(table, row) {
+  if (table === 'user_crypto_keys') {
+    if (db.user_crypto_keys.has(row.user_id)) return Promise.resolve({ data: null, error: { code: '23505' } });
+    db.user_crypto_keys.set(row.user_id, { ...row });
+  }
   if (table === 'group_key_versions') {
     if (db.group_key_versions.some((r) => r.group_id === row.group_id && r.version === row.version)) {
       return Promise.resolve({ data: null, error: { message: 'duplicate key', code: '23505' } });
@@ -177,15 +181,17 @@ function installStorage() {
 import {
   ensureGroupKey, getGroupKey, rotateGroupKey, revokeMemberAndRotate, clearGroupKeyCache,
 } from './groupKeys';
-import { ensureUserPublicKey, clearUserKeyCache } from './userKeys';
+import { ensureUserPublicKey, getMyPrivateKey, clearUserKeyCache } from './userKeys';
+import { supabase } from '../supabase';
 import { encryptCommunityPrayer, decryptCommunityRow } from './communityCrypto';
 import {
-  autoInitAccountKey, lock, destroyVault, importRawMasterKey, exportRawMasterKey,
+  autoInitAccountKey, lock, destroyVault, importRawMasterKey, exportRawMasterKey, configureAccountContext,
 } from './keyManager';
 
 // Give `userId` a fresh account key + published identity keypair; return the raw
 // account key so a later becomeUser() can restore this exact identity.
 async function provisionUser(userId) {
+  configureAccountContext(userId);
   lock();
   clearUserKeyCache();
   await autoInitAccountKey();
@@ -197,6 +203,7 @@ async function provisionUser(userId) {
 // Switch the acting user: load their account key, drop cached identity + group
 // keys so everything is re-fetched and re-unwrapped as that user would.
 async function becomeUser(userId, ackB64) {
+  configureAccountContext(userId);
   lock();
   clearUserKeyCache();
   clearGroupKeyCache();
@@ -218,6 +225,7 @@ async function setupTwoMemberGroup() {
 }
 
 beforeEach(() => { installStorage(); });
+afterEach(() => vi.restoreAllMocks());
 
 describe('group content key lifecycle', () => {
   it('provisions version 1 on first use and encrypts under it', async () => {
@@ -398,5 +406,88 @@ describe('group content key lifecycle', () => {
     expect(results.filter(Boolean)).toHaveLength(1);
     expect(db.group_key_versions.filter((row) => row.version === 2)).toHaveLength(1);
     expect(db.group_member_keys.has('g1:2:alice')).toBe(true);
+  });
+
+  it('blocks cached group keys while locked and reloads historical keys after the same ACK unlocks', async () => {
+    const { ackAlice } = await setupTwoMemberGroup();
+    await becomeUser('alice', ackAlice);
+    const original = await ensureGroupKey('g1');
+    const encrypted = await encryptCommunityPrayer(original, { id: 'historical', title: 'historical prayer' });
+    await rotateGroupKey('g1');
+    lock();
+    expect(await getGroupKey('g1', 1)).toBeNull();
+    expect(await ensureGroupKey('g1')).toBeNull();
+    await importRawMasterKey(ackAlice);
+    const recovered = await decryptCommunityRow((version) => getGroupKey('g1', version), encrypted);
+    expect(recovered.title).toBe('historical prayer');
+  });
+
+  it('never returns the previous account cached group key to a new nonmember account', async () => {
+    const { ackAlice } = await setupTwoMemberGroup();
+    await becomeUser('alice', ackAlice);
+    expect(await ensureGroupKey('g1')).toBeTruthy();
+    // No manual group-cache clear: account context invalidation must do it.
+    await provisionUser('carol');
+    expect(await getGroupKey('g1', 1)).toBeNull();
+  });
+
+  it('ignores an old account group unwrap response after another account is unlocked', async () => {
+    const { ackAlice, ackBob } = await setupTwoMemberGroup();
+    await becomeUser('alice', ackAlice);
+    await ensureGroupKey('g1');
+    clearGroupKeyCache();
+    let release;
+    let entered;
+    const gate = new Promise((resolve) => { release = resolve; });
+    const started = new Promise((resolve) => { entered = resolve; });
+    const originalFrom = supabase.from;
+    const fromSpy = vi.spyOn(supabase, 'from').mockImplementation((table) => {
+      const query = originalFrom(table);
+      if (table === 'group_member_keys') {
+        const originalSingle = query.maybeSingle;
+        query.maybeSingle = async () => {
+          const response = await originalSingle();
+          entered();
+          await gate;
+          return response;
+        };
+      }
+      return query;
+    });
+    const pending = getGroupKey('g1', 1);
+    await started;
+    configureAccountContext('bob');
+    expect(getMyPrivateKey()).toBeNull();
+    currentUser = 'bob';
+    await importRawMasterKey(ackBob);
+    expect(await ensureUserPublicKey('alice')).toBeNull();
+    release();
+    expect(await pending).toBeNull();
+    fromSpy.mockRestore();
+    expect(await getGroupKey('g1', 1)).toBeTruthy();
+  });
+
+  it('does not install a created group key when its commit response arrives after lock', async () => {
+    const { ackAlice } = await setupTwoMemberGroup();
+    await becomeUser('alice', ackAlice);
+    let release;
+    let entered;
+    const gate = new Promise((resolve) => { release = resolve; });
+    const started = new Promise((resolve) => { entered = resolve; });
+    const originalRpc = supabase.rpc;
+    const rpcSpy = vi.spyOn(supabase, 'rpc').mockImplementation(async (name, args) => {
+      const response = await originalRpc(name, args);
+      if (name === 'create_group_key_version') { entered(); await gate; }
+      return response;
+    });
+    const pending = ensureGroupKey('g1');
+    await started;
+    lock();
+    await importRawMasterKey(ackAlice);
+    release();
+    expect(await pending).toBeNull();
+    rpcSpy.mockRestore();
+    // The transaction's durable creator envelope still permits a fresh unwrap.
+    expect(await getGroupKey('g1', 1)).toBeTruthy();
   });
 });

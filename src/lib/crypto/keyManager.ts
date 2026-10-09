@@ -8,7 +8,8 @@
 // Optional recovery wraps the same 256-bit key under a passphrase and under a
 // 128-bit recovery code. Only those wrapped blobs and salts are synced through
 // `vault_keys`; neither the passphrase nor raw key is sent to Supabase. The
-// default inactivity auto-lock is disabled. See docs/ENCRYPTION.md.
+// transparent default inactivity auto-lock is disabled; protected devices
+// always lock after five minutes without activity. See docs/ENCRYPTION.md.
 
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 import { toB64, fromB64 } from './e2ee';
@@ -23,9 +24,10 @@ const SESSION_KEY = 'pfm_vault_session'; // sessionStorage: raw master key, tab-
 // Idle auto-lock is disabled by default: under the "encryption by default"
 // model the account key is transparent (persisted device-local by the
 // accountKey layer), so locking it on idle would only break encrypt/decrypt
-// mid-session without adding protection. The machinery is kept for a future
-// opt-in app-lock; setAutoLockMs(>0) re-enables it.
+// mid-session without adding protection. Protected devices always use the
+// five-minute limit; this setting only controls transparent account keys.
 const DEFAULT_AUTO_LOCK_MS = 0;
+const PROTECTED_AUTO_LOCK_MS = 5 * 60 * 1000;
 
 // Crockford base32 (no I/L/O/U) — unambiguous to read off a recovery sheet.
 const CODE_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
@@ -48,10 +50,30 @@ interface VaultRecord {
   updatedAt?: string;
 }
 
+export interface LifecycleToken {
+  readonly accountId: string | null;
+  readonly generation: number;
+}
+
+export interface CandidateKeyOptions {
+  token?: LifecycleToken;
+  verifyCandidate?: (key: CryptoKey) => Promise<boolean> | boolean;
+}
+
+let accountId: string | null = null;
+let accountContextConfigured = false;
+let lifecycleGeneration = 0;
+const recordSlot = (): string | null => accountId
+  ? `${STORAGE_KEY}:${accountId}` : accountContextConfigured ? null : STORAGE_KEY;
+const sessionSlot = (): string | null => accountId
+  ? `${SESSION_KEY}:${accountId}` : accountContextConfigured ? null : SESSION_KEY;
+const protectionSlot = (userId: string): string => `pfm_device_protected_${userId}`;
+
 // ─── In-memory state (never persisted) ───────────────────────────────────────
 let masterKey: CryptoKey | null = null;
 let autoLockMs = DEFAULT_AUTO_LOCK_MS;
 let autoLockTimer: ReturnType<typeof setTimeout> | null = null;
+let autoLockDeadline: number | null = null;
 const listeners = new Set<(unlocked: boolean) => void>();
 
 const enc = new TextEncoder();
@@ -67,21 +89,37 @@ const hasIDB = (): boolean => typeof indexedDB !== 'undefined';
 
 let cachedRecord: VaultRecord | null = null;
 let hydration: Promise<void> | null = null;
+let vaultMetadataUnavailable = false;
+
+// Both historical versions used standard Base64, 16-byte salts, 12-byte GCM
+// IVs and a 32-byte account key plus the 16-byte authentication tag. Preserve
+// padded and unpadded encodings without accepting arbitrary nonempty strings.
+function hasBase64Length(value: unknown, expectedBytes: number): boolean {
+  if (typeof value !== 'string' || value.length > Math.ceil(expectedBytes * 4 / 3) + 2
+    || !/^[A-Za-z0-9+/]+={0,2}$/.test(value)) return false;
+  try {
+    const decoded = fromB64(value);
+    return decoded.length === expectedBytes
+      && toB64(decoded).replace(/=+$/, '') === value.replace(/=+$/, '');
+  } catch { return false; }
+}
 
 function parseVaultRecord(value: unknown): VaultRecord | null {
   try {
+    if (typeof value === 'string' && value.length > 16_384) return null;
     const record = typeof value === 'string' ? JSON.parse(value) : value;
-    if (!record || typeof record !== 'object') return null;
+    if (!record || typeof record !== 'object' || Array.isArray(record)
+      || JSON.stringify(record).length > 16_384) return null;
     const candidate = record as Partial<VaultRecord>;
     const wrappedIsValid = (wrapped: WrappedKey | undefined) => !!wrapped
-      && typeof wrapped.iv === 'string' && wrapped.iv.length > 0
-      && typeof wrapped.data === 'string' && wrapped.data.length > 0;
+      && !Array.isArray(wrapped) && hasBase64Length(wrapped.iv, IV_BYTES)
+      && hasBase64Length(wrapped.data, 48);
     if (!Number.isInteger(candidate.v) || (candidate.v !== 1 && candidate.v !== VAULT_VERSION)) return null;
-    if (typeof candidate.passSalt !== 'string' || !candidate.passSalt) return null;
-    if (typeof candidate.recoverySalt !== 'string' || !candidate.recoverySalt) return null;
+    if (!hasBase64Length(candidate.passSalt, SALT_BYTES)) return null;
+    if (!hasBase64Length(candidate.recoverySalt, SALT_BYTES)) return null;
     if (!wrappedIsValid(candidate.passWrapped) || !wrappedIsValid(candidate.recoveryWrapped)) return null;
     if (candidate.revision !== undefined
-      && (!Number.isInteger(candidate.revision) || candidate.revision < 0)) return null;
+      && (!Number.isSafeInteger(candidate.revision) || candidate.revision < 0)) return null;
     if (candidate.updatedAt !== undefined
       && (typeof candidate.updatedAt !== 'string' || !Number.isFinite(Date.parse(candidate.updatedAt)))) return null;
     return candidate as VaultRecord;
@@ -91,8 +129,10 @@ function parseVaultRecord(value: unknown): VaultRecord | null {
 }
 
 function recordMetadata(previous?: VaultRecord | null): Pick<VaultRecord, 'revision' | 'updatedAt'> {
+  const revision = (previous?.revision ?? 0) + 1;
+  if (!Number.isSafeInteger(revision)) throw new Error('Vault revision exhausted');
   return {
-    revision: (previous?.revision ?? 0) + 1,
+    revision,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -133,61 +173,84 @@ function sessionStorageRef(): Storage | null {
 // anything that can read the in-memory key (e.g. injected JS) could read this
 // too — it just avoids forcing a passphrase re-entry on every reload.
 async function persistSessionKey(mk: CryptoKey): Promise<void> {
+  const token = getLifecycleToken();
+  const target = sessionSlot();
+  if (!target || getDeviceProtectionPolicy() !== 'transparent') return;
   try {
     const raw = await crypto.subtle.exportKey('raw', mk);
-    sessionStorageRef()?.setItem(SESSION_KEY, toB64(new Uint8Array(raw)));
+    if (!isLifecycleCurrent(token) || masterKey !== mk
+      || getDeviceProtectionPolicy() !== 'transparent') return;
+    sessionStorageRef()?.setItem(target, toB64(new Uint8Array(raw)));
   } catch {
     /* best-effort */
   }
 }
 
 function clearSessionKey(): void {
-  sessionStorageRef()?.removeItem(SESSION_KEY);
+  clearRawSessionKey();
 }
 
 async function restoreSessionKey(): Promise<void> {
   if (masterKey) return;
-  const b64 = sessionStorageRef()?.getItem(SESSION_KEY);
+  const token = getLifecycleToken();
+  const target = sessionSlot();
+  if (!target || getDeviceProtectionPolicy() !== 'transparent') {
+    clearRawSessionKey();
+    return;
+  }
+  const b64 = sessionStorageRef()?.getItem(target);
   if (!b64) return;
   try {
     const mk = await crypto.subtle.importKey('raw', fromB64(b64), { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
-    setMasterKey(mk);
+    if (isLifecycleCurrent(token) && !masterKey && getDeviceProtectionPolicy() === 'transparent') setMasterKey(mk);
   } catch {
     clearSessionKey();
   }
 }
 
 async function doHydrate(): Promise<void> {
+  const token = getLifecycleToken();
+  const target = recordSlot();
+  if (!target) return;
   // One-time migration: if a record still sits in localStorage (older clients),
   // move it into IndexedDB and drop the localStorage copy so the wrapped key no
   // longer persists there.
   const ls = legacyStorage();
-  const legacy = ls?.getItem(STORAGE_KEY);
+  // Unscoped older backups are retained, never assigned to an arbitrary login.
+  // Bound accounts recover their authoritative wrapper through vaultSync. The
+  // unbound compatibility path is retained for existing direct key-manager use.
+  const legacy = !accountContextConfigured ? ls?.getItem(STORAGE_KEY) : null;
   let migrated = false;
   if (legacy) {
     const parsed = parseVaultRecord(legacy);
     try {
+      if (!isLifecycleCurrent(token)) return;
       cachedRecord = parsed;
+      vaultMetadataUnavailable = !parsed;
       // A corrupt legacy value must not permanently masquerade as a vault and
       // trap the user at an unlock screen that can never succeed.
-      ls?.removeItem(STORAGE_KEY);
       if (!parsed) throw new Error('Invalid legacy vault record');
-      if (hasIDB()) await idbSet(STORAGE_KEY, cachedRecord);
+      if (hasIDB()) await idbSet(target, cachedRecord);
+      if (!isLifecycleCurrent(token)) return;
+      ls?.removeItem(STORAGE_KEY);
       migrated = true;
     } catch {
-      cachedRecord = null;
+      if (isLifecycleCurrent(token)) { cachedRecord = null; vaultMetadataUnavailable = true; }
     }
   }
   if (!migrated && hasIDB()) {
     try {
-      const persisted = await idbGet(STORAGE_KEY);
+      const persisted = await idbGet(target);
+      if (!isLifecycleCurrent(token)) return;
       cachedRecord = persisted == null ? null : parseVaultRecord(persisted);
-      if (persisted != null && !cachedRecord) await idbDel(STORAGE_KEY);
+      vaultMetadataUnavailable = persisted != null && !cachedRecord;
+      // Retain corrupt recovery material for diagnosis rather than destroying
+      // the only remaining copy during a transient/unsupported read.
     } catch {
-      cachedRecord = null;
+      if (isLifecycleCurrent(token)) { cachedRecord = null; vaultMetadataUnavailable = true; }
     }
   }
-  await restoreSessionKey();
+  if (isLifecycleCurrent(token)) await restoreSessionKey();
 }
 
 // Load the persisted record into the in-memory cache. Idempotent — safe to call
@@ -204,22 +267,29 @@ function loadRecord(): VaultRecord | null {
 // Update the cache immediately and await the IndexedDB write where callers are
 // already async. Awaiting closes a page-close race that could make a successful
 // passphrase change revert on the next launch.
-async function saveRecord(record: VaultRecord): Promise<void> {
+async function saveRecord(record: VaultRecord, token = getLifecycleToken()): Promise<boolean> {
+  if (!isLifecycleCurrent(token)) return false;
+  const target = recordSlot();
+  if (!target) return false;
   cachedRecord = record;
+  vaultMetadataUnavailable = false;
   if (hasIDB()) {
-    try { await idbSet(STORAGE_KEY, record); } catch { /* server sync can still preserve it */ }
+    try { await idbSet(target, record); } catch { /* server sync can still preserve it */ }
   }
+  return isLifecycleCurrent(token);
 }
 
 // The cache is per tab while IndexedDB is shared. Re-read it before any
 // credential operation so a passphrase changed in another tab invalidates the
 // old passphrase here too instead of surviving until a full reload.
 async function refreshPersistedRecord(): Promise<void> {
+  const token = getLifecycleToken();
+  const target = recordSlot();
   await hydrate();
-  if (!hasIDB()) return;
+  if (!isLifecycleCurrent(token) || !target || !hasIDB()) return;
   try {
-    const persisted = parseVaultRecord(await idbGet(STORAGE_KEY));
-    if (persisted && recordIsNewer(persisted, cachedRecord)) cachedRecord = persisted;
+    const persisted = parseVaultRecord(await idbGet(target));
+    if (isLifecycleCurrent(token) && persisted && recordIsNewer(persisted, cachedRecord)) cachedRecord = persisted;
   } catch { /* retain the last validated in-memory record */ }
 }
 
@@ -308,6 +378,9 @@ export function normalizeRecoveryCode(code: string, version = VAULT_VERSION): st
 
 // ─── Auto-lock ───────────────────────────────────────────────────────────────
 function setMasterKey(mk: CryptoKey | null): void {
+  // A newly verified unlock starts its own countdown, rather than inheriting
+  // the previous unlock's expired deadline.
+  clearAutoLock();
   masterKey = mk;
   if (mk) { resetAutoLock(); persistSessionKey(mk); }
   else { clearAutoLock(); clearSessionKey(); }
@@ -315,21 +388,32 @@ function setMasterKey(mk: CryptoKey | null): void {
 }
 
 function clearAutoLock(): void {
-  if (autoLockTimer) {
+  if (autoLockTimer !== null) {
     clearTimeout(autoLockTimer);
     autoLockTimer = null;
   }
+  autoLockDeadline = null;
 }
 
-// Call on user activity to keep the vault open; restarts the idle countdown.
+// Timer callbacks can be throttled while a tab is hidden or a device sleeps.
+// Activity must enforce the old wall-clock deadline before extending it.
+function enforceAutoLockDeadline(): void {
+  if (masterKey && autoLockDeadline !== null && Date.now() >= autoLockDeadline) lock();
+}
+
 export function resetAutoLock(): void {
+  enforceAutoLockDeadline();
   if (!masterKey) return;
   clearAutoLock();
-  if (autoLockMs > 0) autoLockTimer = setTimeout(lock, autoLockMs);
+  const effectiveMs = getDeviceProtectionPolicy() === 'transparent' ? autoLockMs : PROTECTED_AUTO_LOCK_MS;
+  if (effectiveMs > 0) {
+    autoLockDeadline = Date.now() + effectiveMs;
+    autoLockTimer = setTimeout(lock, effectiveMs);
+  }
 }
 
 export function setAutoLockMs(ms: number): void {
-  autoLockMs = ms;
+  autoLockMs = Number.isFinite(ms) && ms >= 0 ? ms : DEFAULT_AUTO_LOCK_MS;
   resetAutoLock();
 }
 
@@ -338,13 +422,19 @@ export function isVaultInitialized(): boolean {
   return loadRecord() !== null;
 }
 
+export function isVaultMetadataUnavailable(): boolean {
+  return vaultMetadataUnavailable;
+}
+
 export function isUnlocked(): boolean {
+  enforceAutoLockDeadline();
   return masterKey !== null;
 }
 
 // The in-memory master key for encrypt/decrypt. Throws if the vault is locked —
 // callers must unlock first (or check isUnlocked()).
 export function getMasterKey(): CryptoKey {
+  enforceAutoLockDeadline();
   if (!masterKey) throw new Error('Vault is locked');
   return masterKey;
 }
@@ -352,7 +442,11 @@ export function getMasterKey(): CryptoKey {
 // First-time setup. Returns the recovery code to show the user ONCE; it is not
 // stored anywhere in retrievable form.
 export async function createVault(passphrase: string): Promise<string> {
-  const mk = await generateMasterKey();
+  const token = getLifecycleToken();
+  if (cachedRecord && !masterKey) throw new Error('Unlock existing recovery before changing it');
+  const generated = masterKey ?? await generateMasterKey();
+  const mk = masterKey ?? generated;
+  const previous = cachedRecord;
   const recoveryCode = generateRecoveryCode();
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
@@ -360,14 +454,20 @@ export async function createVault(passphrase: string): Promise<string> {
   const passKey = await deriveWrappingKey(passphrase, passSalt);
   const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
 
-  await saveRecord({
+  const passWrapped = await wrapMasterKey(mk, passKey);
+  const recoveryWrapped = await wrapMasterKey(mk, recoveryKey);
+  if (!isLifecycleCurrent(token) || cachedRecord !== previous || (masterKey && masterKey !== mk)) {
+    throw new Error('Account changed during recovery setup');
+  }
+  const saved = await saveRecord({
     v: VAULT_VERSION,
     passSalt: toB64(passSalt),
     recoverySalt: toB64(recoverySalt),
-    passWrapped: await wrapMasterKey(mk, passKey),
-    recoveryWrapped: await wrapMasterKey(mk, recoveryKey),
-    ...recordMetadata(),
-  });
+    passWrapped,
+    recoveryWrapped,
+    ...recordMetadata(previous),
+  }, token);
+  if (!saved) throw new Error('Account changed during recovery setup');
   setMasterKey(mk);
   return recoveryCode;
 }
@@ -379,8 +479,11 @@ export async function createVault(passphrase: string): Promise<string> {
 // setUpRecovery(). No-op if a key is already loaded.
 export async function autoInitAccountKey(): Promise<void> {
   if (masterKey) return;
+  const token = getLifecycleToken();
+  if (accountContextConfigured && !accountId) return;
+  if (getDeviceProtectionPolicy() !== 'transparent') return;
   const mk = await generateMasterKey();
-  setMasterKey(mk);
+  if (isLifecycleCurrent(token) && !masterKey && getDeviceProtectionPolicy() === 'transparent') setMasterKey(mk);
 }
 
 // Turn on recovery / cross-device access for the key ALREADY in memory: wrap it
@@ -389,31 +492,54 @@ export async function autoInitAccountKey(): Promise<void> {
 // all existing ciphertext stays readable. Returns the one-time recovery code, or
 // null if no key is loaded.
 export async function setUpRecovery(passphrase: string): Promise<string | null> {
-  if (!masterKey) return null;
+  const mk = masterKey;
+  const token = getLifecycleToken();
+  const previous = cachedRecord;
+  if (!mk) return null;
   const recoveryCode = generateRecoveryCode();
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(passphrase, passSalt);
   const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
-  await saveRecord({
+  const passWrapped = await wrapMasterKey(mk, passKey);
+  const recoveryWrapped = await wrapMasterKey(mk, recoveryKey);
+  if (!isLifecycleCurrent(token) || masterKey !== mk || cachedRecord !== previous) return null;
+  if (!await saveRecord({
     v: VAULT_VERSION,
     passSalt: toB64(passSalt),
     recoverySalt: toB64(recoverySalt),
-    passWrapped: await wrapMasterKey(masterKey, passKey),
-    recoveryWrapped: await wrapMasterKey(masterKey, recoveryKey),
-    ...recordMetadata(),
-  });
+    passWrapped,
+    recoveryWrapped,
+    ...recordMetadata(previous),
+  }, token)) return null;
   return recoveryCode;
+}
+
+// New recovery methods unwrap into a candidate, prove it against existing
+// account-bound ciphertext, then commit through this common lifecycle fence.
+export async function installCandidateMasterKey(candidate: CryptoKey, options: CandidateKeyOptions = {}): Promise<boolean> {
+  const token = options.token ?? getLifecycleToken();
+  if ((accountContextConfigured && !accountId) || !isLifecycleCurrent(token) || candidate?.algorithm?.name !== 'AES-GCM'
+    || (candidate.algorithm as AesKeyAlgorithm).length !== 256
+    || getDeviceProtectionPolicy() === 'unknown') return false;
+  try {
+    if (options.verifyCandidate && !await options.verifyCandidate(candidate)) return false;
+    if (!isLifecycleCurrent(token) || getDeviceProtectionPolicy() === 'unknown') return false;
+    setMasterKey(candidate);
+    return true;
+  } catch { return false; }
 }
 
 // Load a raw (base64) account key into memory — restores the transparent
 // per-user key on boot (see accountKey.ensureAccountCryptoReady). Returns false
 // if the bytes aren't a valid AES-GCM key.
-export async function importRawMasterKey(b64: string): Promise<boolean> {
+export async function importRawMasterKey(b64: string, options: CandidateKeyOptions = {}): Promise<boolean> {
+  const token = options.token ?? getLifecycleToken();
+  if (!isLifecycleCurrent(token) || getDeviceProtectionPolicy() !== 'transparent') return false;
   try {
     const mk = await crypto.subtle.importKey('raw', fromB64(b64), { name: 'AES-GCM' }, true, ['encrypt', 'decrypt']);
-    setMasterKey(mk);
-    return true;
+    if (getDeviceProtectionPolicy() !== 'transparent') return false;
+    return await installCandidateMasterKey(mk, { ...options, token });
   } catch {
     return false;
   }
@@ -422,28 +548,100 @@ export async function importRawMasterKey(b64: string): Promise<boolean> {
 // Export the in-memory account key as base64 so the accountKey layer can persist
 // it for transparent access on this device. Null when locked.
 export async function exportRawMasterKey(): Promise<string | null> {
-  if (!masterKey) return null;
+  const mk = masterKey;
+  const token = getLifecycleToken();
+  if (!mk) return null;
   try {
-    const raw = await crypto.subtle.exportKey('raw', masterKey);
-    return toB64(new Uint8Array(raw));
+    const raw = await crypto.subtle.exportKey('raw', mk);
+    return isLifecycleCurrent(token) && masterKey === mk ? toB64(new Uint8Array(raw)) : null;
   } catch {
     return null;
   }
 }
 
 // Unlock with the passphrase. Returns false on a wrong passphrase (no throw).
-export async function unlock(passphrase: string): Promise<boolean> {
+export async function unlock(passphrase: string, options: CandidateKeyOptions = {}): Promise<boolean> {
+  const token = options.token ?? getLifecycleToken();
   await refreshPersistedRecord();
   const record = loadRecord();
-  if (!record) return false;
+  if (!record || !isLifecycleCurrent(token)) return false;
   try {
     const passKey = await deriveWrappingKey(passphrase, fromB64(record.passSalt));
     const mk = await unwrapMasterKey(record.passWrapped, passKey);
-    setMasterKey(mk);
-    return true;
+    if (!isLifecycleCurrent(token) || cachedRecord !== record) return false;
+    return await installCandidateMasterKey(mk, { ...options, token });
   } catch {
     return false;
   }
+}
+
+export function getLifecycleToken(): LifecycleToken {
+  enforceAutoLockDeadline();
+  return Object.freeze({ accountId, generation: lifecycleGeneration });
+}
+
+export function isAccountContextConfigured(): boolean {
+  return accountContextConfigured;
+}
+
+export function isLifecycleCurrent(token: LifecycleToken): boolean {
+  enforceAutoLockDeadline();
+  return token.accountId === accountId && token.generation === lifecycleGeneration;
+}
+
+// This durable policy is enforced independently of feature flags. An unreadable
+// or unknown marker never authorizes a return to transparent raw-key storage.
+export function getDeviceProtectionPolicy(userId: string | null = accountId): 'transparent' | 'protected' | 'unknown' {
+  if (!userId) return 'transparent';
+  try {
+    const storage = legacyStorage();
+    if (!storage) return 'unknown';
+    const value = storage.getItem(protectionSlot(userId));
+    return value === null ? 'transparent' : value === 'v1' ? 'protected' : 'unknown';
+  } catch { return 'unknown'; }
+}
+
+export function clearRawSessionKey(userId: string | null = accountId): boolean {
+  try {
+    // Read directly so a denied getter is an unverified cleanup, rather than
+    // confusing it with an environment that has no session storage at all.
+    const storage = globalThis.sessionStorage;
+    storage?.removeItem(SESSION_KEY); // never restore an unowned legacy session
+    if (userId) storage?.removeItem(`${SESSION_KEY}:${userId}`);
+    return !storage || (storage.getItem(SESSION_KEY) === null
+      && (!userId || storage.getItem(`${SESSION_KEY}:${userId}`) === null));
+  } catch { return false; }
+}
+
+export function setDeviceProtectionPolicy(userId: string, enabled: boolean): boolean {
+  if (!userId) return false;
+  try {
+    const storage = legacyStorage();
+    if (!storage) return false;
+    if (enabled) storage.setItem(protectionSlot(userId), 'v1');
+    else storage.removeItem(protectionSlot(userId));
+    clearRawSessionKey(userId);
+    if (userId === accountId) resetAutoLock();
+    return getDeviceProtectionPolicy(userId) === (enabled ? 'protected' : 'transparent');
+  } catch { return false; }
+}
+
+// Auth handlers call this synchronously before exposing another account. No
+// pending hydration, unwrap or session export may resurrect the previous key.
+export function configureAccountContext(userId: string | null): void {
+  const next = userId || null;
+  if (accountContextConfigured && accountId === next) return;
+  const previous = accountId;
+  lifecycleGeneration += 1;
+  clearRawSessionKey(previous);
+  accountId = next;
+  accountContextConfigured = true;
+  masterKey = null;
+  cachedRecord = null;
+  vaultMetadataUnavailable = false;
+  hydration = null;
+  clearAutoLock();
+  for (const listener of listeners) listener(false);
 }
 
 // Prove that a recovery record opens THIS running device's content key without
@@ -451,6 +649,7 @@ export async function unlock(passphrase: string): Promise<boolean> {
 // local wrapper cannot silently overwrite newer recovery settings. The random
 // challenge stays in memory; neither raw keys nor the passphrase leave here.
 export async function verifyRecoveryPassphrase(passphrase: string, recordJson?: unknown): Promise<boolean> {
+  const token = getLifecycleToken();
   const currentKey = masterKey;
   const record = recordJson === undefined ? loadRecord() : parseVaultRecord(recordJson);
   if (!currentKey || !record) return false;
@@ -461,62 +660,89 @@ export async function verifyRecoveryPassphrase(passphrase: string, recordJson?: 
     const challenge = crypto.getRandomValues(new Uint8Array(32));
     const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, currentKey, challenge);
     const plaintext = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, recoveredKey, ciphertext));
-    return masterKey === currentKey && plaintext.length === challenge.length
+    return isLifecycleCurrent(token) && masterKey === currentKey && plaintext.length === challenge.length
       && plaintext.every((byte, index) => byte === challenge[index]);
   } catch {
     return false;
   }
 }
 
+// Test an emergency credential without resetting a passphrase, changing a
+// wrapper, or replacing the running content key.
+export async function verifyRecoveryCode(code: string, recordJson?: unknown): Promise<boolean> {
+  const token = getLifecycleToken();
+  const currentKey = masterKey;
+  const record = recordJson === undefined ? loadRecord() : parseVaultRecord(recordJson);
+  if (!currentKey || !record) return false;
+  const normalized = normalizeRecoveryCode(code, record.v);
+  if (!normalized) return false;
+  try {
+    const wrappingKey = await deriveWrappingKey(normalized, fromB64(record.recoverySalt));
+    const recoveredKey = await unwrapMasterKey(record.recoveryWrapped, wrappingKey);
+    const iv = crypto.getRandomValues(new Uint8Array(IV_BYTES));
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, currentKey, challenge);
+    const plaintext = new Uint8Array(await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, recoveredKey, ciphertext));
+    return isLifecycleCurrent(token) && masterKey === currentKey && plaintext.length === challenge.length
+      && plaintext.every((byte, index) => byte === challenge[index]);
+  } catch { return false; }
+}
+
 // Recover access with the recovery code and set a new passphrase (re-wrapping
 // the same master key, so existing ciphertext stays readable).
-export async function resetPassphrase(recoveryCode: string, newPassphrase: string): Promise<boolean> {
+export async function resetPassphrase(recoveryCode: string, newPassphrase: string, options: CandidateKeyOptions = {}): Promise<boolean> {
+  const token = options.token ?? getLifecycleToken();
   await refreshPersistedRecord();
   const record = loadRecord();
-  if (!record) return false;
+  if (!record || !isLifecycleCurrent(token)) return false;
   const normalized = normalizeRecoveryCode(recoveryCode, record.v ?? 1);
   if (!normalized) return false;
   let mk: CryptoKey;
   try {
     const recoveryKey = await deriveWrappingKey(normalized, fromB64(record.recoverySalt));
     mk = await unwrapMasterKey(record.recoveryWrapped, recoveryKey);
+    if (options.verifyCandidate && !await options.verifyCandidate(mk)) return false;
   } catch {
     return false;
   }
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(newPassphrase, passSalt);
-  await saveRecord({
+  const passWrapped = await wrapMasterKey(mk, passKey);
+  if (!isLifecycleCurrent(token) || cachedRecord !== record) return false;
+  if (!await saveRecord({
     ...record,
     passSalt: toB64(passSalt),
-    passWrapped: await wrapMasterKey(mk, passKey),
+    passWrapped,
     ...recordMetadata(record),
-  });
-  setMasterKey(mk);
-  return true;
+  }, token)) return false;
+  return await installCandidateMasterKey(mk, { token });
 }
 
 // Change the passphrase while unlocked (or by supplying the current one).
-export async function changePassphrase(currentPassphrase: string, newPassphrase: string): Promise<boolean> {
+export async function changePassphrase(currentPassphrase: string, newPassphrase: string, options: CandidateKeyOptions = {}): Promise<boolean> {
+  const token = options.token ?? getLifecycleToken();
   await refreshPersistedRecord();
   const record = loadRecord();
-  if (!record) return false;
+  if (!record || !isLifecycleCurrent(token)) return false;
   let mk: CryptoKey;
   try {
     const currentKey = await deriveWrappingKey(currentPassphrase, fromB64(record.passSalt));
     mk = await unwrapMasterKey(record.passWrapped, currentKey);
+    if (options.verifyCandidate && !await options.verifyCandidate(mk)) return false;
   } catch {
     return false;
   }
   const passSalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const passKey = await deriveWrappingKey(newPassphrase, passSalt);
-  await saveRecord({
+  const passWrapped = await wrapMasterKey(mk, passKey);
+  if (!isLifecycleCurrent(token) || cachedRecord !== record) return false;
+  if (!await saveRecord({
     ...record,
     passSalt: toB64(passSalt),
-    passWrapped: await wrapMasterKey(mk, passKey),
+    passWrapped,
     ...recordMetadata(record),
-  });
-  setMasterKey(mk);
-  return true;
+  }, token)) return false;
+  return await installCandidateMasterKey(mk, { token });
 }
 
 // Rotate the recovery code while the vault is unlocked. Generates a fresh code,
@@ -525,24 +751,29 @@ export async function changePassphrase(currentPassphrase: string, newPassphrase:
 // or null if the vault is locked (no master key in memory to re-wrap). The
 // passphrase wrapping is untouched.
 export async function rotateRecoveryCode(): Promise<string | null> {
+  const token = getLifecycleToken();
   await refreshPersistedRecord();
   const record = loadRecord();
-  if (!record || !masterKey) return null;
+  const mk = masterKey;
+  if (!record || !mk || !isLifecycleCurrent(token)) return null;
   const recoveryCode = generateRecoveryCode();
   const recoverySalt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const recoveryKey = await deriveWrappingKey(normalizeRecoveryCode(recoveryCode)!, recoverySalt);
-  await saveRecord({
+  const recoveryWrapped = await wrapMasterKey(mk, recoveryKey);
+  if (!isLifecycleCurrent(token) || cachedRecord !== record || masterKey !== mk) return null;
+  if (!await saveRecord({
     ...record,
     v: VAULT_VERSION,
     recoverySalt: toB64(recoverySalt),
-    recoveryWrapped: await wrapMasterKey(masterKey, recoveryKey),
+    recoveryWrapped,
     ...recordMetadata(record),
-  });
+  }, token)) return null;
   return recoveryCode;
 }
 
 // Drop the master key from memory. Encrypted data on disk stays encrypted.
 export function lock(): void {
+  lifecycleGeneration += 1;
   setMasterKey(null);
 }
 
@@ -557,19 +788,23 @@ export function onLockChange(listener: (unlocked: boolean) => void): () => void 
 // caller wiping local data (account deletion / sign-out) can be sure the
 // IndexedDB entry is gone before continuing.
 export async function destroyVault(): Promise<void> {
+  const target = recordSlot();
+  const unboundCompatibility = !accountContextConfigured;
   cachedRecord = null;
-  setMasterKey(null);
-  legacyStorage()?.removeItem(STORAGE_KEY); // clear any un-migrated legacy copy
-  if (hasIDB()) {
+  vaultMetadataUnavailable = false;
+  lock();
+  const token = getLifecycleToken();
+  if (unboundCompatibility) legacyStorage()?.removeItem(STORAGE_KEY);
+  if (target && hasIDB()) {
     try {
-      await idbDel(STORAGE_KEY);
+      await idbDel(target);
     } catch {
       /* best-effort */
     }
   }
   // A later account in the same SPA session must hydrate its own newly pulled
   // record instead of reusing this already-resolved hydration promise.
-  hydration = null;
+  if (isLifecycleCurrent(token)) hydration = null;
 }
 
 // ─── Cross-device sync of the WRAPPED record (ciphertext only) ────────────────
@@ -598,10 +833,60 @@ export function inspectVaultRecord(record: unknown): { json: string; revision: n
 
 // Seed this device's vault from a synced record. By default it won't clobber an
 // existing local record (which may be newer); pass overwrite to force.
-export async function importVaultRecord(recordJson: string | object, overwrite = false): Promise<boolean> {
+export async function importVaultRecord(recordJson: string | object, overwrite = false, token = getLifecycleToken()): Promise<boolean> {
+  if (!isLifecycleCurrent(token)) return false;
   if (!overwrite && cachedRecord) return false;
   const record = parseVaultRecord(recordJson);
   if (!record) return false;
-  await saveRecord(record);
-  return true;
+  return await saveRecord(record, token);
+}
+
+// Unscoped pre-migration material may be the only surviving backup. Expose it
+// explicitly for a verified migration; never publish it for a different login.
+export async function readUnassignedLegacyVaultRecord({ strict = false }: { strict?: boolean } = {}): Promise<string | null> {
+  try {
+    const persisted = hasIDB() ? await idbGet(STORAGE_KEY) : null;
+    const legacy = legacyStorage()?.getItem(STORAGE_KEY);
+    const parsed = parseVaultRecord(persisted) ?? parseVaultRecord(legacy);
+    if (strict && !parsed && (persisted != null || legacy != null)) throw new Error('Invalid local recovery metadata');
+    return parsed ? JSON.stringify(parsed) : null;
+  } catch (error) { if (strict) throw error; return null; }
+}
+
+export async function recoverUnassignedLegacyVault(secret: string, options: CandidateKeyOptions & {
+  method?: 'passphrase' | 'code' | 'recoveryCode';
+  verifyCandidate: (key: CryptoKey) => Promise<boolean> | boolean;
+}): Promise<boolean> {
+  const token = options?.token ?? getLifecycleToken();
+  if (!accountId || !isLifecycleCurrent(token) || cachedRecord || typeof options?.verifyCandidate !== 'function') return false;
+  const record = parseVaultRecord(await readUnassignedLegacyVaultRecord());
+  if (!record || !isLifecycleCurrent(token)) return false;
+  try {
+    const usingCode = options.method === 'code' || options.method === 'recoveryCode';
+    const normalized = usingCode ? normalizeRecoveryCode(secret, record.v) : secret;
+    if (!normalized) return false;
+    const wrappingKey = await deriveWrappingKey(normalized, fromB64(usingCode ? record.recoverySalt : record.passSalt));
+    const candidate = await unwrapMasterKey(usingCode ? record.recoveryWrapped : record.passWrapped, wrappingKey);
+    if (!await options.verifyCandidate(candidate) || !isLifecycleCurrent(token) || cachedRecord) return false;
+    if (!await saveRecord(record, token)) return false;
+    return await installCandidateMasterKey(candidate, { token });
+  } catch { return false; }
+}
+
+// IndexedDB is shared but sessionStorage and running keys are tab-local. The
+// durable localStorage policy/lock event closes those raw paths in other tabs
+// before a pending export or unwrap can commit. The enabling tab keeps its
+// already-authorized running key until its own selected lock boundary.
+export function handleAccountSecurityStorageChange(key: string | null): void {
+  if (!accountId) return;
+  if (key === protectionSlot(accountId)) {
+    if (getDeviceProtectionPolicy() !== 'transparent') lock();
+    else resetAutoLock();
+  } else if (key === `pfm_ak_locked_${accountId}`) {
+    try { if (legacyStorage()?.getItem(key)) lock(); } catch { lock(); }
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('storage', (event: StorageEvent) => handleAccountSecurityStorageChange(event.key));
 }

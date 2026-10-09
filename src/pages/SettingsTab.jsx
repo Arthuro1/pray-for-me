@@ -18,6 +18,7 @@ const WordingReviewModal = lazy(() => import('../components/WordingReviewModal')
 import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
 import VaultModal from '../components/VaultModal';
+import PrayerProtection from '../components/PrayerProtection';
 import OriginMigrationGuide from '../components/OriginMigrationGuide';
 import { isOriginalAppOrigin } from '../lib/originMigration';
 import { originMigrationCopy } from '../lib/originMigrationCopy';
@@ -506,6 +507,7 @@ export default function SettingsTab() {
               </PrivacyRow>
 
               {/* Prayer Vault */}
+              <PrayerProtection key={user?.id} userId={user?.id} lang={lang} onPrivacy={() => setShowPrivacy(true)} />
               <PrivacyRow id="privacy-vault" icon={vaultInitialized && !vaultUnlocked ? Lock : Shield} label={t(lang, 'privacyRowVault')} open={!!openPrivacyRows.vault} onToggle={() => togglePrivacyRow('vault')}>
                 <p className="settings-group__sub">
                   {t(lang, 'vaultManageSub')}

@@ -7,12 +7,32 @@ import { clearTranslationCache } from './translationStore';
 import { clearAllAiResultCaches } from '../lib/aiResultCache';
 import { resetAiRequestState } from '../lib/aiCore';
 
+async function candidateOptions(userId, mandatory = false) {
+  if (!userId || (!mandatory && globalThis.navigator?.onLine === false)) return {};
+  const token = vault.getLifecycleToken();
+  const { verifyHistoricalAccountKey } = await import('../lib/prayerProtection');
+  return { token, verifyCandidate: async (key) => {
+    try { return await verifyHistoricalAccountKey(userId, key, token); }
+    catch (error) {
+      // An existing account-scoped legacy wrapper is sufficient for a verified
+      // empty account. Unassigned legacy records always require historical proof.
+      return !mandatory && error?.message === 'no_history';
+    }
+  } };
+}
+
 // Reactive wrapper around the keyManager singleton so React can render the
 // vault's locked/unlocked state. The keyManager owns the crypto + the in-memory
 // master key; this store only mirrors its booleans and forwards actions.
 const useVaultStore = create((set) => ({
   initialized: vault.isVaultInitialized(),
   unlocked: vault.isUnlocked(),
+  recoverySync: 'unknown',
+  syncRecovery: async () => {
+    const synced = await pushVaultRecord();
+    set({ recoverySync: synced ? 'synced' : 'pending' });
+    return synced;
+  },
 
   // Re-sync from the keyManager (e.g. after a destroy from elsewhere).
   refresh: () => set({ initialized: vault.isVaultInitialized(), unlocked: vault.isUnlocked() }),
@@ -25,6 +45,7 @@ const useVaultStore = create((set) => ({
     const code = await vault.createVault(passphrase);
     set({ initialized: true, unlocked: true });
     const synced = await pushVaultRecord(); // sync the wrapped key to other devices
+    set({ recoverySync: synced ? 'synced' : 'pending' });
     track(EVENTS.VAULT_ENABLED); // content-free: only that the vault was enabled
     return { code, synced };
   },
@@ -38,17 +59,22 @@ const useVaultStore = create((set) => ({
     if (!code) return { code: null, synced: false };
     set({ initialized: true, unlocked: true });
     const synced = await pushVaultRecord(); // so other devices can unlock
+    set({ recoverySync: synced ? 'synced' : 'pending' });
     track(EVENTS.VAULT_ENABLED); // content-free: only that recovery was enabled
     return { code, synced };
   },
 
   unlock: async (passphrase, userId) => {
-    const ok = await vault.unlock(passphrase);
+    const unassigned = userId && !vault.isVaultInitialized();
+    const options = await candidateOptions(userId, !!unassigned);
+    const ok = unassigned
+      ? await vault.recoverUnassignedLegacyVault(passphrase, { ...options, method: 'passphrase' })
+      : await vault.unlock(passphrase, options);
     if (ok) {
       // Clear an explicit-lock marker and restore this account's convenient
       // device copy before reporting the action complete.
       if (userId) await rememberAccountKey(userId, { clearLock: true });
-      set({ unlocked: true });
+      set({ initialized: vault.isVaultInitialized(), unlocked: true });
     }
     return ok;
   },
@@ -63,21 +89,26 @@ const useVaultStore = create((set) => ({
   },
 
   resetPassphrase: async (recoveryCode, newPassphrase, userId) => {
-    const ok = await vault.resetPassphrase(recoveryCode, newPassphrase);
+    const unassigned = userId && !vault.isVaultInitialized();
+    const options = await candidateOptions(userId, !!unassigned);
+    if (unassigned && !await vault.recoverUnassignedLegacyVault(recoveryCode, { ...options, method: 'code' })) return false;
+    const ok = await vault.resetPassphrase(recoveryCode, newPassphrase, await candidateOptions(userId));
     if (ok) {
       if (userId) await rememberAccountKey(userId, { clearLock: true });
       set({ unlocked: true });
-      await pushVaultRecord(); // finish persistence before the success UI closes
+      const synced = await pushVaultRecord();
+      set({ recoverySync: synced ? 'synced' : 'pending' });
     }
     return ok;
   },
 
   changePassphrase: async (current, next, userId) => {
-    const ok = await vault.changePassphrase(current, next);
+    const ok = await vault.changePassphrase(current, next, await candidateOptions(userId));
     if (ok) {
       if (userId) await rememberAccountKey(userId);
       set({ unlocked: true });
-      await pushVaultRecord(); // do not strand the new wrapper on tab close
+      const synced = await pushVaultRecord();
+      set({ recoverySync: synced ? 'synced' : 'pending' });
     }
     return ok;
   },
@@ -89,7 +120,9 @@ const useVaultStore = create((set) => ({
   rotateRecoveryCode: async () => {
     const code = await vault.rotateRecoveryCode();
     if (!code) return { code: null, synced: false };
-    return { code, synced: await pushVaultRecord() };
+    const synced = await pushVaultRecord();
+    set({ recoverySync: synced ? 'synced' : 'pending' });
+    return { code, synced };
   },
 
   // Destroys the vault record — encrypted data becomes unrecoverable. Callers
@@ -116,8 +149,15 @@ vault.onLockChange((unlocked) => {
 // locks it after inactivity. resetAutoLock is a no-op while locked.
 if (typeof window !== 'undefined') {
   const onActivity = () => vault.resetAutoLock();
-  for (const evt of ['pointerdown', 'keydown', 'visibilitychange']) {
+  for (const evt of ['pointerdown', 'keydown', 'focus']) {
     window.addEventListener(evt, onActivity, { passive: true });
+  }
+  // Hiding a tab is not activity. On return, keyManager checks the previous
+  // wall-clock deadline before a focus/visibility event may extend it.
+  if (typeof document !== 'undefined') {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') onActivity();
+    }, { passive: true });
   }
 }
 

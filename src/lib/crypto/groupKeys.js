@@ -12,12 +12,14 @@
 import { supabase } from '../supabase';
 import { toB64, fromB64 } from './e2ee';
 import { ensureUserPublicKey, getMyPrivateKey, getMemberPublicKey } from './userKeys';
+import { getMasterKey, isUnlocked, getLifecycleToken, isLifecycleCurrent, isAccountContextConfigured, onLockChange } from './keyManager';
 
 const AES_PARAMS = { name: 'AES-GCM', length: 256 };
 
 // In-memory, session-scoped caches, keyed by group + version so old-version
 // content stays decryptable after a rotation.
 const keyCache = new Map();      // `${groupId}:${version}` -> CryptoKey (unwrapped GCK)
+let cacheGeneration = 0;
 // Fan-out bookkeeping per `${groupId}:${version}`:
 //   { complete: bool, lastAt: number }
 // `complete` is true only once EVERY current member has been wrapped in; while a
@@ -35,6 +37,7 @@ const REDISTRIBUTE_THROTTLE_MS = 5_000;
 const DISTRIBUTION_REFRESH_MS = 5 * 60_000;
 
 export function clearGroupKeyCache() {
+  cacheGeneration += 1;
   keyCache.clear();
   distributed.clear();
 }
@@ -47,6 +50,22 @@ export function clearGroupKeyDistributionCache() {
 }
 
 const tagOf = (groupId, version) => `${groupId}:${version}`;
+
+function contextCurrent(context) {
+  return !!context && context.generation === cacheGeneration && isLifecycleCurrent(context.token)
+    && isUnlocked() && (!isAccountContextConfigured() || context.token.accountId === context.userId)
+    && getMasterKey() === context.masterKey;
+}
+
+async function operationContext() {
+  const token = getLifecycleToken();
+  if (!isUnlocked() || (isAccountContextConfigured() && !token.accountId)) return null;
+  const context = { token, generation: cacheGeneration, masterKey: getMasterKey(),
+    userId: isAccountContextConfigured() ? token.accountId : await currentUserId() };
+  return context.userId && contextCurrent(context) ? context : null;
+}
+
+onLockChange((unlocked) => { if (!unlocked) clearGroupKeyCache(); });
 
 async function currentUserId() {
   try {
@@ -126,7 +145,8 @@ async function myIdentity(myUserId) {
 // has been wrapped in, then mark the (group, version) `complete` so steady-state
 // calls skip the work. This is what lets a late joiner become able to read
 // existing content as soon as any key-holder next touches the group.
-async function distribute(groupId, version, gckRaw, { force = false } = {}) {
+async function distribute(groupId, version, gckRaw, context, { force = false } = {}) {
+  if (!contextCurrent(context)) return;
   const tag = tagOf(groupId, version);
   const state = distributed.get(tag);
   const age = state ? Date.now() - state.lastAt : Infinity;
@@ -134,22 +154,27 @@ async function distribute(groupId, version, gckRaw, { force = false } = {}) {
   if (!force && state && !state.complete && age < REDISTRIBUTE_THROTTLE_MS) return;
 
   const { data: members } = await supabase.from('group_members').select('user_id').eq('group_id', groupId);
+  if (!contextCurrent(context)) return;
   const list = members || [];
   const rows = [];
   let allPublished = list.length > 0;
   for (const m of list) {
     const pub = await getMemberPublicKey(m.user_id);
+    if (!contextCurrent(context)) return;
     if (!pub) { allPublished = false; continue; } // member hasn't published an identity key yet — retry later
+    const encrypted_group_key = await wrapGck(gckRaw, pub, { groupId, version, userId: m.user_id });
+    if (!contextCurrent(context)) return;
     rows.push({
       group_id: groupId,
       key_version: version,
       user_id: m.user_id,
-      encrypted_group_key: await wrapGck(gckRaw, pub, { groupId, version, userId: m.user_id }),
+      encrypted_group_key,
     });
   }
   if (rows.length) {
     const results = await Promise.all(rows.map(async (row) => {
       try {
+        if (!contextCurrent(context)) return { error: { message: 'stale_account' } };
         return await supabase.rpc('distribute_group_key', {
           p_group_id: row.group_id,
           p_key_version: row.key_version,
@@ -165,7 +190,7 @@ async function distribute(groupId, version, gckRaw, { force = false } = {}) {
     // the next group touch retries instead of stranding a member for the session.
     allPublished = allPublished && results.every((result) => !result?.error);
   }
-  distributed.set(tag, { complete: allPublished, lastAt: Date.now() });
+  if (contextCurrent(context)) distributed.set(tag, { complete: allPublished, lastAt: Date.now() });
 }
 
 // Claim `version` for the group and become its key holder: generate a GCK, record
@@ -174,13 +199,16 @@ async function distribute(groupId, version, gckRaw, { force = false } = {}) {
 // to everyone else. If the version row already exists (another member won the
 // race) or the write is refused, abandon and return null — we'll obtain our
 // wrapped copy from the winner later via getGroupKey.
-async function createKeyVersion(groupId, version, myUserId) {
+async function createKeyVersion(groupId, version, context) {
+  if (!contextCurrent(context)) return null;
+  const myUserId = context.userId;
   const myPub = await getMemberPublicKey(myUserId);
-  if (!myPub) return null; // my own identity key isn't published yet
+  if (!myPub || !contextCurrent(context)) return null; // my own identity key isn't published yet
   const gck = await crypto.subtle.generateKey(AES_PARAMS, true, ['encrypt', 'decrypt']);
 
   const gckRaw = new Uint8Array(await crypto.subtle.exportKey('raw', gck));
   const encryptedCreatorKey = await wrapGck(gckRaw, myPub, { groupId, version, userId: myUserId });
+  if (!contextCurrent(context)) return null;
   const idempotencyKey = crypto.randomUUID();
   const args = {
     p_group_id: groupId,
@@ -191,14 +219,16 @@ async function createKeyVersion(groupId, version, myUserId) {
   let committed = null;
   // A lost response after commit is safe to retry with the same idempotency key.
   for (let attempt = 0; attempt < 2 && committed == null; attempt++) {
+    if (!contextCurrent(context)) return null;
     const { data, error } = await supabase.rpc('create_group_key_version', args);
+    if (!contextCurrent(context)) return null;
     if (!error && Number(data) === version) committed = version;
   }
   if (committed == null) return null;
 
-  keyCache.set(tagOf(groupId, version), gck);
-  await distribute(groupId, version, gckRaw, { force: true });
-  return { key: gck, version };
+  keyCache.set(tagOf(groupId, version), { key: gck, context });
+  await distribute(groupId, version, gckRaw, context, { force: true });
+  return contextCurrent(context) ? { key: gck, version } : null;
 }
 
 // Fetch + unwrap my wrapped GCK for a specific version. Cached per session. Null
@@ -206,12 +236,14 @@ async function createKeyVersion(groupId, version, myUserId) {
 // me) or my identity key isn't ready.
 export async function getGroupKey(groupId, version) {
   if (!groupId || !version) return null;
+  const context = await operationContext();
+  if (!context) return null;
   const cached = keyCache.get(tagOf(groupId, version));
-  if (cached) return { key: cached, version };
+  if (cached && cached.context.userId === context.userId && contextCurrent(cached.context)) return { key: cached.key, version };
 
-  const myUserId = await currentUserId();
+  const myUserId = context.userId;
   const privateKey = await myIdentity(myUserId);
-  if (!privateKey) return null;
+  if (!privateKey || !contextCurrent(context)) return null;
 
   try {
     const { data } = await supabase
@@ -221,13 +253,14 @@ export async function getGroupKey(groupId, version) {
       .eq('key_version', version)
       .eq('user_id', myUserId)
       .maybeSingle();
-    if (!data?.encrypted_group_key) return null;
+    if (!data?.encrypted_group_key || !contextCurrent(context)) return null;
     const key = await unwrapGck(data.encrypted_group_key, privateKey, {
       groupId,
       version,
       userId: myUserId,
     });
-    keyCache.set(tagOf(groupId, version), key);
+    if (!contextCurrent(context)) return null;
+    keyCache.set(tagOf(groupId, version), { key, context });
     return { key, version };
   } catch {
     return null;
@@ -240,21 +273,23 @@ export async function getGroupKey(groupId, version) {
 // not ready, or a newcomer awaiting a wrapped key from a co-member).
 export async function ensureGroupKey(groupId) {
   if (!groupId) return null;
-  const myUserId = await currentUserId();
-  if (!(await myIdentity(myUserId))) return null;
+  const context = await operationContext();
+  if (!context || !(await myIdentity(context.userId)) || !contextCurrent(context)) return null;
 
   const version = await currentVersion(groupId);
-  if (version === 0) return createKeyVersion(groupId, 1, myUserId);
+  if (!contextCurrent(context)) return null;
+  if (version === 0) return createKeyVersion(groupId, 1, context);
 
   const gk = await getGroupKey(groupId, version);
+  if (!contextCurrent(context)) return null;
   if (gk) {
     // I hold the current key → make sure co-members (incl. newcomers) have it too.
     try {
       const gckRaw = new Uint8Array(await crypto.subtle.exportKey('raw', gk.key));
-      await distribute(groupId, version, gckRaw);
+      await distribute(groupId, version, gckRaw, context);
     } catch { /* best-effort distribution */ }
   }
-  return gk;
+  return contextCurrent(context) ? gk : null;
 }
 
 // Build a resolver bound to one group: (version) => Promise<{ key, version } | null>.
@@ -271,24 +306,27 @@ export function groupKeyResolver(groupId) {
 // stays readable via the prior versions' wrapped keys. Returns the new
 // { key, version } or null if we couldn't rotate (identity not ready / race).
 export async function rotateGroupKey(groupId) {
-  const myUserId = await currentUserId();
-  if (!(await myIdentity(myUserId))) return null;
+  const context = await operationContext();
+  if (!groupId || !context || !(await myIdentity(context.userId)) || !contextCurrent(context)) return null;
   const next = (await currentVersion(groupId)) + 1;
-  return createKeyVersion(groupId, next, myUserId);
+  return contextCurrent(context) ? createKeyVersion(groupId, next, context) : null;
 }
 
 // Atomically remove a member, revoke their wrapped keys (all versions), and
 // rotate so new content uses a key they never held. The protected RPC performs
 // membership removal + creator-envelope creation in one transaction.
 export async function revokeMemberAndRotate(groupId, userId) {
-  const myUserId = await currentUserId();
-  if (!(await myIdentity(myUserId))) return null;
+  const context = await operationContext();
+  if (!groupId || !userId || !context || !(await myIdentity(context.userId)) || !contextCurrent(context)) return null;
+  const myUserId = context.userId;
   const version = (await currentVersion(groupId)) + 1;
+  if (!contextCurrent(context)) return null;
   const myPub = await getMemberPublicKey(myUserId);
-  if (!myPub) return null;
+  if (!myPub || !contextCurrent(context)) return null;
   const gck = await crypto.subtle.generateKey(AES_PARAMS, true, ['encrypt', 'decrypt']);
   const gckRaw = new Uint8Array(await crypto.subtle.exportKey('raw', gck));
   const encryptedCreatorKey = await wrapGck(gckRaw, myPub, { groupId, version, userId: myUserId });
+  if (!contextCurrent(context)) return null;
   const idempotencyKey = crypto.randomUUID();
   const args = {
     p_group_id: groupId,
@@ -299,11 +337,13 @@ export async function revokeMemberAndRotate(groupId, userId) {
   };
   let committed = null;
   for (let attempt = 0; attempt < 2 && committed == null; attempt++) {
+    if (!contextCurrent(context)) return null;
     const { data, error } = await supabase.rpc('remove_group_member_and_rotate', args);
+    if (!contextCurrent(context)) return null;
     if (!error && Number(data) === version) committed = version;
   }
   if (committed == null) return null;
-  keyCache.set(tagOf(groupId, version), gck);
-  await distribute(groupId, version, gckRaw, { force: true });
-  return { key: gck, version };
+  keyCache.set(tagOf(groupId, version), { key: gck, context });
+  await distribute(groupId, version, gckRaw, context, { force: true });
+  return contextCurrent(context) ? { key: gck, version } : null;
 }

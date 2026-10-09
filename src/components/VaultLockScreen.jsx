@@ -2,6 +2,10 @@ import useAuthStore from '../store/authStore';
 import VaultModal from './VaultModal';
 import AccountGate from './AccountGate';
 import { t } from '../i18n';
+import { PrayerRecoveryChoices } from './PrayerProtection';
+import useVaultStore from '../store/vaultStore';
+import { readUnassignedLegacyVaultRecord } from '../lib/crypto/keyManager';
+import { useEffect, useState } from 'react';
 
 // The full-screen gate shown when a Prayer Vault exists but is locked. It is a
 // hard gate (encrypted content must never render without the key), but instead
@@ -11,6 +15,13 @@ import { t } from '../i18n';
 // passphrase never silently walls someone out of their whole account.
 export default function VaultLockScreen({ lang = 'fr' }) {
   const { user, signOut } = useAuthStore();
+  const initialized = useVaultStore((state) => state.initialized);
+  const [legacyCandidate, setLegacyCandidate] = useState(false);
+  useEffect(() => {
+    let current = true;
+    readUnassignedLegacyVaultRecord().then((record) => { if (current) setLegacyCandidate(!!record); }).catch(() => { if (current) setLegacyCandidate(false); });
+    return () => { current = false; };
+  }, [user?.id]);
 
   return (
     <AccountGate
@@ -24,7 +35,8 @@ export default function VaultLockScreen({ lang = 'fr' }) {
       {/* Reuses the unlock + "Forgot your passphrase?" recovery flow, rendered
           inline (no overlay) inside this friendlier screen. Unlocking flips the
           vault store's `unlocked`, which drops this gate in App. */}
-      <VaultModal lang={lang} initialMode="unlock" userId={user?.id} dismissable={false} embedded />
+      <PrayerRecoveryChoices key={user?.id} lang={lang} userId={user?.id} />
+      {(initialized || legacyCandidate) && <VaultModal lang={lang} initialMode="unlock" userId={user?.id} dismissable={false} embedded />}
     </AccountGate>
   );
 }

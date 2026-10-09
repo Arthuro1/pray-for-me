@@ -9,10 +9,12 @@ const vault = vi.hoisted(() => ({
   resetPassphrase: vi.fn(),
   changePassphrase: vi.fn(),
   rotateRecoveryCode: vi.fn(),
+  syncRecovery: vi.fn(),
+  recoverySync: 'synced',
   unlocked: false,
 }));
 
-vi.mock('../store/vaultStore', () => ({ default: () => vault }));
+vi.mock('../store/vaultStore', () => ({ default: Object.assign(() => vault, { getState: () => vault }) }));
 vi.mock('../store/toastStore', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 import VaultModal from './VaultModal';
@@ -25,6 +27,7 @@ afterEach(cleanup);
 beforeEach(() => {
   vi.clearAllMocks();
   vault.unlocked = false;
+  vault.recoverySync = 'synced';
   vault.unlock.mockResolvedValue(true);
   vault.changePassphrase.mockResolvedValue(true);
 });
@@ -63,5 +66,19 @@ describe('VaultModal actions', () => {
 
     expect(await screen.findByText(t(lang, 'errorGeneric'))).toBeTruthy();
     await waitFor(() => expect(button.disabled).toBe(false));
+  });
+
+  it('keeps unsynced credential changes open until a verified retry succeeds', async () => {
+    vault.recoverySync = 'pending';
+    vault.syncRecovery.mockResolvedValue(true);
+    const onClose = vi.fn();
+    render(<VaultModal lang={lang} initialMode="change" userId="user-1" onClose={onClose} />);
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'vaultCurrentPassphrase')), { target: { value: 'current passphrase' } });
+    fireEvent.change(screen.getByPlaceholderText(t(lang, 'vaultNewPassphrase')), { target: { value: 'new passphrase' } });
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'vaultChangeSave') }));
+    expect(await screen.findByText(t(lang, 'protectionSyncPending'))).toBeTruthy();
+    expect(onClose).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'retry') }));
+    await waitFor(() => expect(onClose).toHaveBeenCalledOnce());
   });
 });

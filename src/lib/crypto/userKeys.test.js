@@ -1,17 +1,28 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+const fixture = vi.hoisted(() => ({ rows: new Map(), readError: null, beforeInsert: null, writes: vi.fn() }));
 
 // In-memory stand-in for the user_crypto_keys table + the public_keys view.
 // Rows persist across tests, so each test uses a distinct user id to stay
 // isolated (a row wrapped under one test's account key can't be unwrapped under
 // another's).
 vi.mock('../supabase', () => {
-  const rows = new Map();
+  const rows = fixture.rows;
   const make = (table) => {
     const q = { _table: table, _id: null };
     q.select = () => q;
     q.eq = (_col, val) => { q._id = val; return q; };
-    q.upsert = (row) => { rows.set(row.user_id, { ...row }); return Promise.resolve({ data: null, error: null }); };
+    q.upsert = (row) => { fixture.writes('upsert'); rows.set(row.user_id, { ...row }); return Promise.resolve({ data: null, error: null }); };
+    q.insert = (row) => {
+      fixture.writes('insert');
+      fixture.beforeInsert?.();
+      fixture.beforeInsert = null;
+      if (rows.has(row.user_id)) return Promise.resolve({ data: null, error: { code: '23505' } });
+      rows.set(row.user_id, { ...row });
+      return Promise.resolve({ data: null, error: null });
+    };
     q.maybeSingle = () => {
+      if (fixture.readError) return Promise.resolve({ data: null, error: fixture.readError });
       const r = rows.get(q._id) || null;
       if (!r) return Promise.resolve({ data: null, error: null });
       if (q._table === 'public_keys') return Promise.resolve({ data: { public_key_jwk: r.public_key_jwk }, error: null });
@@ -33,14 +44,19 @@ function installStorage() {
 }
 
 import { ensureUserPublicKey, getMyPrivateKey, getMemberPublicKey, clearUserKeyCache } from './userKeys';
-import { autoInitAccountKey, destroyVault } from './keyManager';
+import { autoInitAccountKey, destroyVault, lock, exportRawMasterKey, importRawMasterKey } from './keyManager';
 
 beforeEach(async () => {
   installStorage();
+  fixture.readError = null;
+  fixture.beforeInsert = null;
+  fixture.writes.mockClear();
   await destroyVault();
   clearUserKeyCache();
   await autoInitAccountKey(); // an account key must be ready to wrap the private key
 });
+
+afterEach(() => vi.restoreAllMocks());
 
 describe('user identity keypair', () => {
   it('generates, publishes and caches an RSA identity keypair', async () => {
@@ -90,5 +106,68 @@ describe('user identity keypair', () => {
     await destroyVault(); // drop the account key
     clearUserKeyCache();
     expect(await ensureUserPublicKey('u-locked')).toBe(null);
+  });
+
+  it('drops the cached private key synchronously on lock', async () => {
+    await ensureUserPublicKey('u-lock-cached');
+    expect(getMyPrivateKey()).toBeTruthy();
+    lock();
+    expect(getMyPrivateKey()).toBeNull();
+  });
+
+  it('never publishes over an identity when its lookup fails', async () => {
+    const jwk = await ensureUserPublicKey('u-read-error');
+    const original = fixture.rows.get('u-read-error');
+    clearUserKeyCache();
+    fixture.writes.mockClear();
+    fixture.readError = { code: 'network_error' };
+    expect(await ensureUserPublicKey('u-read-error')).toBeNull();
+    expect(fixture.writes).not.toHaveBeenCalled();
+    expect(fixture.rows.get('u-read-error')).toBe(original);
+    fixture.readError = null;
+    expect(await ensureUserPublicKey('u-read-error')).toEqual(jwk);
+  });
+
+  it('adopts the identity published by a competing first-use writer without overwriting it', async () => {
+    const winner = await ensureUserPublicKey('u-insert-race');
+    const winnerRow = fixture.rows.get('u-insert-race');
+    clearUserKeyCache();
+    fixture.rows.delete('u-insert-race');
+    fixture.beforeInsert = () => fixture.rows.set('u-insert-race', winnerRow);
+    fixture.writes.mockClear();
+    expect(await ensureUserPublicKey('u-insert-race')).toEqual(winner);
+    expect(fixture.rows.get('u-insert-race')).toBe(winnerRow);
+    expect(fixture.writes.mock.calls).toEqual([['insert']]);
+    expect(getMyPrivateKey()).toBeTruthy();
+  });
+
+  it('preserves incomplete identity metadata rather than replacing it', async () => {
+    const partial = { public_key_jwk: { kty: 'RSA' }, encrypted_private_key: null };
+    fixture.rows.set('u-partial', partial);
+    expect(await ensureUserPublicKey('u-partial')).toBeNull();
+    expect(fixture.rows.get('u-partial')).toBe(partial);
+    expect(fixture.writes).not.toHaveBeenCalled();
+  });
+
+  it('rejects an identity unwrap that completes after lock and subsequent unlock', async () => {
+    const originalJwk = await ensureUserPublicKey('u-stale-unwrap');
+    const ack = await exportRawMasterKey();
+    clearUserKeyCache();
+    let release;
+    const gate = new Promise((resolve) => { release = resolve; });
+    const originalImport = crypto.subtle.importKey.bind(crypto.subtle);
+    const importSpy = vi.spyOn(crypto.subtle, 'importKey').mockImplementation(async (...args) => {
+      if (args[0] === 'pkcs8') await gate;
+      return originalImport(...args);
+    });
+    const pending = ensureUserPublicKey('u-stale-unwrap');
+    await vi.waitFor(() => expect(importSpy.mock.calls.some(([format]) => format === 'pkcs8')).toBe(true));
+    lock();
+    await importRawMasterKey(ack);
+    release();
+    expect(await pending).toBeNull();
+    expect(getMyPrivateKey()).toBeNull();
+    importSpy.mockRestore();
+    expect(await ensureUserPublicKey('u-stale-unwrap')).toEqual(originalJwk);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { createVault, lock } from './keyManager.ts';
+import { createVault, lock, destroyVault } from './keyManager.ts';
 import { getMasterKey } from './keyManager.ts';
 import { encryptJsonLegacy } from './e2ee.ts';
 import {
@@ -38,9 +38,9 @@ const samplePrayer = () => ({
   prayer_updates: [{ id: 'u', text: 'plaintext update' }],
 });
 
-beforeEach(() => {
+beforeEach(async () => {
   installStorage();
-  lock();
+  await destroyVault();
 });
 
 describe('canEncrypt', () => {

@@ -5,17 +5,33 @@
 On first authenticated use the browser generates a 256-bit AES-GCM account
 content key. Personal content is encrypted before Supabase writes. The raw key
 is kept per user in IndexedDB (`pfm_ak_<user-id>`) and, while unlocked, in
-tab-scoped `sessionStorage` (`pfm_vault_session`). This gives transparent
+tab-scoped `sessionStorage` (`pfm_vault_session:<user-id>`). This gives transparent
 same-device access. It is not a defense against XSS, malicious deployed
 JavaScript, device compromise, or another person using an unlocked profile.
 
-Sign-out clears user-scoped offline snapshots, mutation queues, in-memory data,
+Sign-out clears user-scoped offline snapshots and in-memory data,
 and legacy Workbox caches. The account key remains for the next sign-in on that
 device. Account deletion removes it. Idle auto-lock is disabled by default;
 explicit lock clears memory/session state, removes that account's raw device
 copy, and records a user-scoped lock marker. Refresh and sign-in therefore stay
 locked until the passphrase or recovery flow succeeds; a successful unlock
 stores the same account key on the device again.
+
+Wrapped recovery backups and pending account-owned mutations survive ordinary
+sign-out. Account deletion removes that account's records. Older global
+`pfm_vault` backups remain unassigned until the candidate key is verified against
+the signed-in account's historical ciphertext; they are never uploaded as the
+next person's backup. An old global raw session key is never attributed to a
+new login. Missing or uncertain encryption metadata blocks key provisioning.
+
+Pending mutations carry their account ownership. Queue persistence applies
+atomic IndexedDB deltas so a stale tab cannot erase another tab's unsent
+ciphertext. Terminal encrypted failures are retained for repair rather than
+dropped. Journal hydration reconciles owned pending ciphertext before making
+cached content editable, including offline startup after a lock. This preserves
+pending sensitive fields when a later edit rewrites their encrypted bundle.
+The existing sync model still uses last-write-wins records across independent
+writers; this feature does not add a conflict history or globally ordered edits.
 
 ## Optional passphrase recovery
 
@@ -37,11 +53,86 @@ timestamp. Startup reconciliation imports the newer local/server revision (or
 re-pushes a newer local revision after an interrupted upload), and credential
 operations re-read IndexedDB so a change made in another browser tab is not
 silently replaced by a stale in-memory wrapper. Malformed wrappers fail closed.
+Equal-revision divergent records remain unresolved; client clocks do not choose
+a winner or discard either recovery wrapper.
+
+Scoped legacy backups use IndexedDB `pfm_vault:<user-id>`. Publication uses the
+authenticated `compare_and_swap_vault_record` RPC and an independent server
+readback. Conflicts or failed readbacks remain sync-pending; the UI does not report
+a cross-device backup as ready. Older clients can still write `vault_keys` using
+their legacy API, so their concurrency behavior remains a rollout consideration.
 
 Cross-device recovery requires the synced wrapped record plus either the
 passphrase or recovery code. If no recovery record exists, only a device that
 still has the account key can add recovery. Losing every device key and both
 recovery credentials makes ciphertext unrecoverable.
+
+## Passkey and emergency recovery (enrollment disabled by default)
+
+`VITE_PRAYER_PROTECTION_ENABLED` and server-side
+`RECOVERY_ENROLLMENT_ENABLED` must both be explicitly enabled to enroll. The
+production RP ID is `qetoret.com`, with exactly `https://qetoret.com` accepted as
+the browser origin. Enrollment on preview, www or old Praystead origins is not
+supported. Existing enrolled readers, assertions and offline device unlock remain
+available after the flags are disabled.
+
+Each new method wraps the original account key independently in
+`account_key_recovery_methods`; it never replaces legacy recovery. The version 1
+method format is separate from legacy vault versions. It uses AES-256-GCM with a
+fresh 12-byte nonce and AAD containing the format, account, method and KDF context.
+Passkey PRF output remains client-side, feeding HKDF-SHA-256 with a random 32-byte
+salt and domain separation. Emergency-only recovery uses a fresh 128-bit code,
+PBKDF2-SHA-256 with 600,000 iterations and a 32-byte salt. No encryption
+passphrase is needed for these new methods. Code, raw key and PRF output are never
+sent to the server.
+
+The server uses pinned SimpleWebAuthn verification for registration/assertions,
+including exact origin, RP ID, signature, user verification, ownership, expiry
+and single-use challenge enforcement. Server-only credentials, challenges and
+durable account rate limits have no anonymous or authenticated-client grants.
+Owner RLS permits reading available encrypted method records. Every mutation uses
+an expected revision, and zero-counter authenticators use credential revision CAS.
+
+Registration alone leaves a method pending. The client must read its wrapper
+back, unwrap via a new assertion or re-entered saved code, and prove the original
+key before activation. Restoration verifies the existing encrypted identity
+private key and a historical encrypted prayer where present before installing a
+candidate. This is key-match evidence, not an audit of every stored item. A
+server without the secret cannot certify decryption: verification metadata is
+explicitly client-reported. The UI distinguishes a recorded recovery check from
+"Tested on this device" in the current unlocked session and asks for a real
+second-device recovery test; it never infers that from provider backup bits.
+
+## Protected device access
+
+Enabling protected access requires a currently usable passkey PRF wrapper plus an
+independently re-tested emergency code. Same-device passkey verification is not
+accepted as independent recovery. Account-scoped Web Locks serialize protection
+enable/disable/revocation across tabs; transitions fail closed when unavailable.
+
+The encrypted local wrapper and random authenticated witness are written/read
+back before the durable `pfm_device_protected_<user-id>` policy is enabled. Raw
+IndexedDB/session copies are then drained, deleted and checked. The local
+`cleanupVerified` state is set only after readback; interruption reports
+verification required. Protected policy blocks raw hydration, remembering,
+session mirroring and automatic replacement-key provisioning even with all
+enrollment flags off. Refresh/close locks; protected accounts also lock after
+five minutes of inactivity, with wall-clock expiry checked on resume. An unlock
+does not recreate raw copies. Other open current-version tabs receive storage
+policy/lock events. Older clients that ignore this policy remain a rollout risk.
+
+New-device recovery requires network access. A previously enrolled device can
+unlock offline using PRF and its authenticated local witness, provided its app and
+authenticated account session remain available. Online unlock checks server
+revocation; a disconnected device cannot learn revocation immediately. The OS
+chooses fingerprint, face, device PIN or another verification method; Qetoret
+receives no biometric templates and makes no hardware-backing guarantee.
+
+Lost credential providers, storage eviction and copied offline wrappers remain
+risks. Revocation prevents future service use but cannot erase keys or wrappers
+already copied. Losing every device and every independent recovery secret remains
+irreversible. Custom QR transfer is deferred until a separately reviewed pairing
+protocol is available. See [RECOVERY_RELEASE.md](RECOVERY_RELEASE.md).
 
 ## Ciphertext versions
 

@@ -9,18 +9,25 @@ const db = { vault_keys: new Map() };
 let currentUser = 'user-1';
 let selectError = null;
 let upsertError = null;
+let afterCommit = null;
+let conflict = false;
+let beforeRpc = null;
 
 function resetDb() {
   db.vault_keys.clear();
   currentUser = 'user-1';
   selectError = null;
   upsertError = null;
+  afterCommit = null;
+  conflict = false;
+  beforeRpc = null;
 }
 
 function makeQuery(table) {
   const q = { _id: null };
   q.select = () => q;
   q.eq = (_col, value) => { q._id = value; return q; };
+  q.setHeader = () => q;
   q.maybeSingle = () => Promise.resolve(selectError
     ? { data: null, error: selectError }
     : { data: db[table].get(q._id) || null, error: null });
@@ -34,8 +41,23 @@ function makeQuery(table) {
 
 vi.mock('./supabase', () => ({
   supabase: {
-    auth: { getUser: async () => ({ data: { user: currentUser ? { id: currentUser } : null } }) },
+    auth: {
+      getSession: async () => ({ data: { session: currentUser ? { user: { id: currentUser }, access_token: currentUser } : null } }),
+      getUser: async (token) => ({ data: { user: token ? { id: token } : null } }),
+    },
     from: (table) => makeQuery(table),
+    rpc: (_name, { expected_record, new_record }) => ({
+      setHeader: async (_header, authorization) => {
+        beforeRpc?.();
+        const owner = authorization.slice(7);
+        if (upsertError) return { data: false, error: upsertError };
+        const current = db.vault_keys.get(owner)?.record ?? null;
+        if (conflict || JSON.stringify(current) !== JSON.stringify(expected_record)) return { data: false, error: null };
+        db.vault_keys.set(owner, { user_id: owner, record: structuredClone(new_record), updated_at: new Date().toISOString() });
+        afterCommit?.();
+        return { data: true, error: null };
+      },
+    }),
   },
 }));
 
@@ -85,9 +107,54 @@ describe('pushVaultRecord', () => {
     expect(db.vault_keys.get('user-1').record).toEqual(JSON.parse(exportVaultRecord()));
   });
 
+  it('binds the CAS request to the captured account if the shared session changes before dispatch', async () => {
+    await createVault('account-a-passphrase');
+    const expected = JSON.parse(exportVaultRecord());
+    beforeRpc = () => { currentUser = 'user-2'; };
+
+    expect(await pushVaultRecord()).toBe(true);
+    expect(db.vault_keys.get('user-1').record).toEqual(expected);
+    expect(db.vault_keys.has('user-2')).toBe(false);
+  });
+
   it('does nothing when this device has no record', async () => {
     expect(await pushVaultRecord()).toBe(false);
     expect(db.vault_keys.size).toBe(0);
+  });
+
+  it('does not report a backup when read-back fails after an acknowledged write', async () => {
+    await createVault('passphrase-1');
+    afterCommit = () => { selectError = { code: 'offline' }; };
+    expect(await pushVaultRecord()).toBe(false);
+    expect(db.vault_keys.size).toBe(1);
+  });
+
+  it('does not overwrite a record changed concurrently', async () => {
+    await createVault('passphrase-1');
+    conflict = true;
+    expect(await pushVaultRecord()).toBe(false);
+    expect(db.vault_keys.size).toBe(0);
+  });
+
+  it('keeps an equal-generation conflicting remote credential intact', async () => {
+    await createVault('local-passphrase');
+    const local = exportVaultRecord();
+    await destroyVault();
+    await createVault('another-device-passphrase');
+    const remote = JSON.parse(exportVaultRecord());
+    db.vault_keys.set('user-1', { record: remote });
+    await importVaultRecord(local, true);
+    expect(await pushVaultRecord()).toBe(false);
+    expect(db.vault_keys.get('user-1').record).toEqual(remote);
+    expect(await pullVaultRecord()).toBe(VAULT_SYNC.UNKNOWN);
+    expect(exportVaultRecord()).toBe(local);
+    expect(db.vault_keys.get('user-1').record).toEqual(remote);
+  });
+
+  it('does not accept an unrelated read-back wrapper as this backup', async () => {
+    await createVault('passphrase-1');
+    afterCommit = () => { db.vault_keys.get('user-1').record.passWrapped.data = 'changed'; };
+    expect(await pushVaultRecord()).toBe(false);
   });
 });
 

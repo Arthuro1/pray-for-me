@@ -1,17 +1,16 @@
 // @vitest-environment jsdom
 //
 // The recovery nudge must actually keep nudging: "Later" is a time-boxed snooze
-// that re-surfaces, and only the explicit ✕ opts out for good. This guards the
+// that re-surfaces, including closing it with the dismiss control. This guards the
 // fix for the "prayers disappeared" report, where a one-storage-eviction key
 // loss is permanent — a fire-once-then-silent banner left users unprotected.
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 
 // Keep the store deterministic and the crypto/VaultModal import chain out.
-vi.mock('../../store/vaultStore', () => ({
-  default: () => ({ initialized: false, unlocked: true }),
-}));
-vi.mock('../VaultModal', () => ({ default: () => null }));
+const vaultState = vi.hoisted(() => ({ initialized: false, unlocked: true }));
+vi.mock('../../store/vaultStore', () => ({ default: () => vaultState }));
+vi.mock('../VaultModal', () => ({ default: () => <div role="dialog">one-time code</div> }));
 
 import RecoveryPromptBanner from '../RecoveryPromptBanner';
 import { t } from '../../i18n';
@@ -19,7 +18,7 @@ import { t } from '../../i18n';
 const lang = 'fr';
 const DISMISS_KEY = 'pfm_recovery_prompt_dismissed';
 
-beforeEach(() => localStorage.clear());
+beforeEach(() => { localStorage.clear(); vaultState.initialized = false; });
 afterEach(cleanup);
 
 describe('RecoveryPromptBanner', () => {
@@ -40,11 +39,11 @@ describe('RecoveryPromptBanner', () => {
     expect(screen.queryByText(t(lang, 'backupKeyTitle'))).toBeNull();
   });
 
-  it('the ✕ opts out for good', () => {
+  it('closing the nudge snoozes rather than permanently suppressing recovery', () => {
     render(<RecoveryPromptBanner lang={lang} />);
-    fireEvent.click(screen.getByLabelText(t(lang, 'backupKeyDismissForever')));
+    fireEvent.click(screen.getByLabelText(t(lang, 'backupKeyDismiss')));
 
-    expect(localStorage.getItem(DISMISS_KEY)).toBe('never');
+    expect(Number(localStorage.getItem(DISMISS_KEY))).toBeGreaterThan(Date.now());
     expect(screen.queryByText(t(lang, 'backupKeyTitle'))).toBeNull();
   });
 
@@ -54,12 +53,28 @@ describe('RecoveryPromptBanner', () => {
     expect(screen.getByText(t(lang, 'backupKeyTitle'))).toBeTruthy();
   });
 
-  it('stays hidden for an unelapsed snooze, a "never", and the legacy "1" flag', () => {
-    for (const value of [String(Date.now() + 60_000), 'never', '1']) {
+  it('stays hidden for an unelapsed snooze', () => {
+    for (const value of [String(Date.now() + 60_000)]) {
       localStorage.setItem(DISMISS_KEY, value);
       render(<RecoveryPromptBanner lang={lang} />);
       expect(screen.queryByText(t(lang, 'backupKeyTitle'))).toBeNull();
       cleanup();
     }
+  });
+
+  it('does not inherit another account dismissal or a permanent legacy dismissal', () => {
+    localStorage.setItem(DISMISS_KEY, 'never');
+    localStorage.setItem(`${DISMISS_KEY}:account-a`, String(Date.now() + 60_000));
+    render(<RecoveryPromptBanner lang={lang} userId="account-b" />);
+    expect(screen.getByText(t(lang, 'backupKeyTitle'))).toBeTruthy();
+  });
+
+  it('keeps the one-time-code dialog mounted when setup changes eligibility', () => {
+    const { rerender } = render(<RecoveryPromptBanner lang={lang} userId="account-a" />);
+    fireEvent.click(screen.getByText(t(lang, 'backupKeyCta')));
+    vaultState.initialized = true;
+    rerender(<RecoveryPromptBanner lang={lang} userId="account-a" />);
+    expect(screen.getByRole('dialog').textContent).toContain('one-time code');
+    expect(screen.queryByText(t(lang, 'backupKeyTitle'))).toBeNull();
   });
 });

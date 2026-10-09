@@ -59,7 +59,7 @@ const ErrorNote = ({ children }) => <p role="alert" className="q-notice q-notice
 // like VaultLockScreen can place it inside its own friendlier layout while still
 // reusing the unlock + recovery-code logic here.
 export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false, userId }) {
-  const { createVault, setUpRecovery, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode, unlocked } = useVaultStore();
+  const { createVault, setUpRecovery, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode, syncRecovery, unlocked } = useVaultStore();
   const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change | rotate
   const [pass, setPass] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -131,6 +131,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
       const ok = await resetPassphrase(code, pass, userId);
       if (!ok) return setError(t(lang, 'vaultWrongCode'));
       setPass(''); setCode('');
+      if (useVaultStore.getState().recoverySync === 'pending') { setMode('sync'); return; }
       done('vaultResetDoneToast');
     } catch {
       setError(t(lang, 'errorGeneric'));
@@ -147,6 +148,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
       const ok = await changePassphrase(confirm, pass, userId); // confirm holds the current passphrase
       if (!ok) return setError(t(lang, 'vaultWrongPass'));
       setPass(''); setConfirm('');
+      if (useVaultStore.getState().recoverySync === 'pending') { setMode('sync'); return; }
       done('vaultChangedToast');
     } catch {
       setError(t(lang, 'errorGeneric'));
@@ -182,7 +184,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
 
   const titleKey = {
     setup: 'vaultSetupTitle', recovery: 'vaultRecoveryTitle', unlock: 'vaultUnlockTitle',
-    reset: 'vaultResetTitle', change: 'vaultChangeTitle', rotate: 'vaultRotateTitle',
+    reset: 'vaultResetTitle', change: 'vaultChangeTitle', rotate: 'vaultRotateTitle', sync: 'protectionRecovery',
   }[mode];
 
   const card = (
@@ -225,10 +227,24 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
                 {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
               </button>
             </div>
-            {!codeSynced && <ErrorNote>{t(lang, 'vaultCodeNotSynced')}</ErrorNote>}
+            {!codeSynced && <>
+              <ErrorNote>{t(lang, 'vaultCodeNotSynced')}</ErrorNote>
+              <SubmitButton busy={busy} onClick={async () => {
+                setBusy(true);
+                try { setCodeSynced(await syncRecovery()); } finally { setBusy(false); }
+              }}>{t(lang, 'retry')}</SubmitButton>
+            </>}
             <SubmitButton onClick={() => done()}>{t(lang, 'vaultRecoverySaved')}</SubmitButton>
           </div>
         )}
+
+        {mode === 'sync' && <div className="vault-card__step">
+          <ErrorNote>{t(lang, 'protectionSyncPending')}</ErrorNote>
+          <SubmitButton busy={busy} onClick={async () => {
+            setBusy(true);
+            try { if (await syncRecovery()) done(); } finally { setBusy(false); }
+          }}>{t(lang, 'retry')}</SubmitButton>
+        </div>}
 
         {/* ─── Unlock ─── */}
         {mode === 'unlock' && (

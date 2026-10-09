@@ -9,7 +9,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', 'dev-dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', 'dev-dist', '.eslintrc.cjs', 'reports/**/docx-preview.min.js'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   settings: { react: { version: '18.2' } },
   plugins: ['react-refresh'],

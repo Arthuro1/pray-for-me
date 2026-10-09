@@ -11,7 +11,8 @@ import { readFileSync } from 'node:fs';
 // The device key state, flipped per test. The whole point is that changing it
 // must not change what any of these surfaces say.
 const vault = vi.hoisted(() => ({ unlocked: false }));
-vi.mock('../../lib/crypto/keyManager', () => ({
+vi.mock('../../lib/crypto/keyManager', async (importOriginal) => ({
+  ...(await importOriginal()),
   isUnlocked: () => vault.unlocked,
   getMasterKey: () => null,
 }));
