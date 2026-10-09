@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "setup:recovery-test": "node scripts/prepare-recovery-test.mjs",
+    "dev:recovery-test": "vite --mode recovery-test",
     "ai:dev": "node scripts/start-ai-gateway.mjs",
     "build": "vite build",
     "build:verses": "node scripts/build-verse-bundle.mjs",

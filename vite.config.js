@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { handleAiRequest, MAX_REQUEST_BYTES } from './api/ai.js'
 import { handleRecoveryRequest, MAX_RECOVERY_REQUEST_BYTES } from './api/recovery.js'
+import { loadRecoveryTestEnvironment } from './server/recoveryTestEnvironment.js'
 
 // Single source of truth for the app version: package.json. Injected as the
 // compile-time constant __APP_VERSION__ so the UI (Settings/About) and any docs
@@ -99,11 +100,14 @@ function recoveryApiPlugin(env) {
   }
 }
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, command }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
   // server-only Anthropic credentials. This is read in the Node server only and is
   // never exposed to `import.meta.env` / the browser bundle.
-  const env = loadEnv(mode, process.cwd(), '')
+  const recoveryTest = mode === 'recovery-test'
+    ? loadRecoveryTestEnvironment(process.cwd(), { command, production: process.env.NODE_ENV === 'production' })
+    : null
+  const env = recoveryTest?.env || loadEnv(mode, process.cwd(), '')
   const yvpKey = env.YVP_APP_KEY || ''
 
   // Optional direct-gateway mode: when the browser talks to a dedicated gateway
@@ -117,11 +121,17 @@ export default defineConfig(({ mode }) => {
   const connectSrc = [
     "connect-src 'self' ws: wss: https://*.supabase.co wss://*.supabase.co https://va.vercel-scripts.com https://*.vercel-insights.com",
     aiGatewayOrigin,
+    recoveryTest?.apiOrigin,
   ].filter(Boolean).join(' ')
 
   return {
+  // Disable ambient VITE_ injection for isolated tests. Only validated public
+  // test values below reach the browser; root/process credentials stay out.
+  ...(recoveryTest ? { envDir: recoveryTest.envDir, envPrefix: [] } : {}),
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
+    ...(recoveryTest ? Object.fromEntries(Object.entries(recoveryTest.publicEnv)
+      .map(([key, value]) => [`import.meta.env.${key}`, JSON.stringify(value)])) : {}),
   },
   plugins: [
     react(),
@@ -186,7 +196,8 @@ export default defineConfig(({ mode }) => {
     watch: { ignored: ['**/android-twa/**', '**/docs/play-store/assets/**', '**/reports/**'] },
     // Honour the PORT the dev-preview tooling assigns (it falls back to a free
     // port when 5173 is taken by another running dev server).
-    port: Number(process.env.PORT) || 5173,
+    port: recoveryTest ? 5173 : Number(process.env.PORT) || 5173,
+    ...(recoveryTest ? { host: 'localhost', strictPort: true } : {}),
     // Dev-mode CSP parity with vercel.json so violations (e.g. a stray external
     // script/connection) surface locally instead of only in production. Vite's
     // dev server needs 'unsafe-inline'/'unsafe-eval' for HMR and a ws: socket;
@@ -196,8 +207,8 @@ export default defineConfig(({ mode }) => {
         "default-src 'self'",
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com",
         "style-src 'self' 'unsafe-inline'",
-        "img-src 'self' data: blob: https:",
-        "media-src 'self' blob:",
+        ["img-src 'self' data: blob: https:", recoveryTest?.apiOrigin].filter(Boolean).join(' '),
+        ["media-src 'self' blob:", recoveryTest?.apiOrigin].filter(Boolean).join(' '),
         "font-src 'self' data:",
         connectSrc,
         "worker-src 'self' blob:",

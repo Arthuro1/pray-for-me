@@ -32,11 +32,13 @@ export default function VaultLockScreen({ lang = 'fr' }) {
       exitLabel={t(lang, 'signOut')}
       onExit={signOut}
     >
-      {/* Reuses the unlock + "Forgot your passphrase?" recovery flow, rendered
-          inline (no overlay) inside this friendlier screen. Unlocking flips the
-          vault store's `unlocked`, which drops this gate in App. */}
       <PrayerRecoveryChoices key={user?.id} lang={lang} userId={user?.id} />
-      {(initialized || legacyCandidate) && <VaultModal lang={lang} initialMode="unlock" userId={user?.id} dismissable={false} embedded />}
+      {(initialized || legacyCandidate) && (
+        <details className="prayer-protection__details">
+          <summary>{t(lang, 'protectionLegacyAccess')}</summary>
+          <VaultModal lang={lang} initialMode="unlock" userId={user?.id} dismissable={false} embedded />
+        </details>
+      )}
     </AccountGate>
   );
 }

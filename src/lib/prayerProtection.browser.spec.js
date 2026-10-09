@@ -19,6 +19,7 @@ vi.mock('./crypto/groupKeys', () => ({ clearGroupKeyDistributionCache: vi.fn() }
 // a local test origin cannot act as qetoret.com or create its real credentials.
 vi.mock('./prayerProtectionCapabilities', () => ({
   isRecoveryOriginAllowed: () => true, prayerProtectionEnrollmentEnabled: () => state.enabled,
+  getRecoveryRpId: () => 'qetoret.com',
   getPrayerProtectionCapabilities: async () => ({ secureContext: true, originAllowed: true, webAuthn: true, platformAuthenticator: 'available', prf: 'unverified', canEnroll: state.enabled }),
 }));
 

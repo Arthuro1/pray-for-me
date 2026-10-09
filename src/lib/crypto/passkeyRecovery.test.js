@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { decryptJson, encryptJson, encryptJsonLegacy } from './e2ee';
 import { extractPrfOutput, fromBase64Url, serializePublicKeyCredential, toBase64Url,
   validateRecoveryWrapper, verifySameAccountKey, wrapAccountKeyWithPrf, unwrapAccountKeyWithPrf,
@@ -10,8 +10,27 @@ const credentialId = toBase64Url(new Uint8Array([1, 2, 3, 4]));
 const prfSalt = toBase64Url(crypto.getRandomValues(new Uint8Array(32)));
 const context = { entityType: 'personal-prayer', ownerOrGroupId: accountId, recordId: 'historical-prayer', field: 'sensitive-payload' };
 const key = () => crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+afterEach(() => { vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 describe('independent account-key recovery wrappers', () => {
+  it('binds local test wrappers to localhost without accepting them in production', async () => {
+    vi.stubEnv('DEV', true);
+    vi.stubEnv('MODE', 'recovery-test');
+    vi.stubEnv('VITE_RECOVERY_ALLOW_LOCALHOST', 'true');
+    vi.stubEnv('VITE_RECOVERY_LOCAL_ORIGIN', 'http://localhost:5173');
+    vi.stubGlobal('location', { origin: 'http://localhost:5173' });
+    const original = await key();
+    const history = await encryptJson(original, { title: 'Original localhost test prayer' }, context);
+    const prf = crypto.getRandomValues(new Uint8Array(32));
+    const wrapper = await wrapAccountKeyWithPrf(original, prf, { accountId, methodId, credentialId, prfSalt });
+    expect(wrapper.rpId).toBe('localhost');
+    const candidate = await unwrapAccountKeyWithPrf(wrapper, prf);
+    expect(await decryptJson(candidate, history, context)).toEqual({ title: 'Original localhost test prayer' });
+    expect(() => validateRecoveryWrapper({ ...wrapper, rpId: 'qetoret.com' })).toThrow('invalid_wrapper');
+    vi.stubEnv('DEV', false);
+    expect(() => validateRecoveryWrapper(wrapper)).toThrow('invalid_wrapper');
+  });
+
   it('restores original modern and legacy ciphertext from only the persisted wrapper and reproducible PRF', async () => {
     const original = await key();
     const oldPrayer = await encryptJson(original, { title: 'Historical synthetic prayer' }, context);

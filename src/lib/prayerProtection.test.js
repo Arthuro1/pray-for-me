@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const harness = vi.hoisted(() => ({ store: new Map(), methods: new Map(), requests: [], prayer: null, identity: null, legacy: null,
-  currentUser: null, failCommit: false, failDelete: false, onGet: null, onSet: null, onDelete: null, prfUnavailable: false }));
+  currentUser: null, failCommit: false, failDelete: false, onGet: null, onSet: null, onDelete: null, prfUnavailable: false, rpId: 'qetoret.com' }));
 
 vi.mock('idb-keyval', () => ({
   get: async (key) => harness.store.get(key), set: async (key, value) => { await harness.onSet?.(key); harness.store.set(key, structuredClone(value)); },
@@ -61,9 +61,9 @@ async function fakeApi(_url, request) {
   switch (body.action) {
     case 'list': result = { methods: [...harness.methods.values()].filter((item) => item.userId === harness.currentUser && item.status !== 'revoked') }; break;
     case 'read': result = { method }; break;
-    case 'register-options': result = { methodId: passkeyId, challengeId: crypto.randomUUID(), options: { challenge, rp: { id: 'qetoret.com', name: 'Qetoret' }, user: { id: challenge, name: userId }, pubKeyCredParams: [{ type: 'public-key', alg: -7 }] } }; break;
+    case 'register-options': result = { methodId: passkeyId, challengeId: crypto.randomUUID(), options: { challenge, rp: { id: harness.rpId, name: 'Qetoret' }, user: { id: challenge, name: userId }, pubKeyCredParams: [{ type: 'public-key', alg: -7 }] } }; break;
     case 'register-verify': result = { credentialId }; break;
-    case 'assert-options': result = { challengeId: crypto.randomUUID(), options: { challenge, rpId: 'qetoret.com', allowCredentials: [{ id: credentialId, type: 'public-key' }] }, method }; break;
+    case 'assert-options': result = { challengeId: crypto.randomUUID(), options: { challenge, rpId: harness.rpId, allowCredentials: [{ id: credentialId, type: 'public-key' }] }, method }; break;
     case 'assert-verify': result = { proofId: crypto.randomUUID(), method }; break;
     case 'commit': {
       if (harness.failCommit) return { ok: false, status: 503, json: async () => ({ error: 'recovery_unavailable' }) };
@@ -88,6 +88,7 @@ beforeEach(async () => {
   configureAccountContext(null);
   harness.store.clear(); harness.methods.clear(); harness.requests = []; harness.prayer = null; harness.identity = null; harness.legacy = null;
   harness.currentUser = userId; harness.failCommit = false; harness.failDelete = false; harness.onGet = null; harness.onSet = null; harness.onDelete = null; harness.prfUnavailable = false;
+  harness.rpId = 'qetoret.com';
   clearPrayerProtectionProofs();
   vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'true');
   vi.stubGlobal('localStorage', installStorage()); vi.stubGlobal('sessionStorage', installStorage());
@@ -107,6 +108,25 @@ beforeEach(async () => {
 afterEach(() => { configureAccountContext(null); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
 describe('verified recovery orchestration', () => {
+  it('enrolls and recovers the original history with an explicitly enabled localhost RP', async () => {
+    vi.stubEnv('DEV', true);
+    vi.stubEnv('MODE', 'recovery-test');
+    vi.stubEnv('VITE_RECOVERY_ALLOW_LOCALHOST', 'true');
+    vi.stubEnv('VITE_RECOVERY_LOCAL_ORIGIN', 'http://localhost:5173');
+    vi.stubGlobal('location', { origin: 'http://localhost:5173' });
+    harness.rpId = 'localhost';
+    expect(await enrollPasskeyRecovery(userId)).toMatchObject({ ok: true, method: { wrapper: { rpId: 'localhost' } } });
+    lock();
+    expect(await recoverWithPasskey(userId, passkeyId)).toMatchObject({ ok: true });
+    expect(isUnlocked()).toBe(true);
+  });
+
+  it('rejects a server RP mismatch before showing a registration prompt', async () => {
+    harness.rpId = 'attacker.example';
+    expect(await enrollPasskeyRecovery(userId)).toMatchObject({ ok: false, status: 'unsupported' });
+    expect(navigator.credentials.create).not.toHaveBeenCalled();
+  });
+
   it('only activates passkey recovery after persisted-wrapper readback and an independent assertion', async () => {
     const original = getMasterKey();
     const result = await enrollPasskeyRecovery(userId);

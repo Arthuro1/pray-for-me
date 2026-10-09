@@ -1,12 +1,13 @@
 // Recovery wrappers are independent of the legacy vault record. Neither a
 // WebAuthn assertion nor account sign-in is itself proof of encryption access.
 // Every recovered candidate must be verified before the key manager installs it.
+import { getRecoveryRpId } from '../prayerProtectionCapabilities';
+
 export const RECOVERY_WRAPPER_VERSION = 1;
 export const EMERGENCY_ITERATIONS = 600_000;
 const DOMAIN = 'qetoret/account-recovery';
 const encoder = new TextEncoder();
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const RP_ID = 'qetoret.com';
 
 export function toBase64Url(value) {
   const bytes = value instanceof Uint8Array ? value : new Uint8Array(value);
@@ -37,7 +38,7 @@ export function validateRecoveryWrapper(record, { accountId, methodId, credentia
   const common = ['version', 'kind', 'accountId', 'methodId', 'iv', 'ciphertext'];
   if (record.kind === 'passkey-prf') {
     common.push('credentialId', 'rpId', 'prfSalt', 'hkdfSalt');
-    if (record.rpId !== RP_ID || (credentialId && record.credentialId !== credentialId)) throw new Error('invalid_wrapper');
+    if (record.rpId !== getRecoveryRpId() || (credentialId && record.credentialId !== credentialId)) throw new Error('invalid_wrapper');
     const credential = fromBase64Url(record.credentialId);
     if (!credential.length || credential.length > 1024) throw new Error('invalid_wrapper');
     fromBase64Url(record.prfSalt, 32);
@@ -89,7 +90,7 @@ async function unwrap(record, wrappingKey) {
 }
 
 export async function wrapAccountKeyWithPrf(key, prfOutput, { accountId, methodId, credentialId, prfSalt }) {
-  const record = { version: 1, kind: 'passkey-prf', accountId, methodId, credentialId, rpId: RP_ID,
+  const record = { version: 1, kind: 'passkey-prf', accountId, methodId, credentialId, rpId: getRecoveryRpId(),
     prfSalt, hkdfSalt: toBase64Url(crypto.getRandomValues(new Uint8Array(32))) };
   // Validate metadata before exporting any account key.
   validateRecoveryWrapper({ ...record, iv: toBase64Url(new Uint8Array(12)), ciphertext: toBase64Url(new Uint8Array(48)) });

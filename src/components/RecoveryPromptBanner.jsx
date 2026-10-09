@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { KeyRound } from 'lucide-react';
 import useVaultStore from '../store/vaultStore';
-import VaultModal from './VaultModal';
 import { t } from '../i18n';
 import { useContextualNudgeSlot } from './shared/contextualNudge';
 import ContextualNudgeCard from './shared/ContextualNudgeCard';
 import PrayerProtection from './PrayerProtection';
+import { getProtectionStatus } from '../lib/prayerProtection';
 import { Modal, QuietButton } from './shared/Primitives';
 
 const DISMISS_KEY = 'pfm_recovery_prompt_dismissed';
@@ -26,21 +26,34 @@ function isDismissed(userId) {
   }
 }
 
-// Dismissible nudge shown only in the auto-provisioned state: encryption is on (a
-// key is in memory → `unlocked`) but has NO recovery backup (`!initialized`, so
-// nothing is synced to vault_keys). That's the one-storage-eviction-from-
-// permanent-loss state — setting up recovery wraps the SAME key under a
-// passphrase + code (non-destructive) so it survives a cleared browser or a new
-// device. Both dismissal actions snooze for a week.
+// Nudge accounts without a saved recovery method. Check the new recovery
+// methods as well as the legacy wrapper before declaring that a backup is
+// missing. Both dismissal actions snooze for a week.
 export default function RecoveryPromptBanner({ lang, userId }) {
   const { initialized, unlocked } = useVaultStore();
   const [hidden, setHidden] = useState(() => isDismissed(userId));
   const [showSetup, setShowSetup] = useState(false);
-  const eligible = !initialized && unlocked && !hidden;
+  const [protection, setProtection] = useState(null);
+  const protectionEnabled = import.meta.env.VITE_PRAYER_PROTECTION_ENABLED === 'true';
+  useEffect(() => {
+    let current = true;
+    setProtection(null);
+    setHidden(isDismissed(userId));
+    if (protectionEnabled && userId) {
+      getProtectionStatus(userId).then((result) => {
+        if (current) setProtection({ userId, result });
+      }).catch(() => { /* Unknown health must not be presented as missing recovery. */ });
+    }
+    return () => { current = false; };
+  }, [protectionEnabled, userId]);
+  const health = protection && protection.userId === userId ? protection.result : null;
+  const checked = !protectionEnabled || health?.ok === true;
+  const hasRecovery = health?.methods?.some((method) => method.status === 'active');
+  const eligible = !initialized && unlocked && !hidden && checked && !hasRecovery;
   const { visible, complete } = useContextualNudgeSlot('recovery', eligible, 10);
 
-  // Wrapping changes eligibility before the one-time code screen is shown.
-  // Its modal must outlive nudge visibility until the user finishes that step.
+  // Saving recovery changes eligibility; keep the modal mounted until the
+  // protection flow confirms the user has finished.
   if (!visible && !showSetup) return null;
 
   const remember = (value) => {
@@ -72,12 +85,10 @@ export default function RecoveryPromptBanner({ lang, userId }) {
         />
       </div>}
       {showSetup && (
-        import.meta.env.VITE_PRAYER_PROTECTION_ENABLED === 'true'
-          ? <Modal label={t(lang, 'protectionTitle')} onClose={() => setShowSetup(false)}>
-            <PrayerProtection userId={userId} lang={lang} />
-            <QuietButton onClick={() => setShowSetup(false)}>{t(lang, 'close')}</QuietButton>
-          </Modal>
-          : <VaultModal lang={lang} userId={userId} initialMode="setup" onClose={() => setShowSetup(false)} onUnlocked={() => { complete(); setShowSetup(false); }} />
+        <Modal label={t(lang, 'protectionTitle')} onClose={() => setShowSetup(false)}>
+          <PrayerProtection userId={userId} lang={lang} onReady={() => { complete(); setHidden(true); setShowSetup(false); }} />
+          <QuietButton onClick={() => setShowSetup(false)}>{t(lang, 'close')}</QuietButton>
+        </Modal>
       )}
     </>
   );

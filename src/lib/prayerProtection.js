@@ -6,7 +6,7 @@ import { getMasterKey, isUnlocked, getLifecycleToken, isLifecycleCurrent, instal
   verifyRecoveryCode, inspectVaultRecord, onLockChange } from './crypto/keyManager';
 import { clearTransparentAccountKey, rememberAccountKey, disableProtectedAccountKey } from './crypto/accountKey';
 import { ensureUserPublicKey } from './crypto/userKeys';
-import { getPrayerProtectionCapabilities, prayerProtectionEnrollmentEnabled, isRecoveryOriginAllowed } from './prayerProtectionCapabilities';
+import { getPrayerProtectionCapabilities, prayerProtectionEnrollmentEnabled, isRecoveryOriginAllowed, getRecoveryRpId } from './prayerProtectionCapabilities';
 import { decodeCreationOptions, decodeRequestOptions, extractPrfOutput, serializePublicKeyCredential,
   fromBase64Url, toBase64Url, validateRecoveryWrapper, verifySameAccountKey,
   wrapAccountKeyWithPrf, unwrapAccountKeyWithPrf, wrapAccountKeyWithEmergencyCode, unwrapAccountKeyWithEmergencyCode } from './crypto/passkeyRecovery';
@@ -122,6 +122,7 @@ async function makeAssertion(token, method, purpose) {
   current(token);
   const persisted = challenge.method ? validateMethod(challenge.method, token, { type: 'passkey' }) : method;
   const options = decodeRequestOptions(challenge.options);
+  if (options.rpId !== getRecoveryRpId()) throw new Error('unsupported');
   options.extensions = { prf: { eval: { first: fromBase64Url(persisted.wrapper.prfSalt, 32) } } };
   const credential = await navigator.credentials.get({ publicKey: options });
   current(token);
@@ -242,6 +243,7 @@ export async function enrollPasskeyRecovery(userId, { label } = {}) {
     current(token);
     const registration = await api(token, 'register-options');
     const options = decodeCreationOptions(registration.options);
+    if (options.rp?.id !== getRecoveryRpId()) throw new Error('unsupported');
     options.authenticatorSelection = { ...options.authenticatorSelection, userVerification: 'required' };
     options.extensions = { prf: {} };
     const credential = await navigator.credentials.create({ publicKey: options });
@@ -254,6 +256,7 @@ export async function enrollPasskeyRecovery(userId, { label } = {}) {
     // optional enabled flag. Enrollment uses a fresh server challenge.
     const challenge = await api(token, 'assert-options', { methodId: registration.methodId, purpose: 'enroll' });
     const request = decodeRequestOptions(challenge.options);
+    if (request.rpId !== getRecoveryRpId()) throw new Error('unsupported');
     request.extensions = { prf: { eval: { first: fromBase64Url(prfSalt, 32) } } };
     const assertion = await navigator.credentials.get({ publicKey: request });
     current(token);

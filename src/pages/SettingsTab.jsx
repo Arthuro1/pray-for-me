@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, ClipboardCheck, Download, Flag, Heart, KeyRound, Lock, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Moon, Pencil, RefreshCw, Shield, ShieldCheck, Sun, SunMoon, Sunrise, Trash2, Unlock, WifiOff } from 'lucide-react';
+import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, ClipboardCheck, Download, Flag, Heart, KeyRound, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Moon, Pencil, Shield, ShieldCheck, Sun, SunMoon, Sunrise, Trash2, WifiOff } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -17,19 +17,16 @@ const WordingReportModal = lazy(() => import('../components/WordingReportModal')
 const WordingReviewModal = lazy(() => import('../components/WordingReviewModal'));
 import DonateModal from '../components/DonateModal';
 import PrivacyCenter from '../components/PrivacyCenter';
-import VaultModal from '../components/VaultModal';
 import PrayerProtection from '../components/PrayerProtection';
 import OriginMigrationGuide from '../components/OriginMigrationGuide';
 import { isOriginalAppOrigin } from '../lib/originMigration';
 import { originMigrationCopy } from '../lib/originMigrationCopy';
-import VaultMigrationStatus from '../components/VaultMigrationStatus';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
 import Switch from '../components/shared/Switch';
 import SettingsRow from '../components/shared/SettingsRow';
 import { hasAiConsent, revokeAiConsent } from '../lib/aiConsent';
-import useVaultStore from '../store/vaultStore';
-import { Input, PageHeader, QuietButton, SecondaryButton, SegmentedControl, StatusLabel } from '../components/shared/Primitives';
+import { Input, PageHeader, QuietButton, SecondaryButton, SegmentedControl } from '../components/shared/Primitives';
 import RadioRow from '../components/shared/RadioRow';
 import RiseMark from '../components/shared/RiseMark';
 import VerseAccordion from '../components/VerseAccordion';
@@ -196,13 +193,11 @@ export default function SettingsTab() {
     useShallow((s) => ({ settings: s.settings, updateSettings: s.updateSettings, prayers: s.prayers, categories: s.categories }))
   );
   const { user, signOut, deleteAccount } = useAuthStore();
-  const { initialized: vaultInitialized, unlocked: vaultUnlocked, lock: lockVault } = useVaultStore();
   const [showFeedback, setShowFeedback] = useState(false);
   const [wordingMode, setWordingMode] = useState(null);
   const [showDonate, setShowDonate] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
   const [showMigration, setShowMigration] = useState(false);
-  const [vaultMode, setVaultMode] = useState(null); // 'setup' | 'unlock' | 'change' | null
   const [followUpLastSent, setFollowUpLastSent] = useState(null);
   // The user's own avatar preset. Read through the same relationship-scoped RPC
   // as everyone else's (the caller is always allowed to see their own).
@@ -268,11 +263,6 @@ export default function SettingsTab() {
     });
     return () => cancelAnimationFrame(raf);
   }, []);
-
-  const handleLockVault = async () => {
-    await lockVault(user?.id);
-    toast.success(t(lang, 'vaultLockedToast'));
-  };
 
   const handleToggleNotifications = async () => {
     if (!settings.dailyReminderEnabled) {
@@ -506,36 +496,8 @@ export default function SettingsTab() {
                 )}
               </PrivacyRow>
 
-              {/* Prayer Vault */}
-              <PrayerProtection key={user?.id} userId={user?.id} lang={lang} onPrivacy={() => setShowPrivacy(true)} />
-              <PrivacyRow id="privacy-vault" icon={vaultInitialized && !vaultUnlocked ? Lock : Shield} label={t(lang, 'privacyRowVault')} open={!!openPrivacyRows.vault} onToggle={() => togglePrivacyRow('vault')}>
-                <p className="settings-group__sub">
-                  {t(lang, 'vaultManageSub')}
-                  {vaultInitialized && (
-                    <StatusLabel tone="royal" className="ms-2">{t(lang, vaultUnlocked ? 'vaultStatusUnlocked' : 'vaultStatusLocked')}</StatusLabel>
-                  )}
-                </p>
-
-                {!vaultInitialized && (
-                  <SecondaryButton icon={Shield} iconSize={16} onClick={() => setVaultMode('setup')}>
-                    {t(lang, vaultUnlocked ? 'backupKeyCta' : 'vaultSetup')}
-                  </SecondaryButton>
-                )}
-
-                {vaultInitialized && !vaultUnlocked && (
-                  <SecondaryButton icon={Unlock} iconSize={16} onClick={() => setVaultMode('unlock')}>{t(lang, 'vaultUnlock')}</SecondaryButton>
-                )}
-
-                {vaultInitialized && vaultUnlocked && (
-                  <>
-                    <div className="settings-actions">
-                      <SecondaryButton icon={Lock} iconSize={16} onClick={handleLockVault}>{t(lang, 'vaultLockNow')}</SecondaryButton>
-                      <SecondaryButton icon={KeyRound} iconSize={16} onClick={() => setVaultMode('change')}>{t(lang, 'vaultChangePass')}</SecondaryButton>
-                      <SecondaryButton icon={RefreshCw} iconSize={16} onClick={() => setVaultMode('rotate')}>{t(lang, 'vaultRotateCode')}</SecondaryButton>
-                    </div>
-                    <VaultMigrationStatus lang={lang} />
-                  </>
-                )}
+              <PrivacyRow id="privacy-protection" icon={Shield} label={t(lang, 'protectionTitle')} open={!!openPrivacyRows.protection} onToggle={() => togglePrivacyRow('protection')}>
+                <PrayerProtection key={user?.id} userId={user?.id} lang={lang} showTitle={false} />
               </PrivacyRow>
 
               {/* Notification privacy — what a push may reveal. Native radios; the
@@ -739,9 +701,6 @@ export default function SettingsTab() {
       {showDonate && <DonateModal onClose={() => setShowDonate(false)} />}
       {showPrivacy && <PrivacyCenter lang={lang} onClose={() => setShowPrivacy(false)} />}
       {showMigration && <OriginMigrationGuide lang={lang} onClose={() => setShowMigration(false)} />}
-      {vaultMode && (
-        <VaultModal lang={lang} initialMode={vaultMode} userId={user?.id} onClose={() => setVaultMode(null)} />
-      )}
     </div>
   );
 }

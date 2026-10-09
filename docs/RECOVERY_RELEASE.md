@@ -76,13 +76,18 @@ claimed.
    the approved environment/cohort. The current flags are global; cohort control
    requires a separate deployment or an explicit reviewed rollout mechanism.
 
-The backend has an explicit localhost development option ignored in production;
-the production client remains exact-origin gated. Browser integration uses
-injected test capabilities rather than adding a production origin bypass.
+The isolated `recovery-test` development mode enables exactly
+`http://localhost:5173` / RP ID `localhost` against a separate loopback Supabase
+instance. It requires explicit opt-ins, rejects hosted database URLs and refuses
+production builds. Root environment files and inherited credentials are excluded.
+Production remains exact-origin gated. Setup and its limitations are documented
+in [RECOVERY_LOCAL_TEST.md](RECOVERY_LOCAL_TEST.md). Automated browser integration
+still uses injected test capabilities and simulated authenticator/API responses.
 
 ## Acceptance evidence and outstanding gates
 
-Final local checks on 2026-10-09:
+Recovery implementation checks on 2026-10-09, before the separate local-test
+setup addition:
 
 - `npm run build`, `npm run typecheck`, `npm run lint:strict` and
   `git diff --check` passed.
@@ -112,6 +117,13 @@ or review metadata was modified by this feature:
 
 None of these local results enable enrollment automatically.
 
+The isolated local-test addition was separately checked with 135 passing tests
+across eight capability, cryptography, recovery, UI and backend files, plus the
+recovery browser integration test. Production build, typecheck and strict lint
+also passed. The setup refuses incomplete local credentials and preserves
+existing configuration/migrations on rerun. These checks do not prove a
+physical authenticator or replacement-phone recovery.
+
 Automated browser recovery uses real Chromium WebCrypto/IndexedDB and simulated
 authenticator/API responses. It wipes raw/local key state and restores the same
 encrypted prayer, RSA identity, historical group envelope/content, and attachment.
@@ -123,9 +135,13 @@ The migration and its 39 SQL authorization/lifecycle assertions passed on local
 PostgreSQL 16 in an isolated database, with Supabase auth/role fixtures and a
 minimal assertion adapter because pgTAP is unavailable in that container. A
 second migration application preserved staged ciphertext. All fixtures rolled
-back and the disposable database was removed. This is not a full Supabase stack
-or pgTAP runner pass; run `supabase test db` against the migrated local stack
-before release.
+back and the disposable database was removed. This earlier adapter run was
+subsequently complemented by a real isolated local Supabase stack on PostgreSQL
+17: all 22 migrations applied successfully and the recovery SQL file passed all
+39 pgTAP assertions on 2026-10-09. Other SQL suites and physical-device behavior
+were not covered by that focused run. The running development app returned
+HTTP 200 and loaded in Chrome with no uncaught browser errors; the recovery API
+rejected unauthenticated and unapproved-origin requests.
 
 | Environment | Required physical evidence |
 |---|---|

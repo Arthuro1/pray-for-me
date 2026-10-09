@@ -33,7 +33,30 @@ pending sensitive fields when a later edit rewrites their encrypted bundle.
 The existing sync model still uses last-write-wins records across independent
 writers; this feature does not add a conflict history or globally ordered edits.
 
-## Optional passphrase recovery
+## Prayer protection and recovery
+
+Prayer protection is the single settings destination for encryption access and
+recovery. When passkey enrollment is available, a passkey is the recommended
+first action. The person uses their device's authentication prompt instead of
+creating another encryption password or remembering a recovery code. Existing
+passphrase recovery remains available inside this destination for older accounts;
+it is not a second encryption feature or a required setup step.
+
+An emergency code is an optional additional backup for passkey recovery. It must
+be saved somewhere accessible independently of the original device, such as a
+password manager or a recovery file, rather than memorized. Saving the code does
+not activate it: the client verifies the saved copy against the server's wrapped
+key before reporting completion. Extra device locking has a separate backup
+requirement described below; adding a passkey alone does not require a code.
+
+Both the older passphrase route and the new passkey route wrap the same existing
+account key. Changing recovery methods does not re-encrypt or replace prayers.
+An account sign-in restores the authenticated session; accessing encrypted
+content on a new device additionally requires a usable passkey, saved backup or
+existing legacy recovery credential. A device with no local key may still have
+passkey recovery available even if no legacy `vault_keys` record exists.
+
+## Legacy passphrase recovery
 
 Recovery setup does not replace or re-encrypt the account key. It wraps the same
 key with AES-GCM under PBKDF2-SHA-256 derived keys (310,000 iterations): one from
@@ -62,10 +85,11 @@ readback. Conflicts or failed readbacks remain sync-pending; the UI does not rep
 a cross-device backup as ready. Older clients can still write `vault_keys` using
 their legacy API, so their concurrency behavior remains a rollout consideration.
 
-Cross-device recovery requires the synced wrapped record plus either the
-passphrase or recovery code. If no recovery record exists, only a device that
-still has the account key can add recovery. Losing every device key and both
-recovery credentials makes ciphertext unrecoverable.
+Legacy cross-device recovery requires the synced wrapped record plus either the
+passphrase or its recovery code. New independent methods can also restore the
+same key as described below. If no usable recovery method exists, only a device
+that still has the account key can add recovery. Losing every device key and all
+usable recovery methods makes ciphertext unrecoverable.
 
 ## Passkey and emergency recovery (enrollment disabled by default)
 
@@ -76,10 +100,20 @@ the browser origin. Enrollment on preview, www or old Praystead origins is not
 supported. Existing enrolled readers, assertions and offline device unlock remain
 available after the flags are disabled.
 
+For isolated PC testing, `npm run dev:recovery-test` permits exactly
+`http://localhost:5173` / RP ID `localhost`, only with development mode and both
+explicit localhost opt-ins. Its separate environment directory and loopback
+database do not inherit production credentials; production builds of that mode
+are refused. Wrapper validation uses the trusted environment's RP ID, so local
+and production passkey wrappers are not interchangeable. See
+[RECOVERY_LOCAL_TEST.md](RECOVERY_LOCAL_TEST.md) for setup.
+
 Each new method wraps the original account key independently in
-`account_key_recovery_methods`; it never replaces legacy recovery. The version 1
-method format is separate from legacy vault versions. It uses AES-256-GCM with a
-fresh 12-byte nonce and AAD containing the format, account, method and KDF context.
+`account_key_recovery_methods`. The unified settings interface replaces the old
+Prayer Vault entry, while retaining existing legacy wrappers for compatibility.
+The version 1 method format is separate from legacy vault versions. It uses
+AES-256-GCM with a fresh 12-byte nonce and AAD containing the format, account,
+method and KDF context.
 Passkey PRF output remains client-side, feeding HKDF-SHA-256 with a random 32-byte
 salt and domain separation. Emergency-only recovery uses a fresh 128-bit code,
 PBKDF2-SHA-256 with 600,000 iterations and a 32-byte salt. No encryption
