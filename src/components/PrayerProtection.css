@@ -53,3 +53,23 @@
   .protection-methods li > .protection-actions { padding-inline-start: 1.8rem; }
   .protection-dialog { padding: var(--q-space-5); }
 }
+
+.protection-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--q-space-3); margin: 0; padding: 0; list-style: none; }
+.protection-steps li { display: flex; align-items: center; gap: var(--q-space-2); min-width: 0; color: var(--q-text-secondary); font-size: 0.8125rem; line-height: 1.5; }
+.protection-steps li > span { display: flex; align-items: center; justify-content: center; flex: 0 0 1.75rem; height: 1.75rem; border: 1px solid var(--q-border); border-radius: 50%; font-weight: 600; }
+.protection-steps .is-current { color: var(--q-text); font-weight: 600; }
+.protection-steps .is-current > span, .protection-steps .is-complete > span { border-color: var(--q-selected-border); background: var(--q-selected); color: var(--q-royal-text); }
+.protection-card--next { background: var(--q-surface); }
+.protection-card--main > .primary-button, .protection-card--next > .primary-button { justify-self: start; }
+.protection-card > .quiet-button { justify-self: start; padding-inline: 0; text-align: start; }
+.protection-instructions { list-style: decimal; display: grid; gap: var(--q-space-3); margin: 0; padding-inline-start: 1.5rem; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+.protection-instructions li { padding-inline-start: 0.25rem; }
+.protection-instructions li::marker { color: var(--q-royal-text); font-weight: 600; }
+.protection-success-icon { display: flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--q-selected); color: var(--q-royal-text); }
+.protection-dialog h2:focus { outline: none; }
+@media (max-width: 480px) {
+  .protection-steps { gap: var(--q-space-2); }
+  .protection-steps li { align-items: flex-start; font-size: 0.75rem; }
+  .protection-steps li > span { flex-basis: 1.5rem; height: 1.5rem; }
+  .protection-card--main > .primary-button, .protection-card--next > .primary-button { width: 100%; }
+}

@@ -58,14 +58,47 @@ function BackupInput({ lang, code, onChange, disabled, onError }) {
   </div>;
 }
 
-function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onVerified }) {
+function AccessSetupDialog({ lang, method, busy, message, onContinue, onClose, onUseCode }) {
+  const titleId = useId();
+  const ref = useFocusTrap(true, 'h2');
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return;
+      event.preventDefault(); event.stopImmediatePropagation();
+      if (!busy) onClose();
+    };
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => document.removeEventListener('keydown', onKeyDown, true);
+  }, [busy, onClose]);
+  return <div className="dialog-backdrop fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-4">
+    <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-busy={busy} className="q-dialog protection-dialog">
+      <div className="protection-dialog__heading">
+        <span className="icon-tile tone-plum"><Fingerprint size={20} aria-hidden="true" /></span>
+        <h2 id={titleId} tabIndex={-1} className="q-section-title">{t(lang, method ? 'protectionVerifyMethod' : 'protectionSetupTitle')}</h2>
+      </div>
+      <p className="q-body-sm">{t(lang, method ? 'protectionOpenHint' : 'protectionSetupIntro')}</p>
+      {!method && <ol className="protection-instructions">
+        <li>{t(lang, 'protectionSetupChoose')}</li>
+        <li>{t(lang, 'protectionSetupConfirm')}</li>
+      </ol>}
+      {message && <p role="alert" className="q-notice">{message}</p>}
+      <PrimaryButton icon={Fingerprint} disabled={busy} aria-busy={busy} onClick={onContinue}>{t(lang, 'protectionSetupContinue')}</PrimaryButton>
+      {onUseCode && <QuietButton disabled={busy} onClick={onUseCode}>{t(lang, 'protectionPreferCode')}</QuietButton>}
+      <QuietButton disabled={busy} onClick={onClose}>{t(lang, 'cancel')}</QuietButton>
+    </div>
+  </div>;
+}
+
+function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onComplete, onVerified }) {
   const [result, setResult] = useState(existingMethod ? { method: existingMethod } : null);
   const [step, setStep] = useState(existingMethod ? 'check' : 'start');
   const [code, setCode] = useState('');
-  const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
-  const ref = useFocusTrap();
+  const ref = useFocusTrap(true, 'h2');
+  const current = useRef(true);
+  useEffect(() => { current.current = true; return () => { current.current = false; }; }, []);
+  useEffect(() => { ref.current?.querySelector('h2')?.focus(); }, [step, ref]);
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key !== 'Escape') return;
@@ -79,19 +112,26 @@ function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onVerified
     setBusy(true); setMessage('');
     try {
       const next = await generateEmergencyRecovery(userId);
+      if (!current.current) return;
       if (next.ok && next.code) { setResult(next); setStep('save'); }
       else setMessage(protectionMessage(lang, next.status));
-    } catch { setMessage(t(lang, 'protectionUnavailable')); }
-    finally { setBusy(false); }
+    } catch { if (current.current) setMessage(t(lang, 'protectionUnavailable')); }
+    finally { if (current.current) setBusy(false); }
   };
   const verify = async () => {
     setBusy(true); setMessage('');
     try {
       const next = await verifyEmergencyRecovery(userId, result.method.id, code);
-      if (next.ok) { setCode(''); onVerified(result.method.id); }
+      if (!current.current) return;
+      if (next.ok) {
+        const confirmed = await onVerified(result.method.id);
+        if (!current.current) return;
+        if (confirmed === false) { setMessage(t(lang, 'protectionUnavailable')); return; }
+        setCode(''); setResult({ method: result.method }); setStep('done');
+      }
       else setMessage(protectionMessage(lang, next.status));
-    } catch { setMessage(t(lang, 'protectionUnavailable')); }
-    finally { setBusy(false); }
+    } catch { if (current.current) setMessage(t(lang, 'protectionUnavailable')); }
+    finally { if (current.current) setBusy(false); }
   };
   const download = () => {
     let url;
@@ -99,17 +139,17 @@ function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onVerified
       url = URL.createObjectURL(new Blob([emergencyBackupText(userId, result.code, lang)], { type: 'text/plain;charset=utf-8' }));
       const link = document.createElement('a');
       link.href = url; link.download = `${FILE_PREFIX}-recovery-${result.method.id.slice(0, 8)}.txt`;
-      document.body.append(link); link.click(); link.remove(); setSaved(true);
+      document.body.append(link); link.click(); link.remove();
     } catch { setMessage(t(lang, 'protectionSaveCode')); }
     finally { if (url) setTimeout(() => URL.revokeObjectURL(url), 0); }
   };
   return <div className="dialog-backdrop fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-4">
     <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="emergency-code-title" className="q-dialog protection-dialog">
       <div className="protection-dialog__heading"><span className="icon-tile tone-plum"><KeyRound size={20} aria-hidden="true" /></span>
-        <h2 id="emergency-code-title" className="q-section-title">{t(lang, 'protectionEmergency')}</h2>
+        <h2 id="emergency-code-title" tabIndex={-1} className="q-section-title">{t(lang, step === 'done' ? 'protectionBackupDone' : 'protectionBackupTitle')}</h2>
       </div>
       {step === 'start' && <>
-        <p className="q-body-sm">{t(lang, 'protectionBackupBody')}</p>
+        <p className="q-body-sm">{t(lang, 'protectionBackupIntro')}</p>
         <PrimaryButton disabled={busy} aria-busy={busy} onClick={generate}>{t(lang, 'protectionAddEmergency')}</PrimaryButton>
       </>}
       {step === 'save' && <>
@@ -119,20 +159,26 @@ function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onVerified
         <div className="protection-actions">
           <SecondaryButton icon={Download} onClick={download}>{t(lang, 'protectionDownloadCode')}</SecondaryButton>
           <QuietButton icon={Copy} onClick={async () => {
-            try { await navigator.clipboard.writeText(result.code); setSaved(true); setMessage(t(lang, 'vaultCodeCopied')); }
+            try { await navigator.clipboard.writeText(result.code); setMessage(t(lang, 'vaultCodeCopied')); }
             catch { setMessage(t(lang, 'protectionSaveCode')); }
           }}>{t(lang, 'vaultCopyCode')}</QuietButton>
         </div>
-        <PrimaryButton disabled={!saved} onClick={() => { setMessage(''); setStep('check'); }}>{t(lang, 'protectionCodeSaved')}</PrimaryButton>
+        <PrimaryButton onClick={() => { setMessage(''); setStep('check'); }}>{t(lang, 'protectionCodeSaved')}</PrimaryButton>
       </>}
       {step === 'check' && <>
         <p className="section-label">{t(lang, 'protectionCheckStep')}</p>
         <p className="q-body-sm">{t(lang, 'protectionRepeatCode')}</p>
-        <BackupInput lang={lang} code={code} onChange={setCode} disabled={busy} onError={setMessage} />
+        <BackupInput key={userId} lang={lang} code={code} onChange={setCode} disabled={busy} onError={setMessage} />
         <PrimaryButton icon={Check} disabled={busy || !code.trim()} aria-busy={busy} onClick={verify}>{t(lang, 'protectionVerifyCode')}</PrimaryButton>
       </>}
+      {step === 'done' && <>
+        <span className="protection-success-icon"><Check size={26} aria-hidden="true" /></span>
+        <p className="q-body-sm">{t(lang, 'protectionBackupDoneBody')}</p>
+        <PrimaryButton onClick={onComplete}>{t(lang, 'doneBtn')}</PrimaryButton>
+      </>}
+      {step === 'check' && existingMethod && <QuietButton disabled={busy} onClick={() => { setResult(null); setCode(''); setMessage(''); setStep('start'); }}>{t(lang, 'protectionAddEmergency')}</QuietButton>}
       {message && <p role="status" className="q-notice">{message}</p>}
-      <QuietButton disabled={busy} onClick={onClose}>{t(lang, 'close')}</QuietButton>
+      {step !== 'done' && <QuietButton disabled={busy} onClick={onClose}>{t(lang, 'close')}</QuietButton>}
     </div>
   </div>;
 }
@@ -150,6 +196,8 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
   const [backupChecked, setBackupChecked] = useState(false);
   const [revoke, setRevoke] = useState(null);
   const [vaultMode, setVaultMode] = useState(null);
+  const [setupDialog, setSetupDialog] = useState(null);
+  const [backupDeferred, setBackupDeferred] = useState(false);
   const request = useRef(0);
   const mounted = useRef(true); const account = useRef(userId); account.current = userId;
   const titleId = useId();
@@ -157,7 +205,7 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
     const generation = ++request.current;
     mounted.current = true;
     setHealth(null); setMessage(''); setEmergencyCode(''); setBackupChecked(false); setBusy(false);
-    setEmergencyDialog(null); setVaultMode(null); setRevoke(null); setEmergencyId(''); setPasskeyId(''); setBackupPasskeyId('');
+    setEmergencyDialog(null); setVaultMode(null); setSetupDialog(null); setBackupDeferred(false); setRevoke(null); setEmergencyId(''); setPasskeyId(''); setBackupPasskeyId('');
     getProtectionStatus(userId).then((value) => { if (request.current === generation) setHealth(value); })
       .catch(() => { if (request.current === generation) setHealth({ methods: [], error: true }); });
     return () => { request.current += 1; mounted.current = false; };
@@ -173,7 +221,8 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
       const next = await getProtectionStatus(userId);
       if (request.current !== generation) return;
       setHealth(next); useVaultStore.getState().refresh();
-      if (result.ok && !statusFailed(next) && next.methods?.some((method) => method.status === 'active')) onReady?.();
+      if (result.ok && statusFailed(next)) setMessage(protectionMessage(lang, next.status));
+      return { ...result, health: next };
     } catch { if (request.current === generation) setMessage(t(lang, 'protectionUnavailable')); }
     finally { if (request.current === generation) setBusy(false); }
   };
@@ -192,8 +241,14 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
   const active = methods.filter((method) => method.status === 'active');
   const hasLegacy = initialized || health?.legacy?.available;
   const checked = !!health && !statusFailed(health);
-  const recoveryStatus = active.some((method) => method.verifiedHere) ? 'protectionTestedHere'
-    : active.length ? 'protectionTestRecorded' : hasLegacy ? (health?.legacy?.available || recoverySync === 'synced' ? 'protectionLegacyReady' : 'protectionSyncPending') : 'protectionNeedsSetup';
+  const hasAccess = active.length > 0 && checked;
+  const accessChecked = passkeys.some((method) => method.verifiedHere);
+  const pendingEmergency = methods.find((method) => method.type === 'emergency-code' && method.status === 'pending' && canVerify(method));
+  const setupAvailable = canEnroll && health?.capability?.canEnroll;
+  const showBackupStep = hasAccess && accessChecked && !emergencies.length && !backupDeferred && canEnroll;
+  const openBackup = () => { setMessage(''); setEmergencyDialog(pendingEmergency ? { method: pendingEmergency } : {}); };
+  const openSetup = (method) => { setMessage(''); setSetupDialog({ method }); };
+  const finish = () => { if (!hasAccess || busy) return; setBackupDeferred(true); onReady?.(); };
   const legacyActions = <>
     <p className="q-body-sm">{t(lang, 'protectionLegacyBody')}</p>
     <div className="protection-actions">
@@ -214,32 +269,63 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
         await lock(userId); return { ok: true };
       })}>{t(lang, 'vaultLockNow')}</QuietButton>}
     </div>
+    {checked && !emergencies.length && !backupDeferred && setupAvailable && <ol className="protection-steps" aria-label={t(lang, 'protectionStep', { step: accessChecked ? 2 : 1, total: 2 })}>
+      <li aria-current={!accessChecked ? 'step' : undefined} className={accessChecked ? 'is-complete' : 'is-current'}>
+        <span aria-hidden="true">{accessChecked ? <Check size={14} /> : '1'}</span>{t(lang, 'protectionAccessStep')}
+      </li>
+      <li aria-current={accessChecked ? 'step' : undefined} className={accessChecked ? 'is-current' : ''}>
+        <span aria-hidden="true">2</span>{t(lang, 'protectionBackupStep')}
+      </li>
+    </ol>}
     <div className="protection-card protection-card--main">
-      <div className="protection-card__heading"><KeyRound size={21} aria-hidden="true" /><h3>{t(lang, 'protectionRecovery')}</h3>
-        {!passkeys.length && canEnroll && <span className="protection-badge">{t(lang, 'protectionRecommended')}</span>}
-      </div>
-      <p className="q-body-sm">{t(lang, 'protectionPasskeyBody')}</p>
-      <p className={`protection-status${active.length && checked ? ' protection-status--ready' : ''}`} role="status">
-        {active.length > 0 && checked && <Check size={15} aria-hidden="true" />}
-        {!health ? t(lang, 'protectionLoading') : !checked ? protectionMessage(lang, health.status) : t(lang, recoveryStatus)}
-      </p>
-      {canEnroll && !passkeys.length && <div className="protection-actions">
-        {pendingPasskey && !passkeys.length
-          ? <PrimaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => verifyPasskeyRecovery(userId, pendingPasskey.id))}>{t(lang, 'protectionVerifyMethod')}</PrimaryButton>
-          : <PrimaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => enrollPasskeyRecovery(userId))}>{t(lang, 'protectionEnroll')}</PrimaryButton>}
-      </div>}
-      {canEnroll && health?.capability && !health.capability.canEnroll && <p className="protection-hint">{t(lang, 'protectionUnsupported')}</p>}
-      {!canEnroll && !hasLegacy && active.length === 0 && <p className="protection-hint">{t(lang, 'protectionServiceSetup')}</p>}
-      {active.length > 0 && <p className="protection-hint">{t(lang, 'protectionSameDevice')}</p>}
-      {statusFailed(health) && <QuietButton disabled={busy} onClick={() => run(async () => ({ ok: true }))}>{t(lang, 'protectionRetry')}</QuietButton>}
+      {!health || !checked ? <>
+        <p className="protection-status" role="status">{!health ? t(lang, 'protectionLoading') : protectionMessage(lang, health.status)}</p>
+        {health && <QuietButton disabled={busy} onClick={() => run(async () => ({ ok: true }))}>{t(lang, 'protectionRetry')}</QuietButton>}
+      </> : <>
+        <div className="protection-card__heading">
+          {hasAccess ? <Check size={21} aria-hidden="true" /> : <Fingerprint size={21} aria-hidden="true" />}
+          <h3>{t(lang, hasAccess ? passkeys.length ? accessChecked ? 'protectionAccessReady' : 'protectionTestRecorded' : 'protectionBackupDone' : 'protectionRecovery')}</h3>
+        </div>
+        <p className="q-body-sm">{t(lang, hasAccess ? passkeys.length ? 'protectionAccessSavedBody' : 'protectionBackupDoneBody' : setupAvailable ? 'protectionPasskeyBody' : 'protectionSetupUnavailable')}</p>
+        {hasAccess ? <>
+          {accessChecked && <p className="protection-status protection-status--ready"><Check size={15} aria-hidden="true" />{t(lang, 'protectionAccessChecked')}</p>}
+          {passkeys.length > 0 && !accessChecked && <PrimaryButton icon={Fingerprint} disabled={busy || !unlocked} onClick={() => openSetup(selectedPasskey)}>{t(lang, 'protectionVerifyMethod')}</PrimaryButton>}
+          {emergencies.length > 0 && passkeys.length > 0 && <p className="protection-status"><Check size={15} aria-hidden="true" />{t(lang, 'protectionCodeVerified')}</p>}
+          {onReady && !showBackupStep && <QuietButton disabled={busy} onClick={finish}>{t(lang, 'doneBtn')}</QuietButton>}
+        </> : <>
+          {setupAvailable && <>
+            <PrimaryButton icon={Fingerprint} disabled={busy || !unlocked} onClick={() => openSetup(pendingPasskey)}>{t(lang, pendingPasskey ? 'protectionVerifyMethod' : 'protectionEnroll')}</PrimaryButton>
+            <QuietButton disabled={busy || !unlocked} onClick={openBackup}>{t(lang, 'protectionPreferCode')}</QuietButton>
+          </>}
+          {canEnroll && !setupAvailable && <>
+            <p className="protection-hint">{t(lang, 'protectionUnsupported')}</p>
+            <PrimaryButton icon={Download} disabled={busy || !unlocked} onClick={openBackup}>{t(lang, 'protectionAddEmergency')}</PrimaryButton>
+          </>}
+          {!canEnroll && <p className="protection-hint">{t(lang, 'protectionLegacyFallback')}</p>}
+          {hasLegacy && <p className="protection-status">{t(lang, health.legacy?.available || recoverySync === 'synced' ? 'protectionLegacyReady' : 'protectionSyncPending')}</p>}
+          {hasLegacy && (!setupAvailable || !unlocked) && <SecondaryButton disabled={busy} icon={KeyRound} onClick={() => setVaultMode(unlocked ? 'change' : 'unlock')}>{t(lang, 'protectionLegacyAccess')}</SecondaryButton>}
+        </>}
+      </>}
     </div>
+    {showBackupStep && <div className="protection-card protection-card--next">
+      <p className="section-label">{t(lang, 'protectionStep', { step: 2, total: 2 })}</p>
+      <div className="protection-card__heading"><Download size={20} aria-hidden="true" /><h3>{t(lang, 'protectionBackupRecommended')}</h3></div>
+      <p className="q-body-sm">{t(lang, 'protectionBackupBody')}</p>
+      <PrimaryButton disabled={busy} icon={Download} onClick={openBackup}>{t(lang, 'protectionAddEmergency')}</PrimaryButton>
+      <QuietButton disabled={busy} onClick={finish}>{t(lang, 'protectionLater')}</QuietButton>
+    </div>}
     <details className="protection-details">
       <summary>{t(lang, 'protectionOptions')}</summary>
       <div className="protection-options">
+        {hasAccess && canEnroll && !passkeys.length && setupAvailable && <div className="protection-card">
+          <div className="protection-card__heading"><Fingerprint size={20} aria-hidden="true" /><h3>{t(lang, 'protectionAccessStep')}</h3></div>
+          <p className="q-body-sm">{t(lang, 'protectionPasskeyBody')}</p>
+          <SecondaryButton disabled={busy || !checked || !unlocked} onClick={() => openSetup(pendingPasskey)}>{t(lang, pendingPasskey ? 'protectionVerifyMethod' : 'protectionEnroll')}</SecondaryButton>
+        </div>}
         <div className="protection-card">
           <div className="protection-card__heading"><Download size={19} aria-hidden="true" /><h3>{t(lang, 'protectionBackupTitle')}</h3></div>
           <p className="q-body-sm">{t(lang, 'protectionBackupBody')}</p>
-          {canEnroll && <SecondaryButton disabled={busy || !checked} onClick={() => setEmergencyDialog({})}>{t(lang, 'protectionAddEmergency')}</SecondaryButton>}
+          {canEnroll && <SecondaryButton disabled={busy || !checked || !unlocked} onClick={openBackup}>{t(lang, 'protectionAddEmergency')}</SecondaryButton>}
         </div>
         <div className="protection-card">
           <div className="protection-card__heading"><Fingerprint size={20} aria-hidden="true" /><h3>{t(lang, 'protectionDeviceOptional')}</h3></div>
@@ -258,16 +344,16 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
                   ? <select className="q-input" aria-label={t(lang, 'protectionAdditionalPasskey')} value={backupPasskey.id} onChange={(event) => setBackupPasskeyId(event.target.value)}>
                     {additionalPasskeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
                   </select>
-                  : <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => enrollPasskeyRecovery(userId))}>{t(lang, 'protectionAddPasskey')}</SecondaryButton>}
+                  : <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => openSetup(pendingPasskey)}>{t(lang, 'protectionAddPasskey')}</SecondaryButton>}
               </>}
               {(selectedEmergency || health.legacy?.available || backupChecked) && <details className="protection-details">
                 <summary>{t(lang, 'protectionMoreRecovery')}</summary>
                 {backupChecked ? <p className="protection-status protection-status--ready"><Check size={15} aria-hidden="true" />{t(lang, 'protectionRecoveryReady')}</p> : <>
-                  {(emergencies.length > 1 || (selectedEmergency && health.legacy?.available)) && <select className="q-input" aria-label={t(lang, 'protectionEmergency')} value={emergencyId || selectedEmergency.id} onChange={(event) => setEmergencyId(event.target.value)}>
+                  {(emergencies.length > 1 || (selectedEmergency && health.legacy?.available)) && <select className="q-input" aria-label={t(lang, 'protectionEmergency')} value={emergencyId || selectedEmergency?.id || 'legacy'} onChange={(event) => setEmergencyId(event.target.value)}>
                     {emergencies.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
                     {health.legacy?.available && <option value="legacy">{t(lang, 'vaultRecoveryTitle')}</option>}
                   </select>}
-                  <BackupInput lang={lang} code={emergencyCode} onChange={setEmergencyCode} disabled={busy} onError={setMessage} />
+                  <BackupInput key={userId} lang={lang} code={emergencyCode} onChange={setEmergencyCode} disabled={busy} onError={setMessage} />
                 </>}
               </details>}
               <p className="protection-hint">{t(lang, 'protectionDevicePasskeyBody')}</p>
@@ -284,27 +370,38 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
         </div>
         {methods.length > 0 && <details className="protection-details protection-methods">
           <summary>{t(lang, 'protectionManageMethods')} <span className="protection-count">{methods.length}</span></summary>
-          {canEnroll && passkeys.length > 0 && <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => enrollPasskeyRecovery(userId))}>{t(lang, 'protectionEnroll')}</SecondaryButton>}
+          {canEnroll && passkeys.length > 0 && <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => openSetup(pendingPasskey)}>{t(lang, 'protectionEnroll')}</SecondaryButton>}
           <ul>{methods.map((method) => <li key={method.id}>
             <KeyRound size={17} aria-hidden="true" /><div className="protection-method__body"><strong>{methodLabel(method, lang, methods)}</strong>
               {method.status !== 'active' ? <p>{t(lang, 'protectionNeedsVerification')}</p> : Number.isFinite(Date.parse(method.createdAt)) && <p>{new Date(method.createdAt).toLocaleDateString(lang)}</p>}
             </div>
             <div className="protection-actions">
-              {method.status !== 'active' && canVerify(method) && <QuietButton disabled={busy} onClick={() => method.type === 'passkey' ? run(() => verifyPasskeyRecovery(userId, method.id)) : setEmergencyDialog({ method })}>{t(lang, 'protectionVerifyMethod')}</QuietButton>}
+              {method.status !== 'active' && canVerify(method) && <QuietButton disabled={busy} onClick={() => method.type === 'passkey' ? openSetup(method) : setEmergencyDialog({ method })}>{t(lang, 'protectionVerifyMethod')}</QuietButton>}
               <QuietButton disabled={busy} aria-label={`${t(lang, 'protectionRemove')}: ${methodLabel(method, lang, methods)}`} onClick={() => setRevoke(method)}>{t(lang, 'protectionRemove')}</QuietButton>
             </div>
           </li>)}</ul>
         </details>}
         {hasLegacy && <details className="protection-details"><summary>{t(lang, 'protectionLegacySettings')}</summary>{legacyActions}</details>}
-        <details className="protection-details"><summary>{t(lang, 'protectionDifference')}</summary><p className="q-body-sm">{t(lang, 'protectionDifferenceBody')}</p></details>
       </div>
     </details>
     {unlocked && <VaultMigrationStatus lang={lang} showComplete={false} />}
-    {message && <p role="status" className="q-notice">{message}</p>}
-    {emergencyDialog && <EmergencyCodeDialog lang={lang} userId={userId} existingMethod={emergencyDialog.method} onClose={() => setEmergencyDialog(null)} onVerified={(methodId) => {
-      if (!mounted.current || account.current !== userId) return;
-      setEmergencyCode(''); setEmergencyId(methodId); setBackupChecked(true); setEmergencyDialog(null);
-      run(async () => ({ ok: true }));
+    {message && !setupDialog && <p role="status" className="q-notice">{message}</p>}
+    {setupDialog && <AccessSetupDialog key={userId} lang={lang} method={setupDialog.method} busy={busy} message={message}
+      onClose={() => { setSetupDialog(null); setMessage(''); }}
+      onUseCode={canEnroll ? () => { setSetupDialog(null); openBackup(); } : undefined}
+      onContinue={async () => {
+        const result = await run(() => setupDialog.method
+          ? verifyPasskeyRecovery(userId, setupDialog.method.id) : enrollPasskeyRecovery(userId));
+        if (mounted.current && account.current === userId && result?.ok && !statusFailed(result.health)) { setSetupDialog(null); setBackupDeferred(false); }
+      }} />}
+    {emergencyDialog && <EmergencyCodeDialog key={userId} lang={lang} userId={userId} existingMethod={emergencyDialog.method} onClose={() => setEmergencyDialog(null)} onComplete={() => { setEmergencyDialog(null); if (checked && emergencyDialog.verifiedMethodId && emergencies.some((method) => method.id === emergencyDialog.verifiedMethodId)) onReady?.(); }} onVerified={async (methodId) => {
+      if (!mounted.current || account.current !== userId) return false;
+      const result = await run(async () => ({ ok: true }));
+      if (!mounted.current || account.current !== userId || !result?.ok || statusFailed(result.health)
+        || !result.health.methods?.some((method) => method.id === methodId && method.status === 'active')) return false;
+      setEmergencyCode(''); setEmergencyId(methodId); setBackupChecked(true);
+      setEmergencyDialog((dialog) => ({ ...dialog, verifiedMethodId: methodId }));
+      return true;
     }} />}
     {vaultMode && <VaultModal lang={lang} userId={userId} initialMode={vaultMode} onUnlocked={() => {
       const vault = useVaultStore.getState();
@@ -370,25 +467,28 @@ export function PrayerRecoveryChoices({ userId, lang = 'fr', onRecovered }) {
     {emergencies.length > 1 && <select className="q-input" aria-label={t(lang, 'protectionCredentials')} value={emergency.id} onChange={(event) => setEmergencyId(event.target.value)}>
       {emergencies.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
     </select>}
-    <BackupInput lang={lang} code={code} onChange={setCode} disabled={busy} onError={setMessage} />
+    <BackupInput key={userId} lang={lang} code={code} onChange={setCode} disabled={busy} onError={setMessage} />
     <SecondaryButton disabled={busy || !code.trim()} onClick={() => run(() => recoverWithEmergencyCode(userId, emergency.id, code))}>{t(lang, 'protectionRecoverCode')}</SecondaryButton>
   </div>;
   const passkeyAction = passkey && <>
-    {passkeys.length > 1 && <select className="q-input" aria-label={t(lang, 'protectionPasskey')} value={passkey.id} onChange={(event) => setPasskeyId(event.target.value)} disabled={busy}>
-      {passkeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
-    </select>}
     <PrimaryButton icon={Fingerprint} disabled={busy} onClick={() => run(() => recoverWithPasskey(userId, passkey.id))}>
       {t(lang, passkey.status === 'pending' ? 'protectionPendingPasskey' : 'protectionRecoverPasskey')}
     </PrimaryButton>
+    {passkeys.length > 1 && <details className="protection-details">
+      <summary>{t(lang, 'protectionCredentials')}</summary>
+      <select className="q-input" aria-label={t(lang, 'protectionPasskey')} value={passkey.id} onChange={(event) => setPasskeyId(event.target.value)} disabled={busy}>
+        {passkeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
+      </select>
+    </details>}
   </>;
   return <section className="protection-recovery" aria-label={t(lang, 'protectionChoose')} aria-busy={busy}>
     {localUnlock ? <PrimaryButton icon={Fingerprint} disabled={busy} onClick={() => run(() => unlockWithDevice(userId))}>{t(lang, 'protectionSetDevice')}</PrimaryButton> : passkeyAction}
-    {(localUnlock || passkey) && <p className="protection-hint">{t(lang, 'protectionPasskeyBody')}</p>}
+    {(localUnlock || passkey) && <p className="protection-hint">{t(lang, 'protectionOpenHint')}</p>}
     {statusFailed(health) && <div className="protection-recovery-backup">
       <p role="status" className="q-notice">{protectionMessage(lang, health.status)}</p>
       <QuietButton disabled={busy} onClick={retry}>{t(lang, 'protectionRetry')}</QuietButton>
     </div>}
-    {!statusFailed(health) && !localUnlock && !passkey && <p className="q-body-sm">{t(lang, 'protectionNoPasskey')}</p>}
+    {!statusFailed(health) && !localUnlock && !passkey && !emergency && <p className="q-body-sm">{t(lang, 'protectionNoPasskey')}</p>}
     {localUnlock && otherPasskeys.length > 0 && <details className="protection-details">
       <summary>{t(lang, 'protectionRecoverPasskey')}</summary>
       {otherPasskeys.map((method) => <SecondaryButton key={method.id} icon={KeyRound} disabled={busy} onClick={() => run(() => recoverWithPasskey(userId, method.id))}>{methodLabel(method, lang, methods)}</SecondaryButton>)}

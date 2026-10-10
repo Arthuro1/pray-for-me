@@ -23,11 +23,18 @@ export function useFocusTrap(active = true, initialFocusSelector = null) {
     const onKeyDown = (e) => {
       if (e.key !== 'Tab') return;
       const items = focusables();
-      if (items.length === 0) { e.preventDefault(); return; }
+      if (items.length === 0) { e.preventDefault(); e.stopPropagation(); return; }
       const first = items[0];
       const last = items[items.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      // Instructions may receive initial focus without being a Tab stop.
+      // Keep both directions inside the innermost dialog from that heading.
+      if (!items.includes(document.activeElement)) {
+        e.preventDefault(); e.stopPropagation(); (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); e.stopPropagation(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); e.stopPropagation(); first.focus();
+      }
     };
 
     node.addEventListener('keydown', onKeyDown);

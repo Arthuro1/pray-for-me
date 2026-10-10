@@ -32,10 +32,9 @@ function openDetails(key) {
 }
 
 async function openBackupDialog() {
-  await screen.findByText(t(lang, 'protectionNeedsSetup'));
-  openDetails('protectionOptions');
-  fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
-  return screen.getByRole('dialog', { name: t(lang, 'protectionEmergency') });
+  await screen.findByText(t(lang, 'protectionRecovery'));
+  fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionPreferCode') }));
+  return screen.getByRole('dialog', { name: t(lang, 'protectionBackupTitle') });
 }
 
 async function saveAndContinue(dialog) {
@@ -117,7 +116,7 @@ describe('prayer protection readiness', () => {
     health = { ...health, deviceUnlockAvailable: true, localMethodId: passkey.id, methods: [passkey] };
     render(<PrayerRecoveryChoices userId={userId} lang={lang} />);
     await screen.findByRole('button', { name: t(lang, 'protectionSetDevice') });
-    expect(screen.queryByRole('button', { name: t(lang, 'protectionRecoverPasskey') })).toBeNull();
+    expect(screen.getAllByRole('button', { name: t(lang, 'protectionSetDevice') })).toHaveLength(1);
     expect(screen.queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
   });
 
@@ -125,10 +124,15 @@ describe('prayer protection readiness', () => {
     health.methods = [{ ...passkey, status: 'pending' }];
     health.capability.canEnroll = false;
     render(<PrayerProtection userId={userId} lang={lang} />);
-    await screen.findByText(t(lang, 'protectionNeedsSetup'));
+    await screen.findByText(t(lang, 'protectionRecovery'));
     const main = screen.getByText(t(lang, 'protectionRecovery')).closest('.protection-card');
-    expect(within(main).getByRole('button', { name: t(lang, 'protectionVerifyMethod') }).disabled).toBe(true);
-    expect(screen.queryByText(t(lang, 'protectionTestedHere'))).toBeNull();
+    expect(within(main).queryByRole('button', { name: t(lang, 'protectionVerifyMethod') })).toBeNull();
+    const backup = within(main).getByRole('button', { name: t(lang, 'protectionAddEmergency') });
+    expect(backup.disabled).toBe(false);
+    fireEvent.click(backup);
+    expect(screen.getByRole('dialog', { name: t(lang, 'protectionBackupTitle') })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'close') }));
+    expect(screen.queryByText(t(lang, 'protectionAccessReady'))).toBeNull();
     expect(screen.queryByRole('button', { name: t(lang, 'protectionEnroll') })).toBeNull();
     expect(screen.getByText(t(lang, 'protectionUnsupported'))).toBeTruthy();
     openDetails('protectionOptions'); openDetails('protectionManageMethods');
@@ -151,12 +155,13 @@ describe('prayer protection readiness', () => {
     await screen.findByText(t(lang, 'protectionTestRecorded'));
     openDetails('protectionOptions'); openDetails('protectionManageMethods');
     expect(screen.getByRole('button', { name: `${t(lang, 'protectionRemove')}: Saved passkey` })).toBeTruthy();
-    expect(screen.queryByText(t(lang, 'protectionTestedHere'))).toBeNull();
+    expect(screen.queryByText(t(lang, 'protectionAccessReady'))).toBeNull();
     expect(screen.getAllByText(t(lang, 'protectionTestRecorded'))).toHaveLength(1);
     view.unmount();
     health.methods = [{ ...passkey, verifiedHere: true }];
     render(<PrayerProtection userId={userId} lang={lang} />);
-    expect(await screen.findAllByText(t(lang, 'protectionTestedHere'))).toHaveLength(1);
+    expect(await screen.findByText(t(lang, 'protectionAccessReady'))).toBeTruthy();
+    expect(screen.getAllByText(t(lang, 'protectionAccessChecked'))).toHaveLength(1);
   });
 
   it('shows the one-time code and requires an independent check before finishing', async () => {
@@ -168,7 +173,7 @@ describe('prayer protection readiness', () => {
     expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
     fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
     expect(await within(dialog).findByText(code)).toBeTruthy();
-    expect(within(dialog).getByRole('button', { name: t(lang, 'protectionCodeSaved') }).disabled).toBe(true);
+    expect(within(dialog).getByRole('button', { name: t(lang, 'protectionCodeSaved') }).disabled).toBe(false);
     expect(within(dialog).queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
     await saveAndContinue(dialog);
     expect(writeClipboard).toHaveBeenCalledWith(code);
@@ -204,11 +209,11 @@ describe('prayer protection readiness', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(closeParent).not.toHaveBeenCalled();
-    expect(screen.getByRole('dialog', { name: t(lang, 'protectionEmergency') })).toBeTruthy();
+    expect(screen.getByRole('dialog', { name: t(lang, 'protectionBackupTitle') })).toBeTruthy();
     finishGeneration({ ok: true, code: 'SYNTHETIC-CODE', method: { id: 'new-method' } });
     await within(dialog).findByText('SYNTHETIC-CODE');
     fireEvent.keyDown(document, { key: 'Escape' });
-    expect(screen.queryByRole('dialog', { name: t(lang, 'protectionEmergency') })).toBeNull();
+    expect(screen.queryByRole('dialog', { name: t(lang, 'protectionBackupTitle') })).toBeNull();
     expect(closeParent).not.toHaveBeenCalled();
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(closeParent).toHaveBeenCalledOnce();
@@ -239,7 +244,7 @@ describe('prayer protection readiness', () => {
     await waitFor(() => expect(services.recoverWithEmergencyCode).toHaveBeenCalledWith(userId, 'older', 'older-code'));
   });
 
-  it('makes passkey enrollment the main action without asking for an emergency code', async () => {
+  it('explains saved access before opening device setup and lets the person defer backup', async () => {
     const onReady = vi.fn();
     services.enrollPasskeyRecovery.mockImplementation(async () => {
       health = { ...health, methods: [{ ...passkey, verifiedHere: true }] };
@@ -247,15 +252,23 @@ describe('prayer protection readiness', () => {
     });
     render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
     const enroll = await screen.findByRole('button', { name: t(lang, 'protectionEnroll') });
-    await waitFor(() => expect(enroll.disabled).toBe(false));
+    expect(enroll.disabled).toBe(false);
     expect(screen.getByRole('button', { name: t(lang, 'protectionAddEmergency') }).closest('details').open).toBe(false);
     expect(screen.queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
     fireEvent.click(enroll);
-    await waitFor(() => expect(onReady).toHaveBeenCalledOnce());
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionSetupTitle') });
+    expect(within(dialog).getByText(t(lang, 'protectionSetupChoose'))).toBeTruthy();
+    expect(within(dialog).getByText(t(lang, 'protectionSetupConfirm'))).toBeTruthy();
+    expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') }));
+    expect(await screen.findByText(t(lang, 'protectionAccessReady'))).toBeTruthy();
+    expect(screen.queryByRole('dialog')).toBeNull();
     expect(services.enrollPasskeyRecovery).toHaveBeenCalledWith(userId);
     expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(await screen.findByText(t(lang, 'protectionTestedHere'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'protectionBackupRecommended'))).toBeTruthy();
+    expect(onReady).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionLater') }));
+    expect(onReady).toHaveBeenCalledOnce();
   });
 
   it('resumes a pending backup check without replacing the saved recovery method', async () => {
@@ -266,10 +279,9 @@ describe('prayer protection readiness', () => {
       return { ok: true };
     });
     render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
-    await screen.findByText(t(lang, 'protectionNeedsSetup'));
-    openDetails('protectionOptions'); openDetails('protectionManageMethods');
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionVerifyMethod') }));
-    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionEmergency') });
+    await screen.findByText(t(lang, 'protectionRecovery'));
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionPreferCode') }));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionBackupTitle') });
     expect(within(dialog).getByText(t(lang, 'protectionCheckStep'))).toBeTruthy();
     expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
     fireEvent.change(within(dialog).getByLabelText(t(lang, 'protectionUploadCode')), {
@@ -277,25 +289,37 @@ describe('prayer protection readiness', () => {
     });
     await waitFor(() => expect(within(dialog).getByLabelText(t(lang, 'protectionEmergency')).value).toBe(savedCode));
     fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }));
-    await waitFor(() => expect(onReady).toHaveBeenCalledOnce());
+    await within(dialog).findByText(t(lang, 'protectionBackupDone'));
+    expect(onReady).not.toHaveBeenCalled();
     expect(services.verifyEmergencyRecovery).toHaveBeenCalledWith(userId, 'emergency', savedCode);
+    expect(within(dialog).queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+    expect(within(dialog).queryByText(savedCode)).toBeNull();
+    await waitFor(() => expect(within(document.querySelector('.protection-card--main')).getByText(t(lang, 'protectionBackupDone'))).toBeTruthy());
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'doneBtn') }));
+    await waitFor(() => expect(onReady).toHaveBeenCalledOnce());
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
   it('resumes a pending passkey instead of enrolling a duplicate', async () => {
     health.methods = [{ ...passkey, status: 'pending' }];
     services.verifyPasskeyRecovery.mockImplementation(async () => {
-      health = { ...health, methods: [passkey] };
+      health = { ...health, methods: [{ ...passkey, verifiedHere: true }] };
       return { ok: true };
     });
     const onReady = vi.fn();
     render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
-    await screen.findByText(t(lang, 'protectionNeedsSetup'));
+    await screen.findByText(t(lang, 'protectionRecovery'));
     const main = screen.getByText(t(lang, 'protectionRecovery')).closest('.protection-card');
     fireEvent.click(within(main).getByRole('button', { name: t(lang, 'protectionVerifyMethod') }));
-    await waitFor(() => expect(onReady).toHaveBeenCalledOnce());
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionVerifyMethod') });
+    expect(services.verifyPasskeyRecovery).not.toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') }));
+    await screen.findByText(t(lang, 'protectionAccessReady'));
+    expect(onReady).not.toHaveBeenCalled();
     expect(services.verifyPasskeyRecovery).toHaveBeenCalledWith(userId, 'passkey');
     expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionLater') }));
+    expect(onReady).toHaveBeenCalledOnce();
   });
 
   it('opens a saved backup file for recovery without asking the person to type its code', async () => {
@@ -317,7 +341,7 @@ describe('prayer protection readiness', () => {
   it('offers fresh enrollment for an abandoned registration without a saved encrypted wrapper', async () => {
     health.methods = [{ ...passkey, status: 'pending', revision: 0, wrapper: null }];
     render(<PrayerProtection userId={userId} lang={lang} />);
-    await screen.findByText(t(lang, 'protectionNeedsSetup'));
+    await screen.findByText(t(lang, 'protectionRecovery'));
     const main = screen.getByText(t(lang, 'protectionRecovery')).closest('.protection-card');
     expect(within(main).getByRole('button', { name: t(lang, 'protectionEnroll') }).disabled).toBe(false);
     expect(screen.queryByRole('button', { name: t(lang, 'protectionVerifyMethod') })).toBeNull();
@@ -328,7 +352,7 @@ describe('prayer protection readiness', () => {
     render(<PrayerProtection userId={userId} lang={lang} />);
     expect(await screen.findByText(t(lang, 'protectionUnavailable'))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'protectionNeedsSetup'))).toBeNull();
-    expect(screen.getByRole('button', { name: t(lang, 'protectionEnroll') }).disabled).toBe(true);
+    expect(screen.queryByRole('button', { name: t(lang, 'protectionEnroll') })).toBeNull();
     expect(screen.getByRole('button', { name: t(lang, 'protectionRetry') })).toBeTruthy();
   });
 
@@ -339,10 +363,10 @@ describe('prayer protection readiness', () => {
       : Promise.resolve({ ...health, methods: [] }));
     const view = render(<PrayerProtection userId={userId} lang={lang} />);
     view.rerender(<PrayerProtection userId="other-account" lang={lang} />);
-    await screen.findByText(t(lang, 'protectionNeedsSetup'));
+    await screen.findByText(t(lang, 'protectionRecovery'));
     finishOldHealth({ ...health, methods: [{ ...passkey, verifiedHere: true }] });
-    await waitFor(() => expect(screen.getByText(t(lang, 'protectionNeedsSetup'))).toBeTruthy());
-    expect(screen.queryByText(t(lang, 'protectionTestedHere'))).toBeNull();
+    await waitFor(() => expect(screen.getByText(t(lang, 'protectionRecovery'))).toBeTruthy());
+    expect(screen.queryByText(t(lang, 'protectionAccessReady'))).toBeNull();
     expect(screen.queryByText('Saved passkey')).toBeNull();
   });
 
@@ -362,7 +386,7 @@ describe('prayer protection readiness', () => {
     vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false');
     health.methods = [{ ...passkey, status: 'pending', revision: 0, wrapper: null }];
     render(<PrayerProtection userId={userId} lang={lang} />);
-    expect(await screen.findByText(t(lang, 'protectionServiceSetup'))).toBeTruthy();
+    expect(await screen.findByText(t(lang, 'protectionLegacyFallback'))).toBeTruthy();
     expect(screen.queryByRole('button', { name: t(lang, 'backupKeyCta') })).toBeNull();
     expect(screen.queryByRole('button', { name: t(lang, 'protectionEnroll') })).toBeNull();
   });
@@ -386,11 +410,14 @@ describe('prayer protection readiness', () => {
     const enroll = await screen.findByRole('button', { name: t(lang, 'protectionEnroll') });
     await waitFor(() => expect(enroll.disabled).toBe(false));
     fireEvent.click(enroll);
-    expect(enroll.disabled).toBe(true);
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionSetupTitle') });
+    const next = within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') });
+    fireEvent.click(next);
+    expect(next.disabled).toBe(true);
     view.rerender(<PrayerProtection userId="new-account" lang={lang} onReady={onReady} />);
     await waitFor(() => expect(screen.getByRole('button', { name: t(lang, 'protectionEnroll') }).disabled).toBe(false));
     finishEnrollment({ ok: true });
-    await waitFor(() => expect(screen.getByText(t(lang, 'protectionNeedsSetup'))).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(t(lang, 'protectionRecovery'))).toBeTruthy());
     expect(onReady).not.toHaveBeenCalled();
   });
 
@@ -400,5 +427,201 @@ describe('prayer protection readiness', () => {
     expect(await screen.findByText(t(lang, 'protectionLegacyReady'))).toBeTruthy();
     expect(screen.queryByText(t(lang, 'protectionNeedsSetup'))).toBeNull();
     expect(screen.getByRole('button', { name: t(lang, 'protectionEnroll') })).toBeTruthy();
+  });
+});
+
+
+
+describe('guided access setup', () => {
+  it('cancels the explanation without launching device setup', async () => {
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionEnroll') }));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionSetupTitle') });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'cancel') }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: t(lang, 'protectionEnroll') }).disabled).toBe(false);
+  });
+
+  it.each([
+    ['cancelled', 'protectionCancelled'],
+    ['unavailable', 'protectionUnavailable'],
+  ])('keeps a failed %s setup retryable in the same explanation', async (status, messageKey) => {
+    services.enrollPasskeyRecovery.mockResolvedValueOnce({ ok: false, status }).mockImplementationOnce(async () => {
+      health = { ...health, methods: [{ ...passkey, verifiedHere: true }] };
+      return { ok: true };
+    });
+    const onReady = vi.fn();
+    render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionEnroll') }));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionSetupTitle') });
+    const next = within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') });
+    fireEvent.click(next);
+    expect(await within(dialog).findByRole('alert')).toHaveProperty('textContent', t(lang, messageKey));
+    await waitFor(() => expect(next.disabled).toBe(false));
+    expect(onReady).not.toHaveBeenCalled();
+    fireEvent.click(next);
+    await screen.findByText(t(lang, 'protectionAccessReady'));
+    expect(services.enrollPasskeyRecovery).toHaveBeenCalledTimes(2);
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(onReady).not.toHaveBeenCalled();
+  });
+
+  it('keeps a committed pending access retryable without enrolling another method', async () => {
+    health.methods = [{ ...passkey, status: 'pending' }];
+    services.verifyPasskeyRecovery.mockResolvedValueOnce({ ok: false, status: 'cancelled' }).mockImplementationOnce(async () => {
+      health = { ...health, methods: [{ ...passkey, verifiedHere: true }] };
+      return { ok: true };
+    });
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    const heading = await screen.findByText(t(lang, 'protectionRecovery'));
+    fireEvent.click(within(heading.closest('.protection-card')).getByRole('button', { name: t(lang, 'protectionVerifyMethod') }));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionVerifyMethod') });
+    const next = within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') });
+    fireEvent.click(next);
+    await within(dialog).findByText(t(lang, 'protectionCancelled'));
+    await waitFor(() => expect(next.disabled).toBe(false));
+    fireEvent.click(next);
+    await screen.findByText(t(lang, 'protectionAccessReady'));
+    expect(services.verifyPasskeyRecovery).toHaveBeenCalledTimes(2);
+    expect(services.verifyPasskeyRecovery).toHaveBeenNthCalledWith(1, userId, passkey.id);
+    expect(services.verifyPasskeyRecovery).toHaveBeenNthCalledWith(2, userId, passkey.id);
+    expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
+  });
+
+  it('can verify existing saved access while new enrollment is disabled', async () => {
+    vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false');
+    health.methods = [passkey];
+    services.verifyPasskeyRecovery.mockImplementation(async () => {
+      health = { ...health, methods: [{ ...passkey, verifiedHere: true }] };
+      return { ok: true };
+    });
+    const onReady = vi.fn();
+    render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionVerifyMethod') }));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionVerifyMethod') });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') }));
+    await screen.findByText(t(lang, 'protectionAccessReady'));
+    expect(services.verifyPasskeyRecovery).toHaveBeenCalledWith(userId, passkey.id);
+    expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
+    expect(onReady).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'doneBtn') }));
+    expect(onReady).toHaveBeenCalledOnce();
+  });
+
+  it('can choose a saved backup directly from the explanation without launching device setup', async () => {
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionEnroll') }));
+    const explanation = screen.getByRole('dialog', { name: t(lang, 'protectionSetupTitle') });
+    fireEvent.click(within(explanation).getByRole('button', { name: t(lang, 'protectionPreferCode') }));
+    const backup = screen.getByRole('dialog', { name: t(lang, 'protectionBackupTitle') });
+    expect(within(backup).getByRole('button', { name: t(lang, 'protectionAddEmergency') })).toBeTruthy();
+    expect(screen.queryByRole('dialog', { name: t(lang, 'protectionSetupTitle') })).toBeNull();
+    expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
+    expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
+  });
+
+  it('finishes saving and checking a new backup without exposing its code after success', async () => {
+    services.generateEmergencyRecovery.mockResolvedValue({ ok: true, code: savedCode, method: { id: emergency.id } });
+    services.verifyEmergencyRecovery.mockImplementation(async () => {
+      health = { ...health, methods: [{ ...emergency, verifiedHere: true }] };
+      return { ok: true };
+    });
+    const onReady = vi.fn();
+    render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
+    const dialog = await openBackupDialog();
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
+    await within(dialog).findByText(savedCode);
+    await saveAndContinue(dialog);
+    fireEvent.change(within(dialog).getByLabelText(t(lang, 'protectionEmergency')), { target: { value: savedCode } });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }));
+    await within(dialog).findByText(t(lang, 'protectionBackupDone'));
+    expect(within(dialog).queryByText(savedCode)).toBeNull();
+    expect(within(dialog).queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+    await waitFor(() => expect(within(document.querySelector('.protection-card--main')).getByText(t(lang, 'protectionBackupDone'))).toBeTruthy());
+    expect(services.generateEmergencyRecovery).toHaveBeenCalledOnce();
+    expect(services.verifyEmergencyRecovery).toHaveBeenCalledWith(userId, emergency.id, savedCode);
+    expect(onReady).not.toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'doneBtn') }));
+    expect(onReady).toHaveBeenCalledOnce();
+  });
+
+  it('keeps alternate saved accesses collapsed and uses the first access directly', async () => {
+    health.methods = [passkey, { ...passkey, id: 'other-phone', label: 'Other phone' }];
+    services.recoverWithPasskey.mockResolvedValue({ ok: false, status: 'cancelled' });
+    render(<PrayerRecoveryChoices userId={userId} lang={lang} />);
+    const open = await screen.findByRole('button', { name: t(lang, 'protectionRecoverPasskey') });
+    expect(screen.getByRole('combobox').closest('details').open).toBe(false);
+    fireEvent.click(open);
+    await screen.findByText(t(lang, 'protectionCancelled'));
+    expect(services.recoverWithPasskey).toHaveBeenCalledWith(userId, passkey.id);
+    openDetails('protectionCredentials');
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'other-phone' } });
+    fireEvent.click(open);
+    await waitFor(() => expect(services.recoverWithPasskey).toHaveBeenLastCalledWith(userId, 'other-phone'));
+  });
+
+  it('waits for confirmed saved backup status before offering Done', async () => {
+    health.methods = [{ ...emergency, status: 'pending' }];
+    let finishConfirmation;
+    let checkingSavedStatus = false;
+    services.getProtectionStatus.mockImplementation(async () => checkingSavedStatus
+      ? new Promise((resolve) => { finishConfirmation = resolve; }) : health);
+    services.verifyEmergencyRecovery.mockImplementation(async () => {
+      checkingSavedStatus = true;
+      return { ok: true };
+    });
+    const onReady = vi.fn();
+    render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
+    const dialog = await openBackupDialog();
+    fireEvent.change(within(dialog).getByLabelText(t(lang, 'protectionEmergency')), { target: { value: savedCode } });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }));
+    await waitFor(() => expect(services.getProtectionStatus).toHaveBeenCalledTimes(2));
+    expect(within(dialog).queryByRole('button', { name: t(lang, 'doneBtn') })).toBeNull();
+    expect(within(dialog).getByRole('button', { name: t(lang, 'close') }).disabled).toBe(true);
+    expect(onReady).not.toHaveBeenCalled();
+    finishConfirmation({ ...health, methods: [{ ...emergency, verifiedHere: true }] });
+    const done = await within(dialog).findByRole('button', { name: t(lang, 'doneBtn') });
+    fireEvent.click(done);
+    expect(onReady).toHaveBeenCalledOnce();
+  });
+
+  it('lets someone write down a backup and verify that saved copy without clipboard or download', async () => {
+    services.generateEmergencyRecovery.mockResolvedValue({ ok: true, code: savedCode, method: { id: emergency.id } });
+    services.verifyEmergencyRecovery.mockImplementation(async () => {
+      health = { ...health, methods: [emergency] };
+      return { ok: true };
+    });
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    const dialog = await openBackupDialog();
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
+    await within(dialog).findByText(savedCode);
+    const saved = within(dialog).getByRole('button', { name: t(lang, 'protectionCodeSaved') });
+    expect(saved.disabled).toBe(false);
+    fireEvent.click(saved);
+    expect(within(dialog).queryByText(savedCode)).toBeNull();
+    expect(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }).disabled).toBe(true);
+    fireEvent.change(within(dialog).getByLabelText(t(lang, 'protectionEmergency')), { target: { value: savedCode } });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }));
+    await within(dialog).findByText(t(lang, 'protectionBackupDone'));
+    expect(writeClipboard).not.toHaveBeenCalled();
+    expect(services.verifyEmergencyRecovery).toHaveBeenCalledWith(userId, emergency.id, savedCode);
+  });
+
+  it('dismisses a verified backup with Escape without completing the surrounding flow', async () => {
+    health.methods = [{ ...emergency, status: 'pending' }];
+    services.verifyEmergencyRecovery.mockImplementation(async () => {
+      health = { ...health, methods: [emergency] };
+      return { ok: true };
+    });
+    const onReady = vi.fn();
+    render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
+    const dialog = await openBackupDialog();
+    fireEvent.change(within(dialog).getByLabelText(t(lang, 'protectionEmergency')), { target: { value: savedCode } });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }));
+    await within(dialog).findByText(t(lang, 'protectionBackupDone'));
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(onReady).not.toHaveBeenCalled();
   });
 });
