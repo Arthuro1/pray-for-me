@@ -174,7 +174,7 @@ export async function verifyHistoricalAccountKey(userId, candidate, token = capt
   current(token);
   const [identity, prayer] = await Promise.all([
     supabase.from('user_crypto_keys').select('encrypted_private_key').eq('user_id', userId).maybeSingle(),
-    supabase.from('prayers').select('id,user_id,key_version,encrypted_payload')
+    supabase.from('prayers').select('id,user_id,encrypted_payload')
       .eq('user_id', userId).not('encrypted_payload', 'is', null).limit(1).maybeSingle(),
   ]);
   current(token);

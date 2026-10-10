@@ -10,8 +10,13 @@ vi.mock('idb-keyval', () => ({
 vi.mock('./supabase', () => ({ supabase: {
   auth: { getSession: async () => ({ data: { session: { user: { id: harness.currentUser }, access_token: 'synthetic-token' } } }) },
   from: (table) => {
-    const query = { select: () => query, eq: () => query, not: () => query, limit: () => query,
-      maybeSingle: async () => ({ data: table === 'prayers' ? harness.prayer : table === 'user_crypto_keys' ? harness.identity : table === 'vault_keys' && harness.legacy ? { record: harness.legacy } : null, error: null }) };
+    let columns = [];
+    const query = { select: (fields) => { columns = fields.split(','); return query; }, eq: () => query, not: () => query, limit: () => query,
+      maybeSingle: async () => {
+        // Personal prayers have no key_version column in the deployed schema.
+        if (table === 'prayers' && columns.includes('key_version')) return { data: null, error: { code: '42703' } };
+        return { data: table === 'prayers' ? harness.prayer : table === 'user_crypto_keys' ? harness.identity : table === 'vault_keys' && harness.legacy ? { record: harness.legacy } : null, error: null };
+      } };
     return query;
   },
 } }));
@@ -24,7 +29,7 @@ import { encryptJson, toB64 } from './crypto/e2ee';
 import { forgetAccountKey, rememberAccountKey } from './crypto/accountKey';
 import { fromBase64Url, toBase64Url, wrapAccountKeyWithPrf } from './crypto/passkeyRecovery';
 import { clearPrayerProtectionProofs, enrollPasskeyRecovery, generateEmergencyRecovery, verifyEmergencyRecovery,
-  recoverWithEmergencyCode, recoverWithPasskey, enableDeviceUnlock, disableDeviceUnlock, unlockWithDevice, getProtectionStatus, revokeRecoveryMethod, verifyLegacyRecoveryCode, forgetProtectedDevice } from './prayerProtection';
+  recoverWithEmergencyCode, recoverWithPasskey, enableDeviceUnlock, disableDeviceUnlock, unlockWithDevice, getProtectionStatus, revokeRecoveryMethod, verifyLegacyRecoveryCode, forgetProtectedDevice, verifyHistoricalAccountKey } from './prayerProtection';
 
 const userId = '10000000-0000-4000-8000-000000000001';
 const otherUserId = '10000000-0000-4000-8000-000000000002';
@@ -105,7 +110,7 @@ beforeEach(async () => {
   configureAccountContext(userId);
   await importRawMasterKey(toB64(crypto.getRandomValues(new Uint8Array(32))));
   const payload = await encryptJson(getMasterKey(), { title: 'Synthetic original history' }, { entityType: 'personal-prayer', ownerOrGroupId: userId, recordId: 'old-prayer', keyVersion: 1, field: 'sensitive-payload' });
-  harness.prayer = { id: 'old-prayer', user_id: userId, key_version: 1, encrypted_payload: payload };
+  harness.prayer = { id: 'old-prayer', user_id: userId, encrypted_payload: payload };
 });
 
 afterEach(() => { configureAccountContext(null); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
@@ -121,6 +126,12 @@ async function secondaryPasskey() {
 }
 
 describe('verified recovery orchestration', () => {
+  it('verifies personal prayer history without a key_version database column', async () => {
+    const original = getMasterKey();
+    expect(await verifyHistoricalAccountKey(userId, original)).toBe(true);
+    expect(getMasterKey()).toBe(original);
+  });
+
   it('resumes a committed pending passkey while locked without any old phrase, code or enrollment flag', async () => {
     const enrolled = await enrollPasskeyRecovery(userId);
     harness.methods.set(enrolled.method.id, { ...enrolled.method, status: 'pending', revision: 1 });
