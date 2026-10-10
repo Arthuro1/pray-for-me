@@ -17,14 +17,21 @@ import { useFocusTrap } from '../hooks/useFocusTrap';
 import './PrayerProtection.css';
 
 const enrollmentEnabled = () => import.meta.env.VITE_PRAYER_PROTECTION_ENABLED === 'true';
-const methodLabel = (method, lang) => method.label || t(lang, method.type === 'passkey' ? 'protectionPasskey' : 'protectionEmergency');
+const methodLabel = (method, lang, methods = []) => {
+  if (method.label) return method.label;
+  const peers = methods.filter((item) => item.type === method.type);
+  const name = t(lang, method.type === 'passkey' ? 'protectionPasskey' : 'protectionEmergency');
+  return peers.length > 1 ? name + ' ' + (peers.findIndex((item) => item.id === method.id) + 1) : name;
+};
 const statusFailed = (health) => health?.ok === false || health?.error;
 const canVerify = (method) => method.revision >= 1 && !!method.wrapper;
 
 function protectionMessage(lang, status) {
   const key = {
-    cancelled: 'protectionCancelled', unsupported: 'protectionUnsupported', prf_unavailable: 'protectionUnsupported',
+    cancelled: 'protectionCancelled', unsupported: 'protectionUnsupported', prf_unavailable: 'protectionPrfUnavailable',
     offline: 'protectionOffline', wrong_code: 'protectionWrongRecovery',
+    recovery_not_configured: 'protectionServiceSetup', origin_not_allowed: 'protectionWrongOrigin',
+    authentication_required: 'protectionSignInAgain', unauthorized: 'protectionSignInAgain',
     no_proof: 'protectionIndependent', verification_required: 'protectionIndependent',
     sync_pending: 'protectionSyncPending', sync_failed: 'protectionSyncPending', unavailable: 'protectionUnavailable',
   }[status] || 'protectionUnavailable';
@@ -139,6 +146,7 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
   const [emergencyCode, setEmergencyCode] = useState('');
   const [emergencyId, setEmergencyId] = useState('');
   const [passkeyId, setPasskeyId] = useState('');
+  const [backupPasskeyId, setBackupPasskeyId] = useState('');
   const [backupChecked, setBackupChecked] = useState(false);
   const [revoke, setRevoke] = useState(null);
   const [vaultMode, setVaultMode] = useState(null);
@@ -149,7 +157,7 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
     const generation = ++request.current;
     mounted.current = true;
     setHealth(null); setMessage(''); setEmergencyCode(''); setBackupChecked(false); setBusy(false);
-    setEmergencyDialog(null); setVaultMode(null); setRevoke(null); setEmergencyId(''); setPasskeyId('');
+    setEmergencyDialog(null); setVaultMode(null); setRevoke(null); setEmergencyId(''); setPasskeyId(''); setBackupPasskeyId('');
     getProtectionStatus(userId).then((value) => { if (request.current === generation) setHealth(value); })
       .catch(() => { if (request.current === generation) setHealth({ methods: [], error: true }); });
     return () => { request.current += 1; mounted.current = false; };
@@ -174,6 +182,9 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
   const emergencies = methods.filter((method) => method.type === 'emergency-code' && method.status === 'active');
   const pendingPasskey = methods.find((method) => method.type === 'passkey' && method.status === 'pending' && canVerify(method));
   const selectedPasskey = passkeys.find((method) => method.id === passkeyId) || passkeys[0];
+  const additionalPasskeys = passkeys.filter((method) => method.id !== selectedPasskey?.id);
+  const backupPasskey = additionalPasskeys.find((method) => method.id === backupPasskeyId) || additionalPasskeys[0];
+  const providerBackup = selectedPasskey?.backupState?.eligible === true && selectedPasskey.backupState.backedUp === true;
   const selectedEmergency = emergencies.find((method) => method.id === emergencyId) || emergencies[0];
   const protectedDevice = health?.deviceProtected;
   const pendingDevice = health?.deviceProtectionPending;
@@ -184,16 +195,15 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
   const recoveryStatus = active.some((method) => method.verifiedHere) ? 'protectionTestedHere'
     : active.length ? 'protectionTestRecorded' : hasLegacy ? (health?.legacy?.available || recoverySync === 'synced' ? 'protectionLegacyReady' : 'protectionSyncPending') : 'protectionNeedsSetup';
   const legacyActions = <>
-    <p className="q-body-sm">{t(lang, hasLegacy ? 'protectionLegacyBody' : 'protectionLegacyFallback')}</p>
+    <p className="q-body-sm">{t(lang, 'protectionLegacyBody')}</p>
     <div className="protection-actions">
-      {!hasLegacy && <SecondaryButton icon={KeyRound} onClick={() => setVaultMode('setup')}>{t(lang, 'backupKeyCta')}</SecondaryButton>}
       {hasLegacy && !unlocked && <SecondaryButton icon={KeyRound} onClick={() => setVaultMode('unlock')}>{t(lang, 'protectionLegacyAccess')}</SecondaryButton>}
       {hasLegacy && unlocked && <>
         <SecondaryButton icon={KeyRound} onClick={() => setVaultMode('change')}>{t(lang, 'vaultChangePass')}</SecondaryButton>
         <QuietButton onClick={() => setVaultMode('rotate')}>{t(lang, 'vaultRotateCode')}</QuietButton>
       </>}
     </div>
-    {recoverySync === 'pending' && <p className="q-notice">{t(lang, 'protectionSyncPending')}</p>}
+    {recoverySync === 'pending' && active.length > 0 && <p className="q-notice">{t(lang, 'protectionSyncPending')}</p>}
   </>;
   return <section className="prayer-protection" aria-label={showTitle ? undefined : t(lang, 'protectionTitle')} aria-labelledby={showTitle ? titleId : undefined} aria-busy={busy || !health}>
     {showTitle && <h2 id={titleId} className="q-section-title">{t(lang, 'protectionTitle')}</h2>}
@@ -211,7 +221,7 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
       <p className="q-body-sm">{t(lang, 'protectionPasskeyBody')}</p>
       <p className={`protection-status${active.length && checked ? ' protection-status--ready' : ''}`} role="status">
         {active.length > 0 && checked && <Check size={15} aria-hidden="true" />}
-        {t(lang, !health ? 'protectionLoading' : !checked ? 'protectionUnavailable' : recoveryStatus)}
+        {!health ? t(lang, 'protectionLoading') : !checked ? protectionMessage(lang, health.status) : t(lang, recoveryStatus)}
       </p>
       {canEnroll && !passkeys.length && <div className="protection-actions">
         {pendingPasskey && !passkeys.length
@@ -219,7 +229,7 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
           : <PrimaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => enrollPasskeyRecovery(userId))}>{t(lang, 'protectionEnroll')}</PrimaryButton>}
       </div>}
       {canEnroll && health?.capability && !health.capability.canEnroll && <p className="protection-hint">{t(lang, 'protectionUnsupported')}</p>}
-      {!canEnroll && !hasLegacy && active.length === 0 && legacyActions}
+      {!canEnroll && !hasLegacy && active.length === 0 && <p className="protection-hint">{t(lang, 'protectionServiceSetup')}</p>}
       {active.length > 0 && <p className="protection-hint">{t(lang, 'protectionSameDevice')}</p>}
       {statusFailed(health) && <QuietButton disabled={busy} onClick={() => run(async () => ({ ok: true }))}>{t(lang, 'protectionRetry')}</QuietButton>}
     </div>
@@ -239,22 +249,33 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
             ? <SecondaryButton disabled={busy} onClick={() => run(() => disableDeviceUnlock(userId))}>{t(lang, 'protectionDisableDevice')}</SecondaryButton>
             : canEnroll && selectedPasskey ? <div className="protection-device-setup">
               {passkeys.length > 1 && <select className="q-input" aria-label={t(lang, 'protectionPasskey')} value={selectedPasskey.id} onChange={(event) => setPasskeyId(event.target.value)}>
-                {passkeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang)}</option>)}
+                {passkeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
               </select>}
               {!health.capability?.canProtectDevice && <p className="protection-hint">{t(lang, 'protectionDeviceUnsupported')}</p>}
-              {backupChecked ? <p className="protection-status protection-status--ready"><Check size={15} aria-hidden="true" />{t(lang, 'protectionRecoveryReady')}</p>
-                : <>
-                  <p className="q-body-sm">{t(lang, 'protectionDeviceBackupBody')}</p>
+              {providerBackup ? <p className="protection-hint">{t(lang, 'protectionProviderBackup')}</p> : <>
+                <p className="q-body-sm">{t(lang, 'protectionAdditionalPasskeyBody')}</p>
+                {backupPasskey
+                  ? <select className="q-input" aria-label={t(lang, 'protectionAdditionalPasskey')} value={backupPasskey.id} onChange={(event) => setBackupPasskeyId(event.target.value)}>
+                    {additionalPasskeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
+                  </select>
+                  : <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => enrollPasskeyRecovery(userId))}>{t(lang, 'protectionAddPasskey')}</SecondaryButton>}
+              </>}
+              {(selectedEmergency || health.legacy?.available || backupChecked) && <details className="protection-details">
+                <summary>{t(lang, 'protectionMoreRecovery')}</summary>
+                {backupChecked ? <p className="protection-status protection-status--ready"><Check size={15} aria-hidden="true" />{t(lang, 'protectionRecoveryReady')}</p> : <>
                   {(emergencies.length > 1 || (selectedEmergency && health.legacy?.available)) && <select className="q-input" aria-label={t(lang, 'protectionEmergency')} value={emergencyId || selectedEmergency.id} onChange={(event) => setEmergencyId(event.target.value)}>
-                    {emergencies.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang)}</option>)}
+                    {emergencies.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
                     {health.legacy?.available && <option value="legacy">{t(lang, 'vaultRecoveryTitle')}</option>}
                   </select>}
-                  {(selectedEmergency || health.legacy?.available) && <BackupInput lang={lang} code={emergencyCode} onChange={setEmergencyCode} disabled={busy} onError={setMessage} />}
-                  {canEnroll && !selectedEmergency && !health.legacy?.available && <SecondaryButton disabled={busy} onClick={() => setEmergencyDialog({})}>{t(lang, 'protectionAddEmergency')}</SecondaryButton>}
+                  <BackupInput lang={lang} code={emergencyCode} onChange={setEmergencyCode} disabled={busy} onError={setMessage} />
                 </>}
-              <SecondaryButton icon={Fingerprint} disabled={busy || !health.capability?.canProtectDevice || (!backupChecked && !emergencyCode.trim())} onClick={() => run(async () => {
+              </details>}
+              <p className="protection-hint">{t(lang, 'protectionDevicePasskeyBody')}</p>
+              <SecondaryButton icon={Fingerprint} disabled={busy || !checked || !health.capability?.canProtectDevice || (!providerBackup && !backupPasskey && !backupChecked && !emergencyCode.trim())} onClick={() => run(async () => {
                 const selected = emergencyId === 'legacy' ? undefined : selectedEmergency?.id;
-                const result = await enableDeviceUnlock(userId, selectedPasskey.id, backupChecked ? {} : { emergencyCode, emergencyMethodId: selected });
+                const recovery = emergencyCode.trim() ? { emergencyCode, emergencyMethodId: selected }
+                  : !providerBackup && backupPasskey ? { passkeyMethodId: backupPasskey.id } : {};
+                const result = await enableDeviceUnlock(userId, selectedPasskey.id, recovery);
                 if (result.ok) { setEmergencyCode(''); setBackupChecked(false); }
                 else if (result.status === 'verification_required') setBackupChecked(false);
                 return result;
@@ -265,12 +286,12 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
           <summary>{t(lang, 'protectionManageMethods')} <span className="protection-count">{methods.length}</span></summary>
           {canEnroll && passkeys.length > 0 && <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => run(() => enrollPasskeyRecovery(userId))}>{t(lang, 'protectionEnroll')}</SecondaryButton>}
           <ul>{methods.map((method) => <li key={method.id}>
-            <KeyRound size={17} aria-hidden="true" /><div className="protection-method__body"><strong>{methodLabel(method, lang)}</strong>
+            <KeyRound size={17} aria-hidden="true" /><div className="protection-method__body"><strong>{methodLabel(method, lang, methods)}</strong>
               {method.status !== 'active' ? <p>{t(lang, 'protectionNeedsVerification')}</p> : Number.isFinite(Date.parse(method.createdAt)) && <p>{new Date(method.createdAt).toLocaleDateString(lang)}</p>}
             </div>
             <div className="protection-actions">
               {method.status !== 'active' && canVerify(method) && <QuietButton disabled={busy} onClick={() => method.type === 'passkey' ? run(() => verifyPasskeyRecovery(userId, method.id)) : setEmergencyDialog({ method })}>{t(lang, 'protectionVerifyMethod')}</QuietButton>}
-              <QuietButton disabled={busy} aria-label={`${t(lang, 'protectionRemove')}: ${methodLabel(method, lang)}`} onClick={() => setRevoke(method)}>{t(lang, 'protectionRemove')}</QuietButton>
+              <QuietButton disabled={busy} aria-label={`${t(lang, 'protectionRemove')}: ${methodLabel(method, lang, methods)}`} onClick={() => setRevoke(method)}>{t(lang, 'protectionRemove')}</QuietButton>
             </div>
           </li>)}</ul>
         </details>}
@@ -303,13 +324,25 @@ export function PrayerRecoveryChoices({ userId, lang = 'fr', onRecovered }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [emergencyId, setEmergencyId] = useState('');
+  const [passkeyId, setPasskeyId] = useState('');
   const request = useRef(0);
   useEffect(() => {
     const generation = ++request.current;
-    setHealth(null); setCode(''); setMessage('');
-    getProtectionStatus(userId).then((value) => { if (request.current === generation) setHealth(value); }).catch(() => { if (request.current === generation) setHealth({ methods: [], error: true }); });
+    setHealth(null); setCode(''); setMessage(''); setBusy(false); setPasskeyId(''); setEmergencyId('');
+    getProtectionStatus(userId).then((value) => { if (request.current === generation) setHealth(value); })
+      .catch(() => { if (request.current === generation) setHealth({ methods: [], error: true }); });
     return () => { request.current += 1; };
   }, [userId]);
+  const retry = async () => {
+    const generation = request.current;
+    setBusy(true); setMessage('');
+    try {
+      const value = await getProtectionStatus(userId);
+      if (request.current === generation) setHealth(value);
+    } catch {
+      if (request.current === generation) setHealth({ methods: [], error: true });
+    } finally { if (request.current === generation) setBusy(false); }
+  };
   const run = async (operation) => {
     const generation = request.current;
     setBusy(true); setMessage('');
@@ -321,27 +354,46 @@ export function PrayerRecoveryChoices({ userId, lang = 'fr', onRecovered }) {
     } catch { if (request.current === generation) setMessage(t(lang, 'protectionUnavailable')); }
     finally { if (request.current === generation) setBusy(false); }
   };
-  const methods = (health?.methods || []).filter((method) => method.status === 'active');
-  const passkeys = methods.filter((method) => method.type === 'passkey');
-  const emergencies = methods.filter((method) => method.type === 'emergency-code');
+  const methods = (health?.methods || []).filter((method) => method.status === 'active'
+    || (method.type === 'passkey' && method.status === 'pending' && canVerify(method)));
+  const passkeys = methods.filter((method) => method.type === 'passkey')
+    .sort((first, second) => Number(first.status !== 'active') - Number(second.status !== 'active'));
+  const passkey = passkeys.find((method) => method.id === passkeyId) || passkeys[0];
+  const emergencies = methods.filter((method) => method.type === 'emergency-code' && method.status === 'active');
   const emergency = emergencies.find((method) => method.id === emergencyId) || emergencies[0];
-  const localUnlock = health?.deviceUnlockAvailable || health?.deviceProtected || health?.deviceProtectionPending;
+  const localUnlock = health?.deviceUnlockAvailable;
+  // The local credential and the server recovery entry open the same key.
+  // Keep one primary action instead of listing the same passkey twice.
+  const otherPasskeys = passkeys.filter((method) => !localUnlock || method.id !== health.localMethodId);
   if (!health) return <p role="status" className="q-body-sm">{t(lang, 'protectionLoading')}</p>;
-  if (!localUnlock && methods.length === 0) return statusFailed(health) ? <p role="status" className="q-notice">{protectionMessage(lang, health.status)}</p> : null;
   const backup = emergency && <div className="protection-recovery-backup">
     {emergencies.length > 1 && <select className="q-input" aria-label={t(lang, 'protectionCredentials')} value={emergency.id} onChange={(event) => setEmergencyId(event.target.value)}>
-      {emergencies.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang)}</option>)}
+      {emergencies.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
     </select>}
     <BackupInput lang={lang} code={code} onChange={setCode} disabled={busy} onError={setMessage} />
     <SecondaryButton disabled={busy || !code.trim()} onClick={() => run(() => recoverWithEmergencyCode(userId, emergency.id, code))}>{t(lang, 'protectionRecoverCode')}</SecondaryButton>
   </div>;
+  const passkeyAction = passkey && <>
+    {passkeys.length > 1 && <select className="q-input" aria-label={t(lang, 'protectionPasskey')} value={passkey.id} onChange={(event) => setPasskeyId(event.target.value)} disabled={busy}>
+      {passkeys.map((method) => <option key={method.id} value={method.id}>{methodLabel(method, lang, methods)}</option>)}
+    </select>}
+    <PrimaryButton icon={Fingerprint} disabled={busy} onClick={() => run(() => recoverWithPasskey(userId, passkey.id))}>
+      {t(lang, passkey.status === 'pending' ? 'protectionPendingPasskey' : 'protectionRecoverPasskey')}
+    </PrimaryButton>
+  </>;
   return <section className="protection-recovery" aria-label={t(lang, 'protectionChoose')} aria-busy={busy}>
-    {localUnlock && <PrimaryButton icon={Fingerprint} disabled={busy} onClick={() => run(() => unlockWithDevice(userId))}>{t(lang, 'protectionSetDevice')}</PrimaryButton>}
-    {passkeys.map((method, index) => {
-      const Button = !localUnlock && index === 0 ? PrimaryButton : SecondaryButton;
-      return <Button key={method.id} icon={KeyRound} disabled={busy} onClick={() => run(() => recoverWithPasskey(userId, method.id))}>{methodLabel(method, lang)}</Button>;
-    })}
-    {passkeys.length > 0 || localUnlock ? backup && <details className="protection-details"><summary>{t(lang, 'protectionMoreRecovery')}</summary>{backup}</details> : backup}
+    {localUnlock ? <PrimaryButton icon={Fingerprint} disabled={busy} onClick={() => run(() => unlockWithDevice(userId))}>{t(lang, 'protectionSetDevice')}</PrimaryButton> : passkeyAction}
+    {(localUnlock || passkey) && <p className="protection-hint">{t(lang, 'protectionPasskeyBody')}</p>}
+    {statusFailed(health) && <div className="protection-recovery-backup">
+      <p role="status" className="q-notice">{protectionMessage(lang, health.status)}</p>
+      <QuietButton disabled={busy} onClick={retry}>{t(lang, 'protectionRetry')}</QuietButton>
+    </div>}
+    {!statusFailed(health) && !localUnlock && !passkey && <p className="q-body-sm">{t(lang, 'protectionNoPasskey')}</p>}
+    {localUnlock && otherPasskeys.length > 0 && <details className="protection-details">
+      <summary>{t(lang, 'protectionRecoverPasskey')}</summary>
+      {otherPasskeys.map((method) => <SecondaryButton key={method.id} icon={KeyRound} disabled={busy} onClick={() => run(() => recoverWithPasskey(userId, method.id))}>{methodLabel(method, lang, methods)}</SecondaryButton>)}
+    </details>}
+    {localUnlock || passkey ? backup && <details className="protection-details"><summary>{t(lang, 'protectionMoreRecovery')}</summary>{backup}</details> : backup}
     {message && <p role="alert" className="q-notice">{message}</p>}
   </section>;
 }

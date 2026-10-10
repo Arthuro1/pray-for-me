@@ -46,8 +46,9 @@ An emergency code is an optional additional backup for passkey recovery. It must
 be saved somewhere accessible independently of the original device, such as a
 password manager or a recovery file, rather than memorized. Saving the code does
 not activate it: the client verifies the saved copy against the server's wrapped
-key before reporting completion. Extra device locking has a separate backup
-requirement described below; adding a passkey alone does not require a code.
+key before reporting completion. Automatic device locking can use a passkey
+reported as backed up by its provider or a separately tested additional passkey;
+the optional emergency backup is another fallback, not a required code step.
 
 Both the older passphrase route and the new passkey route wrap the same existing
 account key. Changing recovery methods does not re-encrypt or replace prayers.
@@ -55,6 +56,12 @@ An account sign-in restores the authenticated session; accessing encrypted
 content on a new device additionally requires a usable passkey, saved backup or
 existing legacy recovery credential. A device with no local key may still have
 passkey recovery available even if no legacy `vault_keys` record exists.
+
+A saved usable passkey can restore the original account key without the old
+passphrase or recovery code. Adding a passkey later requires an unlocked device
+that still has that original key. Fingerprint, face or device PIN authorizes a
+registered passkey; it cannot reconstruct a lost key or retroactively recover
+old ciphertext when no usable recovery method or accessible device remains.
 
 ## Legacy passphrase recovery
 
@@ -134,15 +141,23 @@ private key and a historical encrypted prayer where present before installing a
 candidate. This is key-match evidence, not an audit of every stored item. A
 server without the secret cannot certify decryption: verification metadata is
 explicitly client-reported. The UI distinguishes a recorded recovery check from
-"Tested on this device" in the current unlocked session and asks for a real
-second-device recovery test; it never infers that from provider backup bits.
+"Tested on this device" in the current unlocked session. Provider backup flags
+are authenticated metadata about the credential, not evidence that prayer
+recovery has been tested on another device. The interface reports that metadata
+separately and advises a real second-device recovery test. Access on a replacement
+device also depends on the provider account and support for the same passkey PRF.
 
 ## Protected device access
 
-Enabling protected access requires a currently usable passkey PRF wrapper plus an
-independently re-tested emergency code. Same-device passkey verification is not
-accepted as independent recovery. Account-scoped Web Locks serialize protection
-enable/disable/revocation across tabs; transitions fail closed when unavailable.
+Enabling protected access requires a currently usable passkey PRF wrapper and a
+recovery fallback: a provider-reported backed-up passkey, a distinct additional
+passkey checked against the same account key, or an independently re-tested
+optional emergency backup. No passphrase or recovery code is required for the
+passkey routes. A same-device passkey check proves access to the current key,
+not recovery after losing that device; backup metadata and additional passkeys
+must not be described as proof of a successful second-device restore.
+Account-scoped Web Locks serialize protection enable/disable/revocation across
+tabs; transitions fail closed when unavailable.
 
 The encrypted local wrapper and random authenticated witness are written/read
 back before the durable `pfm_device_protected_<user-id>` policy is enabled. Raw

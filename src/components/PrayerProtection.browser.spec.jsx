@@ -12,8 +12,9 @@ vi.mock('../lib/prayerProtection', () => services);
 vi.mock('../store/vaultStore', () => ({ default: Object.assign(() => ({ initialized: true, unlocked: true, recoverySync: 'synced', lock: vi.fn() }), { getState: () => ({ refresh: vi.fn() }) }) }));
 vi.mock('./VaultMigrationStatus', () => ({ default: () => null }));
 vi.mock('./VaultModal', () => ({ default: () => null }));
-import PrayerProtection from './PrayerProtection';
+import PrayerProtection, { PrayerRecoveryChoices } from './PrayerProtection';
 import { loadLocale, t } from '../i18n';
+import AccountGate from './AccountGate';
 
 beforeEach(() => {
   vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'true');
@@ -29,6 +30,43 @@ afterEach(() => {
 const showProtection = (lang) => render(<main style={{ maxWidth: 760, margin: '0 auto', padding: 24 }}><PrayerProtection userId="synthetic-account" lang={lang} /></main>);
 
 describe('Prayer protection presentation', () => {
+  it('shows a code-free recovery action for an interrupted passkey setup on a phone', async () => {
+    await page.viewport(390, 740); document.documentElement.dataset.theme = 'dark';
+    services.getProtectionStatus.mockResolvedValue({ ok: true, methods: [
+      { id: 'saved-passkey', type: 'passkey', status: 'pending', revision: 1, wrapper: {} },
+    ] });
+    services.recoverWithPasskey.mockResolvedValue({ ok: true });
+    render(<AccountGate lang="fr" title={t('fr', 'keyMissingHeading')} body={t('fr', 'keyMissingBody')} reassure={t('fr', 'keyMissingReassure')} exitLabel={t('fr', 'signOut')} onExit={() => {}}>
+      <PrayerRecoveryChoices userId="synthetic-account" lang="fr" />
+    </AccountGate>);
+    const button = await screen.findByRole('button', { name: t('fr', 'protectionPendingPasskey') });
+    await document.fonts.ready;
+    expect(screen.queryByRole('textbox')).toBeNull();
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+    expect(button.getBoundingClientRect().right).toBeLessThanOrEqual(390);
+    await page.screenshot({ path: '../../design-qa/prayer-protection-recovery-mobile.png', element: document.querySelector('.account-gate') || document.body });
+    fireEvent.click(button);
+    expect(services.recoverWithPasskey).toHaveBeenCalledWith('synthetic-account', 'saved-passkey');
+  });
+
+  it('lets a backed-up passkey enable device locking without an emergency form', async () => {
+    await page.viewport(390, 900); document.documentElement.dataset.theme = 'dark';
+    services.getProtectionStatus.mockResolvedValue({ ok: true, deviceProtected: false,
+      capability: { canEnroll: true, canProtectDevice: true },
+      methods: [{ id: 'saved-passkey', type: 'passkey', status: 'active', revision: 1, wrapper: {},
+        backupState: { eligible: true, backedUp: true } }],
+    });
+    showProtection('fr');
+    await screen.findByText(t('fr', 'protectionTestRecorded'));
+    fireEvent.click(screen.getByText(t('fr', 'protectionOptions')));
+    const enable = screen.getByRole('button', { name: t('fr', 'protectionDeviceEnable') });
+    await document.fonts.ready;
+    expect(enable.disabled).toBe(false);
+    expect(screen.queryByLabelText(t('fr', 'protectionEmergency'))).toBeNull();
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(390);
+    await page.screenshot({ path: '../../design-qa/prayer-protection-device-mobile.png', element: enable.closest('.protection-card') });
+  });
+
   it.each([
     ['fr', 1080, 800, 'dark', '100%'],
     ['fr', 390, 740, 'dark', '100%'],

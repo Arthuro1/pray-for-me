@@ -11,8 +11,9 @@ and residual risks are in [ENCRYPTION.md](ENCRYPTION.md) and
 - Production origin: exactly `https://qetoret.com`; RP ID `qetoret.com`.
 - New-device recovery online; enrolled-device unlock offline when the cached app
   and authenticated session remain usable.
-- Require a tested independent emergency code before protected-device migration.
-  Second-device proof is not inferred from a same-device passkey test.
+- Allow protected-device migration with a freshly verified provider-backed passkey
+  or an additional tested passkey. Emergency/legacy backups remain optional routes.
+  Provider backup flags and distinct credentials do not prove second-device access.
 - Lock protected devices on refresh/close and after five minutes of inactivity.
 - Prioritize Android/Google Password Manager, then desktop Chrome/Edge. Test
   iCloud/Safari and installed iOS PWA separately before enabling iOS enrollment.

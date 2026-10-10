@@ -12,33 +12,48 @@ const wrapper = { version: 1, kind: 'passkey-prf', accountId: userId, methodId, 
 const method = { id: methodId, user_id: userId, method_type: 'passkey', credential_id: credentialId,
   status: 'active', revision: 2, wrapper, created_at: '2026-10-09', verified_at: '2026-10-09' };
 const credential = { id: credentialId, user_id: userId, method_id: methodId, rp_id: 'qetoret.com',
-  public_key: b64(32), counter: 0, revision: 0, transports: ['internal'] };
+  public_key: b64(32), counter: 0, revision: 0, device_type: 'singleDevice', backed_up: false, transports: ['internal'] };
 const assertion = { id: credentialId, rawId: credentialId, type: 'public-key', response: {
   clientDataJSON: b64(100), authenticatorData: b64(37), signature: b64(64), userHandle: Buffer.from(userId).toString('base64url'),
 }, clientExtensionResults: { prf: { results: { first: 'SECRET_PRF' } } } };
 
 function fixtures(enrollment = false) {
-  const rpc = vi.fn(async name => {
+  const savedMethod = { ...method };
+  const savedCredential = { ...credential };
+  const rpc = vi.fn(async (name, values) => {
     if (name === 'check_recovery_rate_limit') return { data: true };
     if (name === 'consume_recovery_challenge') return { data: { id: challengeId, challenge: b64(32), origin: 'https://qetoret.com', rp_id: 'qetoret.com',
       operation: 'recover', credential_id: credentialId, expected_revision: 2 } };
-    return { data: method };
+    if (name === 'complete_recovery_assertion') {
+      savedCredential.counter = values.p_new_counter;
+      savedCredential.revision += 1;
+      return { data: null };
+    }
+    return { data: { ...savedMethod } };
   });
   const queries = [];
   const db = { rpc, from(table) {
     const chain = { table, filters: [] };
     for (const key of ['select', 'eq', 'is', 'neq', 'order']) chain[key] = (...args) => { chain.filters.push([key, ...args]); return chain; };
-    chain.maybeSingle = async () => ({ data: table === 'account_recovery_credentials' ? credential : method });
-    chain.then = (resolve, reject) => Promise.resolve({ data: [method] }).then(resolve, reject);
+    chain.update = (values) => { chain.patch = values; return chain; };
+    chain.maybeSingle = async () => {
+      if (table !== 'account_recovery_credentials') return { data: { ...savedMethod } };
+      const matched = chain.filters.every(([kind, key, value]) => kind !== 'eq' && kind !== 'is'
+        || (kind === 'is' && value === null ? savedCredential[key] == null : savedCredential[key] === value));
+      if (!matched) return { data: null };
+      if (chain.patch) Object.assign(savedCredential, chain.patch);
+      return { data: { ...savedCredential } };
+    };
+    chain.then = (resolve, reject) => Promise.resolve({ data: [table === 'account_recovery_credentials' ? savedCredential : savedMethod] }).then(resolve, reject);
     queries.push(chain);
     return chain;
   } };
   const webauthn = {
     generateAuthenticationOptions: vi.fn(async () => ({ challenge: b64(32), userVerification: 'required' })),
-    verifyAuthenticationResponse: vi.fn(async () => ({ verified: true, authenticationInfo: { newCounter: 0, userVerified: true } })),
+    verifyAuthenticationResponse: vi.fn(async () => ({ verified: true, authenticationInfo: { newCounter: 0, userVerified: true, credentialDeviceType: 'singleDevice', credentialBackedUp: false } })),
   };
   const execute = createRecoveryService({ db, user: { id: userId }, config: { enrollment, rpID: 'qetoret.com', origin: 'https://qetoret.com' }, webauthn });
-  return { execute, db, rpc, queries, webauthn };
+  return { execute, db, rpc, queries, webauthn, savedMethod, savedCredential };
 }
 
 describe('server recovery trust boundary', () => {
@@ -92,6 +107,85 @@ describe('server recovery trust boundary', () => {
     expect(input).toMatchObject({ expectedOrigin: 'https://qetoret.com', expectedRPID: 'qetoret.com', expectedChallenge: b64(32), requireUserVerification: true });
     expect(JSON.stringify(input)).not.toContain('SECRET_PRF');
     expect(rpc).toHaveBeenCalledWith('complete_recovery_assertion', expect.objectContaining({ p_credential_revision: 0, p_old_counter: 0, p_new_counter: 0 }));
+  });
+  it('exposes only stored verified backup flags in method metadata', async () => {
+    const { execute, savedCredential } = fixtures();
+    savedCredential.device_type = 'multiDevice';
+    const result = await execute({ action: 'list', backupState: { eligible: true, backedUp: true } });
+    expect(result.methods[0].backupState).toEqual({ eligible: true, backedUp: false });
+    expect((await execute({ action: 'read', methodId })).method.backupState).toEqual({ eligible: true, backedUp: false });
+    expect(result.methods[0]).not.toHaveProperty('public_key');
+    expect(result.methods[0]).not.toHaveProperty('counter');
+    savedCredential.backed_up = true;
+    expect((await execute({ action: 'assert-options', methodId, purpose: 'recover' })).method.backupState)
+      .toEqual({ eligible: true, backedUp: true });
+  });
+  it('does not infer backup eligibility for an absent or foreign-RP credential', async () => {
+    const { execute, savedCredential } = fixtures();
+    savedCredential.device_type = 'multiDevice';
+    savedCredential.backed_up = true;
+    savedCredential.rp_id = 'localhost';
+    expect((await execute({ action: 'read', methodId })).method).not.toHaveProperty('backupState');
+    savedCredential.rp_id = 'qetoret.com';
+    savedCredential.revoked_at = '2026-10-10';
+    expect((await execute({ action: 'list' })).methods[0]).not.toHaveProperty('backupState');
+  });
+  it.each([true, false])('refreshes signed backup status %s with an owner and revision guarded update', async backedUp => {
+    const { execute, savedCredential, webauthn, queries, rpc } = fixtures();
+    savedCredential.device_type = 'multiDevice';
+    savedCredential.backed_up = !backedUp;
+    webauthn.verifyAuthenticationResponse.mockResolvedValue({ verified: true, authenticationInfo: {
+      newCounter: 0, userVerified: true, credentialDeviceType: 'multiDevice', credentialBackedUp: backedUp,
+    } });
+    const result = await execute({ action: 'assert-verify', methodId, challengeId, response: assertion,
+      backupState: { eligible: false, backedUp: !backedUp } });
+    expect(result.method.backupState).toEqual({ eligible: true, backedUp });
+    expect(savedCredential.backed_up).toBe(backedUp);
+    const update = queries.find(query => query.patch);
+    expect(update.patch).toEqual({ backed_up: backedUp });
+    expect(update.filters).toEqual(expect.arrayContaining([
+      ['eq', 'id', credentialId], ['eq', 'user_id', userId], ['eq', 'method_id', methodId],
+      ['eq', 'revision', 1], ['eq', 'counter', 0], ['is', 'revoked_at', null],
+    ]));
+    expect(rpc).toHaveBeenCalledWith('complete_recovery_assertion', expect.objectContaining({ p_credential_revision: 0 }));
+    expect(result.method.wrapper).toEqual(wrapper);
+    expect(JSON.stringify(result)).not.toContain('SECRET_PRF');
+  });
+  it.each([
+    { credentialDeviceType: 'multiDevice', credentialBackedUp: true },
+    { credentialDeviceType: 'singleDevice', credentialBackedUp: true },
+    { credentialDeviceType: 'singleDevice' },
+  ])('rejects inconsistent or missing signed backup metadata before persisting %j', async metadata => {
+    const { execute, webauthn, rpc, queries } = fixtures();
+    webauthn.verifyAuthenticationResponse.mockResolvedValue({ verified: true, authenticationInfo: {
+      newCounter: 0, userVerified: true, ...metadata,
+    } });
+    await expect(execute({ action: 'assert-verify', methodId, challengeId, response: assertion }))
+      .rejects.toMatchObject({ code: 'verification_failed' });
+    expect(rpc.mock.calls.some(([name]) => name === 'complete_recovery_assertion')).toBe(false);
+    expect(queries.some(query => query.patch)).toBe(false);
+  });
+  it('fails closed if a newer credential revision wins the backup-state update', async () => {
+    const { execute, rpc, savedCredential } = fixtures();
+    const original = rpc.getMockImplementation();
+    rpc.mockImplementation(async (name, args) => {
+      const result = await original(name, args);
+      if (name === 'complete_recovery_assertion') savedCredential.revision += 1;
+      return result;
+    });
+    await expect(execute({ action: 'assert-verify', methodId, challengeId, response: assertion }))
+      .rejects.toMatchObject({ code: 'recovery_conflict', status: 409 });
+  });
+  it('fails closed if the method changes after completing the signed assertion', async () => {
+    const { execute, rpc, savedMethod } = fixtures();
+    const original = rpc.getMockImplementation();
+    rpc.mockImplementation(async (name, args) => {
+      const result = await original(name, args);
+      if (name === 'complete_recovery_assertion') savedMethod.revision += 1;
+      return result;
+    });
+    await expect(execute({ action: 'assert-verify', methodId, challengeId, response: assertion }))
+      .rejects.toMatchObject({ code: 'recovery_conflict', status: 409 });
   });
   it('consumes challenges before verification and rejects replay', async () => {
     const { execute, rpc, webauthn } = fixtures();

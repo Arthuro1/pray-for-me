@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const harness = vi.hoisted(() => ({ store: new Map(), methods: new Map(), requests: [], prayer: null, identity: null, legacy: null,
-  currentUser: null, failCommit: false, failDelete: false, onGet: null, onSet: null, onDelete: null, prfUnavailable: false, rpId: 'qetoret.com' }));
+  currentUser: null, failCommit: false, failDelete: false, onGet: null, onSet: null, onDelete: null, prfUnavailable: false, rpId: 'qetoret.com', backupState: null, onApi: null, failVerify: false }));
 
 vi.mock('idb-keyval', () => ({
   get: async (key) => harness.store.get(key), set: async (key, value) => { await harness.onSet?.(key); harness.store.set(key, structuredClone(value)); },
@@ -22,7 +22,7 @@ import { configureAccountContext, importRawMasterKey, getMasterKey, isUnlocked, 
   createVault, exportVaultRecord, rotateRecoveryCode, getDeviceProtectionPolicy } from './crypto/keyManager';
 import { encryptJson, toB64 } from './crypto/e2ee';
 import { forgetAccountKey, rememberAccountKey } from './crypto/accountKey';
-import { fromBase64Url, toBase64Url } from './crypto/passkeyRecovery';
+import { fromBase64Url, toBase64Url, wrapAccountKeyWithPrf } from './crypto/passkeyRecovery';
 import { clearPrayerProtectionProofs, enrollPasskeyRecovery, generateEmergencyRecovery, verifyEmergencyRecovery,
   recoverWithEmergencyCode, recoverWithPasskey, enableDeviceUnlock, disableDeviceUnlock, unlockWithDevice, getProtectionStatus, revokeRecoveryMethod, verifyLegacyRecoveryCode, forgetProtectedDevice } from './prayerProtection';
 
@@ -39,8 +39,9 @@ function installStorage() {
   return { getItem: (key) => values.get(key) ?? null, setItem: (key, value) => values.set(key, String(value)), removeItem: (key) => values.delete(key), clear: () => values.clear() };
 }
 
-function assertion() {
-  return { rawId: credentialBytes.buffer.slice(0), response: { clientDataJSON: new Uint8Array([1]), authenticatorData: new Uint8Array([2]), signature: new Uint8Array([3]), userHandle: null },
+function assertion(options) {
+  const selected = options?.publicKey?.allowCredentials?.[0]?.id;
+  return { rawId: selected ? new Uint8Array(selected).buffer : credentialBytes.buffer.slice(0), response: { clientDataJSON: new Uint8Array([1]), authenticatorData: new Uint8Array([2]), signature: new Uint8Array([3]), userHandle: null },
     getClientExtensionResults: () => harness.prfUnavailable ? { prf: { enabled: true } } : { prf: { results: { first: prfSecret.slice().buffer } } } };
 }
 
@@ -57,17 +58,18 @@ async function fakeApi(_url, request) {
   const body = JSON.parse(request.body);
   harness.requests.push(body);
   let result;
+  await harness.onApi?.(body);
   const method = harness.methods.get(body.methodId);
   switch (body.action) {
     case 'list': result = { methods: [...harness.methods.values()].filter((item) => item.userId === harness.currentUser && item.status !== 'revoked') }; break;
     case 'read': result = { method }; break;
     case 'register-options': result = { methodId: passkeyId, challengeId: crypto.randomUUID(), options: { challenge, rp: { id: harness.rpId, name: 'Qetoret' }, user: { id: challenge, name: userId }, pubKeyCredParams: [{ type: 'public-key', alg: -7 }] } }; break;
     case 'register-verify': result = { credentialId }; break;
-    case 'assert-options': result = { challengeId: crypto.randomUUID(), options: { challenge, rpId: harness.rpId, allowCredentials: [{ id: credentialId, type: 'public-key' }] }, method }; break;
+    case 'assert-options': result = { challengeId: crypto.randomUUID(), options: { challenge, rpId: harness.rpId, allowCredentials: [{ id: method?.credentialId || credentialId, type: 'public-key' }] }, method }; break;
     case 'assert-verify': result = { proofId: crypto.randomUUID(), method }; break;
     case 'commit': {
       if (harness.failCommit) return { ok: false, status: 503, json: async () => ({ error: 'recovery_unavailable' }) };
-      const created = { id: body.methodId, userId, type: 'passkey', status: 'pending', credentialId, wrapper: body.wrapper, revision: 1, label: 'Synthetic device' };
+      const created = { id: body.methodId, userId, type: 'passkey', status: 'pending', credentialId, wrapper: body.wrapper, revision: 1, label: 'Synthetic device', backupState: harness.backupState };
       harness.methods.set(created.id, created); result = { method: created }; break;
     }
     case 'emergency-create': {
@@ -75,6 +77,7 @@ async function fakeApi(_url, request) {
       harness.methods.set(created.id, created); result = { method: created }; break;
     }
     case 'verify': case 'emergency-verify': {
+      if (harness.failVerify) return { ok: false, status: 503, json: async () => ({ error: 'recovery_unavailable' }) };
       const verified = { ...method, status: 'active', revision: method.revision + 1, verifiedAt: new Date().toISOString(), verificationKind: 'client-reported' };
       harness.methods.set(verified.id, verified); result = { method: verified }; break;
     }
@@ -88,7 +91,7 @@ beforeEach(async () => {
   configureAccountContext(null);
   harness.store.clear(); harness.methods.clear(); harness.requests = []; harness.prayer = null; harness.identity = null; harness.legacy = null;
   harness.currentUser = userId; harness.failCommit = false; harness.failDelete = false; harness.onGet = null; harness.onSet = null; harness.onDelete = null; harness.prfUnavailable = false;
-  harness.rpId = 'qetoret.com';
+  harness.rpId = 'qetoret.com'; harness.backupState = null; harness.onApi = null; harness.failVerify = false;
   clearPrayerProtectionProofs();
   vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'true');
   vi.stubGlobal('localStorage', installStorage()); vi.stubGlobal('sessionStorage', installStorage());
@@ -96,7 +99,7 @@ beforeEach(async () => {
   vi.stubGlobal('PublicKeyCredential', { isUserVerifyingPlatformAuthenticatorAvailable: async () => true });
   vi.stubGlobal('navigator', { onLine: true, locks: lockQueue(), credentials: {
     create: vi.fn(async () => ({ rawId: credentialBytes.buffer.slice(0), response: { clientDataJSON: new Uint8Array([1]), attestationObject: new Uint8Array([2]), getTransports: () => ['internal'] } })),
-    get: vi.fn(async () => { await harness.onGet?.(); return assertion(); }),
+    get: vi.fn(async (options) => { await harness.onGet?.(); return assertion(options); }),
   } });
   vi.stubGlobal('fetch', vi.fn(fakeApi));
   configureAccountContext(userId);
@@ -107,7 +110,58 @@ beforeEach(async () => {
 
 afterEach(() => { configureAccountContext(null); vi.unstubAllGlobals(); vi.unstubAllEnvs(); });
 
+async function secondaryPasskey() {
+  const id = '20000000-0000-4000-8000-000000000002';
+  const secondCredentialId = toBase64Url(new Uint8Array([5, 6, 7, 8]));
+  const wrapper = await wrapAccountKeyWithPrf(getMasterKey(), prfSecret, { accountId: userId, methodId: id,
+    credentialId: secondCredentialId, prfSalt: toBase64Url(crypto.getRandomValues(new Uint8Array(32))) });
+  const method = { id, userId, type: 'passkey', status: 'active', revision: 2, credentialId: secondCredentialId, wrapper };
+  harness.methods.set(id, method);
+  return method;
+}
+
 describe('verified recovery orchestration', () => {
+  it('resumes a committed pending passkey while locked without any old phrase, code or enrollment flag', async () => {
+    const enrolled = await enrollPasskeyRecovery(userId);
+    harness.methods.set(enrolled.method.id, { ...enrolled.method, status: 'pending', revision: 1 });
+    lock(); vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false'); harness.requests = [];
+    expect(await recoverWithPasskey(userId, enrolled.method.id)).toMatchObject({ ok: true, status: 'recovered', method: { status: 'active' } });
+    expect(isUnlocked()).toBe(true);
+    expect(harness.requests.map((item) => item.action)).toEqual(['read', 'assert-options', 'assert-verify', 'verify']);
+    expect(harness.requests.find((item) => item.action === 'assert-options').purpose).toBe('verify');
+    expect(harness.methods.get(enrolled.method.id).status).toBe('active');
+  });
+
+  it.each(['wrong history', 'missing history', 'activation failure'])('does not activate or install a pending passkey after %s', async (failure) => {
+    const enrolled = await enrollPasskeyRecovery(userId);
+    harness.methods.set(enrolled.method.id, { ...enrolled.method, status: 'pending', revision: 1 });
+    if (failure === 'wrong history') {
+      const different = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']);
+      harness.prayer.encrypted_payload = await encryptJson(different, {}, { entityType: 'personal-prayer', ownerOrGroupId: userId, recordId: 'old-prayer', field: 'sensitive-payload' });
+    } else if (failure === 'missing history') harness.prayer = null;
+    else harness.failVerify = true;
+    lock(); harness.requests = [];
+    expect((await recoverWithPasskey(userId, enrolled.method.id)).ok).toBe(false);
+    expect(isUnlocked()).toBe(false);
+    expect(harness.methods.get(enrolled.method.id).status).toBe('pending');
+    if (failure !== 'activation failure') expect(harness.requests.some((item) => item.action === 'verify')).toBe(false);
+  });
+
+  it('rejects an uncommitted pending passkey before prompting', async () => {
+    harness.methods.set(passkeyId, { id: passkeyId, userId, type: 'passkey', status: 'pending', revision: 0, wrapper: null });
+    lock();
+    expect(await recoverWithPasskey(userId, passkeyId)).toMatchObject({ ok: false, status: 'no_recovery' });
+    expect(navigator.credentials.get).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    [403, 'origin_not_allowed', 'origin_not_allowed'], [503, 'recovery_not_configured', 'recovery_not_configured'],
+    [401, 'unauthorized', 'authentication_required'], [403, 'enrollment_disabled', 'disabled'],
+    [404, 'recovery_not_found', 'no_recovery'], [503, 'private_server_details', 'server_error'],
+  ])('preserves safe recovery API failure %s/%s', async (status, error, expected) => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status, json: async () => ({ error }) })));
+    expect(await getProtectionStatus(userId)).toMatchObject({ ok: false, status: expected });
+  });
   it('enrolls and recovers the original history with an explicitly enabled localhost RP', async () => {
     vi.stubEnv('DEV', true);
     vi.stubEnv('MODE', 'recovery-test');
@@ -233,6 +287,116 @@ describe('verified recovery orchestration', () => {
 });
 
 describe('protected-device migration and offline unlock', () => {
+  it('protects and recovers with a freshly verified backed-up passkey and no emergency code', async () => {
+    harness.backupState = { eligible: true, backedUp: true };
+    const passkey = await enrollPasskeyRecovery(userId);
+    harness.store.set(`pfm_ak_${userId}`, 'synthetic-raw-copy');
+    expect(await enableDeviceUnlock(userId, passkey.method.id)).toMatchObject({ ok: true, status: 'protected' });
+    expect(harness.store.get(`pfm_protected_device_v1:${userId}`).recoveryRoute).toMatchObject({ type: 'passkey-backup', methodId: passkey.method.id });
+    expect(harness.store.has(`pfm_ak_${userId}`)).toBe(false);
+    expect(harness.requests.some((item) => item.action.startsWith('emergency'))).toBe(false);
+    lock(); navigator.onLine = false;
+    expect(await unlockWithDevice(userId)).toMatchObject({ ok: true });
+  });
+
+  it('does not trust stale backed-up metadata if the fresh assertion reports no backup', async () => {
+    harness.backupState = { eligible: true, backedUp: true };
+    const passkey = await enrollPasskeyRecovery(userId);
+    harness.store.set(`pfm_ak_${userId}`, 'original-raw-copy');
+    harness.onApi = (body) => {
+      if (body.action === 'assert-verify') harness.methods.set(passkey.method.id, { ...harness.methods.get(passkey.method.id), backupState: { eligible: true, backedUp: false } });
+    };
+    expect(await enableDeviceUnlock(userId, passkey.method.id)).toMatchObject({ ok: false, status: 'verification_required' });
+    expect(getDeviceProtectionPolicy(userId)).toBe('transparent');
+    expect(harness.store.get(`pfm_ak_${userId}`)).toBe('original-raw-copy');
+  });
+
+  it('accepts a second freshly usable distinct passkey as a code-free backup route', async () => {
+    const passkey = await enrollPasskeyRecovery(userId);
+    const secondary = await secondaryPasskey();
+    harness.store.set(`pfm_ak_${userId}`, 'synthetic-raw-copy');
+    expect(await enableDeviceUnlock(userId, passkey.method.id, { passkeyMethodId: secondary.id })).toMatchObject({ ok: true, status: 'protected' });
+    expect(harness.store.get(`pfm_protected_device_v1:${userId}`).recoveryRoute).toMatchObject({ type: 'passkey', methodId: secondary.id, credentialId: secondary.credentialId });
+    expect(await revokeRecoveryMethod(userId, secondary.id)).toMatchObject({ ok: false, status: 'verification_required' });
+    lock();
+    expect(await recoverWithPasskey(userId, secondary.id)).toMatchObject({ ok: true, status: 'recovered' });
+    expect(harness.store.has(`pfm_ak_${userId}`)).toBe(false);
+  });
+
+  it('rejects choosing the primary passkey itself as its second recovery route', async () => {
+    const passkey = await enrollPasskeyRecovery(userId);
+    expect(await enableDeviceUnlock(userId, passkey.method.id, { passkeyMethodId: passkey.method.id })).toMatchObject({ ok: false, status: 'verification_required' });
+    expect(getDeviceProtectionPolicy(userId)).toBe('transparent');
+  });
+
+  it('preserves raw access when a second passkey changes revision during its OS prompt', async () => {
+    const passkey = await enrollPasskeyRecovery(userId);
+    const secondary = await secondaryPasskey();
+    harness.store.set(`pfm_ak_${userId}`, 'original-raw-copy');
+    let prompts = 0;
+    harness.onGet = () => { if (++prompts === 2) harness.methods.set(secondary.id, { ...secondary, revision: secondary.revision + 1 }); };
+    expect(await enableDeviceUnlock(userId, passkey.method.id, { passkeyMethodId: secondary.id })).toMatchObject({ ok: false, status: 'verification_required' });
+    expect(getDeviceProtectionPolicy(userId)).toBe('transparent');
+    expect(harness.store.get(`pfm_ak_${userId}`)).toBe('original-raw-copy');
+  });
+
+  it('replaces the required emergency route with a freshly backed-up primary before removing it', async () => {
+    const passkey = await enrollPasskeyRecovery(userId);
+    const emergency = await generateEmergencyRecovery(userId);
+    await verifyEmergencyRecovery(userId, emergency.method.id, emergency.code);
+    expect((await enableDeviceUnlock(userId, passkey.method.id)).ok).toBe(true);
+    harness.methods.set(passkey.method.id, { ...harness.methods.get(passkey.method.id), backupState: { eligible: true, backedUp: true } });
+    expect(await revokeRecoveryMethod(userId, emergency.method.id)).toMatchObject({ ok: true, status: 'revoked' });
+    expect(harness.store.get(`pfm_protected_device_v1:${userId}`).recoveryRoute.type).toBe('passkey-backup');
+    expect(harness.methods.get(emergency.method.id).status).toBe('revoked');
+  }, 30_000);
+  it.each(['same credential', 'wrong key'])('rejects a second-passkey backup with %s while preserving raw access', async (failure) => {
+    const passkey = await enrollPasskeyRecovery(userId);
+    const secondary = await secondaryPasskey();
+    const key = failure === 'wrong key' ? await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']) : getMasterKey();
+    const candidateCredentialId = failure === 'same credential' ? passkey.method.credentialId : secondary.credentialId;
+    const wrapper = await wrapAccountKeyWithPrf(key, prfSecret, { accountId: userId, methodId: secondary.id,
+      credentialId: candidateCredentialId, prfSalt: secondary.wrapper.prfSalt });
+    harness.methods.set(secondary.id, { ...secondary, credentialId: candidateCredentialId, wrapper });
+    harness.store.set(`pfm_ak_${userId}`, 'original-raw-copy');
+    expect(await enableDeviceUnlock(userId, passkey.method.id, { passkeyMethodId: secondary.id })).toMatchObject({ ok: false,
+      status: failure === 'wrong key' ? 'key_mismatch' : 'verification_required' });
+    expect(getDeviceProtectionPolicy(userId)).toBe('transparent');
+    expect(harness.store.get(`pfm_ak_${userId}`)).toBe('original-raw-copy');
+  });
+
+  it.each(['before cleanup', 'after cleanup'])('does not report protection complete if backup state changes %s', async (phase) => {
+    harness.backupState = { eligible: true, backedUp: true };
+    const passkey = await enrollPasskeyRecovery(userId);
+    harness.store.set(`pfm_ak_${userId}`, 'original-raw-copy');
+    const removeBackup = () => harness.methods.set(passkey.method.id, { ...harness.methods.get(passkey.method.id), backupState: { eligible: true, backedUp: false } });
+    if (phase === 'before cleanup') harness.onSet = (key) => { if (key === `pfm_protected_device_v1:${userId}`) removeBackup(); };
+    else harness.onDelete = (key) => { if (key === `pfm_ak_${userId}`) removeBackup(); };
+    expect(await enableDeviceUnlock(userId, passkey.method.id)).toMatchObject({ ok: false, status: 'verification_required' });
+    if (phase === 'before cleanup') {
+      expect(getDeviceProtectionPolicy(userId)).toBe('transparent');
+      expect(harness.store.get(`pfm_ak_${userId}`)).toBe('original-raw-copy');
+    } else {
+      expect(getDeviceProtectionPolicy(userId)).toBe('protected');
+      expect((await getProtectionStatus(userId))).toMatchObject({ deviceProtected: false, deviceProtectionPending: true });
+      expect(harness.store.get(`pfm_protected_device_v1:${userId}`).cleanupVerified).toBe(false);
+      lock(); navigator.onLine = false;
+      expect((await unlockWithDevice(userId)).ok).toBe(true);
+      expect(harness.store.has(`pfm_ak_${userId}`)).toBe(false);
+    }
+  });
+
+  it('keeps the required backup active when saving its passkey-based replacement fails', async () => {
+    const passkey = await enrollPasskeyRecovery(userId);
+    const secondary = await secondaryPasskey();
+    expect((await enableDeviceUnlock(userId, passkey.method.id, { passkeyMethodId: secondary.id })).ok).toBe(true);
+    harness.methods.set(passkey.method.id, { ...harness.methods.get(passkey.method.id), backupState: { eligible: true, backedUp: true } });
+    harness.onSet = (key) => { if (key === `pfm_protected_device_v1:${userId}`) throw new Error('storage failed'); };
+    expect((await revokeRecoveryMethod(userId, secondary.id)).ok).toBe(false);
+    expect(harness.methods.get(secondary.id).status).toBe('active');
+    expect(harness.store.get(`pfm_protected_device_v1:${userId}`).recoveryRoute.methodId).toBe(secondary.id);
+  });
+
   it('accepts a synced legacy wrapper encoded as a JSON string with its actual revision', async () => {
     const passkey = await enrollPasskeyRecovery(userId);
     const code = await createVault('legacy synthetic passphrase');

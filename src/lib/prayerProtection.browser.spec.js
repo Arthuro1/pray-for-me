@@ -4,7 +4,7 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval';
 
-const state = vi.hoisted(() => ({ methods: new Map(), identity: null, prayer: null, userId: null, enabled: true, offline: false }));
+const state = vi.hoisted(() => ({ methods: new Map(), identity: null, prayer: null, userId: null, enabled: true, offline: false, backupState: null }));
 vi.mock('./supabase', () => ({ supabase: {
   auth: { getSession: async () => ({ data: { session: { user: { id: state.userId }, access_token: 'synthetic-token' } } }) },
   from: (table) => {
@@ -52,7 +52,7 @@ async function apiDouble(_url, request) {
     case 'assert-verify': result = { proofId: crypto.randomUUID(), method: existing }; break;
     case 'commit': case 'emergency-create': {
       const method = { id: body.methodId, userId, type: body.action === 'commit' ? 'passkey' : 'emergency-code', status: 'pending', revision: 1, wrapper: body.wrapper,
-        ...(body.action === 'commit' ? { credentialId } : {}) };
+        ...(body.action === 'commit' ? { credentialId, backupState: state.backupState } : {}) };
       state.methods.set(method.id, method); result = { method }; break;
     }
     case 'read': result = { method: existing }; break;
@@ -67,7 +67,7 @@ async function apiDouble(_url, request) {
 
 beforeEach(async () => {
   configureAccountContext(null);
-  state.methods.clear(); state.identity = null; state.prayer = null; state.userId = userId; state.enabled = true; state.offline = false;
+  state.methods.clear(); state.identity = null; state.prayer = null; state.userId = userId; state.enabled = true; state.offline = false; state.backupState = null;
   localStorage.removeItem(`pfm_device_protected_${userId}`);
   sessionStorage.clear();
   await Promise.all([idbDel(`pfm_ak_${userId}`), idbDel(`pfm_protected_device_v1:${userId}`), idbDel(`pfm_vault:${userId}`)]);
@@ -151,3 +151,41 @@ it('recovers original prayer, identity, group key and encrypted attachment after
   expect(await idbGet(`pfm_ak_${userId}`)).toBe(toB64(new Uint8Array(await crypto.subtle.exportKey('raw', getMasterKey()))));
   expect((await decryptJson(getMasterKey(), state.prayer.encrypted_payload, prayerContext)).title).toBe('Synthetic original prayer');
 }, 60_000);
+
+
+it('uses a backed-up passkey alone for protected offline access and new-profile recovery of the same prayer', async () => {
+  state.prayer = { id: 'historical-prayer', user_id: userId, key_version: 1,
+    encrypted_payload: await encryptJson(getMasterKey(), { title: 'Original code-free prayer' }, prayerContext) };
+  state.backupState = { eligible: true, backedUp: true };
+  const enrolled = await enrollPasskeyRecovery(userId);
+  expect(enrolled.ok).toBe(true);
+  await idbSet(`pfm_ak_${userId}`, 'original-raw-slot');
+  expect((await enableDeviceUnlock(userId, enrolled.method.id)).ok).toBe(true);
+  expect((await idbGet(`pfm_protected_device_v1:${userId}`)).recoveryRoute.type).toBe('passkey-backup');
+  expect(await idbGet(`pfm_ak_${userId}`)).toBeUndefined();
+  expect([...state.methods.values()].every((method) => method.type === 'passkey')).toBe(true);
+  lock(); state.enabled = false; state.offline = true;
+  expect((await unlockWithDevice(userId)).ok).toBe(true);
+  expect(await decryptJson(getMasterKey(), state.prayer.encrypted_payload, prayerContext)).toEqual({ title: 'Original code-free prayer' });
+  configureAccountContext(null);
+  await idbDel(`pfm_protected_device_v1:${userId}`);
+  localStorage.removeItem(`pfm_device_protected_${userId}`);
+  sessionStorage.clear(); state.offline = false;
+  configureAccountContext(userId);
+  expect(isUnlocked()).toBe(false);
+  expect((await recoverWithPasskey(userId, enrolled.method.id)).ok).toBe(true);
+  expect(await decryptJson(getMasterKey(), state.prayer.encrypted_payload, prayerContext)).toEqual({ title: 'Original code-free prayer' });
+}, 30_000);
+
+it('finishes pending passkey recovery after losing the running key with enrollment disabled', async () => {
+  state.prayer = { id: 'historical-prayer', user_id: userId, key_version: 1,
+    encrypted_payload: await encryptJson(getMasterKey(), { title: 'Original pending prayer' }, prayerContext) };
+  const enrolled = await enrollPasskeyRecovery(userId);
+  expect(enrolled.ok).toBe(true);
+  state.methods.set(enrolled.method.id, { ...enrolled.method, status: 'pending', revision: 1 });
+  lock(); state.enabled = false;
+  expect(isUnlocked()).toBe(false);
+  const recovered = await recoverWithPasskey(userId, enrolled.method.id);
+  expect(recovered).toMatchObject({ ok: true, status: 'recovered', method: { status: 'active' } });
+  expect(await decryptJson(getMasterKey(), state.prayer.encrypted_payload, prayerContext)).toEqual({ title: 'Original pending prayer' });
+}, 30_000);

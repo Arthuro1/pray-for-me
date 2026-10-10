@@ -49,7 +49,8 @@ function failed(error) {
   const name = error?.name;
   const statuses = new Set(['stale_account', 'locked', 'disabled', 'unsupported', 'offline', 'cancelled', 'prf_unavailable',
     'invalid_wrapper', 'credential_mismatch', 'wrong_code', 'key_mismatch', 'no_history', 'no_recovery', 'verification_required',
-    'cleanup_incomplete', 'storage_unavailable', 'sync_failed', 'server_error', 'revoked', 'invalid_code', 'authentication_required']);
+    'cleanup_incomplete', 'storage_unavailable', 'sync_failed', 'server_error', 'revoked', 'invalid_code', 'authentication_required',
+    'origin_not_allowed', 'recovery_not_configured']);
   const status = name === 'NotAllowedError' || name === 'AbortError' ? 'cancelled'
     : name === 'NotSupportedError' ? 'unsupported'
       : statuses.has(error?.message) ? error.message : 'failed';
@@ -87,7 +88,13 @@ async function api(token, action, args = {}) {
   let result;
   try { result = await response.json(); } catch { throw new Error('server_error'); }
   current(token);
-  if (!response.ok) throw new Error(response.status === 403 ? 'disabled' : 'server_error');
+  if (!response.ok) {
+    const errors = { origin_not_allowed: 'origin_not_allowed', recovery_not_configured: 'recovery_not_configured',
+      unauthorized: 'authentication_required', authentication_required: 'authentication_required',
+      enrollment_disabled: 'disabled', disabled: 'disabled', no_recovery: 'no_recovery',
+      recovery_not_found: 'no_recovery', recovery_not_verified: 'verification_required' };
+    throw new Error(errors[result?.error] || (response.status === 401 ? 'authentication_required' : response.status === 403 ? 'disabled' : 'server_error'));
+  }
   return result;
 }
 
@@ -132,13 +139,21 @@ async function makeAssertion(token, method, purpose) {
     const verified = await api(token, 'assert-verify', { methodId: method.id, challengeId: challenge.challengeId,
       response: serializePublicKeyCredential(credential) });
     current(token);
-    return { output, proofId: verified.proofId, method: persisted };
+    // Backup state must come from the freshly verified, signed assertion rather
+    // than the options issued before an OS prompt or registration metadata.
+    const latest = verified.method ? validateMethod(verified.method, token, { type: 'passkey' })
+      : { ...persisted, backupState: null };
+    if (latest.id !== persisted.id || latest.revision !== persisted.revision || latest.credentialId !== persisted.credentialId
+      || JSON.stringify(latest.wrapper) !== JSON.stringify(persisted.wrapper)) throw new Error('verification_required');
+    return { output, proofId: verified.proofId, method: latest };
   } catch (error) { output.fill(0); throw error; }
 }
 
 async function readMethod(token, methodId, options) {
   const { method } = await api(token, 'read', { methodId });
-  return options?.metadataOnly ? validateMethodMetadata(method, token) : validateMethod(method, token, options);
+  const validated = options?.metadataOnly ? validateMethodMetadata(method, token) : validateMethod(method, token, options);
+  if (validated.id !== methodId) throw new Error('no_recovery');
+  return validated;
 }
 
 async function sameRunningKey(token, original, candidate) {
@@ -299,14 +314,26 @@ export async function verifyPasskeyRecovery(userId, methodId, existingToken, exi
 export async function recoverWithPasskey(userId, methodId) {
   return outcome(async () => {
     const token = capture(userId);
-    const method = await readMethod(token, methodId, { active: true, type: 'passkey' });
-    const asserted = await makeAssertion(token, method, 'recover');
+    const method = await readMethod(token, methodId, { type: 'passkey' });
+    const asserted = await makeAssertion(token, method, method.status === 'pending' ? 'verify' : 'recover');
     let candidate;
     try { candidate = await unwrapAccountKeyWithPrf(asserted.method.wrapper, asserted.output, { accountId: userId, methodId, credentialId: method.credentialId }); }
     finally { asserted.output.fill(0); }
+    let recoveredMethod = asserted.method;
+    if (recoveredMethod.status === 'pending') {
+      // A committed wrapper may outlive an interrupted enrollment. The original
+      // key is no longer required in memory: existing ciphertext is its proof.
+      if (!await verifyHistoricalAccountKey(userId, candidate, token)) throw new Error('key_mismatch');
+      current(token);
+      const verified = await api(token, 'verify', { methodId, expectedRevision: recoveredMethod.revision,
+        proofId: asserted.proofId, clientVerified: true });
+      recoveredMethod = validateMethod(verified.method, token, { active: true, type: 'passkey' });
+      if (recoveredMethod.id !== methodId || recoveredMethod.credentialId !== asserted.method.credentialId
+        || JSON.stringify(recoveredMethod.wrapper) !== JSON.stringify(asserted.method.wrapper)) throw new Error('verification_required');
+    }
     await installRecovered(token, candidate);
-    rememberMethodProof(token, asserted.method);
-    return { ok: true, status: 'recovered', method: asserted.method };
+    rememberMethodProof(token, recoveredMethod);
+    return { ok: true, status: 'recovered', method: recoveredMethod };
   });
 }
 
@@ -402,26 +429,80 @@ async function checkIndependentRecovery(token, { emergencyCode, emergencyMethodI
   }
   current(token);
   if (proof.key !== getMasterKey()) throw new Error('verification_required');
+  return { type: proof.methodId === 'legacy' ? 'legacy-code' : 'emergency-code', methodId: proof.methodId, revision: proof.revision,
+    ...(proof.methodId === 'legacy' ? { legacyJson: proof.legacyJson } : {}) };
+}
+
+const passkeyBackedUp = (method) => method?.backupState?.eligible === true && method.backupState.backedUp === true;
+const backedUpRoute = (method) => ({ type: 'passkey-backup', methodId: method.id, credentialId: method.credentialId, revision: method.revision });
+
+async function assertRunningPasskey(token, methodId, original) {
+  const method = await readMethod(token, methodId, { active: true, type: 'passkey' });
+  const asserted = await makeAssertion(token, method, 'verify');
+  let candidate;
+  try {
+    validateMethod(asserted.method, token, { active: true, type: 'passkey' });
+    candidate = await unwrapAccountKeyWithPrf(asserted.method.wrapper, asserted.output,
+      { accountId: token.accountId, methodId, credentialId: method.credentialId });
+  }
+  finally { asserted.output.fill(0); }
+  await sameRunningKey(token, original, candidate);
+  rememberMethodProof(token, asserted.method);
+  return { method: asserted.method, candidate };
+}
+
+async function checkDeviceRecovery(token, primary, recovery) {
+  if (passkeyBackedUp(primary)) return backedUpRoute(primary);
+  if (recovery.passkeyMethodId) {
+    const secondary = await readMethod(token, recovery.passkeyMethodId, { active: true, type: 'passkey' });
+    if (secondary.id === primary.id || secondary.credentialId === primary.credentialId) throw new Error('verification_required');
+    const verified = await assertRunningPasskey(token, secondary.id, getMasterKey());
+    // Distinct credentials provide two usable routes; they do not establish
+    // that the credentials live on different devices or with different providers.
+    return { type: 'passkey', methodId: verified.method.id, credentialId: verified.method.credentialId, revision: verified.method.revision };
+  }
+  return checkIndependentRecovery(token, recovery);
+}
+
+async function recheckDeviceRecovery(token, primary, route, { requireLocalProof = true } = {}) {
+  const latest = await readMethod(token, primary.id, { active: true, type: 'passkey' });
+  if (latest.revision !== primary.revision || latest.credentialId !== primary.credentialId
+    || JSON.stringify(latest.wrapper) !== JSON.stringify(primary.wrapper)) throw new Error('verification_required');
+  if (route.type === 'passkey-backup') {
+    if (route.methodId !== latest.id || route.revision !== latest.revision || !passkeyBackedUp(latest)) throw new Error('verification_required');
+  } else if (route.type === 'passkey') {
+    const secondary = await readMethod(token, route.methodId, { active: true, type: 'passkey' });
+    if (secondary.id === latest.id || secondary.credentialId === latest.credentialId
+      || secondary.credentialId !== route.credentialId || secondary.revision !== route.revision) throw new Error('verification_required');
+  } else if (requireLocalProof) {
+    const checked = await checkIndependentRecovery(token);
+    if (JSON.stringify(checked) !== JSON.stringify(route)) throw new Error('verification_required');
+  } else if (route.type === 'emergency-code') {
+    const backup = await readMethod(token, route.methodId, { active: true, type: 'emergency-code' });
+    if (backup.revision !== route.revision) throw new Error('verification_required');
+  } else if (route.type === 'legacy-code') {
+    const legacy = await supabase.from('vault_keys').select('record').eq('user_id', token.accountId).maybeSingle();
+    current(token);
+    const metadata = inspectVaultRecord(legacy.data?.record);
+    if (legacy.error || !metadata || metadata.revision !== route.revision || metadata.json !== route.legacyJson) throw new Error('verification_required');
+  } else throw new Error('verification_required');
+  current(token);
 }
 
 export async function enableDeviceUnlock(userId, methodId, recovery = {}) {
   return protectionTransition(userId, async (token) => {
     requireEnrollment();
-    await checkIndependentRecovery(token, recovery);
     const original = getMasterKey();
-    const method = await readMethod(token, methodId, { active: true, type: 'passkey' });
-    const asserted = await makeAssertion(token, method, 'verify');
-    let candidate;
-    try { candidate = await unwrapAccountKeyWithPrf(asserted.method.wrapper, asserted.output, { accountId: userId, methodId, credentialId: method.credentialId }); }
-    finally { asserted.output.fill(0); }
-    await sameRunningKey(token, original, candidate);
+    const { method, candidate } = await assertRunningPasskey(token, methodId, original);
+    const recoveryRoute = await checkDeviceRecovery(token, method, recovery);
+    await recheckDeviceRecovery(token, method, recoveryRoute);
     // Store ciphertext only. The local witness makes offline unlock prove the
     // candidate against this device's original key before installation.
     const iv = crypto.getRandomValues(new Uint8Array(12));
     const challenge = crypto.getRandomValues(new Uint8Array(32));
     const witness = await crypto.subtle.encrypt({ name: 'AES-GCM', iv,
       additionalData: new TextEncoder().encode(JSON.stringify(['qetoret/device-unlock', 1, userId, methodId])) }, original, challenge);
-    const local = { version: 1, accountId: userId, cleanupVerified: false, method: asserted.method, witness: { iv: toBase64Url(iv), ciphertext: toBase64Url(witness),
+    const local = { version: 1, accountId: userId, cleanupVerified: false, method, recoveryRoute, witness: { iv: toBase64Url(iv), ciphertext: toBase64Url(witness),
       // Hashing a random challenge allows checking plaintext without storing it.
       digest: toBase64Url(await crypto.subtle.digest('SHA-256', challenge)) } };
     current(token);
@@ -432,12 +513,13 @@ export async function enableDeviceUnlock(userId, methodId, recovery = {}) {
     if (JSON.stringify(readback) !== JSON.stringify(local)) throw new Error('storage_unavailable');
     // The OS prompt may have stayed open while another device changed the
     // backup. Re-read the independent route before removing raw device copies.
-    await checkIndependentRecovery(token, recovery);
+    await recheckDeviceRecovery(token, method, recoveryRoute);
     await sameRunningKey(token, original, candidate);
     if (!setDeviceProtectionPolicy(userId, true)) throw new Error('storage_unavailable');
     const cleaned = await clearTransparentAccountKey(userId);
     current(token);
     if (!cleaned) throw new Error('cleanup_incomplete');
+    await recheckDeviceRecovery(token, method, recoveryRoute);
     const completed = { ...local, cleanupVerified: true };
     await idbSet(slot(userId), completed);
     current(token);
@@ -445,7 +527,7 @@ export async function enableDeviceUnlock(userId, methodId, recovery = {}) {
     current(token);
     if (getDeviceProtectionPolicy(userId) !== 'protected' || await idbGet(`pfm_ak_${userId}`) != null) throw new Error('cleanup_incomplete');
     current(token);
-    rememberMethodProof(token, asserted.method);
+    rememberMethodProof(token, method);
     return { ok: true, status: 'protected', method };
   });
 }
@@ -535,9 +617,27 @@ export async function revokeRecoveryMethod(userId, methodId) {
     current(token);
     if (getDeviceProtectionPolicy(userId) !== 'transparent' && local?.method?.id === methodId) throw new Error('verification_required');
     const method = await readMethod(token, methodId, { metadataOnly: true });
-    if (getDeviceProtectionPolicy(userId) !== 'transparent' && method.type === 'emergency-code') {
-      const { methods = [] } = await api(token, 'list');
-      if (!methods.some((item) => item.id !== methodId && item.type === 'emergency-code' && item.status === 'active')) throw new Error('verification_required');
+    if (getDeviceProtectionPolicy(userId) !== 'transparent') {
+      const route = local?.recoveryRoute;
+      const removesRecordedBackup = route && route.type !== 'passkey-backup' && route.methodId === methodId;
+      let removesLegacyLastBackup = false;
+      if (!route && method.type === 'emergency-code') {
+        const { methods = [] } = await api(token, 'list');
+        removesLegacyLastBackup = !methods.some((item) => item.id !== methodId && item.type === 'emergency-code' && item.status === 'active');
+      }
+      if (removesRecordedBackup || removesLegacyLastBackup) {
+        if (!local?.method) throw new Error('verification_required');
+        const primary = await assertRunningPasskey(token, local.method.id, getMasterKey());
+        if (!passkeyBackedUp(primary.method)) throw new Error('verification_required');
+        const replacement = { ...local, method: primary.method, recoveryRoute: backedUpRoute(primary.method) };
+        await recheckDeviceRecovery(token, primary.method, replacement.recoveryRoute);
+        await idbSet(slot(userId), replacement);
+        current(token);
+        if (JSON.stringify(await idbGet(slot(userId))) !== JSON.stringify(replacement)) throw new Error('storage_unavailable');
+        await recheckDeviceRecovery(token, primary.method, replacement.recoveryRoute);
+      } else if (route) {
+        await recheckDeviceRecovery(token, local.method, route, { requireLocalProof: false });
+      }
     }
     await api(token, 'revoke', { methodId, expectedRevision: method.revision });
     current(token);

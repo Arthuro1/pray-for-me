@@ -47,7 +47,8 @@ Group members see content explicitly shared with their group.
   remain in the browser. Registration is not encrypted recovery proof; fresh
   assertion/readback/unwrap and historical key-match verification are required.
   Activation metadata is client-reported, and UI evidence is same-device only.
-- Protected-device migration requires tested independent emergency recovery and
+- Protected-device migration requires a freshly verified provider-backed passkey
+  or an additional tested recovery route, plus
   verified raw-copy deletion. A durable per-account policy enforces it even when
   enrollment flags are disabled. Cross-tab Web Locks serialize policy changes;
   old deployed clients that ignore the policy require separate rollout control.
@@ -109,7 +110,7 @@ Group members see content explicitly shared with their group.
 | XSS or malicious deployment | CSP, no HTML injection for rich text, dependency review, code review/CODEOWNERS | JavaScript running in the origin can read displayed plaintext, IndexedDB keys, session keys, and auth tokens. Encryption does not protect an unlocked compromised origin |
 | Lost or shared device | OS/browser access control, explicit lock, optional passphrase recovery | Default auto-lock is off; an unlocked browser profile or extracted local profile can expose the account key |
 | Recovery-code theft | 128-bit random code, PBKDF2 wrapping, rotation, code shown once | Anyone with the code and synced wrapped record can reset the passphrase; rotation is required after suspected disclosure |
-| Lost passkey/provider or phone | Fresh PRF unwrap/readback, original-key verification, independent emergency code required before device protection | Provider synchronization and PRF retention are not guaranteed; physical replacement-device recovery must be tested; loss of all independent secrets remains permanent |
+| Lost passkey/provider or phone | Fresh PRF unwrap/readback and original-key verification; provider-backed primary or additional tested recovery route before device protection | Provider synchronization and PRF retention are not guaranteed; physical replacement-device recovery must be tested; two credential IDs do not prove two physical devices; loss of all usable recovery routes remains permanent |
 | Recovery API abuse/replay | Auth getUser-derived owner, exact origin/RP, maintained signature/UV verification, one-use five-minute challenges, expected revisions, server-only state and durable per-account quotas | A stolen session may revoke/delete methods or cause denial of service; server-reported client verification is not server decryption proof |
 | Protected-device bypass/race | Durable account policy blocks raw persistence, verified cleanup, serialized policy transitions, generation fences, lock clears decrypted prayer state | Old clients may ignore the policy; malicious origin JavaScript can tamper with local policy and read an unlocked key |
 | Offline revocation delay | Online assertions recheck server method state; local wrapper and witness require correct PRF-derived key offline | Revocation cannot erase disconnected/captured key material; cached authenticated app access is needed offline |

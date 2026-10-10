@@ -57,6 +57,70 @@ beforeEach(() => {
 afterEach(() => { cleanup(); vi.unstubAllEnvs(); });
 
 describe('prayer protection readiness', () => {
+  it('uses a provider-backed passkey for device locking without a code field', async () => {
+    health.methods = [{ ...passkey, backupState: { eligible: true, backedUp: true } }];
+    services.enableDeviceUnlock.mockResolvedValue({ ok: true, status: 'protected' });
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    await screen.findByText(t(lang, 'protectionTestRecorded'));
+    openDetails('protectionOptions');
+    expect(screen.queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+    expect(screen.getByText(t(lang, 'protectionProviderBackup'))).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionDeviceEnable') }));
+    await waitFor(() => expect(services.enableDeviceUnlock).toHaveBeenCalledWith(userId, passkey.id, {}));
+    expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
+  });
+
+  it('uses an additional passkey for device locking without creating a code', async () => {
+    health.methods = [passkey, { ...passkey, id: 'backup-passkey', label: 'Other phone' }];
+    services.enableDeviceUnlock.mockResolvedValue({ ok: true, status: 'protected' });
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    await screen.findByText(t(lang, 'protectionTestRecorded'));
+    openDetails('protectionOptions');
+    expect(screen.queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionDeviceEnable') }));
+    await waitFor(() => expect(services.enableDeviceUnlock).toHaveBeenCalledWith(userId, passkey.id, { passkeyMethodId: 'backup-passkey' }));
+    expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
+  });
+
+  it('offers locked recovery for a saved pending passkey, without enrollment flags or a phrase', async () => {
+    vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false');
+    health.methods = [{ ...passkey, status: 'pending' }];
+    services.recoverWithPasskey.mockResolvedValue({ ok: true, status: 'recovered' });
+    const resolved = vi.fn();
+    render(<PrayerRecoveryChoices userId={userId} lang={lang} onRecovered={resolved} />);
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionPendingPasskey') }));
+    await waitFor(() => expect(resolved).toHaveBeenCalledOnce());
+    expect(services.recoverWithPasskey).toHaveBeenCalledWith(userId, passkey.id);
+    expect(screen.queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+  });
+
+  it('keeps incomplete registration without a wrapper out of recovery choices', async () => {
+    health.methods = [{ ...passkey, status: 'pending', revision: 0, wrapper: null }];
+    render(<PrayerRecoveryChoices userId={userId} lang={lang} />);
+    expect(await screen.findByText(t(lang, 'protectionNoPasskey'))).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'protectionPendingPasskey') })).toBeNull();
+  });
+
+  it('shows the actual service problem and retries without reporting recovered prayers', async () => {
+    health = { ok: false, status: 'origin_not_allowed', methods: [] };
+    const resolved = vi.fn();
+    render(<PrayerRecoveryChoices userId={userId} lang={lang} onRecovered={resolved} />);
+    expect(await screen.findByText(t(lang, 'protectionWrongOrigin'))).toBeTruthy();
+    health = { ok: true, methods: [passkey] };
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionRetry') }));
+    await screen.findByRole('button', { name: t(lang, 'protectionRecoverPasskey') });
+    expect(resolved).not.toHaveBeenCalled();
+    expect(services.recoverWithPasskey).not.toHaveBeenCalled();
+  });
+
+  it('shows one unlock action for the device and its server passkey', async () => {
+    health = { ...health, deviceUnlockAvailable: true, localMethodId: passkey.id, methods: [passkey] };
+    render(<PrayerRecoveryChoices userId={userId} lang={lang} />);
+    await screen.findByRole('button', { name: t(lang, 'protectionSetDevice') });
+    expect(screen.queryByRole('button', { name: t(lang, 'protectionRecoverPasskey') })).toBeNull();
+    expect(screen.queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+  });
+
   it('keeps pending and unsupported registration untested', async () => {
     health.methods = [{ ...passkey, status: 'pending' }];
     health.capability.canEnroll = false;
@@ -76,7 +140,7 @@ describe('prayer protection readiness', () => {
     health.methods = [passkey];
     services.recoverWithPasskey.mockResolvedValue({ ok: false, status: 'cancelled' });
     render(<PrayerRecoveryChoices userId={userId} lang={lang} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'Saved passkey' }));
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionRecoverPasskey') }));
     expect(await screen.findByText(t(lang, 'protectionCancelled'))).toBeTruthy();
     expect(services.recoverWithPasskey).toHaveBeenCalledWith(userId, 'passkey');
   });
@@ -166,7 +230,7 @@ describe('prayer protection readiness', () => {
     health.methods = [passkey, emergency, { ...emergency, id: 'older', label: 'Older emergency code' }];
     services.recoverWithEmergencyCode.mockResolvedValue({ ok: false, status: 'wrong_code' });
     render(<PrayerRecoveryChoices userId={userId} lang={lang} />);
-    await screen.findByRole('button', { name: 'Saved passkey' });
+    await screen.findByRole('button', { name: t(lang, 'protectionRecoverPasskey') });
     expect(screen.getByRole('button', { name: t(lang, 'protectionRecoverCode') }).closest('details').open).toBe(false);
     openDetails('protectionMoreRecovery');
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'older' } });
@@ -286,7 +350,7 @@ describe('prayer protection readiness', () => {
     health = { ok: false, status: 'offline', methods: [], capability: { canEnroll: true } };
     const onReady = vi.fn();
     render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
-    await screen.findByText(t(lang, 'protectionUnavailable'));
+    await screen.findByText(t(lang, 'protectionOffline'));
     fireEvent.click(screen.getByRole('button', { name: t(lang, 'protectionRetry') }));
     await waitFor(() => expect(services.getProtectionStatus).toHaveBeenCalledTimes(2));
     expect(screen.queryByText(t(lang, 'protectionRecoveryReady'))).toBeNull();
@@ -294,24 +358,26 @@ describe('prayer protection readiness', () => {
     expect(onReady).not.toHaveBeenCalled();
   });
 
-  it('keeps fallback setup available when enrollment is disabled and only abandoned methods exist', async () => {
+  it('does not offer a new legacy passphrase when passkey enrollment is unavailable', async () => {
     vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false');
     health.methods = [{ ...passkey, status: 'pending', revision: 0, wrapper: null }];
     render(<PrayerProtection userId={userId} lang={lang} />);
-    expect(await screen.findByRole('button', { name: t(lang, 'backupKeyCta') })).toBeTruthy();
+    expect(await screen.findByText(t(lang, 'protectionServiceSetup'))).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t(lang, 'backupKeyCta') })).toBeNull();
     expect(screen.queryByRole('button', { name: t(lang, 'protectionEnroll') })).toBeNull();
   });
 
-  it.each(['pending', 'synced'])('finishes legacy setup only with confirmed server recovery (%s)', async (sync) => {
+  it.each(['pending', 'synced'])('finishes existing legacy settings only with confirmed server recovery (%s)', async (sync) => {
     vi.stubEnv('VITE_PRAYER_PROTECTION_ENABLED', 'false');
+    vault.initialized = true; vault.recoverySync = sync;
     const onReady = vi.fn();
     render(<PrayerProtection userId={userId} lang={lang} onReady={onReady} />);
-    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'backupKeyCta') }));
-    vault.initialized = true; vault.recoverySync = sync;
+    await screen.findByText(t(lang, sync === 'synced' ? 'protectionLegacyReady' : 'protectionSyncPending'));
+    openDetails('protectionOptions'); openDetails('protectionLegacySettings');
+    fireEvent.click(screen.getByRole('button', { name: t(lang, 'vaultChangePass') }));
     fireEvent.click(screen.getByRole('button', { name: 'Complete legacy recovery' }));
     expect(onReady).toHaveBeenCalledTimes(sync === 'synced' ? 1 : 0);
   });
-
   it('resets busy state and ignores the old enrollment result after an account switch', async () => {
     let finishEnrollment;
     services.enrollPasskeyRecovery.mockImplementation(() => new Promise((resolve) => { finishEnrollment = resolve; }));

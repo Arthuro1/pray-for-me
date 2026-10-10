@@ -58,7 +58,7 @@ const ErrorNote = ({ children }) => <p role="alert" className="q-notice q-notice
 // `embedded=true` renders just the card (no fixed overlay/backdrop) so a host
 // like VaultLockScreen can place it inside its own friendlier layout while still
 // reusing the unlock + recovery-code logic here.
-export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false, userId }) {
+export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClose, onUnlocked, dismissable = true, embedded = false, userId, onUsePasskey }) {
   const { createVault, setUpRecovery, unlock, resetPassphrase, changePassphrase, rotateRecoveryCode, syncRecovery, unlocked } = useVaultStore();
   const [mode, setMode] = useState(initialMode); // setup | recovery | unlock | reset | change | rotate
   const [pass, setPass] = useState('');
@@ -262,7 +262,11 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
         {/* ─── Reset via recovery code ─── */}
         {mode === 'reset' && (
           <div className="vault-card__step">
-            <p className="vault-card__intro">{t(lang, 'vaultResetIntro')}</p>
+            <p className="q-body-sm">{t(lang, 'protectionNoCodeHelp')}</p>
+            {onUsePasskey && <QuietButton disabled={busy} onClick={onUsePasskey}>{t(lang, 'protectionRecoverPasskey')}</QuietButton>}
+            <details className="protection-details">
+              <summary>{t(lang, 'vaultResetTitle')}</summary>
+              <p className="vault-card__intro">{t(lang, 'vaultResetIntro')}</p>
             <Input
               type="text"
               value={code}
@@ -276,6 +280,7 @@ export default function VaultModal({ lang = 'fr', initialMode = 'unlock', onClos
             <PassField value={pass} onChange={setPass} placeholder={t(lang, 'vaultNewPassphrase')} />
             {error && <ErrorNote>{error}</ErrorNote>}
             <SubmitButton onClick={handleReset} busy={busy} disabled={!code || !pass}>{t(lang, 'vaultReset')}</SubmitButton>
+            </details>
           </div>
         )}
 

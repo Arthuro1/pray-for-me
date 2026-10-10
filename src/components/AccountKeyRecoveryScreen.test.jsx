@@ -25,7 +25,7 @@ describe('account key recovery with independent passkey methods', () => {
 
     expect(screen.getByRole('heading', { name: t(lang, 'keyMissingHeading') })).toBeTruthy();
     const body = screen.getByText(t(lang, 'keyMissingBody'));
-    expect(body.textContent).toMatch(/passkey|clé d['’]accès/i);
+    expect(screen.getByRole('button', { name: 'Use saved passkey' })).toBeTruthy();
     expect(body.textContent).not.toMatch(/no recovery code was set up|aucun code de récupération n['’]a été configuré/i);
     expect(screen.getByText(t(lang, 'keyMissingReassure'))).toBeTruthy();
   });

@@ -43,6 +43,19 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
     if (!credential || credential.rp_id !== config.rpID) throw new RecoveryError('recovery_not_found', 404);
     return credential;
   };
+  const describeMethod = async (method, credential) => {
+    const value = publicMethod(method);
+    if (method.method_type !== 'passkey' || !method.credential_id) return value;
+    // Backup flags originate in verified authenticator data, not browser
+    // extension results or client labels. Never return public-key material.
+    const saved = credential || checkDb(await db.from('account_recovery_credentials')
+      .select('id,method_id,rp_id,device_type,backed_up').eq('id', method.credential_id)
+      .eq('user_id', userId).eq('method_id', method.id).is('revoked_at', null).maybeSingle());
+    if (saved?.id === method.credential_id && saved.method_id === method.id && saved.rp_id === config.rpID) value.backupState = {
+      eligible: saved.device_type === 'multiDevice', backedUp: saved.backed_up === true,
+    };
+    return value;
+  };
   const challenge = async (method, operation, options) => {
     const row = await rpc('create_recovery_challenge', {
       p_method_id: method.id, p_operation: operation, p_challenge: options.challenge,
@@ -71,7 +84,7 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
     switch (body.action) {
       case 'list': {
         const methods = checkDb(await db.from('account_key_recovery_methods').select('*').eq('user_id', userId).neq('status', 'revoked').order('created_at', { ascending: false }));
-        return { methods: methods.map(publicMethod) };
+        return { methods: await Promise.all(methods.map(method => describeMethod(method))) };
       }
       case 'register-options': {
         enroll();
@@ -121,7 +134,7 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
           rpID: config.rpID, userVerification: 'required', timeout: 60000,
           allowCredentials: [{ id: credential.id, transports: credential.transports }],
         });
-        return { ...await challenge(method, purpose, options), method: publicMethod(method) };
+        return { ...await challenge(method, purpose, options), method: await describeMethod(method, credential) };
       }
       case 'assert-verify': {
         const method = await readMethod(body.methodId);
@@ -141,11 +154,31 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
             credential: { id: credential.id, publicKey: new Uint8Array(Buffer.from(credential.public_key, 'base64url')),
               counter: credential.counter, transports: credential.transports } });
         } catch { throw new RecoveryError('verification_failed'); }
-        if (!verification.verified || !verification.authenticationInfo?.userVerified) throw new RecoveryError('verification_failed');
+        const info = verification.authenticationInfo;
+        if (!verification.verified || !info?.userVerified
+          || !['singleDevice', 'multiDevice'].includes(info.credentialDeviceType)
+          || typeof info.credentialBackedUp !== 'boolean'
+          || info.credentialDeviceType !== credential.device_type
+          || (info.credentialDeviceType === 'singleDevice' && info.credentialBackedUp)) {
+          throw new RecoveryError('verification_failed');
+        }
         await rpc('complete_recovery_assertion', { p_method_id: method.id, p_challenge_id: pending.id,
-          p_old_counter: credential.counter, p_new_counter: verification.authenticationInfo.newCounter,
+          p_old_counter: credential.counter, p_new_counter: info.newCounter,
           p_credential_revision: credential.revision });
-        return { proofId: pending.id, method: publicMethod(method) };
+        // Refresh mutable BS after the signed assertion. The counter RPC has
+        // incremented this revision; a concurrent assertion or revocation makes
+        // this guarded update fail instead of overwriting newer backup state.
+        const refreshed = checkDb(await db.from('account_recovery_credentials')
+          .update({ backed_up: info.credentialBackedUp }).eq('id', credential.id).eq('user_id', userId)
+          .eq('method_id', method.id).eq('revision', credential.revision + 1)
+          .eq('counter', info.newCounter).is('revoked_at', null)
+          .select('id,method_id,rp_id,device_type,backed_up').maybeSingle());
+        if (!refreshed) throw new RecoveryError('recovery_conflict', 409);
+        const persisted = await readMethod(method.id);
+        if (persisted.revision !== method.revision || persisted.credential_id !== credential.id || persisted.status !== method.status) {
+          throw new RecoveryError('recovery_conflict', 409);
+        }
+        return { proofId: pending.id, method: await describeMethod(persisted, refreshed) };
       }
       case 'commit': {
         enroll();
@@ -154,7 +187,7 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
         const wrapper = validateWrapper(body.wrapper, { userId, methodId: method.id, credentialId: credential.id, rpID: config.rpID, type: 'passkey' });
         const updated = await rpc('commit_recovery_method', { p_method_id: method.id,
           p_revision: expectedRevision(body.expectedRevision), p_proof_id: requireUUID(body.proofId), p_wrapper: wrapper });
-        return { method: publicMethod(updated) };
+        return { method: await describeMethod(updated) };
       }
       case 'emergency-create': {
         enroll();
@@ -162,11 +195,11 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
         const wrapper = validateWrapper(body.wrapper, { userId, methodId, type: 'emergency-code' });
         const method = await rpc('create_recovery_method', { p_method_id: methodId,
           p_method_type: 'emergency-code', p_wrapper: wrapper, p_label: safeLabel(body.label) });
-        return { method: publicMethod(method) };
+        return { method: await describeMethod(method) };
       }
       case 'read': {
         const method = await rpc('read_recovery_method', { p_method_id: requireUUID(body.methodId) });
-        return { method: publicMethod(method) };
+        return { method: await describeMethod(method) };
       }
       case 'verify':
       case 'emergency-verify': {
@@ -178,11 +211,11 @@ export function createRecoveryService({ db, user, config, webauthn = webauthnDef
         const updated = await rpc('verify_recovery_method', { p_method_id: method.id,
           p_revision: expectedRevision(body.expectedRevision),
           p_proof_id: method.method_type === 'passkey' ? requireUUID(body.proofId) : null });
-        return { method: publicMethod(updated) };
+        return { method: await describeMethod(updated) };
       }
       case 'revoke': {
         const method = await rpc('revoke_recovery_method', { p_method_id: requireUUID(body.methodId), p_revision: expectedRevision(body.expectedRevision) });
-        return { method: publicMethod(method) };
+        return { method: await describeMethod(method) };
       }
       default: throw new RecoveryError('invalid_request');
     }
