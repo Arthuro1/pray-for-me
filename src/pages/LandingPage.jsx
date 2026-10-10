@@ -8,7 +8,9 @@ import {
 import { BrandLockup, BrandMark } from '../components/shared/Brand';
 import { PrimaryButton, QuietButton } from '../components/shared/Primitives';
 import LandingHeader from './landing/LandingHeader';
+import useLandingMusic from './landing/useLandingMusic';
 import LandingHero, { GOOGLE_PLAY_URL } from './landing/LandingHero';
+import LandingMusicInvitation from './landing/LandingMusicInvitation';
 import LandingCome from './landing/LandingCome';
 import LandingBeat from './landing/LandingBeat';
 import LandingCircles from './landing/LandingCircles';
@@ -49,6 +51,9 @@ function detectLang() {
 // frame it); `onSignIn` is the direct path to authentication for people who
 // already have an account.
 export default function LandingPage({ onBeginPrayer, onSignIn }) {
+  const music = useLandingMusic();
+  const beginPrayer = (...args) => music.leave(onBeginPrayer, ...args);
+  const signIn = () => music.leave(onSignIn);
   const [lang, setLang] = useState(detectLang);
   // What is ON SCREEN right now, and which language it is really in. The page
   // never waits behind a dictionary: English is bundled, so the first frame is
@@ -132,24 +137,26 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
         copy={copy}
         theme={shown}
         onToggleTheme={toggleTheme}
-        onSignIn={onSignIn}
+        onSignIn={signIn}
       />
 
       <main>
-        <LandingHero copy={copy} onBeginPrayer={onBeginPrayer} onSignIn={onSignIn} />
+        <LandingHero copy={copy} onBeginPrayer={beginPrayer} onSignIn={signIn} />
+
+        <LandingMusicInvitation copy={copy} lang={rendered.lang} music={music} onBeginPrayer={beginPrayer} />
 
         <div className="landing__story">
           <LandingCome copy={copy} label={movement('come')} lang={rendered.lang} />
 
           <LandingBeat
             {...beat('bring', movement('bring'))}
-            visual={<BringVignette copy={copy} onBeginPrayer={onBeginPrayer} />}
+            visual={<BringVignette copy={copy} onBeginPrayer={beginPrayer} />}
           />
 
           {/* From your heart to the nations: the seven Intercession Circles —
               not levels, the widening reach of intercession, each a doorway
               into prayer (landing/LandingCircles.jsx). */}
-          <LandingCircles lang={rendered.lang} label={movement('carry')} copy={copy.circles} onBeginPrayer={onBeginPrayer} />
+          <LandingCircles lang={rendered.lang} label={movement('carry')} copy={copy.circles} onBeginPrayer={beginPrayer} />
 
           <LandingBeat
             {...beat('together', copy.together.label)}
@@ -179,7 +186,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
           <BrandMark size={56} />
           <h2 id="landing-final-title" className="landing__final-title">{c.ctaTitle}</h2>
           <div className="landing__actions landing__actions--center">
-            <PrimaryButton onClick={() => onBeginPrayer()} className="landing__cta">{beginLabel}</PrimaryButton>
+            <PrimaryButton onClick={() => beginPrayer()} className="landing__cta">{beginLabel}</PrimaryButton>
             <a href={GOOGLE_PLAY_URL} target="_blank" rel="noopener noreferrer" className="secondary-button landing__cta">
               <Smartphone size={18} aria-hidden="true" />
               <span>{playStore.cta}</span>
@@ -192,7 +199,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
       <footer className="landing__footer">
         <BrandLockup size={24} />
         <p className="q-meta">{c.footerBuilt}</p>
-        <QuietButton onClick={onSignIn}>{c.signIn} →</QuietButton>
+        <QuietButton onClick={signIn}>{c.signIn} →</QuietButton>
       </footer>
     </div>
   );

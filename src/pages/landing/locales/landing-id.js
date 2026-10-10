@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Bahasa",
   "translationInProgress": "Terjemahan sedang berlangsung",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Sejenak untuk dikuatkan",
+    "invitation": "Apa pun yang membebani hati Anda hari ini, ingatlah bahwa Allah mendengar Anda.",
+    "title": "He Answers Prayers",
+    "caption": "Lagu tentang iman, harapan, dan kepercayaan pada waktu Allah.",
+    "recording": "Rekaman",
+    "play": "Tonton: {title}",
+    "close": "Tutup video",
+    "privacy": "Jika Anda memilih menonton, Anda akan terhubung ke YouTube, yang mungkin menerima data tentang kunjungan Anda.",
+    "fallback": "Jika pemutar tidak tersedia, tonton di YouTube.",
+    "external": "Tonton di YouTube",
+    "externalNotice": "Membuka YouTube di tab baru"
+  },
   "hero": {
     "gloss": "bahasa Ibrani untuk “ukupan”",
     "title": "Biarlah doa-doa Anda naik seperti dupa.",

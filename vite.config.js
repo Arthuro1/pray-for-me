@@ -176,7 +176,7 @@ export default defineConfig(({ mode }) => {
         "manifest-src 'self'",
         "base-uri 'self'",
         "form-action 'self'",
-        "frame-src 'none'",
+        "frame-src https://www.youtube-nocookie.com",
         "frame-ancestors 'none'",
         "object-src 'none'",
       ].join('; '),

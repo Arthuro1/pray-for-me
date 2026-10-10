@@ -13,6 +13,16 @@ const EXPECTED_CODES = [
   'id', 'ja', 'ko', 'pt', 'ru', 'sw', 'tl', 'zh',
 ];
 
+function landingSchema(value) {
+  if (Array.isArray(value)) return value.map(landingSchema);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, child]) => [key, landingSchema(child)]),
+    );
+  }
+  return typeof value;
+}
+
 describe('landing locale chunks', () => {
   it('preserves all 16 supported languages with the complete landing schema', async () => {
     expect([...LANDING_LOCALE_CODES].sort()).toEqual(EXPECTED_CODES);
@@ -26,9 +36,12 @@ describe('landing locale chunks', () => {
     // measured against English rather than a floor — a `>= 3` check once let eight
     // locales ship three questions while everyone else saw five, silently and with
     // every test green.
-    const expectedFaqs = (await loadLandingCopy('en')).content.faqs.length;
+    const englishCopy = await loadLandingCopy('en');
+    const expectedSchema = landingSchema(englishCopy);
+    const expectedFaqs = englishCopy.content.faqs.length;
 
     for (const [code, copy] of copies) {
+      expect(landingSchema(copy), `${code}: complete landing schema`).toEqual(expectedSchema);
       expect(copy.content.signIn, `${code}: sign-in`).toEqual(expect.any(String));
       expect(copy.content.faqs, `${code}: FAQs`).toHaveLength(expectedFaqs);
       expect(copy.movements, `${code}: the seven movements, Come to Remember`).toHaveLength(7);
@@ -48,6 +61,29 @@ describe('landing locale chunks', () => {
       expect(copy.prayNowLabel, `${code}: pray-now label`).toEqual(expect.any(String));
       expect(copy.languageMenuLabel, `${code}: language menu label`).toEqual(expect.any(String));
       expect(copy.translationInProgress, `${code}: translation status`).toEqual(expect.any(String));
+    }
+  });
+
+  it('keeps optional YouTube controls complete in every language', async () => {
+    const musicKeys = [
+      'heading', 'invitation', 'title', 'caption', 'recording', 'play', 'close',
+      'privacy', 'fallback', 'external', 'externalNotice',
+    ];
+
+    for (const code of LANDING_LOCALE_CODES) {
+      const { music } = await loadLandingCopy(code);
+      expect(Object.keys(music), `${code}: YouTube copy schema`).toEqual(musicKeys);
+      for (const key of musicKeys) {
+        expect(music[key], `${code}: music.${key}`).toEqual(expect.any(String));
+        expect(music[key].trim(), `${code}: nonempty music.${key}`).not.toBe('');
+      }
+      expect(music.title, `${code}: canonical song title`).toBe('He Answers Prayers');
+      expect(music.play.match(/\{title\}/g), `${code}: song-title interpolation`).toHaveLength(1);
+      expect(music.play.replace('{title}', music.title), `${code}: resolved watch label`)
+        .not.toMatch(/\{[^}]+\}/);
+      for (const key of ['privacy', 'fallback', 'external', 'externalNotice']) {
+        expect(music[key], `${code}: YouTube disclosure in music.${key}`).toContain('YouTube');
+      }
     }
   });
 

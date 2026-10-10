@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Language",
   "translationInProgress": "Translation in progress",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "A moment of encouragement",
+    "invitation": "Whatever you’re carrying today, remember that God hears you.",
+    "title": "He Answers Prayers",
+    "caption": "A song of faith, hope, and trust in God’s timing.",
+    "recording": "Recording",
+    "play": "Watch: {title}",
+    "close": "Close video",
+    "privacy": "Choosing to watch connects to YouTube, which may receive data about your visit.",
+    "fallback": "If the player is unavailable, watch on YouTube.",
+    "external": "Watch on YouTube",
+    "externalNotice": "Opens YouTube in a new tab"
+  },
   "hero": {
     "gloss": "Hebrew for “incense”",
     "title": "Let your prayers rise.",

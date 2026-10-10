@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Язык",
   "translationInProgress": "Перевод в процессе",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Минутка ободрения",
+    "invitation": "Что бы ни было сегодня у вас на сердце, помните: Бог слышит вас.",
+    "title": "He Answers Prayers",
+    "caption": "Песня о вере, надежде и доверии Божьему времени.",
+    "recording": "Запись",
+    "play": "Смотреть: {title}",
+    "close": "Закрыть видео",
+    "privacy": "Если вы решите посмотреть видео, произойдёт подключение к YouTube, который может получить данные о вашем посещении.",
+    "fallback": "Если проигрыватель недоступен, смотрите на YouTube.",
+    "external": "Смотреть на YouTube",
+    "externalNotice": "Открывает YouTube в новой вкладке"
+  },
   "hero": {
     "gloss": "«фимиам» на иврите",
     "title": "Пусть ваши молитвы восходят к Богу.",

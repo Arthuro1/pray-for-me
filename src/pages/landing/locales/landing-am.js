@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "ቋንቋ",
   "translationInProgress": "ትርጉሙ በሂደት ላይ ነው",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "የማበረታቻ ጊዜ",
+    "invitation": "ዛሬ በልብዎ ያለው ሸክም ምንም ቢሆን፣ እግዚአብሔር እንደሚሰማዎት ያስታውሱ።",
+    "title": "He Answers Prayers",
+    "caption": "ስለ እምነት፣ ተስፋ እና በእግዚአብሔር ጊዜ ስለ መታመን የሚናገር መዝሙር።",
+    "recording": "ቅጂ",
+    "play": "ይመልከቱ፦ {title}",
+    "close": "ቪዲዮውን ይዝጉ",
+    "privacy": "ለመመልከት ሲመርጡ ከYouTube ጋር ይገናኛሉ፤ YouTubeም ስለ ጉብኝትዎ መረጃ ሊቀበል ይችላል።",
+    "fallback": "ማጫወቻው ካልተገኘ፣ በYouTube ይመልከቱ።",
+    "external": "በYouTube ይመልከቱ",
+    "externalNotice": "YouTubeን በአዲስ ትር ይከፍታል"
+  },
   "hero": {
     "gloss": "በዕብራይስጥ «ዕጣን»",
     "title": "ጸሎቶችዎ እንደ ዕጣን ወደ ላይ ይውጡ።",

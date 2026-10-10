@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "语言",
   "translationInProgress": "翻译进行中",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "片刻鼓励",
+    "invitation": "无论今天心中有什么重担，请记得神听见你。",
+    "title": "He Answers Prayers",
+    "caption": "一首关于信心、盼望，以及信靠神所定时间的歌曲。",
+    "recording": "录制版本",
+    "play": "观看：{title}",
+    "close": "关闭视频",
+    "privacy": "选择观看会连接到 YouTube，YouTube 可能会收到有关你此次访问的数据。",
+    "fallback": "如果播放器无法使用，请前往 YouTube 观看。",
+    "external": "在 YouTube 上观看",
+    "externalNotice": "在新标签页中打开 YouTube"
+  },
   "hero": {
     "gloss": "希伯来文的“香”",
     "title": "愿你的祷告如香升起。",

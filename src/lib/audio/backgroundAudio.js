@@ -1,13 +1,11 @@
 import { devWarn } from '../logger';
 
 const FADE_IN_MS = 1400;
-// A gentle, gradual fade so finishing a prayer ("Amen") or choosing silence
-// lets the atmosphere settle out rather than cutting off mid-note.
+// Let the atmosphere settle gently when finishing a prayer or choosing silence.
 const FADE_OUT_MS = 1800;
 
-// First-party, instrumental-only prayer atmospheres. They are served from the
-// app's own origin, so changing music never shares prayer data with a third
-// party. Silence remains a full session choice.
+// First-party prayer atmospheres. Changing music never shares prayer data with
+// a third party. Silence remains a full session choice.
 export const AUDIO_TRACKS = Object.freeze([
   { id: 'soft-piano', src: '/audio/piano-and-rain.mp3', labelKey: 'audioSoftPiano' },
   { id: 'ambient-pad', src: '/audio/ambient-pad.mp3', labelKey: 'audioAmbientPad' },
@@ -16,8 +14,6 @@ export const AUDIO_TRACKS = Object.freeze([
   { id: 'silence', src: null, labelKey: 'audioSilence' },
 ]);
 
-// Prayer sessions begin quietly. A visitor can opt into music, and that choice
-// is remembered for later sessions, but we never start audio before consent.
 export const DEFAULT_AUDIO_TRACK_ID = 'silence';
 
 export function resolveTrack(id) {
@@ -29,35 +25,81 @@ export function clamp01(value) {
   return Math.min(1, Math.max(0, value));
 }
 
-// ── iOS-safe playback engine ────────────────────────────────────────────────
-// iOS Safari has two habits that quietly break a naive <audio> element:
-//   1. HTMLMediaElement.volume is read-only there — reading it always returns
-//      1.0 and writing is a no-op — so a "gentle 16%" atmosphere would blare at
-//      full volume (or the fade-in from 0 would never rise).
-//   2. Programmatic play() is refused unless it happens inside a user gesture.
-// So we keep ONE reused element (created lazily), feature-detect whether the
-// element's own volume is honoured, and only on the phones where it is NOT
-// (iOS) route the element through a Web Audio GainNode — the single volume
-// control iOS respects. Playback is always kicked from the tap that selects a
-// track (see PrayerMusicControl), and the whole engine stays failure-soft: a
-// missing asset or an autoplay block yields silence and leaves prayer usable.
-
-let el = null; // the single reused HTMLAudioElement
-let ctx = null; // AudioContext, created only when the gain path is needed
-let gain = null; // GainNode — the iOS-honoured volume control
-let useGain = false; // true once we've detected element.volume is ignored (iOS)
-let graphReady = false; // MediaElementSource can be created only once per element
-let loadedSrc = null; // which track src is currently attached to `el`
+// Prayer playback reuses one lazily created element. iOS ignores
+// HTMLMediaElement.volume, so use a Web Audio gain there. The engine leaves
+// the saved music preference to the prayer control.
+let el = null;
+let ctx = null;
+let gain = null;
+let useGain = false;
+let graphReady = false;
+let loadedSrc = null;
 let playing = false;
 let playingTrackId = 'silence';
 let fadeTimer = null;
 let operationId = 0;
+let cancelPendingPlay = null;
+let cancelPendingStop = null;
+let stopPromise = null;
+let snapshot = { owner: null, status: 'idle', playing: false, trackId: 'silence' };
+const listeners = new Set();
+
+// A stable snapshot supports useSyncExternalStore without render loops.
+export function getBackgroundAudioState() {
+  return snapshot;
+}
+
+export function subscribeBackgroundAudio(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function publishState(owner, status, trackId = snapshot.trackId) {
+  snapshot = { owner, status, playing, trackId };
+  listeners.forEach((listener) => listener(snapshot));
+}
 
 function browserAudioAvailable() {
-  // jsdom deliberately leaves HTMLMediaElement.play() unimplemented; treat it
-  // like any other audio-less environment so component tests stay quiet.
+  // jsdom leaves native playback unimplemented; component tests stay quiet.
   const isJsdom = typeof navigator !== 'undefined' && /jsdom/i.test(navigator.userAgent || '');
   return typeof Audio === 'function' && !isJsdom;
+}
+
+function clearFade() {
+  if (fadeTimer !== null) {
+    clearInterval(fadeTimer);
+    fadeTimer = null;
+  }
+}
+
+function supersedeOperation() {
+  operationId += 1;
+  cancelPendingPlay?.();
+  cancelPendingStop?.();
+  stopPromise = null;
+  clearFade();
+  return operationId;
+}
+
+function playbackFailed() {
+  if (!snapshot.owner) return;
+  const { owner, trackId } = snapshot;
+  supersedeOperation();
+  playing = false;
+  playingTrackId = 'silence';
+  publishState(owner, 'error', trackId);
+  applyLevel(0);
+  try { el?.pause(); } catch { /* best effort */ }
+}
+
+function playbackPaused() {
+  // Ignore the deliberate pause before a new start or at the end of a fade.
+  if (snapshot.status !== 'playing' || el?.paused === false) return;
+  supersedeOperation();
+  playing = false;
+  playingTrackId = 'silence';
+  applyLevel(0);
+  publishState(null, 'idle', 'silence');
 }
 
 function ensureElement() {
@@ -65,18 +107,18 @@ function ensureElement() {
   try {
     el = new Audio();
   } catch {
-    el = null;
     return null;
   }
   el.loop = true;
-  el.preload = 'auto';
-  // Harmless for audio, and keeps iOS from ever promoting it to fullscreen.
+  // No network request before the visitor asks to listen.
+  el.preload = 'none';
   el.setAttribute('playsinline', '');
+  el.addEventListener('error', playbackFailed);
+  el.addEventListener('pause', playbackPaused);
+  el.addEventListener('ended', playbackPaused);
   return el;
 }
 
-// True when writing element.volume actually changes it. iOS reports 1.0 no
-// matter what — that tells us to fall back to the Web Audio gain path.
 function volumeControllable() {
   if (!el) return false;
   try {
@@ -90,14 +132,13 @@ function volumeControllable() {
   }
 }
 
-// Build element → gain → destination once. Only reached on engines where the
-// element's own volume is ignored, so we never touch Web Audio on desktop.
 function ensureGraph() {
   if (graphReady || !el) return;
   const Ctx = typeof AudioContext !== 'undefined'
     ? AudioContext
     : (typeof window !== 'undefined' ? window.webkitAudioContext : undefined);
-  if (!Ctx) return; // no Web Audio → nothing better than full-volume playback
+  // If neither volume mechanism is available, fail softly in silence.
+  if (!Ctx) return;
   try {
     ctx = new Ctx();
     const source = ctx.createMediaElementSource(el);
@@ -113,154 +154,181 @@ function ensureGraph() {
   }
 }
 
-function clearFade() {
-  if (fadeTimer) {
-    clearInterval(fadeTimer);
-    fadeTimer = null;
-  }
-}
-
-// Set the effective level, optionally ramped over durationMs. Uses the Web
-// Audio gain when it is the active control (iOS); otherwise element.volume.
 function applyLevel(level, durationMs = 0) {
   const target = clamp01(level);
-
+  clearFade();
   if (useGain && gain && ctx) {
     try {
       const now = ctx.currentTime;
       gain.gain.cancelScheduledValues(now);
-      gain.gain.setValueAtTime(clamp01(gain.gain.value) || 0, now);
+      gain.gain.setValueAtTime(clamp01(gain.gain.value), now);
       if (durationMs > 0) gain.gain.linearRampToValueAtTime(target, now + durationMs / 1000);
       else gain.gain.setValueAtTime(target, now);
-      return;
+      return true;
     } catch {
-      // fall through to the element path
+      // An iOS element ignores volume: never fall through to full-volume audio.
+      return false;
     }
   }
-
-  clearFade();
-  if (!el) return;
-  if (durationMs <= 0) {
-    el.volume = target;
-    return;
-  }
-  const start = el.volume;
-  const steps = Math.max(1, Math.round(durationMs / 50));
-  let step = 0;
-  fadeTimer = setInterval(() => {
-    step += 1;
-    el.volume = clamp01(start + (target - start) * (step / steps));
-    if (step >= steps) clearFade();
-  }, 50);
+  if (!el) return false;
+  try {
+    if (durationMs <= 0) {
+      el.volume = target;
+      return true;
+    }
+    const start = el.volume;
+    const steps = Math.max(1, Math.round(durationMs / 50));
+    let step = 0;
+    fadeTimer = setInterval(() => {
+      step += 1;
+      try { el.volume = clamp01(start + (target - start) * (step / steps)); } catch { playbackFailed(); }
+      if (step >= steps) clearFade();
+    }, 50);
+    return true;
+  } catch { return false; }
 }
 
 function safePlay(element) {
   return new Promise((resolve) => {
     let settled = false;
-    const done = (ok) => { if (!settled) { settled = true; resolve(ok); } };
+    let timeout = null;
+    const cancel = () => done(false);
+    const done = (ok) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      if (cancelPendingPlay === cancel) cancelPendingPlay = null;
+      resolve(ok);
+    };
+    cancelPendingPlay = cancel;
+    timeout = setTimeout(cancel, 3500);
     try {
       const result = element.play?.();
       if (result && typeof result.then === 'function') {
         result.then(() => done(true), () => done(false));
       } else {
-        done(true); // no promise (older engines) — assume it started
+        done(true);
       }
     } catch {
       done(false);
     }
-    // A play() that never fires 'playing' or rejects (rare) must not hang.
-    setTimeout(() => done(false), 3500);
   });
 }
 
 async function stopInternal({ fade = false } = {}) {
   const thisOperation = operationId;
   const wasPlaying = playing;
+  const previous = snapshot;
   playing = false;
   playingTrackId = 'silence';
   clearFade();
-  if (!el) return;
-  if (fade && wasPlaying) {
+  if (fade && wasPlaying && el) {
+    publishState(previous.owner, 'stopping');
     applyLevel(0, FADE_OUT_MS);
-    await new Promise((resolve) => setTimeout(resolve, FADE_OUT_MS));
-    // A newer start (e.g. a fresh session, or a StrictMode remount) can take
-    // over while this fade is still ramping down. Don't pause its track — that
-    // delayed pause would silence audio the user just asked to hear.
+    await new Promise((resolve) => {
+      const finish = () => {
+        if (cancelPendingStop === cancel) cancelPendingStop = null;
+        resolve();
+      };
+      const timer = setTimeout(finish, FADE_OUT_MS);
+      const cancel = () => { clearTimeout(timer); finish(); };
+      cancelPendingStop = cancel;
+    });
+    // A new gesture can take over during the fade; its track must keep playing.
     if (thisOperation !== operationId) return;
-  } else {
-    applyLevel(0);
   }
-  try { el.pause(); } catch { /* best effort */ }
+  applyLevel(0);
+  try { el?.pause(); } catch { /* best effort */ }
+  publishState(null, 'idle', 'silence');
 }
 
-export async function stopBackgroundAudio({ fade = false } = {}) {
-  operationId += 1;
-  await stopInternal({ fade });
+export function stopBackgroundAudio({ fade = false } = {}) {
+  if (fade && snapshot.status === 'stopping' && stopPromise) return stopPromise;
+  supersedeOperation();
+  stopPromise = stopInternal({ fade });
+  return stopPromise;
 }
 
-// Starts or changes the session atmosphere. MUST be called from the user
-// gesture that selects a track so iOS unlocks the element and lets us resume
-// the audio graph.
-export async function startBackgroundInstrumental({
+// A session can resume its saved choice; explicit selection also calls this
+// synchronously in the gesture to unlock audio on iOS.
+export function startBackgroundInstrumental({
   trackId = DEFAULT_AUDIO_TRACK_ID,
   volume = 0.16,
 } = {}) {
-  const thisOperation = ++operationId;
+  return startTrack(resolveTrack(trackId), volume);
+}
 
-  const track = resolveTrack(trackId);
+async function startTrack(track, volume) {
+  const thisOperation = supersedeOperation();
   if (!track || !track.src) {
     await stopInternal();
     return { started: false, trackId: 'silence' };
   }
+
   if (!browserAudioAvailable() || !ensureElement()) {
+    playing = false;
+    playingTrackId = 'silence';
+    publishState('prayer', 'error', track.id);
     return { started: false, trackId: track.id };
   }
-
-  // The mount effect (or a stray re-select) can ask for the track that is
-  // already playing — keep it running and just settle its level.
-  if (playing && playingTrackId === track.id) {
-    applyLevel(clamp01(volume), 0);
+  // Re-selecting the playing source adjusts its volume without restarting it.
+  if (playing && playingTrackId === track.id && loadedSrc === track.src) {
+    if (!applyLevel(volume)) {
+      playbackFailed();
+      return { started: false, trackId: track.id };
+    }
+    publishState('prayer', 'playing', track.id);
     return { started: true, trackId: track.id };
   }
 
-  // Decide the volume mechanism once, then wire the gain graph only if needed.
+  playing = false;
+  playingTrackId = 'silence';
+  publishState('prayer', 'starting', track.id);
+  try { el.pause(); } catch { /* cancel any previous pending play */ }
   if (!useGain && !graphReady && !volumeControllable()) {
     useGain = true;
     ensureGraph();
   }
-
-  clearFade();
-  if (useGain) el.volume = 1; // the gain node owns the level from here on
-  applyLevel(0, 0); // begin silent so the fade-in has somewhere to rise from
-
+  if (useGain && !graphReady) {
+    playbackFailed();
+    return { started: false, trackId: track.id };
+  }
+  if (useGain) {
+    try { el.volume = 1; } catch { /* gain controls the effective volume */ }
+  }
+  if (!applyLevel(0)) {
+    playbackFailed();
+    return { started: false, trackId: track.id };
+  }
   if (loadedSrc !== track.src) {
     el.src = track.src;
     loadedSrc = track.src;
   }
   try { el.currentTime = 0; } catch { /* not seekable until loaded */ }
 
-  // Kick playback synchronously (unlocks the element on iOS) before awaiting,
-  // and resume the graph inside the same gesture — a suspended context is silent.
+  // Keep play() and context.resume() inside the originating user gesture.
   const playPromise = safePlay(el);
   if (useGain && ctx?.state === 'suspended') {
-    try { ctx.resume(); } catch { /* best effort */ }
+    try {
+      Promise.resolve(ctx.resume()).catch(() => {
+        if (thisOperation === operationId) playbackFailed();
+      });
+    } catch { playbackFailed(); }
   }
-
   const started = await playPromise;
-  if (thisOperation !== operationId) {
-    // A newer selection or a stop superseded us mid-load.
-    return { started: false, trackId: track.id };
-  }
+  if (thisOperation !== operationId) return { started: false, trackId: track.id };
   if (!started) {
     devWarn('backgroundAudio: playback unavailable', track.id);
-    playing = false;
-    try { el.pause(); } catch { /* best effort */ }
+    playbackFailed();
     return { started: false, trackId: track.id };
   }
-
   playing = true;
   playingTrackId = track.id;
-  applyLevel(clamp01(volume), FADE_IN_MS);
+  if (!applyLevel(volume, FADE_IN_MS)) {
+    playbackFailed();
+    return { started: false, trackId: track.id };
+  }
+  publishState('prayer', 'playing', track.id);
   return { started: true, trackId: track.id };
 }
 

@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "اللغة",
   "translationInProgress": "الترجمة قيد العمل",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "لحظة تشجيع",
+    "invitation": "مهما كان ما تحمله في قلبك اليوم، تذكّر أن الله يسمعك.",
+    "title": "He Answers Prayers",
+    "caption": "ترنيمة عن الإيمان والرجاء والثقة بتوقيت الله.",
+    "recording": "التسجيل",
+    "play": "شاهد: {title}",
+    "close": "إغلاق الفيديو",
+    "privacy": "عندما تختار المشاهدة، ستتصل بـYouTube، وقد يتلقى بيانات عن زيارتك.",
+    "fallback": "إذا تعذّر استخدام المشغّل، شاهد على YouTube.",
+    "external": "شاهد على YouTube",
+    "externalNotice": "يفتح YouTube في علامة تبويب جديدة"
+  },
   "hero": {
     "gloss": "«بخور» بالعبرية",
     "title": "لتصعد صلواتك كالبخور.",

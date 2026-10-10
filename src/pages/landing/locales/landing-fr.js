@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Langue",
   "translationInProgress": "Traduction en cours",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Un moment d’encouragement",
+    "invitation": "Quoi que vous portiez aujourd’hui, rappelez-vous que Dieu vous entend.",
+    "title": "He Answers Prayers",
+    "caption": "Un chant de foi, d’espérance et de confiance dans le temps choisi par Dieu.",
+    "recording": "Enregistrement",
+    "play": "Regarder : {title}",
+    "close": "Fermer la vidéo",
+    "privacy": "Choisir de regarder vous connecte à YouTube, qui peut recevoir des données sur votre visite.",
+    "fallback": "Si le lecteur est indisponible, regardez sur YouTube.",
+    "external": "Regarder sur YouTube",
+    "externalNotice": "Ouvre YouTube dans un nouvel onglet"
+  },
   "hero": {
     "gloss": "« encens » en hébreu",
     "title": "Que vos prières s'élèvent.",

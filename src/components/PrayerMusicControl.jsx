@@ -19,9 +19,10 @@ function initialAudioTrack() {
 // Shared by authenticated and guest prayer sessions. Music is entirely
 // first-party and device-local: the control stores only a track id, never prayer
 // content. A failed autoplay attempt stays failure-soft; choosing the same track
-// again retries from that direct user gesture.
-export default function PrayerMusicControl({ lang, active = true }) {
-  const [trackId, setTrackId] = useState(initialAudioTrack);
+// again retries from that direct user gesture. The first guest prayer opts out
+// of preference resumption, without clearing the saved session choice.
+export default function PrayerMusicControl({ lang, active = true, resumePreference = true }) {
+  const [trackId, setTrackId] = useState(() => (resumePreference ? initialAudioTrack() : DEFAULT_AUDIO_TRACK_ID));
   const [open, setOpen] = useState(false);
   const track = resolveTrack(trackId) || resolveTrack('silence');
 

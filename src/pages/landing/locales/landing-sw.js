@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Lugha",
   "translationInProgress": "Tafsiri inaendelea",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Wakati wa kutiwa moyo",
+    "invitation": "Chochote kilicho moyoni mwako leo, kumbuka kwamba Mungu anakusikia.",
+    "title": "He Answers Prayers",
+    "caption": "Wimbo wa imani, tumaini na kuamini kwamba Mungu hutenda kwa wakati wake.",
+    "recording": "Rekodi",
+    "play": "Tazama: {title}",
+    "close": "Funga video",
+    "privacy": "Ukichagua kutazama, utaunganishwa na YouTube, ambayo inaweza kupokea data kuhusu ziara yako.",
+    "fallback": "Ikiwa kichezaji hakipatikani, tazama kwenye YouTube.",
+    "external": "Tazama kwenye YouTube",
+    "externalNotice": "Hufungua YouTube kwenye kichupo kipya"
+  },
   "hero": {
     "gloss": "“uvumba” kwa Kiebrania",
     "title": "Maombi yako na yapande juu kama uvumba.",

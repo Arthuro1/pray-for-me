@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "भाषा",
   "translationInProgress": "अनुवाद जारी है",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "प्रोत्साहन का एक पल",
+    "invitation": "आज आपके मन पर चाहे जो भी बोझ हो, याद रखें कि परमेश्वर आपकी सुनता है।",
+    "title": "He Answers Prayers",
+    "caption": "विश्वास, आशा और परमेश्वर के समय पर भरोसे का एक गीत।",
+    "recording": "रिकॉर्डिंग",
+    "play": "देखें: {title}",
+    "close": "वीडियो बंद करें",
+    "privacy": "देखने का विकल्प चुनने पर YouTube से जुड़ेंगे, जिसे आपकी इस विज़िट के बारे में डेटा मिल सकता है।",
+    "fallback": "यदि प्लेयर उपलब्ध नहीं है, तो YouTube पर देखें।",
+    "external": "YouTube पर देखें",
+    "externalNotice": "YouTube एक नए टैब में खुलता है"
+  },
   "hero": {
     "gloss": "हिब्रू में “धूप”",
     "title": "आपकी प्रार्थनाएँ धूप की तरह ऊपर उठें।",

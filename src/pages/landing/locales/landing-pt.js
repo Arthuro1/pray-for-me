@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Idioma",
   "translationInProgress": "Tradução em andamento",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Um momento de encorajamento",
+    "invitation": "Seja o que for que você traga no coração hoje, lembre-se de que Deus ouve você.",
+    "title": "He Answers Prayers",
+    "caption": "Uma canção de fé, esperança e confiança no tempo de Deus.",
+    "recording": "Gravação",
+    "play": "Assistir: {title}",
+    "close": "Fechar o vídeo",
+    "privacy": "Ao escolher assistir ao vídeo, você se conecta ao YouTube, que pode receber dados sobre sua visita.",
+    "fallback": "Se o player não estiver disponível, assista no YouTube.",
+    "external": "Assistir no YouTube",
+    "externalNotice": "Abre o YouTube em uma nova aba"
+  },
   "hero": {
     "gloss": "“incenso” em hebraico",
     "title": "Que suas orações se elevem.",

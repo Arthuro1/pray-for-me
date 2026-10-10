@@ -30,8 +30,8 @@ html.landing-root body { background: var(--q-canvas); }
 }
 
 .landing__brand { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; }
-.landing__nav-actions { display: flex; align-items: center; gap: var(--q-space-2); }
-.landing__sign-in { max-width: 9rem; padding-inline: var(--q-space-4); }
+.landing__nav-actions { min-width: 0; display: flex; align-items: center; gap: var(--q-space-2); }
+.landing__sign-in { min-width: 0; max-width: 9rem; padding-inline: var(--q-space-4); }
 .landing__sign-in > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .landing__language-menu { position: absolute; z-index: 50; inset-inline-end: 0; width: min(17rem, calc(100vw - 1.5rem)); max-height: calc(100dvh - 5rem); margin-block-start: var(--q-space-1); overflow-y: auto; }
 .landing__language-menu [aria-checked="true"] { background: var(--q-selected); color: var(--q-royal-text); }
@@ -369,4 +369,57 @@ html.landing-root body { background: var(--q-canvas); }
   .landing-letter__more,
   .landing-letter__rest { animation: none; }
   .landing__circle-panel.is-leaving { opacity: 1; transform: none; transition: none; }
+}
+
+/* Optional encouragement after the hero. The preview is entirely local;
+   YouTube owns the visible player and its controls once the visitor opens it. */
+.landing-music {
+  display: grid;
+  max-width: 72rem;
+  align-items: start;
+  gap: var(--q-space-8);
+  margin-inline: auto;
+  padding: 0 var(--q-space-6) var(--q-space-20);
+}
+.landing-music__copy, .landing-music__video { min-width: 0; }
+.landing-music__heading {
+  max-width: 18ch;
+  margin: 0;
+  color: var(--q-text);
+  font-family: var(--q-font-editorial);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 450;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+.landing-music__invitation { max-width: 32rem; margin: var(--q-space-4) 0 0; color: var(--q-text-secondary); font-size: 1.0625rem; line-height: 1.65; }
+.landing-music__caption { margin: var(--q-space-3) 0 var(--q-space-6); color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+.landing-music__title { margin: 0 0 var(--q-space-3); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.25rem; font-weight: 500; line-height: 1.4; }
+.landing-music__recording { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-3); margin-block-end: var(--q-space-3); color: var(--q-text-secondary); font-size: var(--q-type-meta); }
+.landing-music__recording select { min-width: 0; max-width: 100%; min-height: 44px; padding: var(--q-space-2) var(--q-space-3); border: 1px solid var(--q-card-border); border-radius: var(--q-radius-control); background: var(--q-field); color: var(--q-text); font: inherit; }
+.landing-music__frame {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  /* YouTube needs at least a 200 x 200 viewport for usable controls, even when
+     a narrow phone makes the usual 16:9 frame shorter than that. */
+  min-height: 200px;
+  overflow: hidden;
+  border: 1px solid var(--q-card-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface-muted);
+}
+.landing-music__frame iframe { display: block; width: 100%; height: 100%; min-height: 200px; border: 0; }
+.landing-music__preview { display: flex; width: 100%; height: 100%; min-height: 200px; flex-direction: column; align-items: center; justify-content: center; gap: var(--q-space-3); padding: var(--q-space-5); background: radial-gradient(ellipse at center, color-mix(in srgb, var(--q-gold) 10%, transparent), transparent 75%); text-align: center; }
+.landing-music__preview svg { color: var(--q-gold-text); }
+.landing-music__preview > span { color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(1.25rem, 4vw, 1.75rem); }
+.landing-music__preview small { color: var(--q-text-secondary); font-size: var(--q-type-meta); }
+.landing-music__privacy, .landing-music__fallback { margin: var(--q-space-3) 0 0; color: var(--q-text-secondary); font-size: var(--q-type-meta); line-height: 1.6; }
+.landing-music__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); margin-block-start: var(--q-space-3); }
+.landing-music__actions > button { min-height: 44px; max-width: 100%; text-align: start; }
+.landing-music__actions svg { flex: 0 0 auto; }
+.landing-music__external { display: inline-flex; min-height: 44px; align-items: center; gap: var(--q-space-2); color: var(--q-royal-text); font-size: 0.9375rem; text-decoration: none; }
+.landing-music__external:hover { text-decoration: underline; text-underline-offset: 4px; }
+@media (min-width: 900px) {
+  .landing-music { grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--q-space-12); }
+  .landing-music__copy { padding-block-start: var(--q-space-6); }
 }

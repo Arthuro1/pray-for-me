@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "言語",
   "translationInProgress": "翻訳作業中",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "励ましのひととき",
+    "invitation": "今日どんな思いを抱えていても、神があなたの声を聞いておられることを覚えていてください。",
+    "title": "He Answers Prayers",
+    "caption": "信仰と希望、そして神の時を信頼する歌。",
+    "recording": "収録版",
+    "play": "見る：{title}",
+    "close": "動画を閉じる",
+    "privacy": "動画を見ることを選ぶと YouTube に接続され、訪問に関するデータが YouTube に送られる場合があります。",
+    "fallback": "プレーヤーが利用できない場合は、YouTube でご覧ください。",
+    "external": "YouTube で見る",
+    "externalNotice": "新しいタブで YouTube を開きます"
+  },
   "hero": {
     "gloss": "ヘブライ語で「香」",
     "title": "あなたの祈りが立ち上りますように。",

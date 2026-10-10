@@ -64,7 +64,7 @@ function GuestPrayerSession({ prayer, lang, onClose, onPrayed }) {
                   <X size={20} aria-hidden="true" />
                 </button>
                 <div className="prayer-session__tools">
-                  <PrayerMusicControl lang={lang} active />
+                  <PrayerMusicControl lang={lang} active resumePreference={false} />
                 </div>
               </div>
               <div className="prayer-session__progress-row">

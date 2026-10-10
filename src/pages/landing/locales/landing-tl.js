@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Wika",
   "translationInProgress": "Isinasalin pa",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Sandali ng pagpapalakas ng loob",
+    "invitation": "Anuman ang dinadala mo sa puso ngayon, tandaan na pinapakinggan ka ng Diyos.",
+    "title": "He Answers Prayers",
+    "caption": "Isang awit ng pananampalataya, pag-asa, at pagtitiwala sa takdang panahon ng Diyos.",
+    "recording": "Rekording",
+    "play": "Panoorin: {title}",
+    "close": "Isara ang video",
+    "privacy": "Kapag pinili mong manood, kokonekta ka sa YouTube, na maaaring makatanggap ng datos tungkol sa pagbisita mo.",
+    "fallback": "Kung hindi magamit ang player, panoorin sa YouTube.",
+    "external": "Panoorin sa YouTube",
+    "externalNotice": "Binubuksan ang YouTube sa bagong tab"
+  },
   "hero": {
     "gloss": "salitang Hebreo para sa “insenso”",
     "title": "Pumailanlang nawa ang iyong mga panalangin.",

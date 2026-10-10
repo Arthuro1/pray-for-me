@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Idioma",
   "translationInProgress": "Traducción en curso",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Un momento de ánimo",
+    "invitation": "Sea lo que sea que lleves en el corazón hoy, recuerda que Dios te escucha.",
+    "title": "He Answers Prayers",
+    "caption": "Una canción de fe, esperanza y confianza en el tiempo de Dios.",
+    "recording": "Grabación",
+    "play": "Ver: {title}",
+    "close": "Cerrar el video",
+    "privacy": "Al elegir ver el video, te conectas a YouTube, que puede recibir datos sobre tu visita.",
+    "fallback": "Si el reproductor no está disponible, mira el video en YouTube.",
+    "external": "Ver en YouTube",
+    "externalNotice": "Abre YouTube en una pestaña nueva"
+  },
   "hero": {
     "gloss": "«incienso» en hebreo",
     "title": "Que tus oraciones se eleven.",

@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "언어",
   "translationInProgress": "번역 진행 중",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "잠시 마음에 힘을 얻는 시간",
+    "invitation": "오늘 어떤 짐을 안고 있든, 하나님께서 당신의 기도를 듣고 계심을 기억하세요.",
+    "title": "He Answers Prayers",
+    "caption": "믿음과 소망, 그리고 하나님의 때를 신뢰하는 노래.",
+    "recording": "녹음 버전",
+    "play": "보기: {title}",
+    "close": "동영상 닫기",
+    "privacy": "시청을 선택하면 YouTube에 연결되며, YouTube가 방문에 관한 데이터를 받을 수 있습니다.",
+    "fallback": "플레이어를 사용할 수 없으면 YouTube에서 시청하세요.",
+    "external": "YouTube에서 보기",
+    "externalNotice": "새 탭에서 YouTube 열기"
+  },
   "hero": {
     "gloss": "히브리어로 ‘향’",
     "title": "당신의 기도가 향처럼 올라가기를.",

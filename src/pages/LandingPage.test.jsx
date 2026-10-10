@@ -160,8 +160,8 @@ describe('LandingPage — pray first', () => {
     expect(screen.getAllByText(/Sign in/).length).toBeGreaterThanOrEqual(3);
     fireEvent.click(screen.getAllByText('Sign in')[0]);
     expect(onSignIn).toHaveBeenCalled();
-    // One invitation, worded the same everywhere: the hero, Bring, and the close.
-    expect(screen.getAllByText('Begin with a prayer')).toHaveLength(3);
+    // One invitation: the hero, encouragement, Bring, and the close.
+    expect(screen.getAllByText('Begin with a prayer')).toHaveLength(4);
   });
 
   it('starts the guest prayer flow from the product-preview Pray now button', async () => {

@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "Sprache",
   "translationInProgress": "Übersetzung in Arbeit",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "Ein Moment der Ermutigung",
+    "invitation": "Was auch immer dich heute beschäftigt: Denk daran, dass Gott dich hört.",
+    "title": "He Answers Prayers",
+    "caption": "Ein Lied über Glauben, Hoffnung und das Vertrauen darauf, dass Gott zur rechten Zeit handelt.",
+    "recording": "Aufnahme",
+    "play": "Ansehen: {title}",
+    "close": "Video schließen",
+    "privacy": "Wenn du das Video ansiehst, wird eine Verbindung zu YouTube hergestellt. Dabei kann YouTube Daten über deinen Besuch erhalten.",
+    "fallback": "Wenn der Player nicht verfügbar ist, sieh dir das Video auf YouTube an.",
+    "external": "Auf YouTube ansehen",
+    "externalNotice": "Öffnet YouTube in einem neuen Tab"
+  },
   "hero": {
     "gloss": "hebräisch für „Räucherwerk“",
     "title": "Lass deine Gebete aufsteigen.",

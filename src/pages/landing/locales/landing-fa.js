@@ -48,6 +48,20 @@ export default {
   },
   "languageMenuLabel": "زبان",
   "translationInProgress": "ترجمه در حال انجام است",
+  // AI-drafted listening copy; native editorial review is pending.
+  "music": {
+    "heading": "لحظه‌ای برای دلگرمی",
+    "invitation": "امروز هر باری که بر دل دارید، به یاد داشته باشید که خدا صدای شما را می‌شنود.",
+    "title": "He Answers Prayers",
+    "caption": "سرودی دربارهٔ ایمان، امید و اعتماد به زمان‌بندی خدا.",
+    "recording": "نسخهٔ ضبط‌شده",
+    "play": "تماشا کنید: {title}",
+    "close": "بستن ویدیو",
+    "privacy": "با انتخاب تماشا به YouTube متصل می‌شوید، که ممکن است اطلاعاتی دربارهٔ بازدید شما دریافت کند.",
+    "fallback": "اگر پخش‌کننده در دسترس نیست، در YouTube تماشا کنید.",
+    "external": "تماشا در YouTube",
+    "externalNotice": "YouTube را در زبانه‌ای جدید باز می‌کند"
+  },
   "hero": {
     "gloss": "«بخور» به عبری",
     "title": "باشد که دعاهای شما چون بخور بالا رود.",
