@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BookOpen } from 'lucide-react';
 import { isLocaleLoaded, loadLocale } from '../../i18n';
 import { localizeRef } from '../../content/teaching/pick';
@@ -12,10 +12,20 @@ import { localizeRef } from '../../content/teaching/pick';
 const VerseAccordion = lazy(() => import('../VerseAccordion'));
 
 export default function ScriptureRefButton({ reference, lang }) {
-  const [requested, setRequested] = useState(false);
+  const [requestedLang, setRequestedLang] = useState(null);
+  const requested = requestedLang === lang;
   // The reader's own words ("Read the whole chapter") come from the app's
   // dictionary, which the public page does not otherwise load.
-  const [localeReady, setLocaleReady] = useState(() => isLocaleLoaded(lang));
+  const [localeReadyLang, setLocaleReadyLang] = useState(() => isLocaleLoaded(lang) ? lang : null);
+
+  useEffect(() => {
+    if (!requested) return undefined;
+    let current = true;
+    loadLocale(lang).then(() => {
+      if (current) setLocaleReadyLang(lang);
+    });
+    return () => { current = false; };
+  }, [requested, lang]);
   const label = localizeRef(reference, lang);
   // Chapter and verse stay left-to-right inside Arabic or Persian text, or
   // "7:9-10" would read "10-7:9".
@@ -33,16 +43,10 @@ export default function ScriptureRefButton({ reference, lang }) {
     </button>
   );
 
-  const request = async () => {
-    setRequested(true);
-    if (!isLocaleLoaded(lang)) {
-      await loadLocale(lang);
-      setLocaleReady(true);
-    }
-  };
+  const request = () => setRequestedLang(lang);
 
   if (!requested) return trigger({ onClick: request });
-  if (!localeReady && !isLocaleLoaded(lang)) return trigger({ busy: true });
+  if (localeReadyLang !== lang && !isLocaleLoaded(lang)) return trigger({ busy: true });
   return (
     <Suspense fallback={trigger({ busy: true })}>
       <VerseAccordion reference={label} lang={lang} defaultExpanded>

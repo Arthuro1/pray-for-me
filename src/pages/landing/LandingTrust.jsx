@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import {
   Bell, BookOpen, ChevronDown, Church, Globe, HeartHandshake, Lightbulb, Lock, Smartphone, UserRound, Users, WifiOff,
 } from 'lucide-react';
+import { getAiProviderLabel } from '../../lib/aiProvider';
 
 // What a visitor needs to trust the place before praying in it: the practical
 // facts in one strip, always visible, then the questions people ask. The
@@ -83,7 +84,14 @@ export default function LandingTrust({ copy }) {
           <p className="landing-faq__intro">{c.faqIntro}</p>
         </div>
         <div className="landing__faq">
-          {c.faqs.map((faq, i) => <Question key={faq.q} {...faq} mark={FAQ_MARKS[i]} />)}
+          {c.faqs.map((faq, i) => (
+            <Question
+              key={faq.q}
+              {...faq}
+              a={faq.a.replace('{provider}', getAiProviderLabel())}
+              mark={FAQ_MARKS[i]}
+            />
+          ))}
         </div>
       </section>
     </>

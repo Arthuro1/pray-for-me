@@ -10,7 +10,7 @@ import { PrimaryButton } from './shared/Primitives';
 // encrypt any that aren't. Only rendered by SettingsTab while the vault is
 // unlocked (the migration needs the master key). Stays silent while checking,
 // offline, or when there's nothing to protect.
-export default function VaultMigrationStatus({ lang }) {
+export default function VaultMigrationStatus({ lang, showComplete = true }) {
   const scanVaultCoverage = usePrayerStore((s) => s.scanVaultCoverage);
   const migrateToVault = usePrayerStore((s) => s.migrateToVault);
   const [status, setStatus] = useState(undefined); // undefined=checking | {total,pending} | null=couldn't check
@@ -35,6 +35,7 @@ export default function VaultMigrationStatus({ lang }) {
   if (!status || status.total === 0) return null;
 
   if (status.pending === 0) {
+    if (!showComplete) return null;
     return (
       <p className="vault-status">
         <ShieldCheck size={16} aria-hidden="true" /> {t(lang, 'vaultAllProtected')}

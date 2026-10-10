@@ -38,6 +38,13 @@ beforeEach(() => {
 });
 
 describe('prayerNoteDrafts — privacy at rest', () => {
+  it('can inspect an expired note during a domain move without deleting it', async () => {
+    await saveNoteDraft({ prayerId: PRAYER, text: SECRET });
+    const record = idbStore.get(SLOT);
+    record.updatedAt = Date.now() - 8 * 24 * 60 * 60 * 1000;
+    expect(await loadNoteDraft(PRAYER, { clearInvalid: false })).toBeNull();
+    expect(idbStore.get(SLOT)).toBe(record);
+  });
   it('never writes the note text in plaintext', async () => {
     await saveNoteDraft({ prayerId: PRAYER, text: SECRET });
     const blob = persistedBlob();

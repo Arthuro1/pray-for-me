@@ -129,7 +129,7 @@ The operational gates below still require actual evidence.
 - Run controlled production synthetic-account access/account-erasure checks;
   migration application and policy/grant metadata verification are complete.
 - Resolve or disposition the remaining unit/content failures with actual evidence.
-- Confirm versionCode `4` is unused in Console and publish its real Play
+- Confirm versionCode `5` is unused in Console and publish its real Play
   app-signing fingerprint; install the internal-track release from Play.
 - Test Android 15/16 layout, trust, push, media, sign-in, account erasure and
   old-origin vault recovery on physical devices.

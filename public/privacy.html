@@ -74,7 +74,7 @@
     <p>Your personal prayer companion</p>
   </header>
   <main>
-    <p class="updated">Last updated: October 8, 2026</p>
+    <p class="updated">Last updated: October 9, 2026</p>
 
     <section>
       <h2>Overview</h2>
@@ -128,10 +128,15 @@
         remove recognizable contact details and secrets, and sent through Qetoret's
         authenticated app server. <strong>When Claude is configured, the app server
         sends this text directly to Anthropic, which receives
-        and processes this selected text.</strong> For prayer guidance, the prayer title
-        is included by default; prayer details and the latest update are optional.
-        Translation sends the selected text needed for that task. Requests also include
-        task information such as language and selected guidance options. Redaction is
+        and processes this selected text.</strong> With private Ollama, the selected text
+        is processed through the operator's private gateway and model instead.
+        For prayer guidance, the prayer title is always included; prayer details and
+        the latest update are excluded by default and sent only if you include them,
+        where those options are available. You can review the outgoing prayer text
+        before each explicit prayer AI request. Requests also include your language
+        and the selected guidance option. Prayer categories and the rest of your
+        journal are not included. Translation sends the text selected for that task
+        and the target language. Redaction is
         imperfect and names remain in the selected text, so text can
         still contain sensitive personal information. Encryption of your saved journal
         does not hide text you choose to send to an AI service.

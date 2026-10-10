@@ -12,6 +12,7 @@ import SyncIndicator from './components/shared/SyncIndicator';
 import Onboarding from './components/Onboarding';
 import FirstPrayerFlow from './components/FirstPrayerFlow';
 import RecoveryPromptBanner from './components/RecoveryPromptBanner';
+import OriginMigrationBanner from './components/OriginMigrationBanner';
 import { ContextualNudgeProvider } from './components/shared/ContextualNudgeCoordinator';
 import ErrorBoundary from './components/ErrorBoundary';
 import { toast } from './store/toastStore';
@@ -44,6 +45,7 @@ import AccountKeyRecoveryScreen from './components/AccountKeyRecoveryScreen';
 import AccountKeyUnavailableScreen from './components/AccountKeyUnavailableScreen';
 import { pullVaultRecord } from './lib/vaultSync';
 import { ensureAccountCryptoReady, rememberAccountKey, CRYPTO_STATUS } from './lib/crypto/accountKey';
+import { configureAccountContext } from './lib/crypto/keyManager';
 import { hasAiConsent } from './lib/aiConsent';
 import { getContentLang, ensureContentLang } from './lib/contentLang';
 import { initQueue, onMutationDropped } from './lib/mutationQueue';
@@ -198,6 +200,7 @@ export default function AuthenticatedApp({
   const navigate = useNavigate();
   const [localeReady, setLocaleReady] = useState(isLocaleLoaded(lang));
   const [vaultChecked, setVaultChecked] = useState(false);
+  const [cryptoCheckedUserId, setCryptoCheckedUserId] = useState(null);
   const [cryptoStatus, setCryptoStatus] = useState(null);
   const [cryptoAttempt, setCryptoAttempt] = useState(0);
 
@@ -277,7 +280,7 @@ export default function AuthenticatedApp({
       search: location.search,
       authLoading,
       userId: user?.id,
-      vaultChecked,
+      vaultChecked: vaultChecked && cryptoCheckedUserId === user?.id,
       vaultUnlocked,
     });
     if (!shortcut || shortcut === 'wait') return;
@@ -291,11 +294,10 @@ export default function AuthenticatedApp({
     setFormOptions(null);
     setShowForm(true);
     navigate('/', { replace: true });
-  }, [location.pathname, location.search, authLoading, user?.id, vaultChecked, vaultUnlocked, navigate]);
+  }, [location.pathname, location.search, authLoading, user?.id, vaultChecked, cryptoCheckedUserId, vaultUnlocked, navigate]);
 
   useEffect(() => {
     if (user?.id) {
-      loadData(user.id);
       loadTranslations(user.id);
       fetchPendingCount(user.id);
       // Default the user's writing language to the current display language, so a
@@ -308,7 +310,7 @@ export default function AuthenticatedApp({
       // Nor while a shared plan is waiting to start: its first day IS the first prayer.
       if (!localStorage.getItem('pfm_onboarded') && !hasPendingGuestDraftSync() && !hasPendingPlanJoin()) setShowOnboarding(true);
     }
-  }, [user?.id, loadData, loadTranslations, fetchPendingCount]);
+  }, [user?.id, loadTranslations, fetchPendingCount]);
 
   // An anonymous visitor opening an invite link only ever sees the auth screen
   // (the router below is gated on `user`), so remember the intended path. After
@@ -333,14 +335,17 @@ export default function AuthenticatedApp({
   // the retry screen instead of being read as "no recovery was ever set up".
   // Gates the splash until the crypto state is known.
   useEffect(() => {
-    if (!user?.id) { setVaultChecked(false); setCryptoStatus(null); return undefined; }
+    if (!user?.id) { setVaultChecked(false); setCryptoCheckedUserId(null); setCryptoStatus(null); return undefined; }
     let cancelled = false;
     (async () => {
+      configureAccountContext(user.id);
       const recoverySync = await pullVaultRecord();
+      if (cancelled) return;
       const status = await ensureAccountCryptoReady(user.id, recoverySync);
       if (cancelled) return;
       setCryptoStatus(status);
       useVaultStore.getState().refresh();
+      setCryptoCheckedUserId(user.id);
       setVaultChecked(true);
     })();
     return () => { cancelled = true; };
@@ -350,8 +355,8 @@ export default function AuthenticatedApp({
   // have run before auto-init/unlock, leaving encrypted rows as placeholders).
   // Also remember the key for transparent access on this device from now on.
   useEffect(() => {
-    if (user?.id && vaultUnlocked) { rememberAccountKey(user.id); loadData(user.id); }
-  }, [vaultUnlocked, user?.id, loadData]);
+    if (user?.id && vaultUnlocked && vaultChecked && cryptoCheckedUserId === user.id) { rememberAccountKey(user.id); loadData(user.id); }
+  }, [vaultUnlocked, user?.id, vaultChecked, cryptoCheckedUserId, loadData]);
 
   // Pray-first import: a visitor who prayed as a guest and chose "Save in my
   // private journal" authenticates, and here — once the account key is READY and
@@ -359,7 +364,7 @@ export default function AuthenticatedApp({
   // through the normal encrypted path, exactly once. The draft is device-local
   // (IndexedDB), so it survives an OAuth / email-confirmation round-trip.
   useEffect(() => {
-    if (!user?.id || !vaultChecked || !vaultUnlocked) return undefined;
+    if (!user?.id || !vaultChecked || cryptoCheckedUserId !== user.id || !vaultUnlocked) return undefined;
     if (!hasPendingGuestDraftSync()) return undefined;
     let cancelled = false;
     (async () => {
@@ -370,7 +375,7 @@ export default function AuthenticatedApp({
       toast.success(t(currentLang, 'savedPrivately'));
     })();
     return () => { cancelled = true; };
-  }, [user?.id, vaultChecked, vaultUnlocked, loadData]);
+  }, [user?.id, vaultChecked, cryptoCheckedUserId, vaultUnlocked, loadData]);
 
   const finishOnboarding = () => {
     localStorage.setItem('pfm_onboarded', '1');
@@ -407,7 +412,7 @@ export default function AuthenticatedApp({
   // common monolingual case), and never sends private prayer content — including
   // decrypted E2EE testimonies — to the AI translator without explicit consent.
   useEffect(() => {
-    if (!user?.id || !vaultUnlocked) return;
+    if (!user?.id || !vaultUnlocked || cryptoCheckedUserId !== user.id) return;
     const target = settings.language;
     const contentLang = getContentLang() || target;
     if (target === contentLang) return;
@@ -415,9 +420,9 @@ export default function AuthenticatedApp({
     if (prayers.length > 0 || categories.length > 0) {
       translateContent(prayers, categories, target, user.id);
     }
-  }, [settings.language, prayers, categories, user?.id, vaultUnlocked, translateContent]);
+  }, [settings.language, prayers, categories, user?.id, cryptoCheckedUserId, vaultUnlocked, translateContent]);
 
-  if (authLoading || !localeReady || (user && !vaultChecked)) {
+  if (authLoading || !localeReady || (user && (!vaultChecked || cryptoCheckedUserId !== user.id))) {
     return (
       <BrandLoader label={APP_NAME} />
     );
@@ -460,14 +465,14 @@ export default function AuthenticatedApp({
   // Hard gate: a vault exists but is locked → block the app until it's unlocked,
   // so encrypted content is never rendered (or re-cached) without the key.
   // Unlocking flips vaultUnlocked → the reload-on-unlock effect re-decrypts.
-  if (vaultInitialized && !vaultUnlocked) {
+  if ((vaultInitialized || cryptoStatus === CRYPTO_STATUS.LOCKED || cryptoStatus === CRYPTO_STATUS.READY) && !vaultUnlocked) {
     return <VaultLockScreen lang={lang} />;
   }
 
   // Hard gate: the server holds encrypted data but this device has no key and no
   // recovery record. We refused to silently mint a new key (which would orphan
   // that data); let the user recover on their original device or start fresh.
-  if (cryptoStatus === CRYPTO_STATUS.ORPHANED) {
+  if (cryptoStatus === CRYPTO_STATUS.ORPHANED && !vaultUnlocked) {
     // startFreshEncryption unlocks the key, which flips vaultUnlocked → the
     // reload-on-unlock effect re-decrypts; here we just drop the gate.
     return <AccountKeyRecoveryScreen lang={lang} onResolved={() => setCryptoStatus(CRYPTO_STATUS.READY)} />;
@@ -493,7 +498,8 @@ export default function AuthenticatedApp({
       <CommunityTermsGate key={user.id} userId={user.id} lang={lang} onSignOut={() => useAuthStore.getState().signOut()}>
       <ContextualNudgeProvider key={location.pathname}>
         <Layout onAddPrayer={openAdd}>
-          <RecoveryPromptBanner lang={lang} />
+          <OriginMigrationBanner key={user.id} lang={lang} />
+          <RecoveryPromptBanner key={`recovery:${user.id}`} lang={lang} userId={user.id} />
           <ErrorBoundary lang={lang} resetKey={location.pathname}>
             <Suspense fallback={<PageLoader />}>
               <Routes>

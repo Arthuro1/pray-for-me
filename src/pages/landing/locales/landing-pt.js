@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "Como funcionam as sugestões de versículos?",
-        "a": "Quando você pede sugestões, o título e os detalhes da oração são enviados a um serviço de IA, que sugere passagens bíblicas. Você lê cada passagem e discerne o que se aplica."
+        "a": "Com seu consentimento, o título da oração é enviado pelo servidor do Qetoret a {provider} para sugerir passagens bíblicas. Os detalhes e a atualização mais recente só são enviados se você os incluir. Você confere o texto antes de cada pedido relacionado a uma oração. O texto que você escolhe traduzir também é enviado a esse serviço. Seu idioma e, quando aplicável, o tipo de sugestão escolhido também são incluídos. Você pode retirar seu consentimento a qualquer momento nas Configurações para interromper pedidos futuros; isso não permite recuperar o texto já enviado. Leia cada passagem sugerida e discirna o que se aplica."
       },
       {
         "q": "O Qetoret é uma rede social?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Para quais igrejas é o Qetoret?",
-        "a": "Para cristãos de todas as tradições da Igreja. O Qetoret ajuda você a orar; ele nunca substitui sua igreja local, seus pastores ou sua comunhão."
+        "a": "Enraizado nas Escrituras e moldado por uma fé viva em Jesus Cristo, o Qetoret acolhe cristãos de diferentes tradições da Igreja que desejam crescer em oração. Ele nunca substitui sua igreja local, seus pastores ou sua comunhão."
       },
       {
         "q": "Quais idiomas são suportados?",
-        "a": "16 idiomas: francês, inglês, alemão, português, chinês, espanhol, hindi, japonês, suaíli, amárico, indonésio, tagalo, coreano, russo, árabe e persa."
+        "a": "A navegação está disponível em 16 idiomas. A cobertura do conteúdo devocional varia: alguns ensinamentos mais longos e planos de oração podem aparecer em inglês ou francês. As traduções da página de apresentação ainda estão sendo concluídas e revisadas linguisticamente; o menu de idiomas indica as traduções parciais."
       },
       {
         "q": "É gratuito?",
@@ -201,8 +201,8 @@ export default {
         "desc": "O app Android no Google Play, ou instale pelo navegador no celular ou no computador."
       },
       {
-        "title": "16 idiomas",
-        "desc": "Mude o idioma quando quiser."
+        "title": "Navegação em 16 idiomas",
+        "desc": "A cobertura devocional varia; a revisão das traduções continua."
       },
       {
         "title": "Lembretes discretos",

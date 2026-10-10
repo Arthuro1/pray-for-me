@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "¿Cómo funcionan las sugerencias de versículos?",
-        "a": "Cuando pides sugerencias, el título y los detalles de la oración se envían a un servicio de IA, que propone pasajes bíblicos. Tú lees cada pasaje y disciernes qué se aplica."
+        "a": "Con tu consentimiento, el título de la oración se envía a través del servidor de Qetoret a {provider} para sugerir pasajes bíblicos. Los detalles y la última actualización solo se envían si los incluyes. Revisas el texto antes de cada solicitud relacionada con una oración. El texto que eliges traducir también se envía a este servicio. También se incluyen tu idioma y, cuando corresponda, el tipo de sugerencia que elijas. Puedes retirar tu consentimiento en cualquier momento en Ajustes para detener futuras solicitudes; esto no permite recuperar el texto ya enviado. Lee cada pasaje sugerido y discierne qué se aplica."
       },
       {
         "q": "¿Qetoret es una red social?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "¿Para qué iglesias es Qetoret?",
-        "a": "Para cristianos de todas las tradiciones de la Iglesia. Qetoret te ayuda a orar; nunca reemplaza a tu iglesia local, a sus pastores ni a su comunión."
+        "a": "Arraigado en las Escrituras y guiado por una fe viva en Jesucristo, Qetoret acoge a cristianos de distintas tradiciones de la Iglesia que desean crecer en la oración. Nunca reemplaza a tu iglesia local, a sus pastores ni a su comunión."
       },
       {
         "q": "¿Qué idiomas están disponibles?",
-        "a": "La interfaz completa funciona en 16 idiomas."
+        "a": "La navegación está disponible en 16 idiomas. La cobertura del contenido devocional varía: algunas enseñanzas más largas y planes de oración pueden aparecer en inglés o francés. Las traducciones de la página de presentación aún se están completando y revisando lingüísticamente; el menú de idiomas señala las traducciones parciales."
       },
       {
         "q": "¿Es gratuito?",
@@ -201,8 +201,8 @@ export default {
         "desc": "La app de Android en Google Play, o instálala desde tu navegador en el teléfono o la computadora."
       },
       {
-        "title": "16 idiomas",
-        "desc": "Cambia de idioma cuando quieras."
+        "title": "Navegación en 16 idiomas",
+        "desc": "La cobertura devocional varía; la revisión de las traducciones continúa."
       },
       {
         "title": "Recordatorios discretos",

@@ -1,0 +1,3 @@
+- Um visual mais tranquilo e claro para proteger suas orações.
+- Verificação de acesso e configuração do código de reserva mais simples.
+- Gerenciamento mais fácil dos acessos salvos.

@@ -1,0 +1,32 @@
+Instruction name: Qetoret full review access
+
+For Play Console App access. Enter the verified review email/password and recovery
+secret only in Console's private fields; this text does not supply credentials.
+
+Qetoret is a prayer journal and guided-prayer app at https://qetoret.com.
+The landing page lets you begin a prayer without an account. For account and
+community features, select Sign in and use the supplied email/password account.
+Use the password option rather than Google sign-in or an email magic link.
+
+On a fresh device, unlock encrypted prayers with the dedicated review account's
+existing secret phrase or verified backup code supplied privately in App access.
+The recovery secret is separate from the account password. Review access must
+not depend on a fingerprint or passkey held only on the developer's device.
+
+Accept the Terms of Use if prompted. Today and Journal contain synthetic prayer
+content. Prayer plans are available from navigation; Together contains the
+synthetic review group. Settings includes Privacy & Security and the prayer
+protection controls. This update simplifies access verification, backup-code
+saving and checking, and saved-access management; existing recovery still works.
+
+Account deletion is in Privacy & Security > Danger zone > Delete my account.
+For destructive deletion testing, use the separate verified deletion-test account
+provided privately in Console. The public request page is
+https://qetoret.com/delete-account.html.
+
+No subscription or payment is required. Optional AI assistance requires consent
+and uses the normal permitted quota. Public support: arthur.meteng@gmail.com.
+
+Before pasting: verify these menu labels and seeded content on the deployed app,
+confirm both accounts work on a fresh device and confirm the support address is
+monitored. Add the actual private account/recovery fields in Console.

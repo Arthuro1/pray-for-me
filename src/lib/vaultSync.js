@@ -1,6 +1,7 @@
 // Syncs the user's WRAPPED vault record (ciphertext only) through Supabase so
 // the Prayer Vault can be unlocked on any of their devices. The record never
-// contains the master key or passphrase, so this preserves zero-knowledge.
+// contains the master key or passphrase. This is ciphertext storage, not a
+// claim of protection against malicious deployed JavaScript.
 //
 // Both functions fail soft — a missing table (migration not run) or a dead
 // network must never throw into the boot path — but they REPORT the failure
@@ -14,6 +15,8 @@ import {
   inspectVaultRecord,
   isVaultInitialized,
   hydrate,
+  getLifecycleToken,
+  isLifecycleCurrent,
 } from './crypto/keyManager';
 import { devError } from './logger';
 
@@ -24,10 +27,13 @@ export const VAULT_SYNC = {
   UNKNOWN: 'unknown', // the lookup failed — the answer must not be inferred
 };
 
-async function currentUserId() {
+async function currentAccount() {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
-    return user?.id ?? null;
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data?.session?.access_token) return null;
+    const { data: { user }, error: userError } = await supabase.auth.getUser(data.session.access_token);
+    if (userError || !user?.id || user.id !== data.session.user?.id) return null;
+    return { userId: user.id, authorization: `Bearer ${data.session.access_token}` };
   } catch {
     return null;
   }
@@ -38,18 +44,40 @@ async function currentUserId() {
 // PostgREST reports RLS and constraint failures in `error` rather than throwing,
 // so an unchecked call reports success while leaving other devices with nothing
 // to recover from.
+function canonical(value) {
+  if (Array.isArray(value)) return JSON.stringify(value.map((item) => JSON.parse(canonical(item))));
+  if (value && typeof value === 'object') return JSON.stringify(Object.fromEntries(Object.keys(value).sort().map((key) => [key, JSON.parse(canonical(value[key]))])));
+  return JSON.stringify(value);
+}
+
 export async function pushVaultRecord() {
+  const token = getLifecycleToken();
   await hydrate();
+  if (!isLifecycleCurrent(token)) return false;
   const record = exportVaultRecord();
   if (!record) return false;
-  const userId = await currentUserId();
-  if (!userId) return false;
+  const account = await currentAccount();
+  const userId = account?.userId;
+  if (!userId || !isLifecycleCurrent(token) || (token.accountId && token.accountId !== userId)) return false;
   try {
-    const { error } = await supabase
-      .from('vault_keys')
-      .upsert({ user_id: userId, record: JSON.parse(record), updated_at: new Date().toISOString() });
-    if (error) { devError('vaultSync push failed', error.code); return false; }
-    return true;
+    const local = inspectVaultRecord(record);
+    if (!local) return false;
+    const { data: before, error: readError } = await supabase.from('vault_keys').select('record').eq('user_id', userId).setHeader('Authorization', account.authorization).maybeSingle();
+    if (readError || !isLifecycleCurrent(token)) return false;
+    const proposed = JSON.parse(local.json);
+    const remote = inspectVaultRecord(before?.record);
+    if (remote && canonical(JSON.parse(remote.json)) === canonical(proposed)) return true;
+    // Equal-generation divergent edits are conflicts, never a client-clock race.
+    if (remote && remote.revision >= local.revision) return false;
+    const { data: committed, error } = await supabase.rpc('compare_and_swap_vault_record', {
+      expected_record: before?.record ?? null, new_record: proposed,
+    }).setHeader('Authorization', account.authorization);
+    if (error || !committed || !isLifecycleCurrent(token)) {
+      devError('vaultSync push failed', error?.code || 'conflict'); return false;
+    }
+    const { data: after, error: verifyError } = await supabase.from('vault_keys').select('record').eq('user_id', userId).setHeader('Authorization', account.authorization).maybeSingle();
+    return !verifyError && isLifecycleCurrent(token) && exportVaultRecord() === record
+      && !!after?.record && canonical(after.record) === canonical(proposed);
   } catch (e) {
     devError('vaultSync push failed', e?.status);
     return false;
@@ -67,12 +95,15 @@ export async function pushVaultRecord() {
 // whether a device with no key may mint a fresh one, and inferring "no recovery
 // exists" from a network blip would offer to discard perfectly recoverable data.
 export async function pullVaultRecord() {
+  const token = getLifecycleToken();
   await hydrate(); // ensure the local cache reflects IndexedDB before we decide
-  const userId = await currentUserId();
-  if (!userId) return VAULT_SYNC.UNKNOWN;
+  const account = await currentAccount();
+  const userId = account?.userId;
+  if (!userId || !isLifecycleCurrent(token) || (token.accountId && token.accountId !== userId)) return VAULT_SYNC.UNKNOWN;
   try {
     const { data, error } = await supabase
-      .from('vault_keys').select('record, updated_at').eq('user_id', userId).maybeSingle();
+      .from('vault_keys').select('record, updated_at').eq('user_id', userId).setHeader('Authorization', account.authorization).maybeSingle();
+    if (!isLifecycleCurrent(token)) return VAULT_SYNC.UNKNOWN;
     if (error) { devError('vaultSync pull failed', error.code); return VAULT_SYNC.UNKNOWN; }
     if (data?.record) {
       const remote = inspectVaultRecord(data.record);
@@ -87,23 +118,19 @@ export async function pullVaultRecord() {
       }
       const local = inspectVaultRecord(exportVaultRecord());
       if (!local) {
-        await importVaultRecord(remote.json, true);
-        return VAULT_SYNC.PRESENT;
+        return await importVaultRecord(remote.json, true, token) ? VAULT_SYNC.PRESENT : VAULT_SYNC.UNKNOWN;
       }
-      if (local.json === remote.json) return VAULT_SYNC.PRESENT;
+      if (canonical(JSON.parse(local.json)) === canonical(JSON.parse(remote.json))) return VAULT_SYNC.PRESENT;
 
-      // Passphrase and recovery-code changes increment `revision`. `updatedAt`
-      // resolves the rare same-revision concurrent edit; the server timestamp
-      // is only a fallback for legacy wrappers that predate embedded metadata.
-      const remoteUpdatedAt = remote.updatedAt || Date.parse(data.updated_at || '') || 0;
-      const remoteIsNewer = remote.revision > local.revision
-        || (remote.revision === local.revision && remoteUpdatedAt >= local.updatedAt);
-      if (remoteIsNewer) {
-        await importVaultRecord(remote.json, true);
+      // A client clock cannot decide which divergent recovery credential to
+      // discard. Keep both copies and surface uncertainty on an equal revision.
+      if (remote.revision === local.revision) return VAULT_SYNC.UNKNOWN;
+      if (remote.revision > local.revision) {
+        if (!await importVaultRecord(remote.json, true, token)) return VAULT_SYNC.UNKNOWN;
       } else {
         // This device has a passphrase/recovery change whose earlier upload was
         // interrupted. Re-publish it instead of silently reverting it.
-        await pushVaultRecord();
+        if (!await pushVaultRecord()) return VAULT_SYNC.UNKNOWN;
       }
       return VAULT_SYNC.PRESENT;
     }

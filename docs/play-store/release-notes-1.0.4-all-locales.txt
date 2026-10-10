@@ -1,0 +1,111 @@
+<am>
+Praystead አሁን Qetoret ተብሎ ይጠራል።
+መተግበሪያው አሁን qetoret.com ይከፍታል።
+Android 7.0 ወይም ከዚያ በላይ ያስፈልጋል።
+ወደ አዲሱ ድረ ገጽ ከመዛወር በፊት፣ ነባር የተመሰጠሩ ማስታወሻዎች በመጀመሪያው መሣሪያ ላይ የተዋቀረ የካዝና መልሶ ማግኛ ያስፈልጋቸዋል።
+</am>
+
+<ar>
+أصبح اسم Praystead الآن Qetoret.
+يفتح التطبيق الآن qetoret.com.
+يتطلب Android 7.0 أو إصدارًا أحدث.
+يتطلب الوصول إلى اليوميات المشفرة الحالية على الموقع الجديد إعداد استرداد الخزنة على الجهاز الأصلي قبل الانتقال.
+</ar>
+
+<de-DE>
+Praystead heißt jetzt Qetoret.
+Die App öffnet jetzt qetoret.com.
+Android 7.0 oder neuer ist erforderlich.
+Für den Zugriff auf bestehende verschlüsselte Tagebücher auf der neuen Website muss die Tresor-Wiederherstellung vor dem Wechsel auf dem ursprünglichen Gerät eingerichtet sein.
+</de-DE>
+
+<en-US>
+Praystead is now Qetoret.
+The app now opens qetoret.com.
+Android 7.0 or later is required.
+Existing encrypted journals require vault recovery set up on the original device before moving to the new website.
+</en-US>
+
+<es-ES>
+Praystead ahora se llama Qetoret.
+La aplicación ahora abre qetoret.com.
+Se requiere Android 7.0 o posterior.
+Para acceder a los diarios cifrados existentes en el nuevo sitio web, la recuperación de la bóveda debe estar configurada en el dispositivo original antes del cambio.
+</es-ES>
+
+<fa>
+نام Praystead اکنون Qetoret است.
+برنامه اکنون qetoret.com را باز می‌کند.
+Android 7.0 یا بالاتر لازم است.
+برای دسترسی به یادداشت‌های روزانه رمزگذاری‌شده موجود در وب‌سایت جدید، بازیابی خزانه باید پیش از انتقال روی دستگاه اصلی تنظیم شده باشد.
+</fa>
+
+<fil>
+Qetoret na ang pangalan ng Praystead.
+Binubuksan na ng app ang qetoret.com.
+Kailangan ang Android 7.0 o mas bago.
+Para ma-access ang mga kasalukuyang naka-encrypt na journal sa bagong website, kailangang naka-set up ang vault recovery sa orihinal na device bago lumipat.
+</fil>
+
+<fr-FR>
+Praystead s'appelle désormais Qetoret.
+L'application ouvre maintenant qetoret.com.
+Android 7.0 ou une version ultérieure est nécessaire.
+L'accès aux journaux chiffrés existants sur le nouveau site nécessite une récupération du coffre configurée sur l'appareil d'origine avant le changement.
+</fr-FR>
+
+<hi-IN>
+Praystead का नाम अब Qetoret है।
+ऐप अब qetoret.com खोलता है।
+Android 7.0 या उसके बाद का संस्करण आवश्यक है।
+नई वेबसाइट पर मौजूदा एन्क्रिप्टेड डायरी तक पहुँचने के लिए, वेबसाइट बदलने से पहले मूल डिवाइस पर वॉल्ट रिकवरी सेट अप होना आवश्यक है।
+</hi-IN>
+
+<id>
+Praystead kini bernama Qetoret.
+Aplikasi kini membuka qetoret.com.
+Memerlukan Android 7.0 atau yang lebih baru.
+Untuk mengakses jurnal terenkripsi yang sudah ada di situs baru, pemulihan brankas harus sudah disiapkan pada perangkat asal sebelum berpindah.
+</id>
+
+<ja-JP>
+PraysteadはQetoretに名称を変更しました。
+アプリはqetoret.comを開くようになりました。
+Android 7.0以降が必要です。
+新しいサイトで既存の暗号化された日記にアクセスするには、移行前に元の端末で保管庫の復元設定を済ませておく必要があります。
+</ja-JP>
+
+<ko-KR>
+Praystead의 이름이 Qetoret으로 변경되었습니다.
+이제 앱에서 qetoret.com이 열립니다.
+Android 7.0 이상이 필요합니다.
+새 웹사이트에서 기존 암호화된 일기에 접근하려면 이전하기 전에 원래 기기에서 보관함 복구를 설정해야 합니다.
+</ko-KR>
+
+<pt-BR>
+Praystead agora se chama Qetoret.
+O aplicativo agora abre qetoret.com.
+É necessário Android 7.0 ou superior.
+Para acessar os diários criptografados existentes no novo site, a recuperação do cofre precisa estar configurada no dispositivo original antes da mudança.
+</pt-BR>
+
+<ru-RU>
+Praystead теперь называется Qetoret.
+Приложение теперь открывает qetoret.com.
+Требуется Android 7.0 или новее.
+Для доступа к существующим зашифрованным дневникам на новом сайте необходимо до перехода настроить восстановление хранилища на исходном устройстве.
+</ru-RU>
+
+<sw>
+Praystead sasa inaitwa Qetoret.
+Programu sasa inafungua qetoret.com.
+Android 7.0 au toleo jipya zaidi inahitajika.
+Ili kufikia shajara zilizopo zilizosimbwa kwa njia fiche kwenye tovuti mpya, urejeshaji wa sanduku la siri lazima uwe umewekwa kwenye kifaa cha awali kabla ya kuhamia.
+</sw>
+
+<zh-CN>
+Praystead 现已更名为 Qetoret。
+应用现在打开 qetoret.com。
+需要 Android 7.0 或更高版本。
+要在新网站访问现有的加密日记，必须在迁移前于原设备上设置保险库恢复功能。
+</zh-CN>

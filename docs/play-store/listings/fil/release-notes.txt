@@ -1,0 +1,3 @@
+- Mas maaliwalas at malinaw na disenyo para sa proteksiyon ng mga panalangin.
+- Mas simpleng pag-verify ng access at pag-set up ng backup code.
+- Mas madaling pamamahala ng mga naka-save na access.

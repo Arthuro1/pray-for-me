@@ -1,6 +1,7 @@
 # Threat model
 
-Last reviewed: 2026-10-08. This document describes the implementation, not an
+Last reviewed: 2026-10-09. Recovery enrollment is default-disabled; no production
+migration or physical-device acceptance is claimed. This document describes the implementation, not an
 aspirational design. Encryption details are in [ENCRYPTION.md](./ENCRYPTION.md).
 
 ## Assets and trust boundaries
@@ -26,11 +27,14 @@ Group members see content explicitly shared with their group.
 - Automatic device-local encryption creates a 256-bit account content key. Its
   raw Base64 representation is stored in user-scoped IndexedDB as
   `pfm_ak_<user-id>`. An unlocked raw key is also mirrored in tab-scoped
-  `sessionStorage` as `pfm_vault_session` so refresh does not re-lock it.
+  `sessionStorage` as `pfm_vault_session:<user-id>` so refresh does not re-lock
+  transparent access. Protected devices never hydrate or persist a raw session key.
 - The account key normally survives sign-out by design. Sign-out removes the
-  encrypted offline snapshot, mutation queue, and legacy service-worker caches.
-  Account deletion removes the account key.
-- Default idle auto-lock is disabled (`0`). Explicit lock removes the in-memory,
+  encrypted offline snapshot and legacy service-worker caches. Scoped wrapped
+  recovery and account-owned pending mutations are retained; older unowned
+  backups/queue entries remain unassigned. Account deletion removes owned key state.
+- Default transparent idle auto-lock is disabled (`0`); protected devices lock
+  after five minutes of inactivity and on refresh/close. Explicit lock removes the in-memory,
   session, and raw device copies and persists a user-scoped lock marker. The
   account stays locked across refresh/sign-in until a successful credential
   flow restores the same key and clears that marker.
@@ -39,6 +43,18 @@ Group members see content explicitly shared with their group.
   128 random bits encoded as 26 Crockford Base32 characters, formatted
   `XXXXX-XXXXX-XXXXX-XXXXX-XXXXX-X`. Version 1 16-character records remain
   readable; rotating a code writes version 2 and invalidates the old code.
+- Independent passkey/emergency wrappers preserve that key. Passkey PRF secrets
+  remain in the browser. Registration is not encrypted recovery proof; fresh
+  assertion/readback/unwrap and historical key-match verification are required.
+  Activation metadata is client-reported, and UI evidence is same-device only.
+- Protected-device migration requires a freshly verified provider-backed passkey
+  or an additional tested recovery route, plus
+  verified raw-copy deletion. A durable per-account policy enforces it even when
+  enrollment flags are disabled. Cross-tab Web Locks serialize policy changes;
+  old deployed clients that ignore the policy require separate rollout control.
+- Account switch, lock and sign-out invalidate in-flight key work. Candidate
+  imports are installed only under their captured account/lifecycle. Historical
+  unassigned wrappers require ciphertext verification before adoption.
 - Version 2 AES-GCM uses canonical additional authenticated data containing the
   encryption schema, entity, owner/group, record, parent, key version, and field.
   Moving ciphertext to a different context fails authentication. Version 1 is
@@ -94,6 +110,10 @@ Group members see content explicitly shared with their group.
 | XSS or malicious deployment | CSP, no HTML injection for rich text, dependency review, code review/CODEOWNERS | JavaScript running in the origin can read displayed plaintext, IndexedDB keys, session keys, and auth tokens. Encryption does not protect an unlocked compromised origin |
 | Lost or shared device | OS/browser access control, explicit lock, optional passphrase recovery | Default auto-lock is off; an unlocked browser profile or extracted local profile can expose the account key |
 | Recovery-code theft | 128-bit random code, PBKDF2 wrapping, rotation, code shown once | Anyone with the code and synced wrapped record can reset the passphrase; rotation is required after suspected disclosure |
+| Lost passkey/provider or phone | Fresh PRF unwrap/readback and original-key verification; provider-backed primary or additional tested recovery route before device protection | Provider synchronization and PRF retention are not guaranteed; physical replacement-device recovery must be tested; two credential IDs do not prove two physical devices; loss of all usable recovery routes remains permanent |
+| Recovery API abuse/replay | Auth getUser-derived owner, exact origin/RP, maintained signature/UV verification, one-use five-minute challenges, expected revisions, server-only state and durable per-account quotas | A stolen session may revoke/delete methods or cause denial of service; server-reported client verification is not server decryption proof |
+| Protected-device bypass/race | Durable account policy blocks raw persistence, verified cleanup, serialized policy transitions, generation fences, lock clears decrypted prayer state | Old clients may ignore the policy; malicious origin JavaScript can tamper with local policy and read an unlocked key |
+| Offline revocation delay | Online assertions recheck server method state; local wrapper and witness require correct PRF-derived key offline | Revocation cannot erase disconnected/captured key material; cached authenticated app access is needed offline |
 | AI relay/cost abuse | Supabase session verification in `/api/ai` for Claude; server-defined tasks/prompts/model/token budgets; bounded body and strict input + structured-output validation; Bible-verse-text rejection; shared per-minute and atomic daily user/global quotas that fail closed; 50-second request timeout within a 60-second function duration; `AI_PROXY_DISABLED` breaker; no-content application logging. The optional Ollama gateway enforces its own controls | Authorized inputs are decrypted on-device and processed by the app server and Anthropic after provider-specific consent, or by the private gateway/model for Ollama. A server administrator can read process memory; infrastructure/provider retention requires separate verification |
 | Undisclosed AI provider change | Account-scoped local consent for the current Anthropic disclosure revision; same-origin handler rejects missing or mismatching provider header for Claude; no automatic cross-provider fallback | The header is a compatibility guard, not cryptographic proof of consent. Misaligned server/public provider configuration or malicious JavaScript can bypass assumptions |
 | Sensitive data in AI input | Browser-side redaction of emails/phones/addresses/secrets/sensitive URLs before transmission; minimum-data default (title sent, details/latest update opt-in) | Redaction is best-effort; names remain in selected text because they are often central to the prayer. Selected text can still reveal religious belief, health details or other sensitive information to the configured provider |
@@ -110,6 +130,13 @@ recovery. “Protection against database compromise” means a database-only
 attacker should get ciphertext plus metadata, not content. This project does not
 claim protection against malicious deployed JavaScript, a compromised device,
 or an already-unlocked browser. Avoid the unqualified phrase “zero knowledge.”
+
+"Device unlock" means a PRF-derived key releases the encrypted account key under
+the protected policy. An identity-only biometric prompt does not establish that
+property. "Tested here" means the client recovered the same key in this
+environment; it does not establish lost-phone or second-device recovery. Custom
+QR transfer is not implemented. Release evidence and rollback constraints are in
+[RECOVERY_RELEASE.md](RECOVERY_RELEASE.md).
 
 ## Assumptions
 

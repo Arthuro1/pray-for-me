@@ -165,7 +165,8 @@ export const DAYS = [
     ref: '2 Samuel 12:1-15',
     related: ['2 Samuel 11', 'Psalm 51', '2 Samuel 13:1-22'],
     movement: 'return',
-    resourceTopics: ['david', 'repentance', 'kingship', 'biblical-narrative'],
+    // Keep the optional shelf on David's historical and narrative context.
+    resourceTopics: ['david', 'kingship', 'biblical-narrative'],
     reflection: L(
       'Read chapter 11 before Nathan’s confrontation. David uses royal power to take Bathsheba and arrange Uriah’s death. The parable exposes his ability to judge another man while concealing his own violence. His confession matters, but the narrative does not let forgiveness erase the damage. Psalm 51, whose heading connects it with Nathan’s visit, gives a poetic language of repentance; it is not a verbatim transcript of David’s private thoughts.',
       'Lis le chapitre 11 avant la confrontation avec Nathan. David utilise son pouvoir royal pour prendre Bath-Shéba et organiser la mort d’Urie. La parabole dévoile sa capacité à juger autrui tout en dissimulant sa propre violence. Sa confession compte, mais le récit ne permet pas que le pardon efface les dommages. Le Psaume 51, dont le titre relie le texte à la visite de Nathan, offre un langage poétique de repentance ; il n’est pas la transcription exacte des pensées privées de David.',

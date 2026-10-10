@@ -10,25 +10,22 @@
 import { callAiForJson, localizeAiError } from './lib/aiCore';
 import { AI_MODEL_HINT } from './lib/aiClient';
 import { createAiCache, aiCacheKey } from './lib/aiResultCache';
-import { redactMany } from './lib/aiRedaction';
+import { preparePrayerAiInput, selectPrayerAiInput } from './lib/aiPrayerInput';
 import useAuthStore from './store/authStore';
 import usePrayerStore from './store/prayerStore';
 
 const cache = createAiCache();
 
-export async function getAIRecommendations({ title, description = '', update = '', type = 'new', lang = 'fr' }) {
+export async function getAIRecommendations({ title, description = '', update = '', type = 'new', lang = 'fr', reviewedInput = null }) {
   const isEvolution = type === 'evolution';
   const userId = useAuthStore.getState().user?.id;
   const settings = usePrayerStore.getState().settings || {};
   // Minimum-data default: the title is always sent; the description and the latest
   // update are each excluded unless the user opts in. Whatever is opted in is
   // composed into the single context string the gateway sees as `description`.
-  const sendDescription = !!settings.aiSendDescription;
-  const sendUpdate = !!settings.aiSendUpdate;
-  const parts = [];
-  if (sendDescription && description && description.trim()) parts.push(description.trim());
-  if (sendUpdate && update && update.trim()) parts.push(update.trim());
-  const effectiveContext = parts.join('\n\n');
+  const selected = reviewedInput || selectPrayerAiInput({ title, description, update }, settings);
+  const effectiveContext = [selected.description, selected.update].filter(Boolean).join('\n\n');
+  const outgoing = preparePrayerAiInput(selected);
   const kind = isEvolution ? 'evolution' : 'new';
 
   const key = await aiCacheKey({
@@ -36,14 +33,13 @@ export async function getAIRecommendations({ title, description = '', update = '
     task: 'prayer_recommendations',
     model: AI_MODEL_HINT,
     lang,
-    input: { title, context: effectiveContext, kind },
+    input: { title: selected.title, context: effectiveContext, kind },
   });
   if (cache.has(key)) return { recs: cache.get(key), error: null };
 
-  const { texts } = redactMany([title, effectiveContext]);
   const { data, error } = await callAiForJson({
     task: 'prayer_recommendations',
-    input: { title: texts[0], description: texts[1], kind, lang },
+    input: { title: outgoing.title, description: outgoing.context, kind, lang },
     feature: 'points',
   });
   if (error) return { recs: [], error: localizeAiError(error, lang) };

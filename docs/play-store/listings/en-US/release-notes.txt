@@ -1,5 +1,3 @@
-Welcome to Qetoret.
-- A renewed design for daily prayer, your journal, guided plans and praying together.
-- The app now opens qetoret.com.
-- Updated Qetoret branding and privacy information.
-Set up vault recovery on your original device before moving an existing encrypted journal to the new website.
+- A calmer, clearer design for prayer protection.
+- Simpler access verification and backup-code setup.
+- Easier management of saved access methods.

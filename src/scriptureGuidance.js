@@ -7,7 +7,7 @@
 import { callAiForJson, localizeAiError } from './lib/aiCore';
 import { AI_MODEL_HINT } from './lib/aiClient';
 import { createAiCache, aiCacheKey } from './lib/aiResultCache';
-import { redactMany } from './lib/aiRedaction';
+import { preparePrayerAiInput, selectPrayerAiInput } from './lib/aiPrayerInput';
 import useAuthStore from './store/authStore';
 import usePrayerStore from './store/prayerStore';
 
@@ -36,33 +36,31 @@ function normalize(data) {
 }
 
 // Returns { guidance, error }. guidance is null when nothing usable came back.
-export async function getScriptureGuidance({ title, description = '', lang = 'fr' }) {
+export async function getScriptureGuidance({ title, description = '', lang = 'fr', reviewedInput = null }) {
   if (!title) return { guidance: null, error: null };
 
   const userId = useAuthStore.getState().user?.id;
   const settings = usePrayerStore.getState().settings || {};
   // Minimum-data default: the title is sent, the description is EXCLUDED unless the
   // user has explicitly opted in (aiSendDescription).
-  const sendDescription = !!settings.aiSendDescription;
-  const effectiveDescription = sendDescription ? description : '';
+  const selected = reviewedInput || selectPrayerAiInput({ title, description }, settings);
+  const outgoing = preparePrayerAiInput(selected);
 
   const key = await aiCacheKey({
     userId,
     task: 'scripture_guidance',
     model: AI_MODEL_HINT,
     lang,
-    input: { title, description: effectiveDescription },
+    input: { title: selected.title, description: selected.description },
   });
   if (cache.has(key)) return { guidance: cache.get(key), error: null };
 
   // Redact high-confidence sensitive tokens (emails, phones, secrets, …) before
   // transmission. The guidance output is references + explanations, so no
   // placeholder restoration is needed on the response.
-  const { texts } = redactMany([title, effectiveDescription]);
-
   const { data, error } = await callAiForJson({
     task: 'scripture_guidance',
-    input: { title: texts[0], description: texts[1], lang },
+    input: { title: outgoing.title, description: outgoing.description, lang },
     feature: 'guidance',
   });
 

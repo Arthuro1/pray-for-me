@@ -17,10 +17,6 @@ const COOLDOWN_MS = 5000;
 // share a single 'default' bucket.
 const lastCallByFeature = new Map();
 
-// Prayers whose exact outgoing text the user has already reviewed this session.
-// The outgoing-text preview is shown once per prayer before its first AI request.
-const previewedPrayers = new Set();
-
 // In-memory request state (in-flight markers + cooldown timers). Cleared on
 // consent withdrawal / sign-out via resetAiRequestState().
 export function getRemainingCooldown(feature = 'default') {
@@ -28,22 +24,11 @@ export function getRemainingCooldown(feature = 'default') {
   return Math.max(0, Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000));
 }
 
-// Whether the user has reviewed the outgoing text for this prayer this session.
-export function hasReviewedOutgoing(prayerId) {
-  return !!prayerId && previewedPrayers.has(prayerId);
-}
-
-// Record that the user reviewed and confirmed the outgoing text for this prayer.
-export function markOutgoingReviewed(prayerId) {
-  if (prayerId) previewedPrayers.add(prayerId);
-}
-
-// Clear all in-memory AI request state (cooldown timers, outgoing-text reviews).
+// Clear all in-memory AI request state (cooldown timers and limit responses).
 // Consent withdrawal and sign-out call this so a withdrawn user starts clean.
 export function resetAiRequestState() {
   resetAiLimits();
   lastCallByFeature.clear();
-  previewedPrayers.clear();
 }
 
 // Map a typed error from callAiForJson to localized, user-facing copy.

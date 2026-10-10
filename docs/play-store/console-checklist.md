@@ -1,3 +1,26 @@
+# Update checklist — 1.0.5 (6), 10 October 2026
+
+Use [update-1.0.5.md](update-1.0.5.md) for current upload values and
+[update-readiness-1.0.5.md](update-readiness-1.0.5.md) for the evidence.
+
+- [x] Signed AAB/APK prepared with existing package/upload key; minSdk 24, targetSdk 36.
+- [x] Web and wrapper versions aligned to 1.0.5; version code 6 prepared locally.
+- [x] All 16 app locales and all 16 Play listing/release-note files prepared.
+- [x] Reviewer directions, public links, declaration assessment and deployment instructions prepared.
+- [x] Full unit suite passed: 304 files / 3,696 tests; build/typecheck/lint/locales passed.
+- [x] Local/live release preflight passed all 12 checks.
+- [x] Existing 26 image/screenshot files preserved; no generators or screenshot suites run.
+- [ ] Deploy the intended website source/API configuration; verify recovery flag choices and the new UI.
+- [ ] Confirm version code 6 is unused and live asset links matches actual Play app-signing certificate.
+- [ ] Verify private reviewer/deletion-test credentials and recovery on a fresh device.
+- [ ] Install internal-track update from Play; complete device/recovery acceptance and review pre-launch feedback.
+- [ ] Review current Console declarations, support contact, desired track/rollout and Publishing overview; submit when ready.
+
+Preparation did not deploy or write to Console. Do not regenerate store artwork.
+The checklist below is the preserved 8 October record; use the current values
+above and current runbook for this update.
+
+---
 # Console checklist and release gate
 
 Repository review and official-policy checks: **8 October 2026**. Check off items
@@ -19,8 +42,8 @@ listing text; it does not certify production readiness. Paul’s explicit
   origins automatically. Keep a recovery path on the old origin before redirecting
   existing users.
 - [ ] **Signing and Android association:** verify the final signed bundle's
-  package `space.praystead.twa`, version `4` / `1.0.3`, target `36`; confirm version
-  `4` is unused. Add the **Play app-signing** certificate to the live Digital Asset
+  package `space.praystead.twa`, version `5` / `1.0.4`, minSdk `24`, target `36`;
+  confirm version `5` is unused. Add the **Play app-signing** certificate to the live Digital Asset
   Links file. The upload certificate alone does not verify Play-installed builds.
 - [ ] **Terms acceptance before community posting:** source now includes
   `CommunityTermsGate` around every signed-in route/composer, including existing

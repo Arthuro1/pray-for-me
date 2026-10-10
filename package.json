@@ -1,10 +1,12 @@
 {
   "name": "qetoret",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.5",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "setup:recovery-test": "node scripts/prepare-recovery-test.mjs",
+    "dev:recovery-test": "vite --mode recovery-test",
     "ai:dev": "node scripts/start-ai-gateway.mjs",
     "build": "vite build",
     "build:verses": "node scripts/build-verse-bundle.mjs",
@@ -29,6 +31,7 @@
   "dependencies": {
     "@ffmpeg/core": "^0.12.10",
     "@ffmpeg/ffmpeg": "^0.12.15",
+    "@simplewebauthn/server": "14.0.3",
     "@supabase/supabase-js": "^2.108.2",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",

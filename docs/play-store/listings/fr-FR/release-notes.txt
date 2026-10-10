@@ -1,5 +1,3 @@
-Bienvenue dans Qetoret.
-- Un nouveau design pour la prière quotidienne, le journal, les parcours guidés et la prière en groupe.
-- L'application ouvre désormais qetoret.com.
-- Identité Qetoret et informations de confidentialité mises à jour.
-Configurez la récupération du coffre sur votre appareil d'origine avant de transférer un journal chiffré vers le nouveau site.
+- Un design plus soigné et plus lisible pour protéger vos prières.
+- Une vérification d’accès et des codes de secours plus simples.
+- Une gestion plus claire de vos accès enregistrés.

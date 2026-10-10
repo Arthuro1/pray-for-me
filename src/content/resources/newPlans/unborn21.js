@@ -127,7 +127,7 @@ export const UNBORN21_CANDIDATES = [
     type: 'article',
     originalLanguage: 'en',
     domains: ['relationships'],
-    topics: ['scripture-prayer'],
+    topics: ['parenting', 'scripture-prayer'],
     perspective: ['evangelical'],
     status: 'needs_review',
     description: {

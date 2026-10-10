@@ -12,6 +12,8 @@ const env = () => ({
   AI_GATEWAY_URL: 'http://127.0.0.1:3001',
 });
 
+const RESERVATION_ID = 'd9796a30-a072-4f34-b9da-28608c534323';
+
 const guidance = () => ({
   passages: [{ ref: 'James 1:5', readWhole: 'James 1', why: 'A passage for seeking wisdom.' }],
   context: 'James encourages believers to seek wisdom in trials.',
@@ -68,7 +70,11 @@ function installFetch(overrides = {}) {
     }
     if (address === 'https://direct-test.supabase.co/rest/v1/rpc/check_ai_usage_quota') {
       if (overrides.dailyThrows) throw new Error('Daily counter private detail');
-      return jsonResponse(overrides.dailyBody ?? { allowed: true }, overrides.dailyStatus ?? 200);
+      return jsonResponse(overrides.dailyBody ?? { allowed: true, reservation_id: RESERVATION_ID }, overrides.dailyStatus ?? 200);
+    }
+    if (address === 'https://direct-test.supabase.co/rest/v1/rpc/release_ai_usage_reservation') {
+      if (overrides.releaseThrows) throw new Error('Private refund service diagnostic');
+      return jsonResponse(true, overrides.releaseStatus ?? 200);
     }
     if (address === 'https://api.anthropic.com/v1/messages') {
       if (overrides.providerResponse) return overrides.providerResponse;
@@ -249,6 +255,44 @@ describe('direct Claude authentication and request boundaries', () => {
 });
 
 describe('direct Claude shared spending limits', () => {
+  const released = fetchImpl => fetchImpl.mock.calls.filter(([url]) => String(url).endsWith('/release_ai_usage_reservation'));
+
+  it.each([400, 401, 403, 404, 413, 429, 500, 529])('releases only the reserved request after an explicit provider rejection (%i)', async (providerStatus) => {
+    const json = vi.fn();
+    const { res, fetchImpl } = await run({ fetchImpl: installFetch({ providerResponse: { ok: false, status: providerStatus, headers: new Headers(), json } }) });
+    expect(res.statusCode).toBe(providerStatus === 429 ? 429 : 502);
+    expect(released(fetchImpl)).toHaveLength(1);
+    expect(JSON.parse(released(fetchImpl)[0][1].body)).toEqual({ p_reservation_id: RESERVATION_ID });
+    expect(released(fetchImpl)[0][1].headers.Authorization).toBe('Bearer signed-in-user-token');
+    expect(JSON.stringify(res.body)).not.toContain(RESERVATION_ID);
+    expect(JSON.stringify(released(fetchImpl))).not.toContain('Wisdom at work');
+    expect(json).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    {},
+    { providerThrows: true },
+    { text: 'invalid output' },
+    { providerBody: { stop_reason: 'max_tokens', content: [] } },
+  ])('retains the reservation for successful inference or an ambiguous transport failure %#', async (options) => {
+    const { fetchImpl } = await run({ fetchImpl: installFetch(options) });
+    expect(released(fetchImpl)).toHaveLength(0);
+  });
+
+  it.each([{ releaseThrows: true }, { releaseStatus: 503 }])('preserves the provider error if quota release is unavailable %#', async (options) => {
+    const { res, fetchImpl } = await run({ fetchImpl: installFetch({ ...options, providerStatus: 429 }) });
+    expect(res.statusCode).toBe(429);
+    expect(res.body.code).toBe('provider_rate_limit');
+    expect(released(fetchImpl)).toHaveLength(1);
+    expect(JSON.stringify(res.body)).not.toMatch(/private|diagnostic|d9796a30/i);
+  });
+
+  it('remains compatible with a database that has not yet added reservation receipts', async () => {
+    const { res, fetchImpl } = await run({ fetchImpl: installFetch({ dailyBody: { allowed: true }, providerStatus: 429 }) });
+    expect(res.statusCode).toBe(429);
+    expect(released(fetchImpl)).toHaveLength(0);
+  });
+
   it('identifies the minute limit and tells clients when to retry', async () => {
     const { res, fetchImpl } = await run({ fetchImpl: installFetch({ minuteBody: false }) });
     expect(res.statusCode).toBe(429);

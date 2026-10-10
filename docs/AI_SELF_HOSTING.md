@@ -66,6 +66,8 @@ Ensure the database has the shared minute-limit and daily-quota RPCs:
 - `supabase/ai_rate_limit.sql`: `check_ai_rate_limit`.
 - `supabase/migrations/20260731190702_ai_usage_quotas.sql`:
   `check_ai_usage_quota` and atomic per-user/global daily usage.
+- `supabase/migrations/20261008180009_refundable_ai_usage_reservations.sql`:
+  content-free quota receipts and idempotent refunds for provider rejections.
 - `supabase/migrations/20260804120000_encrypted_translations.sql`: encrypted
   private/community translation caches.
 
@@ -73,6 +75,29 @@ The handler refuses inference when authentication, rate-limit checks, or quota
 checks are unavailable. Apply the project's migrations using the normal
 [migration procedure](./MIGRATIONS.md), then verify an authenticated request on
 the deployed app.
+
+### Daily limits and provider failures
+
+The default daily caps are 100 requests per account and 5,000 across the app,
+resetting at midnight UTC. Prayer assistance and translation share these caps.
+Set `AI_USER_DAILY_LIMIT` and `AI_GLOBAL_DAILY_LIMIT` on the app host to change
+them. A local `.env.development.local` changes only the local Vite server.
+Vercel environment changes need a new deployment before functions use them.
+For a temporary increase, set `AI_USER_DAILY_LIMIT_TEMPORARY` together with
+`AI_USER_DAILY_LIMIT_TEMPORARY_UNTIL` (an ISO timestamp); the regular cap resumes
+automatically at that deadline.
+
+The server reserves usage before inference to enforce caps across concurrent
+instances. Explicit provider HTTP rejections release exactly that reservation.
+Network/time-out outcomes and successful but invalid or truncated model output
+remain counted because inference may have been billed. Refund receipts never
+reach the browser. Historical counters are retained; previous failed requests
+cannot be safely inferred or refunded from aggregate counts.
+
+The browser briefly shares limit responses across features. It rechecks a daily
+limit after one minute so an updated allowance or released reservation becomes
+available without waiting until midnight. Concurrent provider cooldowns retain
+their own deadlines.
 
 ## Architecture and controls
 
@@ -104,8 +129,10 @@ account. Legacy synced `aiConsentPrayer` / `aiConsentHome` booleans alone cannot
 authorize Claude requests: the user must accept the current disclosure on that
 device. Switching from private processing to Claude, or changing the Anthropic
 disclosure revision, requires renewed consent. Existing private/Ollama consent
-remains valid for private processing. Withdrawal clears AI result caches and
-request state; it does not recall text already processed by a provider.
+remains valid for private processing. Users can withdraw consent at any time in
+Settings. Withdrawal blocks future requests until they consent again and clears
+AI result caches and request state; it does not recall text already processed by
+a provider.
 
 For Claude, keep `AI_PROVIDER=anthropic` and `VITE_AI_PROVIDER=anthropic` aligned.
 The browser sends `X-Qetoret-AI-Provider: anthropic`; the server rejects an absent
@@ -114,12 +141,16 @@ older app bundle with only the private-processing disclosure from being silently
 sent to Claude. It is not cryptographic proof of consent. Deploy matching public
 disclosure and server configuration together.
 
-The outgoing prayer preview shows redacted text. By default the title is
-included; prayer details and the latest update require their respective opt-ins.
-Translation sends the selected text needed for that task. Requests also include
-task metadata such as language and selected guidance options. Encryption at rest
-and HTTPS do not prevent the app server or Anthropic from reading the selected
-plaintext during inference.
+Before each explicit prayer AI request, the outgoing preview shows the redacted
+prayer text. The title is always included; prayer details and the latest update
+are excluded by default and require their respective opt-ins where available.
+The request also sends the language and, for prayer points, whether new or further
+suggestions were requested. Prayer categories and the rest of the journal are not
+part of these requests. Translation sends the text selected for that task and
+the target language. Both go through Qetoret's authenticated app server to the
+configured provider: Anthropic for Claude, or the operator's private gateway and
+Ollama model. Encryption at rest and HTTPS do not prevent those processors from
+reading selected plaintext during inference.
 
 ## Private Ollama alternative
 

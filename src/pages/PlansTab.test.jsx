@@ -17,6 +17,24 @@ vi.mock('../lib/planAnalytics', async (importOriginal) => ({
   trackPlansPageViewed: vi.fn(),
   trackPlanDetailOpened: vi.fn(),
 }));
+vi.mock('../content/prayerPlans', async (importOriginal) => {
+  const actual = await importOriginal();
+  const draftCategory = { id: 'test-review-only', labelKey: 'testReviewOnlyCategory' };
+  const fixture = {
+    ...actual.PLANS[0], id: 'test-review-draft', titleKey: 'testReviewDraftTitle',
+    category: draftCategory.id, review: { status: 'needs_review' },
+  };
+  const plans = [...actual.PLANS, fixture];
+  return {
+    ...actual,
+    PLANS: plans,
+    PLAN_CATEGORIES: [...actual.PLAN_CATEGORIES, draftCategory],
+    plansByCategory: (input = plans) => [
+      ...actual.plansByCategory(input.filter((plan) => plan.category !== draftCategory.id)),
+      { ...draftCategory, plans: input.filter((plan) => plan.category === draftCategory.id) },
+    ].filter((group) => group.plans.length > 0),
+  };
+});
 
 import PlansTab from './PlansTab';
 import usePrayerStore from '../store/prayerStore';
@@ -74,12 +92,12 @@ describe('PlansTab', () => {
     expect(screen.queryByRole('button', { name: t(lang, 'browseJourneys') })).toBeNull();
   });
 
-  // A draft stays in the data catalogue for review preview, but a production
-  // reader never sees it — nor a heading that would have nothing under it.
+  // A test-only draft and category keep both negative checks meaningful even
+  // when every real plan has been approved.
   it('keeps plans awaiting review, and their empty headings, out of production', () => {
     renderPlans();
     const drafts = PLANS.filter((plan) => !isPlanReviewed(plan));
-    expect(drafts.length).toBeGreaterThan(0);
+    expect(drafts.map((plan) => plan.id)).toContain('test-review-draft');
     for (const plan of drafts) expect(screen.queryByText(titleOf(plan.id)), plan.id).toBeNull();
     const published = PLANS.filter(isPlanReviewed);
     for (const category of PLAN_CATEGORIES.filter(({ id }) => !published.some((plan) => plan.category === id))) {

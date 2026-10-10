@@ -135,8 +135,8 @@ export async function markGuestDraftPrayed() {
 }
 
 // Decrypt and return the pending draft, or null. Expired / malformed / undecrypt-
-// able drafts are deleted as a side effect (fail closed, never surface garbage).
-export async function loadGuestDraft() {
+// able drafts are deleted by default. Migration inspections opt out of cleanup.
+export async function loadGuestDraft({ clearInvalid = true } = {}) {
   let record = null;
   let key = null;
   if (memory) {
@@ -151,12 +151,12 @@ export async function loadGuestDraft() {
 
   const supportedVersion = record.v === 1 || (record.v === DRAFT_VERSION && typeof record.id === 'string');
   if (!supportedVersion || !Number.isFinite(record.createdAt) || Date.now() - record.createdAt > MAX_AGE_MS) {
-    await clearGuestDraft();
+    if (clearInvalid) await clearGuestDraft();
     return null;
   }
   try {
     const data = await decryptJson(key, record.payload, record.payload?.v >= 2 ? draftContext(record.id) : undefined);
-    if (!data || typeof data.title !== 'string') { await clearGuestDraft(); return null; }
+    if (!data || typeof data.title !== 'string') { if (clearInvalid) await clearGuestDraft(); return null; }
     return {
       id: data.id,
       title: data.title,
@@ -166,7 +166,7 @@ export async function loadGuestDraft() {
       createdAt: record.createdAt,
     };
   } catch {
-    await clearGuestDraft(); // corrupt / wrong key — delete rather than trust
+    if (clearInvalid) await clearGuestDraft(); // migration inspections preserve storage
     return null;
   }
 }

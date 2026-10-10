@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "Bagaimana saran ayat bekerja?",
-        "a": "Saat Anda meminta saran, judul dan detail doa dikirim ke layanan AI yang mengusulkan bagian Alkitab. Anda membaca setiap bagian dan menimbang mana yang sesuai."
+        "a": "Dengan persetujuan Anda, judul doa dikirim melalui server Qetoret ke {provider} untuk menyarankan bagian Alkitab. Detail dan pembaruan terbaru hanya dikirim jika Anda memilih menyertakannya. Anda meninjau teks sebelum setiap permintaan terkait doa. Teks yang Anda pilih untuk diterjemahkan juga dikirim ke layanan ini. Bahasa Anda dan, jika berlaku, jenis saran yang dipilih juga disertakan. Anda dapat menarik persetujuan kapan saja di Pengaturan untuk menghentikan permintaan berikutnya; ini tidak dapat menarik kembali teks yang sudah dikirim. Baca setiap bagian yang disarankan dan timbang mana yang sesuai."
       },
       {
         "q": "Apakah Qetoret media sosial?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Qetoret untuk gereja yang mana?",
-        "a": "Untuk orang Kristen dari semua tradisi gereja. Qetoret membantu Anda berdoa; Qetoret tidak pernah menggantikan gereja lokal Anda, para gembalanya, atau persekutuannya."
+        "a": "Berakar dalam Kitab Suci dan dibentuk oleh iman yang hidup kepada Yesus Kristus, Qetoret menyambut orang Kristen dari berbagai tradisi gereja yang ingin bertumbuh dalam doa. Qetoret tidak pernah menggantikan gereja lokal Anda, para gembalanya, atau persekutuannya."
       },
       {
         "q": "Bahasa apa saja yang didukung?",
-        "a": "Seluruh antarmuka tersedia dalam 16 bahasa."
+        "a": "Navigasi tersedia dalam 16 bahasa. Cakupan materi renungan berbeda-beda: beberapa pengajaran panjang dan rencana doa mungkin ditampilkan dalam bahasa Inggris atau Prancis. Terjemahan halaman perkenalan masih dilengkapi dan ditinjau secara kebahasaan; menu bahasa menandai terjemahan yang belum lengkap."
       },
       {
         "q": "Apakah gratis?",
@@ -201,8 +201,8 @@ export default {
         "desc": "Aplikasi Android di Google Play, atau pasang dari browser di ponsel atau komputer Anda."
       },
       {
-        "title": "16 bahasa",
-        "desc": "Ganti bahasa kapan saja."
+        "title": "Navigasi dalam 16 bahasa",
+        "desc": "Cakupan renungan berbeda-beda; peninjauan terjemahan terus berlangsung."
       },
       {
         "title": "Pengingat yang lembut",

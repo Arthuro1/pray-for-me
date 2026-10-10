@@ -10,10 +10,10 @@ import { Modal, PrimaryButton, SecondaryButton } from './shared/Primitives';
 
 // One disclosure, said once: what the AI is (a study aid that is not Scripture
 // and cannot know God's will), what is sent and to whom (the title; details and
-// the latest update only if included; the exact text is shown before the first
+// the latest update only if included; the prayer text is shown before every
 // request — AiOutgoingPreview), and that consent can be withdrawn in Settings.
-// Every AI feature sends one prayer's title plus, optionally, its details or
-// latest update; `context` only scopes the stored consent.
+// Prayer guidance sends one prayer's title plus its selected optional fields.
+// Translation sends the text selected for that task; `context` scopes consent.
 export default function AiConsentModal({ lang = 'en', context = 'prayer', onAccept, onCancel }) {
   return (
     <Modal label={t(lang, 'aiConsentTitle')} onClose={onCancel} size="sm">

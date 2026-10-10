@@ -4,12 +4,14 @@ import { t } from '../i18n';
 import { useEscapeKey } from '../hooks/useEscapeKey';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import LabelsManager from './LabelsManager';
+import { circleLabelKey } from '../lib/circles';
 
 const selectClass = 'min-h-11 w-full rounded-xl px-3 text-sm';
 
 export default function JournalFilters({
   segment,
   filters,
+  circles,
   categories,
   people,
   groups,
@@ -62,6 +64,24 @@ export default function JournalFilters({
           </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {circles.length > 0 && (
+            <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
+              {t(lang, 'circleFieldLabel')}
+              <select
+                value={filters.circle}
+                onChange={set('circle')}
+                className={selectClass}
+                style={{ background: 'var(--q-field)', border: '0.5px solid var(--q-field-border)', color: 'var(--q-text)' }}
+              >
+                <option value="all">{t(lang, 'all')}</option>
+                {circles.map((circle) => (
+                  <option key={circle || 'unplaced'} value={circle || 'unplaced'}>
+                    {t(lang, circle ? circleLabelKey(circle) : 'circleUnplaced')}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           {categories.length > 0 && (
             <label className="grid gap-1.5 text-xs font-medium" style={{ color: 'var(--q-text-secondary)' }}>
               {t(lang, 'allCategories')}

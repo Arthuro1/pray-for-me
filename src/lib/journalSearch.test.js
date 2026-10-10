@@ -140,12 +140,30 @@ describe('journal retrieval filters', () => {
     });
   });
 
-  // The Journal finds prayers by circle through its "By circle" view alone, so
-  // the filters never grow a second, competing circle system.
-  it('has no circle filter', () => {
-    expect(EMPTY_JOURNAL_FILTERS).not.toHaveProperty('circle');
-    expect(journalFilterOptions([{ id: 'c1', status: 'active', title: 'Home', circle: 'household' }]))
-      .not.toHaveProperty('circles');
+  it('narrows actual prayer entries by circle together with other retrieval filters', () => {
+    const prayers = [
+      prayer('home', { circle: 'household', person_name: 'Anna' }),
+      prayer('home-other', { circle: 'household', person_name: 'Marc' }),
+      prayer('heart', { circle: 'self', person_name: 'Anna' }),
+      prayer('answered-home', { circle: 'household', status: 'answered', person_name: 'Anna' }),
+    ];
+    const filters = { ...EMPTY_JOURNAL_FILTERS, circle: 'household', person: 'Anna' };
+    expect(filterJournalPrayers({ prayers, status: 'active', filters }).map(({ prayer: row }) => row.id))
+      .toEqual(['home']);
+    expect(filterJournalPrayers({ prayers, status: 'answered', filters }).map(({ prayer: row }) => row.id))
+      .toEqual(['answered-home']);
+    expect(journalFiltersActive({ ...EMPTY_JOURNAL_FILTERS, circle: 'household' }, 'active')).toBe(true);
+  });
+
+  it('can retrieve unplaced prayers without assigning a circle to them', () => {
+    const prayers = [prayer('loose'), prayer('newer-circle', { circle: 'unknown' }), prayer('home', { circle: 'household' })];
+    expect(filterJournalPrayers({
+      prayers,
+      status: 'active',
+      filters: { ...EMPTY_JOURNAL_FILTERS, circle: 'unplaced' },
+    }).map(({ prayer: row }) => row.id)).toEqual(['loose', 'newer-circle']);
+    expect(prayers[0]).not.toHaveProperty('circle');
+    expect(prayers[1].circle).toBe('unknown');
   });
 
   it('does not count an answered-date choice as active-segment filtering', () => {

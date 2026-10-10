@@ -76,6 +76,17 @@ describe('guestPrayerDraft — survives a same-device OAuth reload', () => {
 });
 
 describe('guestPrayerDraft — lifetime & integrity', () => {
+  it('can inspect expired and corrupt drafts without deleting them during a domain move', async () => {
+    await saveGuestDraft({ title: SECRET });
+    const record = idbStore.get(SLOT);
+    record.createdAt = Date.now() - 25 * 60 * 60 * 1000;
+    expect(await loadGuestDraft({ clearInvalid: false })).toBeNull();
+    expect(idbStore.get(SLOT)).toBe(record);
+    record.createdAt = Date.now();
+    record.payload = { invalid: true };
+    expect(await loadGuestDraft({ clearInvalid: false })).toBeNull();
+    expect(idbStore.get(SLOT)).toBe(record);
+  });
   it('deletes an expired draft on read (older than 24h)', async () => {
     await saveGuestDraft({ title: SECRET });
     // Age both the record and the marker past the 24h ceiling.

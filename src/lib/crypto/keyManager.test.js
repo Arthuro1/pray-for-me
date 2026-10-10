@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   createVault,
   unlock,
+  verifyRecoveryPassphrase,
   lock,
   isUnlocked,
   isVaultInitialized,
@@ -77,6 +78,43 @@ describe('vault lifecycle', () => {
     const mkB64 = Buffer.from(mkRaw).toString('base64');
     expect(stored).not.toContain(mkB64);
     expect(stored).not.toContain('zebra-lantern-velvet'); // passphrase isn't stored either
+  });
+});
+
+describe('read-only migration recovery verification', () => {
+  it('checks the server wrapper while preserving the running key, local wrapper and existing ciphertext', async () => {
+    await createVault('old recovery passphrase');
+    const originalRecord = exportVaultRecord();
+    const ciphertext = await encryptJsonLegacy(getMasterKey(), { prayer: 'still readable' });
+    await changePassphrase('old recovery passphrase', 'new recovery passphrase');
+    const serverRecord = exportVaultRecord();
+    await importVaultRecord(originalRecord, true); // stale local wrapper, same content key
+    const runningKey = getMasterKey();
+
+    expect(await verifyRecoveryPassphrase('new recovery passphrase', serverRecord)).toBe(true);
+    expect(await verifyRecoveryPassphrase('old recovery passphrase', serverRecord)).toBe(false);
+    expect(getMasterKey()).toBe(runningKey);
+    expect(exportVaultRecord()).toBe(originalRecord);
+    expect(await decryptJson(getMasterKey(), ciphertext)).toEqual({ prayer: 'still readable' });
+  });
+
+  it('rejects an unrelated wrapped key even when the passphrase is valid, without replacing the current key', async () => {
+    await createVault('same passphrase');
+    const unrelatedRecord = exportVaultRecord();
+    await destroyVault();
+    await createVault('same passphrase');
+    const runningKey = getMasterKey();
+    const currentRecord = exportVaultRecord();
+    const ciphertext = await encryptJsonLegacy(runningKey, { prayer: 'my current prayer' });
+
+    expect(await verifyRecoveryPassphrase('same passphrase', unrelatedRecord)).toBe(false);
+    expect(await verifyRecoveryPassphrase('same passphrase', { invalid: true })).toBe(false);
+    expect(getMasterKey()).toBe(runningKey);
+    expect(exportVaultRecord()).toBe(currentRecord);
+    expect(await decryptJson(getMasterKey(), ciphertext)).toEqual({ prayer: 'my current prayer' });
+    lock();
+    expect(await verifyRecoveryPassphrase('same passphrase', currentRecord)).toBe(false);
+    expect(isUnlocked()).toBe(false);
   });
 });
 
@@ -204,9 +242,12 @@ describe('storage migration', () => {
   // A fresh module instance (resetModules) so hydrate() runs its one-time
   // migration against a pre-seeded legacy localStorage record.
   it('migrates a legacy localStorage record into the cache and clears localStorage', async () => {
+    await createVault('migration-pass');
+    const payload = await encryptJsonLegacy(getMasterKey(), { prayer: 'original legacy ciphertext' });
+    const legacy = { ...JSON.parse(exportVaultRecord()), v: 1 };
+    await destroyVault();
     vi.resetModules();
     installStorage();
-    const legacy = { v: 1, passSalt: 'ps', recoverySalt: 'rs', passWrapped: { iv: 'i', data: 'd' }, recoveryWrapped: { iv: 'i2', data: 'd2' } };
     globalThis.localStorage.setItem('pfm_vault', JSON.stringify(legacy));
 
     const km = await import('./keyManager.ts');
@@ -216,5 +257,66 @@ describe('storage migration', () => {
     // The wrapped key no longer lives in localStorage after migration.
     expect(globalThis.localStorage.getItem('pfm_vault')).toBe(null);
     expect(km.exportVaultRecord()).toContain('passSalt');
+    expect(await km.unlock('migration-pass')).toBe(true);
+    expect(await decryptJson(km.getMasterKey(), payload)).toEqual({ prayer: 'original legacy ciphertext' });
   });
+});
+
+describe('legacy recovery record validation', () => {
+  it('retains v1/v2 ciphertext and historical metadata with standard padded or unpadded Base64', async () => {
+    const code = await createVault('compatible-pass');
+    const encrypted = await encryptJsonLegacy(getMasterKey(), { prayer: 'unchanged original' });
+    const original = JSON.parse(exportVaultRecord());
+    const unpad = (value) => value.replace(/=+$/, '');
+    const compatible = { ...original, v: 1, historicalMetadata: 'retained',
+      passSalt: unpad(original.passSalt), recoverySalt: unpad(original.recoverySalt),
+      passWrapped: { iv: unpad(original.passWrapped.iv), data: unpad(original.passWrapped.data) },
+      recoveryWrapped: { iv: unpad(original.recoveryWrapped.iv), data: unpad(original.recoveryWrapped.data) } };
+    delete compatible.revision; delete compatible.updatedAt;
+    expect(inspectVaultRecord(compatible)).toMatchObject({ revision: 0, updatedAt: 0 });
+    lock();
+    expect(await importVaultRecord(compatible, true)).toBe(true);
+    expect(await unlock('compatible-pass')).toBe(true);
+    expect(await decryptJson(getMasterKey(), encrypted)).toEqual({ prayer: 'unchanged original' });
+    expect(JSON.parse(exportVaultRecord()).historicalMetadata).toBe('retained');
+    expect(await resetPassphrase(code, 'new-compatible-pass')).toBe(true);
+    expect(await decryptJson(getMasterKey(), encrypted)).toEqual({ prayer: 'unchanged original' });
+  });
+
+  it('rejects malformed binary parameters and unsafe metadata without replacing a usable vault', async () => {
+    await createVault('preserved-pass');
+    const original = exportVaultRecord();
+    const record = JSON.parse(original);
+    const b64 = (bytes) => Buffer.alloc(bytes).toString('base64');
+    const invalid = [[], { ...record, passSalt: 'x' }, { ...record, recoverySalt: b64(15) },
+      { ...record, passWrapped: { iv: b64(11), data: b64(48) } },
+      { ...record, recoveryWrapped: { iv: b64(12), data: b64(47) } },
+      { ...record, revision: Number.MAX_SAFE_INTEGER + 1 }, { ...record, updatedAt: 'invalid timestamp' },
+      { ...record, extra: 'x'.repeat(16_384) }];
+    for (const value of invalid) {
+      expect(inspectVaultRecord(value)).toBeNull();
+      expect(await importVaultRecord(value, true)).toBe(false);
+      expect(exportVaultRecord()).toBe(original);
+    }
+    lock();
+    expect(await unlock('preserved-pass')).toBe(true);
+  });
+
+  it('keeps genuine version-1 16-character recovery credentials usable', async () => {
+    await createVault('historical-pass');
+    const encrypted = await encryptJsonLegacy(getMasterKey(), { prayer: 'historical sixteen-character code' });
+    const record = { ...JSON.parse(exportVaultRecord()), v: 1 };
+    const code = '0123456789ABCDEF';
+    const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(code), 'PBKDF2', false, ['deriveKey']);
+    const wrapping = await crypto.subtle.deriveKey({ name: 'PBKDF2', hash: 'SHA-256', iterations: 310_000,
+      salt: new Uint8Array(Buffer.from(record.recoverySalt, 'base64')) }, base, { name: 'AES-GCM', length: 256 }, false, ['wrapKey']);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const wrapped = await crypto.subtle.wrapKey('raw', getMasterKey(), wrapping, { name: 'AES-GCM', iv });
+    record.recoveryWrapped = { iv: Buffer.from(iv).toString('base64'), data: Buffer.from(wrapped).toString('base64') };
+    delete record.revision; delete record.updatedAt;
+    lock();
+    expect(await importVaultRecord(record, true)).toBe(true);
+    expect(await resetPassphrase('01234-56789-ABCDE-F', 'restored-pass')).toBe(true);
+    expect(await decryptJson(getMasterKey(), encrypted)).toEqual({ prayer: 'historical sixteen-character code' });
+  }, 30_000);
 });

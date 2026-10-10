@@ -1,0 +1,34 @@
+[
+  {
+    "locale": "fr-FR",
+    "language": "French",
+    "nativeLanguage": "Français",
+    "short": "Un journal pour la prière quotidienne, la Bible et la prière ensemble.",
+    "paragraphs": [
+      "Qetoret est un compagnon de prière chrétien pour présenter à Dieu ce qui vous tient à cœur, revenir à la prière avec intention et garder la mémoire des réponses reçues.",
+      "Vivez un moment de prière sans créer de compte. Connectez-vous pour enregistrer vos sujets dans votre journal personnel. Notez vos prières pour vous-même ou pour d'autres, ajoutez des nouvelles et des notes, puis consignez les réponses et les témoignages.",
+      "Trouvez votre rythme avec les prières du jour, des horaires récurrents, un calendrier et des rappels facultatifs. Explorez des parcours de prière guidée, des passages bibliques et des lectures, et gardez vos réflexions au fil du parcours.",
+      "Créez ou rejoignez des groupes de prière. Partagez certains sujets avec leurs membres, portez-vous les uns les autres dans la prière et encouragez-vous avec des nouvelles. Ajoutez des photos, des enregistrements vocaux ou des vidéos aux nouvelles et témoignages compatibles.",
+      "Le contenu privé du journal est chiffré dans votre navigateur avant son envoi. Le contenu d'un groupe est chiffré pour ses membres, qui peuvent lire et conserver ce que vous partagez. Configurez la récupération facultative du coffre avant de changer d'appareil ou de navigateur afin de pouvoir y déverrouiller votre journal chiffré.",
+      "Un compte est nécessaire pour la synchronisation et les fonctions communautaires. Certaines actions du journal fonctionnent hors connexion puis se synchronisent au retour du réseau. La connexion au compte, l'envoi de médias et d'autres fonctions en ligne nécessitent internet.",
+      "Qetoret est gratuit et propose 16 langues d'interface. Android 7.0 ou une version ultérieure est nécessaire.",
+      "Site : https://qetoret.com\nConfidentialité : https://qetoret.com/privacy.html\nSuppression du compte : https://qetoret.com/delete-account.html"
+    ]
+  },
+  {
+    "locale": "de-DE",
+    "language": "German",
+    "nativeLanguage": "Deutsch",
+    "short": "Ein Gebetstagebuch für tägliches Gebet, Bibeltexte und gemeinsames Beten.",
+    "paragraphs": [
+      "Qetoret ist ein christlicher Gebetsbegleiter, um Gott zu bringen, was dir auf dem Herzen liegt, bewusst zum Gebet zurückzukehren und Antworten im Laufe der Zeit festzuhalten.",
+      "Beginne einen ruhigen Gebetsmoment ohne Konto. Melde dich an, um Anliegen in deinem persönlichen Tagebuch zu speichern. Schreibe Gebete für dich oder andere, ergänze Neuigkeiten und Notizen und halte erhörte Gebete und Zeugnisse fest.",
+      "Finde deinen Rhythmus mit den Gebeten für heute, wiederkehrenden Terminen, einem Kalender und optionalen Erinnerungen. Entdecke geführte Gebetspläne, Bibelstellen und Lesetexte und halte deine Gedanken unterwegs fest.",
+      "Erstelle eine Gebetsgruppe oder tritt einer bei. Teile ausgewählte Anliegen mit ihren Mitgliedern, tragt einander im Gebet und ermutigt euch mit Neuigkeiten. Füge Fotos, Sprachaufnahmen oder Videos zu den dafür vorgesehenen Neuigkeiten und Zeugnissen hinzu.",
+      "Private Tagebuchinhalte werden vor dem Hochladen in deinem Browser verschlüsselt. Gruppeninhalte werden für die Mitglieder verschlüsselt, die geteilte Inhalte lesen und behalten können. Richte vor einem Geräte- oder Browserwechsel die optionale Tresor-Wiederherstellung ein, damit du dein verschlüsseltes Tagebuch dort entsperren kannst.",
+      "Für die Synchronisierung und Gemeinschaftsfunktionen ist ein Konto erforderlich. Einige Tagebuchaktionen funktionieren offline und werden synchronisiert, sobald wieder eine Verbindung besteht. Anmeldung, Medienuploads und andere Onlinefunktionen benötigen Internetzugang.",
+      "Qetoret ist kostenlos nutzbar und bietet 16 Sprachen für die Benutzeroberfläche. Android 7.0 oder neuer ist erforderlich.",
+      "Website: https://qetoret.com\nDatenschutz: https://qetoret.com/privacy.html\nKontolöschung: https://qetoret.com/delete-account.html"
+    ]
+  }
+]

@@ -45,10 +45,10 @@ describe('fetchVerseText — authoritative-only Scripture', () => {
     // A range reference must be looked up under its extent-precise passage id, so
     // it can never read a row an older build wrote (single-verse text stored under
     // the range's reference string). This is what un-masks the full-passage fix.
-    vi.mocked(usfmFromReference).mockReturnValue('PHP.1.3-11');
-    await fetchVerseText({ reference: 'Philippians 1:3-11', lang: 'en' });
-    expect(spy.refQueries).toContain('PHP.1.3-11');
-    expect(spy.refQueries).not.toContain('Philippians 1:3-11');
+    vi.mocked(usfmFromReference).mockReturnValue('JHN.3.16-17');
+    await fetchVerseText({ reference: 'John 3:16-17', lang: 'en' });
+    expect(spy.refQueries).toContain('JHN.3.16-17');
+    expect(spy.refQueries).not.toContain('John 3:16-17');
   });
 
   it('returns reference-only (no text, no error) when no authoritative source is available', async () => {

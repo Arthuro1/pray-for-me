@@ -5,10 +5,9 @@
 // Scripture wording — that is the app's single most sensitive correctness/safety
 // boundary (a misquoted verse presented as Scripture is worse than no verse).
 // So the only source of full verse TEXT is authoritative:
-//   0. The OFFLINE BUNDLE (src/content/verses/*.json via verseBundle.js) — public
-//      domain text pre-resolved at build time for the whole curated pool. Instant,
-//      offline, free, and un-misquotable; it means the reader almost never needs
-//      the network for a pool verse, and never the AI reference→USFM step.
+//   0. The OFFLINE BUNDLE (src/content/verses/*.json via verseBundle.js) — licensed
+//      text pre-resolved for daily verses and every landing-page passage.
+//      Available without authentication, including complete ranges and chapters.
 //   1. localStorage cache (a previously-resolved passage).
 //   2. The shared verse_cache table — but ONLY 'youversion' rows, so no legacy
 //      AI-sourced text can resurface as if authoritative.

@@ -1,29 +1,16 @@
-Qetoret est un compagnon de prière chrétien pour présenter à Dieu ce qui vous tient à cœur, y revenir avec intention et garder la mémoire des réponses reçues.
+Qetoret est un compagnon de prière chrétien pour présenter à Dieu ce qui vous tient à cœur, revenir à la prière avec intention et garder la mémoire des réponses reçues.
 
-COMMENCEZ PAR UNE PRIÈRE
-Vivez un moment de prière sans créer de compte. Lorsque vous souhaitez conserver votre prière, connectez-vous pour l'enregistrer dans votre journal personnel.
+Vivez un moment de prière sans créer de compte. Connectez-vous pour enregistrer vos sujets dans votre journal personnel. Notez vos prières pour vous-même ou pour d'autres, ajoutez des nouvelles et des notes, puis consignez les réponses et les témoignages.
 
-GARDEZ UN JOURNAL DE PRIÈRE
-Notez vos sujets pour vous-même ou pour d'autres, ajoutez des nouvelles et des notes, puis consignez les réponses et les témoignages. Organisez votre intercession par cercles, de votre foyer à votre Église et aux nations.
+Trouvez votre rythme avec les prières du jour, des horaires récurrents, un calendrier et des rappels facultatifs. Explorez des parcours de prière guidée, des passages bibliques et des lectures, et gardez vos réflexions au fil du parcours.
 
-TROUVEZ VOTRE RYTHME
-Retrouvez les prières prévues aujourd'hui, choisissez une fréquence et planifiez vos suivis. Consultez le calendrier et activez les rappels si vous le souhaitez.
+Créez ou rejoignez des groupes de prière. Partagez certains sujets avec leurs membres, portez-vous les uns les autres dans la prière et encouragez-vous avec des nouvelles. Ajoutez des photos, des enregistrements vocaux ou des vidéos aux nouvelles et témoignages compatibles.
 
-GRANDISSEZ AVEC LA BIBLE
-Explorez des parcours de prière guidée, des passages bibliques et des lectures sur la prière et la vie chrétienne. Avancez à votre rythme et gardez vos réflexions personnelles.
+Le contenu privé du journal est chiffré dans votre navigateur avant son envoi. Le contenu d'un groupe est chiffré pour ses membres, qui peuvent lire et conserver ce que vous partagez. Configurez la récupération facultative du coffre avant de changer d'appareil ou de navigateur afin de pouvoir y déverrouiller votre journal chiffré.
 
-PRIEZ ENSEMBLE
-Créez ou rejoignez des groupes de prière, partagez certains sujets avec leurs membres et portez-vous les uns les autres dans la prière. Encouragez-vous avec des nouvelles. Choisissez ce que vous partagez et avec qui.
+Un compte est nécessaire pour la synchronisation et les fonctions communautaires. Certaines actions du journal fonctionnent hors connexion puis se synchronisent au retour du réseau. La connexion au compte, l'envoi de médias et d'autres fonctions en ligne nécessitent internet.
 
-GARDEZ AUSSI UNE TRACE AUDIO OU VISUELLE
-Ajoutez des photos, des enregistrements vocaux ou des vidéos aux nouvelles et témoignages compatibles. Notez ce qui vous vient pendant un temps de prière pour y revenir ensuite.
-
-CONFIDENTIALITÉ ET RÉCUPÉRATION
-Le contenu privé du journal est chiffré dans votre navigateur avant son envoi. Le contenu d'un groupe est chiffré pour ses membres, qui peuvent lire et conserver ce que vous partagez. Configurez la récupération du coffre avant de changer d'appareil ou de navigateur afin de pouvoir y déverrouiller votre journal.
-
-Vous pouvez commencer sans compte. Un compte est nécessaire pour la synchronisation et les fonctions communautaires. Certaines actions du journal fonctionnent hors connexion puis se synchronisent au retour du réseau ; la connexion au compte, l'envoi de médias et d'autres fonctions en ligne nécessitent internet.
-
-Qetoret est gratuit et propose 16 langues d'interface, dont le français et l'anglais.
+Qetoret est gratuit et propose 16 langues d'interface. Android 7.0 ou une version ultérieure est nécessaire.
 
 Site : https://qetoret.com
 Confidentialité : https://qetoret.com/privacy.html

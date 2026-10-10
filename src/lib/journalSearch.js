@@ -1,8 +1,10 @@
 import { testimonyList } from '../utils/prayer';
+import { circleOf } from './circles';
 
-// Circles are not a filter: the Journal has one circle-oriented way to find
-// prayers, its "By circle" view, rather than two competing ones.
+// Every filter narrows the same local prayer entries. Circle teaching and
+// suggested plans live on their own page, outside Journal retrieval.
 export const EMPTY_JOURNAL_FILTERS = Object.freeze({
+  circle: 'all',
   category: 'all',
   person: 'all',
   source: 'all',
@@ -113,6 +115,9 @@ function answeredDateMatches(prayer, value, now) {
 }
 
 function prayerMatchesFilters(prayer, filters, prayerShares, status, now) {
+  if (filters.circle && filters.circle !== 'all') {
+    if ((circleOf(prayer) || 'unplaced') !== filters.circle) return false;
+  }
   if (filters.category !== 'all') {
     const categoryIds = (prayer.prayer_categories || []).map((row) => row.category_id);
     if (!categoryIds.includes(filters.category)) return false;
@@ -135,7 +140,8 @@ function prayerMatchesFilters(prayer, filters, prayerShares, status, now) {
 
 export function journalFiltersActive(filters, status) {
   return (
-    filters.category !== 'all'
+    (!!filters.circle && filters.circle !== 'all')
+    || filters.category !== 'all'
     || filters.person !== 'all'
     || filters.source !== 'all'
     || (status === 'answered' && filters.answeredDate !== 'all')

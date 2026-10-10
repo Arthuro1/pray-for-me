@@ -1,0 +1,3 @@
+- Un diseño más sereno y claro para proteger tus oraciones.
+- Verificación de acceso y configuración del código de respaldo más sencillas.
+- Gestión más fácil de los accesos guardados.

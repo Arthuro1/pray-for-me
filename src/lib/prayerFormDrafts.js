@@ -153,8 +153,8 @@ export async function saveFormDraft(slot, fields) {
 }
 
 // Decrypt and return one slot's draft fields, or null. Expired / malformed /
-// undecryptable drafts are deleted as a side effect (fail closed).
-export async function loadFormDraft(slot) {
+// undecryptable drafts are deleted by default. Migration inspections opt out.
+export async function loadFormDraft(slot, { clearInvalid = true } = {}) {
   const entry = await readRecord(slot);
   if (!entry) return null;
   const { record, key } = entry;
@@ -163,15 +163,15 @@ export async function loadFormDraft(slot) {
     || !Number.isFinite(record.updatedAt)
     || Date.now() - record.updatedAt > MAX_AGE_MS
   ) {
-    await clearFormDraft(slot);
+    if (clearInvalid) await clearFormDraft(slot);
     return null;
   }
   try {
     const fields = await decryptJson(key, record.payload, draftContext(slot));
-    if (!fields || typeof fields !== 'object') { await clearFormDraft(slot); return null; }
+    if (!fields || typeof fields !== 'object') { if (clearInvalid) await clearFormDraft(slot); return null; }
     return { ...fields, updatedAt: record.updatedAt };
   } catch {
-    await clearFormDraft(slot); // corrupt / wrong key — delete rather than trust
+    if (clearInvalid) await clearFormDraft(slot); // migration inspections preserve storage
     return null;
   }
 }
@@ -196,6 +196,21 @@ export async function clearAllFormDrafts() {
       if (typeof k === 'string' && k.startsWith(KEY_PREFIX)) await idbDel(k);
     }
   } catch { /* best-effort cleanup */ }
+}
+
+// Content-free inventory for the origin-migration safety check. Include the
+// memory fallback too; an unfinished prayer must not be mistaken for synced
+// account content when IndexedDB is unavailable.
+export async function listFormDraftSlots() {
+  const slots = new Set(memory.keys());
+  if (hasIDB()) {
+    // Unlike cleanup, a failed inventory must propagate: migration cannot
+    // honestly report that no drafts exist when storage could not be read.
+    for (const key of await idbKeys()) {
+      if (typeof key === 'string' && key.startsWith(KEY_PREFIX)) slots.add(key.slice(KEY_PREFIX.length));
+    }
+  }
+  return [...slots];
 }
 
 // Test-only: drop the in-memory cache to simulate a fresh page load, leaving any

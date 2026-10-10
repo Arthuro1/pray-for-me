@@ -12,7 +12,7 @@
 // Everything fails soft: if the user_crypto_keys table isn't present yet or the
 // network is down, callers get null rather than a throw.
 import { supabase } from '../supabase';
-import { getMasterKey, isUnlocked } from './keyManager';
+import { getMasterKey, isUnlocked, getLifecycleToken, isLifecycleCurrent, isAccountContextConfigured, onLockChange } from './keyManager';
 import { encryptJson, decryptJson, toB64, fromB64 } from './e2ee';
 
 const RSA_PARAMS = {
@@ -34,10 +34,8 @@ const privateKeyContext = (userId) => ({
 let cache = null; // { userId, publicJwk, privateKey }
 let cacheGeneration = 0;
 
-// Coalesce concurrent first-use calls for the same account. Without this guard,
-// two empty-row reads can each mint a different RSA pair; the last database
-// upsert then replaces the public key while a group key may already have been
-// wrapped to the first one.
+// Coalesce concurrent first-use calls for the same account. Insert-only
+// publication also preserves the winner when another device publishes first.
 const identityInFlight = new Map(); // userId -> Promise<public JWK | null>
 
 // Reset the in-memory keypair (sign-out / tests). The server row is untouched.
@@ -47,18 +45,32 @@ export function clearUserKeyCache() {
   identityInFlight.clear();
 }
 
+function identityContext(userId) {
+  const token = getLifecycleToken();
+  if (!userId || !isUnlocked() || (isAccountContextConfigured() && token.accountId !== userId)) return null;
+  return { userId, token, generation: cacheGeneration, masterKey: getMasterKey() };
+}
+
+function contextCurrent(context) {
+  return !!context && context.generation === cacheGeneration && isLifecycleCurrent(context.token)
+    && isUnlocked() && (!isAccountContextConfigured() || context.token.accountId === context.userId)
+    && getMasterKey() === context.masterKey;
+}
+
+onLockChange((unlocked) => { if (!unlocked) clearUserKeyCache(); });
+
 // Ensure the signed-in user has a published identity keypair, and that this
 // session holds the unwrapped private key. Returns the public JWK, or null if
 // the ACK is locked / the table is missing / offline.
 export async function ensureUserPublicKey(userId) {
-  if (!userId || !isUnlocked()) return null;
-  if (cache && cache.userId === userId && cache.privateKey) return cache.publicJwk;
+  const context = identityContext(userId);
+  if (!context) return null;
+  if (cache && cache.userId === userId && cache.privateKey && contextCurrent(cache.context)) return cache.publicJwk;
 
   const existing = identityInFlight.get(userId);
   if (existing) return existing;
 
-  const generation = cacheGeneration;
-  const pending = ensureUserPublicKeyOnce(userId, generation);
+  const pending = ensureUserPublicKeyOnce(userId, context);
   identityInFlight.set(userId, pending);
   try {
     return await pending;
@@ -67,15 +79,16 @@ export async function ensureUserPublicKey(userId) {
   }
 }
 
-async function ensureUserPublicKeyOnce(userId, generation) {
+async function ensureUserPublicKeyOnce(userId, context, allowCreate = true) {
 
   let row;
   try {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('user_crypto_keys')
       .select('public_key_jwk, encrypted_private_key')
       .eq('user_id', userId)
       .maybeSingle();
+    if (error || !contextCurrent(context)) return null;
     row = data;
   } catch {
     return null; // table absent / offline — fail soft
@@ -83,10 +96,11 @@ async function ensureUserPublicKeyOnce(userId, generation) {
 
   if (row?.public_key_jwk && row?.encrypted_private_key) {
     try {
-      const pkcs8B64 = await decryptJson(getMasterKey(), row.encrypted_private_key, privateKeyContext(userId));
+      const pkcs8B64 = await decryptJson(context.masterKey, row.encrypted_private_key, privateKeyContext(userId));
+      if (!contextCurrent(context)) return null;
       const privateKey = await crypto.subtle.importKey('pkcs8', fromB64(pkcs8B64), RSA_PARAMS, false, ['decrypt']);
-      if (generation !== cacheGeneration) return null;
-      cache = { userId, publicJwk: row.public_key_jwk, privateKey };
+      if (!contextCurrent(context)) return null;
+      cache = { userId, publicJwk: row.public_key_jwk, privateKey, context };
       return cache.publicJwk;
     } catch {
       // Can't unwrap (e.g. a different ACK on a new device before recovery).
@@ -96,37 +110,44 @@ async function ensureUserPublicKeyOnce(userId, generation) {
     }
   }
 
-  // No row yet → generate and publish a fresh keypair.
-  return publishNewKeypair(userId, generation);
+  // Partial metadata is recovery evidence, never permission to replace an identity.
+  if (row != null || !allowCreate) return null;
+  return publishNewKeypair(userId, context);
 }
 
 // Generate a fresh RSA identity keypair, wrap its private key under the CURRENT
-// account key, and upsert it (overwriting any existing row for this user).
+// account key, then insert it. Only explicit identity regeneration may replace
+// an existing row.
 // Caches the unwrapped private key for the session. Returns the public JWK, or
 // null if the account key is locked or the write fails. Requires the vault
 // unlocked (getMasterKey throws otherwise).
-async function publishNewKeypair(userId, generation = cacheGeneration) {
-  if (!isUnlocked()) return null;
-  const kp = await crypto.subtle.generateKey(RSA_PARAMS, true, ['encrypt', 'decrypt']);
-  const publicJwk = await crypto.subtle.exportKey('jwk', kp.publicKey);
-  const pkcs8 = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
-  const encrypted_private_key = await encryptJson(
-    getMasterKey(),
-    toB64(new Uint8Array(pkcs8)),
-    privateKeyContext(userId),
-  );
+async function publishNewKeypair(userId, context, replace = false) {
   try {
-    const { error } = await supabase.from('user_crypto_keys').upsert(
-      { user_id: userId, public_key_jwk: publicJwk, encrypted_private_key, key_version: 1, updated_at: new Date().toISOString() },
-      { onConflict: 'user_id' },
+    if (!contextCurrent(context)) return null;
+    const kp = await crypto.subtle.generateKey(RSA_PARAMS, true, ['encrypt', 'decrypt']);
+    if (!contextCurrent(context)) return null;
+    const publicJwk = await crypto.subtle.exportKey('jwk', kp.publicKey);
+    const pkcs8 = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
+    if (!contextCurrent(context)) return null;
+    const encrypted_private_key = await encryptJson(
+      context.masterKey,
+      toB64(new Uint8Array(pkcs8)),
+      privateKeyContext(userId),
     );
+    if (!contextCurrent(context)) return null;
+    const row = { user_id: userId, public_key_jwk: publicJwk, encrypted_private_key, key_version: 1, updated_at: new Date().toISOString() };
+    // A second device may publish between our read and write. Its identity wins;
+    // ordinary provisioning must never overwrite keys already used by a group.
+    const query = supabase.from('user_crypto_keys');
+    const { error } = await (replace ? query.upsert(row, { onConflict: 'user_id' }) : query.insert(row));
+    if (!contextCurrent(context)) return null;
+    if (error?.code === '23505' && !replace) return ensureUserPublicKeyOnce(userId, context, false);
     if (error) return null;
+    cache = { userId, publicJwk, privateKey: kp.privateKey, context };
+    return publicJwk;
   } catch {
     return null;
   }
-  if (generation !== cacheGeneration) return null;
-  cache = { userId, publicJwk, privateKey: kp.privateKey };
-  return publicJwk;
 }
 
 // Force-replace this user's identity keypair. Used by the "start fresh" recovery
@@ -136,14 +157,15 @@ async function publishNewKeypair(userId, generation = cacheGeneration) {
 // group keys wrapped to the OLD public key become unusable (that content is
 // already lost); new group keys re-provision lazily under the new identity.
 export async function regenerateIdentityKey(userId) {
+  if (!identityContext(userId)) return null;
   clearUserKeyCache();
-  return publishNewKeypair(userId, cacheGeneration);
+  return publishNewKeypair(userId, identityContext(userId), true);
 }
 
 // The current session's unwrapped private key (for unwrapping group keys wrapped
 // to us). Null until ensureUserPublicKey has run this session.
 export function getMyPrivateKey() {
-  return cache?.privateKey || null;
+  return cache && contextCurrent(cache.context) ? cache.privateKey : null;
 }
 
 // Import another member's CURRENT public key (for wrapping a group key to them).

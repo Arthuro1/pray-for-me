@@ -53,7 +53,8 @@ vi.mock('../lib/dataCache', () => ({
 }));
 
 // Nothing queued as a create; the testimony write is elsewhere in the queue.
-vi.mock('../lib/mutationQueue', () => ({ enqueue: vi.fn(), pendingPrayerIds: vi.fn(() => new Set()) }));
+vi.mock('../lib/mutationQueue', () => ({ enqueue: vi.fn(), pendingPrayerIds: vi.fn(() => new Set()),
+  initQueue: async () => {}, queueReadiness: () => 'ready', getPendingMutations: () => [] }));
 // syncSettings is fire-and-forget; keep it inert so it never touches the network.
 vi.mock('../lib/settingsSync', () => ({
   fetchUserSettings: async () => null,

@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "How do Scripture suggestions work?",
-        "a": "When you ask for suggestions, the prayer's title and details are sent to an AI service, which proposes Bible passages. You read each passage and decide what applies."
+        "a": "With your consent, the prayer title is sent through Qetoret's server to {provider} for Bible suggestions. Details and the latest update are sent only if you include them. You review the outgoing text before each prayer request. Text you choose to translate also goes to this service. Your language and the guidance option you select, when applicable, are also included. You can withdraw consent at any time in Settings to stop future requests; this cannot recall text already sent. Read each suggested passage and decide what applies."
       },
       {
         "q": "Is Qetoret a social network?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Which churches is Qetoret for?",
-        "a": "For Christians of every church tradition. Qetoret helps you pray; it never replaces your local church, its pastors or its fellowship."
+        "a": "Rooted in Scripture and shaped by a living faith in Jesus Christ, Qetoret welcomes Christians from different church traditions who desire to grow in prayer. It never replaces your local church, its pastors or its fellowship."
       },
       {
         "q": "What languages are supported?",
-        "a": "16 languages: French, English, German, Portuguese, Chinese, Spanish, Hindi, Japanese, Swahili, Amharic, Indonesian, Tagalog, Korean, Russian, Arabic, and Persian."
+        "a": "Navigation is available in 16 languages. Devotional coverage varies: some longer teachings and prayer plans may appear in English or French. Marketing translations are still being completed and linguistically reviewed; the language menu marks partial landing translations."
       },
       {
         "q": "Is it free?",
@@ -201,8 +201,8 @@ export default {
         "desc": "The Android app on Google Play, or install it from your browser on your phone or computer."
       },
       {
-        "title": "16 languages",
-        "desc": "Change the language at any time."
+        "title": "Navigation in 16 languages",
+        "desc": "Devotional coverage varies; translation review continues."
       },
       {
         "title": "Gentle reminders",

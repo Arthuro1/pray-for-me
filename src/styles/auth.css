@@ -1,0 +1,77 @@
+/* Authentication leads; the small brand lockup and footer stay quiet. Normal
+   flow lets translations, enlarged type and the on-screen keyboard scroll. */
+.auth-experience.auth-experience {
+  gap: var(--q-space-5);
+  padding-block: max(var(--q-space-16), env(safe-area-inset-top)) max(var(--q-space-8), env(safe-area-inset-bottom));
+  background: var(--q-canvas);
+}
+
+.auth-experience .auth-back {
+  inset-block-start: max(var(--q-space-3), env(safe-area-inset-top));
+  inset-inline-start: clamp(var(--q-space-3), 3vw, var(--q-space-10));
+}
+
+.auth-experience .auth-brand {
+  width: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+.auth-experience .auth-brand__lockup {
+  gap: var(--q-space-2);
+}
+
+.auth-experience .auth-sheet {
+  width: min(100%, 27rem);
+  padding: var(--q-space-8);
+  box-shadow: var(--q-card-shadow);
+}
+
+.auth-experience .auth-sheet__title {
+  font-family: var(--q-font-ui);
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.auth-heading,
+.auth-experience .auth-intent {
+  margin-block-end: var(--q-space-6);
+}
+
+.auth-experience .auth-google {
+  min-height: 44px;
+}
+
+.auth-experience .auth-or {
+  gap: var(--q-space-3);
+  margin-block: var(--q-space-4);
+}
+
+.auth-experience .auth-sheet__intro {
+  margin-block-start: var(--q-space-2);
+  line-height: 1.6;
+}
+
+.auth-secondary {
+  margin-block-start: var(--q-space-4);
+  padding-block-start: var(--q-space-2);
+  border-block-start: 1px solid var(--q-border);
+}
+
+.auth-secondary .quiet-button {
+  color: var(--q-text-secondary);
+  font-weight: 400;
+}
+
+@media (max-width: 639px) {
+  .auth-experience.auth-experience {
+    padding-block-end: max(var(--q-space-6), env(safe-area-inset-bottom));
+  }
+
+  .auth-experience .auth-sheet {
+    padding: var(--q-space-6) var(--q-space-5) var(--q-space-4);
+  }
+}

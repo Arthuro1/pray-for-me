@@ -23,6 +23,7 @@ vi.hoisted(() => {
 vi.mock('idb-keyval', () => ({
   get: async (k) => idbStore.get(k),
   set: async (k, v) => { idbStore.set(k, v); },
+  update: async (k, updater) => { idbStore.set(k, structuredClone(updater(structuredClone(idbStore.get(k))))); },
   del: async (k) => { idbStore.delete(k); },
 }));
 

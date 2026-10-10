@@ -1,10 +1,47 @@
+# Current Play update — 10 October 2026
+
+The prepared update is **1.0.5 (6)** for Qetoret, package **space.praystead.twa**,
+minSdk 24 / targetSdk 36. Web/About version is aligned to 1.0.5. The signed AAB
+and APK retain the existing upload key.
+
+Start with [update-1.0.5.md](update-1.0.5.md). The complete local pack is
+[android-twa/releases/1.0.5/qetoret-google-play-1.0.5-update-pack.zip](../../android-twa/releases/1.0.5/qetoret-google-play-1.0.5-update-pack.zip).
+It contains signed artifacts, frontend/source ZIPs, copy-ready listing text and
+release notes for all 16 Play languages, review instructions, declaration
+assessment and current validation evidence. **Existing images/screenshots are
+preserved and reused; none were regenerated.**
+
+| Current file | Use |
+| --- | --- |
+| [update-1.0.5.md](update-1.0.5.md) | Exact upload values and submission sequence |
+| [release-notes-1.0.5-all-locales.txt](release-notes-1.0.5-all-locales.txt) | Paste enabled-language release-note blocks into Console |
+| [listings](listings) | Per-language title, short/full description and release notes |
+| [update-app-access-1.0.5.txt](update-app-access-1.0.5.txt) | Reviewer directions; private credentials are entered only in Console |
+| [update-console-fields-1.0.5.json](update-console-fields-1.0.5.json) | Release fields, links and app-to-Play locale mapping |
+| [update-declarations-1.0.5.md](update-declarations-1.0.5.md) | App content/Data safety source-change assessment |
+| [update-deployment-1.0.5.md](update-deployment-1.0.5.md) | Website/API deployment and recovery flag requirements |
+| [update-readiness-1.0.5.md](update-readiness-1.0.5.md) | Current checks and remaining Console/device evidence |
+| [release-artifacts.md](release-artifacts.md) | Artifact identities, checksums and signed-release evidence |
+
+Current full unit suite: **304 files / 3,696 tests passed**. Production build,
+typecheck, strict lint, locales and all 12 local/live release checks passed.
+The new website UI still requires deployment; the local static build preserves
+disabled new-recovery-enrollment defaults. Confirm the intended host settings.
+Version code 6 availability, Play signing, private review access, installed-app
+acceptance and rollout settings remain Console/device checks.
+
+No website deployment, Play upload or publication was performed. The 8 October
+submission record below is preserved as history, including its older artifacts
+and observations.
+
+---
 # Qetoret Google Play submission pack
 
 Prepared from the repository on **8 October 2026**. Public website:
 **https://qetoret.com**. Android application ID remains
-**`space.praystead.twa`** so this can update the existing app. The planned wrapper
-release is **versionCode `4`, versionName `1.0.3`, targetSdk `36`**. Confirm that
-`4` is greater than every version already uploaded to Play before using it.
+**`space.praystead.twa`** so this can update the existing app. The corrected wrapper
+release is **versionCode `5`, versionName `1.0.4`, minSdk `24`, targetSdk `36`**.
+Confirm that `5` is greater than every version already uploaded to Play before using it.
 
 This folder contains submission material and a release gate. It is **not evidence
 that the live domain, signing, Console declarations, or device tests have passed**.
@@ -12,6 +49,11 @@ The TWA displays the deployed website: a later web deployment changes the app
 experience without a new bundle and must pass the same privacy and safety checks.
 
 ## Observed status on 8 October 2026
+
+The checks below record the earlier release preparation. The subsequent
+Android correction raises the installation floor to **API 24 (Android 7.0)**
+for **1.0.4 (5)**; see [release-artifacts.md](release-artifacts.md) for its
+artifact metadata, signatures and hashes.
 
 The local release preflight passed all six static checks. The live preflight
 reached qetoret.com but found the **old Praystead web manifest**; root, privacy,
@@ -66,18 +108,18 @@ graphic and six phone screenshot drafts in `assets/screenshots/en-US/`. Check th
 asset manifest and final installed app before submitting the screenshots. The
 store icon is 32-bit RGBA PNG; feature graphic and screenshots remain RGB.
 
-Prepared Android artifacts and verification records are in
-[`android-twa/releases/1.0.3/`](../../android-twa/releases/1.0.3):
-`qetoret-1.0.3-4.aab` for Play upload, `qetoret-1.0.3-4.apk` for direct testing,
+Corrected Android artifacts and verification records are in
+[`android-twa/releases/1.0.4/`](../../android-twa/releases/1.0.4):
+`qetoret-1.0.4-5.aab` for Play upload, `qetoret-1.0.4-5.apk` for direct testing,
 `SHA256SUMS.txt` and `release-verification.json`. Use the final rebuilt files and
 the hashes in those records. A direct APK installation does not test Play signing.
 
-The shareable `qetoret-google-play-1.0.3-submission-pack.zip` in that release
-folder contains these Android artifacts, this complete listing/asset pack and
-the applied feedback-ownership migration/tests and deployment evidence. Paths inside the archive retain
-their repository structure. It excludes signing keys, passwords, environment
-files and reviewer credentials. It is a preparation archive, not an approval to
-publish; follow [validation.md](validation.md) and the Console checklist first.
+The earlier `qetoret-google-play-1.0.3-submission-pack.zip` in the `1.0.3`
+release folder is a **historical archive** containing the superseded minSdk
+`21` wrapper. Use the corrected **1.0.4 (5)** AAB/APK and verification records
+above for the current Android submission. The listing/asset material and
+database/deployment evidence remain in this folder; follow
+[validation.md](validation.md) and the Console checklist before publishing.
 
 Canonical Console URLs after deployment:
 

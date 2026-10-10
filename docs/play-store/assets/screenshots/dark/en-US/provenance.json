@@ -1,0 +1,505 @@
+{
+  "generatedAt": "2026-10-08T20:36:29.810Z",
+  "locale": "en-US",
+  "appearance": "dark",
+  "captureTime": "2026-10-08T08:00:00+02:00",
+  "source": "Current real app components at local development preview routes with synthetic fixtures and production route context",
+  "method": "Each category rendered separately at its stated CSS viewport; no resized phone captures, device frames or marketing overlays",
+  "orientation": "portrait",
+  "aspectRatio": "9:16",
+  "note": "Browser viewport captures for store device categories, not photographs or captures from physical Android devices.",
+  "screenshots": [
+    {
+      "file": "phone/01-today.png",
+      "device": "Phone",
+      "route": "/__design/today?capture=1",
+      "width": 1080,
+      "height": 1920,
+      "viewport": {
+        "width": 432,
+        "height": 768
+      },
+      "deviceScaleFactor": 2.5,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 138063,
+      "sha256": "daf6cebee9f639cdf5061baafdb8f6e8712af99c2fffd865211724ad2b62ef1b",
+      "alt": "Dark Today screen with a prayer for Sarah, daily prayer actions and Scripture.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 432,
+        "viewportWidth": 432,
+        "activeNav": [
+          "Today",
+          "Today"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "phone/02-journal.png",
+      "device": "Phone",
+      "route": "/__design/journal?capture=1",
+      "width": 1080,
+      "height": 1920,
+      "viewport": {
+        "width": 432,
+        "height": 768
+      },
+      "deviceScaleFactor": 2.5,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 111614,
+      "sha256": "7452ba3f7d86762309bbee94e680ce211ce0d4598e61afdbe409711c414c9629",
+      "alt": "Dark prayer journal with personal prayer requests, search and filters.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 432,
+        "viewportWidth": 432,
+        "activeNav": [
+          "Journal",
+          "Journal"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "phone/03-my-house.png",
+      "device": "Phone",
+      "route": "/__design/circle?c=household&capture=1",
+      "width": 1080,
+      "height": 1920,
+      "viewport": {
+        "width": 432,
+        "height": 768
+      },
+      "deviceScaleFactor": 2.5,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 150982,
+      "sha256": "f49e1ca26d0a15ba7bb40ca073f856ec364df15ba8626c343929e47bfad48956",
+      "alt": "My house intercession circle with teaching and household prayer guidance in dark mode.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 432,
+        "viewportWidth": 432,
+        "activeNav": [
+          "My house"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "phone/04-plans.png",
+      "device": "Phone",
+      "route": "/__design/plans?capture=1",
+      "width": 1080,
+      "height": 1920,
+      "viewport": {
+        "width": 432,
+        "height": 768
+      },
+      "deviceScaleFactor": 2.5,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 125021,
+      "sha256": "d9a3f5fc5d3829b22a2fd510db353605a293054dc5a2241dff3b6677225b9dd0",
+      "alt": "Guided Christian prayer plans in the dark Qetoret interface.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 432,
+        "viewportWidth": 432,
+        "activeNav": [
+          "Plans",
+          "Plans"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "phone/05-together.png",
+      "device": "Phone",
+      "route": "/__design/together?capture=1",
+      "width": 1080,
+      "height": 1920,
+      "viewport": {
+        "width": 432,
+        "height": 768
+      },
+      "deviceScaleFactor": 2.5,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 113351,
+      "sha256": "4767329ea2849c3ab923268df7740e55fb9014f0094dc3288ea70a66f0f28d8e",
+      "alt": "Dark Together screen showing prayer groups and people to pray with.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 432,
+        "viewportWidth": 432,
+        "activeNav": [
+          "Together",
+          "Together"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "phone/06-prayer.png",
+      "device": "Phone",
+      "route": "/__design/first-prayer?capture=1",
+      "width": 1080,
+      "height": 1920,
+      "viewport": {
+        "width": 432,
+        "height": 768
+      },
+      "deviceScaleFactor": 2.5,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 105740,
+      "sha256": "1bb6540f8bdefe47862420aa14694467748ce06d88a7083214ab141cd13af7ba",
+      "alt": "Dark prayer entry screen inviting the user to bring what is on their heart before God.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 432,
+        "viewportWidth": 432,
+        "activeNav": [],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-7-inch/01-today.png",
+      "device": "7-inch tablet",
+      "route": "/__design/today?capture=1",
+      "width": 1440,
+      "height": 2560,
+      "viewport": {
+        "width": 720,
+        "height": 1280
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 207128,
+      "sha256": "dba4892d05a3d4cdd2ed11a60d2ed3fa746882171021e08ebfd148236c97a8bd",
+      "alt": "Dark Today screen with a prayer for Sarah, daily prayer actions and Scripture.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 720,
+        "viewportWidth": 720,
+        "activeNav": [
+          "Today",
+          "Today"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-7-inch/02-journal.png",
+      "device": "7-inch tablet",
+      "route": "/__design/journal?capture=1",
+      "width": 1440,
+      "height": 2560,
+      "viewport": {
+        "width": 720,
+        "height": 1280
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 158273,
+      "sha256": "4abf74ba4c3a2be0b0c95ea39cb729ccd9c942986df464ba53a697a45c8fe09e",
+      "alt": "Dark prayer journal with personal prayer requests, search and filters.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 720,
+        "viewportWidth": 720,
+        "activeNav": [
+          "Journal",
+          "Journal"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-7-inch/03-my-house.png",
+      "device": "7-inch tablet",
+      "route": "/__design/circle?c=household&capture=1",
+      "width": 1440,
+      "height": 2560,
+      "viewport": {
+        "width": 720,
+        "height": 1280
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 211188,
+      "sha256": "170d04734a4f8ef82389974bf133a9469a0856a32bcf90649dd7396a1125e426",
+      "alt": "My house intercession circle with teaching and household prayer guidance in dark mode.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 720,
+        "viewportWidth": 720,
+        "activeNav": [
+          "My house"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-7-inch/04-plans.png",
+      "device": "7-inch tablet",
+      "route": "/__design/plans?capture=1",
+      "width": 1440,
+      "height": 2560,
+      "viewport": {
+        "width": 720,
+        "height": 1280
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 205069,
+      "sha256": "a3bda24a43b183973d3cb6b2e8b47b5e6393debc55393e9a82d12e42930df951",
+      "alt": "Guided Christian prayer plans in the dark Qetoret interface.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 720,
+        "viewportWidth": 720,
+        "activeNav": [
+          "Plans",
+          "Plans"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-7-inch/05-together.png",
+      "device": "7-inch tablet",
+      "route": "/__design/together?capture=1",
+      "width": 1440,
+      "height": 2560,
+      "viewport": {
+        "width": 720,
+        "height": 1280
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 135320,
+      "sha256": "ca5904faa33d884dd0d3e65ed3a84049c7c48130c7a9dcf1de83dc3c378ba4e1",
+      "alt": "Dark Together screen showing prayer groups and people to pray with.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 720,
+        "viewportWidth": 720,
+        "activeNav": [
+          "Together",
+          "Together"
+        ],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-7-inch/06-prayer.png",
+      "device": "7-inch tablet",
+      "route": "/__design/first-prayer?capture=1",
+      "width": 1440,
+      "height": 2560,
+      "viewport": {
+        "width": 720,
+        "height": 1280
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 126870,
+      "sha256": "ba76175ac8ff407db777bf99279f9f1c38c4cc30157f018b3326675febd73a59",
+      "alt": "Dark prayer entry screen inviting the user to bring what is on their heart before God.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 720,
+        "viewportWidth": 720,
+        "activeNav": [],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-10-inch/01-today.png",
+      "device": "10-inch tablet",
+      "route": "/__design/today?capture=1",
+      "width": 1800,
+      "height": 3200,
+      "viewport": {
+        "width": 900,
+        "height": 1600
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 257099,
+      "sha256": "43599d2e999f980c00a542bff04ec05dc6c282c95b955d864929ea0541421f43",
+      "alt": "Dark Today screen with a prayer for Sarah, daily prayer actions and Scripture.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 900,
+        "viewportWidth": 900,
+        "activeNav": [
+          "Today",
+          "Today"
+        ],
+        "sidebarVisible": true
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-10-inch/02-journal.png",
+      "device": "10-inch tablet",
+      "route": "/__design/journal?capture=1",
+      "width": 1800,
+      "height": 3200,
+      "viewport": {
+        "width": 900,
+        "height": 1600
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 213466,
+      "sha256": "340a80266270cf0e545e6e94b3adb91f12923f4dc3eb9de328ac1a6cc687bda1",
+      "alt": "Dark prayer journal with personal prayer requests, search and filters.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 900,
+        "viewportWidth": 900,
+        "activeNav": [
+          "Journal",
+          "Journal"
+        ],
+        "sidebarVisible": true
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-10-inch/03-my-house.png",
+      "device": "10-inch tablet",
+      "route": "/__design/circle?c=household&capture=1",
+      "width": 1800,
+      "height": 3200,
+      "viewport": {
+        "width": 900,
+        "height": 1600
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 326180,
+      "sha256": "e6804eb8dd2e0ef4913bd6c28bee79908c8c1b7bfec140ad179ee8d1303e1da9",
+      "alt": "My house intercession circle with teaching and household prayer guidance in dark mode.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 900,
+        "viewportWidth": 900,
+        "activeNav": [
+          "My house"
+        ],
+        "sidebarVisible": true
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-10-inch/04-plans.png",
+      "device": "10-inch tablet",
+      "route": "/__design/plans?capture=1",
+      "width": 1800,
+      "height": 3200,
+      "viewport": {
+        "width": 900,
+        "height": 1600
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 310369,
+      "sha256": "5f590df1174400a605bfca6dc9f6219866a0b52ab60aa1c72ba4eced2ba2e143",
+      "alt": "Guided Christian prayer plans in the dark Qetoret interface.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 900,
+        "viewportWidth": 900,
+        "activeNav": [
+          "Plans",
+          "Plans"
+        ],
+        "sidebarVisible": true
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-10-inch/05-together.png",
+      "device": "10-inch tablet",
+      "route": "/__design/together?capture=1",
+      "width": 1800,
+      "height": 3200,
+      "viewport": {
+        "width": 900,
+        "height": 1600
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 183762,
+      "sha256": "2d7a1a13958be2e4f2941473e2a32844756b9f13f2d1e5fda1879c12593686f8",
+      "alt": "Dark Together screen showing prayer groups and people to pray with.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 900,
+        "viewportWidth": 900,
+        "activeNav": [
+          "Together",
+          "Together"
+        ],
+        "sidebarVisible": true
+      },
+      "blockedRequests": []
+    },
+    {
+      "file": "tablet-10-inch/06-prayer.png",
+      "device": "10-inch tablet",
+      "route": "/__design/first-prayer?capture=1",
+      "width": 1800,
+      "height": 3200,
+      "viewport": {
+        "width": 900,
+        "height": 1600
+      },
+      "deviceScaleFactor": 2,
+      "format": "24-bit RGB PNG without alpha",
+      "bytes": 157963,
+      "sha256": "bc6202319a6853bcc7bfd8b13cc720917aa9453d885bc92f991e5c4cc11ca858",
+      "alt": "Dark prayer entry screen inviting the user to bring what is on their heart before God.",
+      "checks": {
+        "theme": "dark",
+        "background": "rgb(17, 16, 24)",
+        "documentWidth": 900,
+        "viewportWidth": 900,
+        "activeNav": [],
+        "sidebarVisible": false
+      },
+      "blockedRequests": []
+    }
+  ]
+}

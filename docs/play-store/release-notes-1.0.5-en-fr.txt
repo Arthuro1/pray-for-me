@@ -1,0 +1,11 @@
+<en-US>
+- A calmer, clearer design for prayer protection.
+- Simpler access verification and backup-code setup.
+- Easier management of saved access methods.
+</en-US>
+
+<fr-FR>
+- Un design plus soigné et plus lisible pour protéger vos prières.
+- Une vérification d’accès et des codes de secours plus simples.
+- Une gestion plus claire de vos accès enregistrés.
+</fr-FR>

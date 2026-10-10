@@ -1,0 +1,3 @@
+- Tampilan perlindungan doa yang lebih tenang dan jelas.
+- Verifikasi akses dan pengaturan kode cadangan yang lebih sederhana.
+- Pengelolaan akses tersimpan yang lebih mudah.

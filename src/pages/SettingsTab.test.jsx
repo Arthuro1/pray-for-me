@@ -3,7 +3,7 @@
 // Settings opens on the profile card — who you are, how you signed in and the
 // way out — then four collapsible, labelled sections (Privacy & Security,
 // Notifications, Appearance & language, Support & feedback).
-// Privacy & Security is the ONE consolidated destination: Privacy Center, vault,
+// Privacy & Security is the ONE consolidated destination: Privacy Center, protection,
 // notification previews, low data mode, AI consent, export and account deletion
 // all live there. This verifies the structure, that deletion sits in the privacy
 // danger zone, and that /settings#<section> deep-links (including the legacy
@@ -23,24 +23,23 @@ vi.mock('../push', () => ({
 }));
 vi.mock('../lib/analytics', () => ({ track: vi.fn(), EVENTS: new Proxy({}, { get: (_, k) => String(k) }) }));
 vi.mock('../components/NotificationPreferences', () => ({ default: () => null }));
-vi.mock('../components/VaultMigrationStatus', () => ({ default: () => null }));
 vi.mock('../components/shared/AiDisclaimer', () => ({ default: () => null }));
 vi.mock('../components/FeedbackModal', () => ({ default: () => null }));
 vi.mock('../components/DonateModal', () => ({ default: () => null }));
 vi.mock('../components/PrivacyCenter', () => ({ default: () => null }));
-vi.mock('../components/VaultModal', () => ({ default: () => null }));
+vi.mock('../components/PrayerProtection', () => ({
+  default: ({ userId, showTitle }) => <div data-testid="prayer-protection" data-account={userId} data-show-title={String(showTitle)}>Protection controls</div>,
+}));
 
 import SettingsTab from './SettingsTab';
 import ConfirmHost from '../components/shared/ConfirmHost';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import useVaultStore from '../store/vaultStore';
 import useConfirmStore from '../store/confirmStore';
 import { t } from '../i18n';
 
 const lang = 'fr';
 const renderSettings = () => render(<MemoryRouter><SettingsTab /><ConfirmHost /></MemoryRouter>);
-const originalVaultLock = useVaultStore.getState().lock;
 afterEach(cleanup);
 
 beforeEach(() => {
@@ -60,7 +59,6 @@ beforeEach(() => {
     deleteAccount: vi.fn(async () => ({ error: null })),
   });
   useConfirmStore.setState({ dialog: null });
-  useVaultStore.setState({ initialized: false, unlocked: false, lock: originalVaultLock });
 });
 
 describe('SettingsTab — grouped sections', () => {
@@ -82,11 +80,11 @@ describe('SettingsTab — grouped sections', () => {
     expect(signOut).toHaveBeenCalledTimes(1);
   });
 
-  it('consolidates privacy: vault, previews, low data, export and deletion in Privacy & Security', () => {
+  it('consolidates privacy: protection, previews, low data, export and deletion in Privacy & Security', () => {
     renderSettings();
     const privacy = document.getElementById('privacy');
     expect(privacy).toBeTruthy();
-    for (const key of ['privacyCenterTitle', 'privacyRowVault', 'notifPreviewTitle', 'lowDataTitle', 'exportData', 'dangerZone', 'deleteAccount']) {
+    for (const key of ['privacyCenterTitle', 'protectionTitle', 'notifPreviewTitle', 'lowDataTitle', 'exportData', 'dangerZone', 'deleteAccount']) {
       expect(privacy.textContent, `privacy section should contain ${key}`).toContain(t(lang, key));
     }
   });
@@ -141,7 +139,7 @@ describe('SettingsTab — grouped sections', () => {
   it('Privacy & Security starts COMPACT: every internal row collapsed, deletion apart at the bottom', () => {
     window.location.hash = '#privacy';
     renderSettings();
-    for (const key of ['privacyRowOverview', 'privacyRowVault', 'privacyRowNotif', 'privacyRowLowData', 'privacyRowAi', 'privacyRowExport']) {
+    for (const key of ['privacyRowOverview', 'protectionTitle', 'privacyRowNotif', 'privacyRowLowData', 'privacyRowAi', 'privacyRowExport']) {
       const row = screen.getByRole('button', { name: t(lang, key) });
       expect(row.getAttribute('aria-expanded'), `${key} should start collapsed`).toBe('false');
       expect(row.getAttribute('aria-controls')).toBeTruthy();
@@ -164,16 +162,19 @@ describe('SettingsTab — grouped sections', () => {
     expect(usePrayerStore.getState().settings.lowDataMode).toBe(true);
   });
 
-  it('locks the signed-in account through the vault button', async () => {
-    const lockVault = vi.fn(async () => true);
-    useVaultStore.setState({ initialized: true, unlocked: true, lock: lockVault });
+  it('offers one protection destination without a second vault panel or repeated title', () => {
     window.location.hash = '#privacy';
     renderSettings();
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'privacyRowVault') }));
-
-    fireEvent.click(screen.getByRole('button', { name: t(lang, 'vaultLockNow') }));
-
-    await waitFor(() => expect(lockVault).toHaveBeenCalledWith('user-1'));
+    const disclosure = screen.getByRole('button', { name: t(lang, 'protectionTitle') });
+    expect(disclosure.getAttribute('aria-controls')).toBe('privacy-protection-body');
+    expect(document.getElementById('privacy-vault-body')).toBeNull();
+    expect(screen.queryByText(t(lang, 'privacyRowVault'))).toBeNull();
+    fireEvent.click(disclosure);
+    const protection = screen.getByTestId('prayer-protection');
+    expect(document.getElementById('privacy-protection-body').hidden).toBe(false);
+    expect(protection.getAttribute('data-account')).toBe('user-1');
+    expect(protection.getAttribute('data-show-title')).toBe('false');
+    expect(screen.getAllByText(t(lang, 'protectionTitle'))).toHaveLength(1);
   });
 
   it('warns before deleting and runs account erasure only after confirmation', async () => {

@@ -4,7 +4,9 @@
 export const AI_PROVIDER_CONSENT_REVISION = 'anthropic:1';
 
 export function getAiProvider() {
-  return import.meta.env.VITE_AI_PROVIDER === 'anthropic' ? 'anthropic' : 'ollama';
+  // Match the server's default. Private inference must be explicitly selected;
+  // an omitted build variable must never disclose Ollama while calling Claude.
+  return ['ollama', 'private'].includes(import.meta.env.VITE_AI_PROVIDER) ? 'ollama' : 'anthropic';
 }
 
 export function getAiProviderLabel() {

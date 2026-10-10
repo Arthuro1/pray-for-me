@@ -20,7 +20,7 @@ export default {
       },
       {
         "q": "Paano gumagana ang mga mungkahing talata?",
-        "a": "Kapag humingi ka ng mungkahi, ipinapadala ang pamagat at detalye ng panalangin sa isang AI service na nagmumungkahi ng mga talata sa Biblia. Ikaw ang babasa ng bawat talata at magpapasya kung alin ang angkop."
+        "a": "Sa iyong pahintulot, ipinapadala ang pamagat ng panalangin sa {provider} sa pamamagitan ng server ng Qetoret upang magmungkahi ng mga talata sa Biblia. Ipinapadala lang ang mga detalye at pinakabagong update kung pipiliin mong isama ang mga ito. Sinusuri mo ang teksto bago ang bawat kahilingang may kaugnayan sa panalangin. Ipinapadala rin sa serbisyong ito ang tekstong pipiliin mong isalin. Kasama rin ang iyong wika at, kung naaangkop, ang uri ng mungkahing pinili mo. Maaari mong bawiin ang pahintulot anumang oras sa Mga Setting upang ihinto ang mga susunod na kahilingan; hindi nito mababawi ang tekstong naipadala na. Basahin ang bawat iminungkahing talata at magpasya kung alin ang angkop."
       },
       {
         "q": "Social network ba ang Qetoret?",
@@ -28,11 +28,11 @@ export default {
       },
       {
         "q": "Para sa aling mga iglesia ang Qetoret?",
-        "a": "Para sa mga Kristiyano ng bawat tradisyon ng iglesia. Tinutulungan ka ng Qetoret na manalangin; hindi nito kailanman pinapalitan ang iyong lokal na iglesia, ang mga pastor nito o ang pakikisama nito."
+        "a": "Nakaugat sa Kasulatan at hinuhubog ng buhay na pananampalataya kay Jesu-Cristo, tinatanggap ng Qetoret ang mga Kristiyano mula sa iba't ibang tradisyon ng iglesia na nais lumago sa panalangin. Hindi nito kailanman pinapalitan ang iyong lokal na iglesia, ang mga pastor nito o ang pagsasama-sama ng mga mananampalataya."
       },
       {
         "q": "Anong mga wika ang suportado?",
-        "a": "Gumagana ang buong interface sa 16 na wika."
+        "a": "Available ang mga menu sa 16 na wika. Iba-iba ang saklaw ng mga debosyon: maaaring lumabas sa Ingles o Pranses ang ilang mas mahahabang aralin at plano ng panalangin. Kinukumpleto at sinusuri pa ang wika ng mga salin sa pahina ng pagpapakilala; minamarkahan sa menu ng wika ang mga saling hindi pa kumpleto."
       },
       {
         "q": "Libre ba?",
@@ -201,8 +201,8 @@ export default {
         "desc": "Ang Android app sa Google Play, o i-install ito mula sa browser sa iyong telepono o computer."
       },
       {
-        "title": "16 na wika",
-        "desc": "Palitan ang wika anumang oras."
+        "title": "Mga menu sa 16 na wika",
+        "desc": "Iba-iba ang saklaw ng debosyon; patuloy ang pagsusuri ng mga salin."
       },
       {
         "title": "Mahinahong paalala",
