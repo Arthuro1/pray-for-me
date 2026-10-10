@@ -1,3 +1,40 @@
+# Current Play update — 10 October 2026
+
+The prepared update is **1.0.5 (6)** for Qetoret, package **space.praystead.twa**,
+minSdk 24 / targetSdk 36. Web/About version is aligned to 1.0.5. The signed AAB
+and APK retain the existing upload key.
+
+Start with [update-1.0.5.md](update-1.0.5.md). The complete local pack is
+[android-twa/releases/1.0.5/qetoret-google-play-1.0.5-update-pack.zip](../../android-twa/releases/1.0.5/qetoret-google-play-1.0.5-update-pack.zip).
+It contains signed artifacts, frontend/source ZIPs, copy-ready listing text and
+release notes for all 16 Play languages, review instructions, declaration
+assessment and current validation evidence. **Existing images/screenshots are
+preserved and reused; none were regenerated.**
+
+| Current file | Use |
+| --- | --- |
+| [update-1.0.5.md](update-1.0.5.md) | Exact upload values and submission sequence |
+| [release-notes-1.0.5-all-locales.txt](release-notes-1.0.5-all-locales.txt) | Paste enabled-language release-note blocks into Console |
+| [listings](listings) | Per-language title, short/full description and release notes |
+| [update-app-access-1.0.5.txt](update-app-access-1.0.5.txt) | Reviewer directions; private credentials are entered only in Console |
+| [update-console-fields-1.0.5.json](update-console-fields-1.0.5.json) | Release fields, links and app-to-Play locale mapping |
+| [update-declarations-1.0.5.md](update-declarations-1.0.5.md) | App content/Data safety source-change assessment |
+| [update-deployment-1.0.5.md](update-deployment-1.0.5.md) | Website/API deployment and recovery flag requirements |
+| [update-readiness-1.0.5.md](update-readiness-1.0.5.md) | Current checks and remaining Console/device evidence |
+| [release-artifacts.md](release-artifacts.md) | Artifact identities, checksums and signed-release evidence |
+
+Current full unit suite: **304 files / 3,696 tests passed**. Production build,
+typecheck, strict lint, locales and all 12 local/live release checks passed.
+The new website UI still requires deployment; the local static build preserves
+disabled new-recovery-enrollment defaults. Confirm the intended host settings.
+Version code 6 availability, Play signing, private review access, installed-app
+acceptance and rollout settings remain Console/device checks.
+
+No website deployment, Play upload or publication was performed. The 8 October
+submission record below is preserved as history, including its older artifacts
+and observations.
+
+---
 # Qetoret Google Play submission pack
 
 Prepared from the repository on **8 October 2026**. Public website:

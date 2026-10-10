@@ -25,7 +25,7 @@ const savedCode = '00000-11111-22222-33333-44444-5';
 let health;
 
 function openDetails(key) {
-  const summary = screen.getByText(t(lang, key), { exact: false });
+  const summary = screen.getByText((_, element) => element.textContent.includes(t(lang, key)), { selector: 'summary' });
   fireEvent.click(summary);
   // Reflect the native toggle explicitly for jsdom versions without its default action.
   summary.closest('details').open = true;
@@ -171,11 +171,16 @@ describe('prayer protection readiness', () => {
     render(<PrayerProtection userId={userId} lang={lang} />);
     const dialog = await openBackupDialog();
     expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
+    const saveRail = within(dialog).getByRole('list', { name: t(lang, 'protectionStep', { step: 1, total: 2 }) });
+    expect(saveRail.querySelector('[aria-current="step"]').textContent).toContain(t(lang, 'protectionSaveStep'));
     fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
     expect(await within(dialog).findByText(code)).toBeTruthy();
+    expect(saveRail.querySelector('[aria-current="step"]').textContent).toContain(t(lang, 'protectionSaveStep'));
     expect(within(dialog).getByRole('button', { name: t(lang, 'protectionCodeSaved') }).disabled).toBe(false);
     expect(within(dialog).queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
     await saveAndContinue(dialog);
+    const checkRail = within(dialog).getByRole('list', { name: t(lang, 'protectionStep', { step: 2, total: 2 }) });
+    expect(checkRail.querySelector('[aria-current="step"]').textContent).toContain(t(lang, 'protectionCheckStep'));
     expect(writeClipboard).toHaveBeenCalledWith(code);
     expect(within(dialog).queryByText(code)).toBeNull();
     expect(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }).disabled).toBe(true);
@@ -227,7 +232,7 @@ describe('prayer protection readiness', () => {
     openDetails('protectionOptions');
     expect(screen.getByText(t(lang, 'protectionDeviceUnsupported'))).toBeTruthy();
     openDetails('protectionManageMethods');
-    expect(screen.getByRole('button', { name: t(lang, 'protectionEnroll') }).disabled).toBe(false);
+    expect(within(document.querySelector('.protection-methods')).getByRole('button', { name: t(lang, 'protectionAddPasskey') }).disabled).toBe(false);
     expect(screen.getByRole('button', { name: t(lang, 'protectionDeviceEnable') }).disabled).toBe(true);
   });
 
@@ -435,12 +440,40 @@ describe('prayer protection readiness', () => {
 describe('guided access setup', () => {
   it('cancels the explanation without launching device setup', async () => {
     render(<PrayerProtection userId={userId} lang={lang} />);
-    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionEnroll') }));
+    const opener = await screen.findByRole('button', { name: t(lang, 'protectionEnroll') });
+    opener.focus();
+    fireEvent.click(opener);
     const dialog = screen.getByRole('dialog', { name: t(lang, 'protectionSetupTitle') });
     fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'cancel') }));
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(services.enrollPasskeyRecovery).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: t(lang, 'protectionEnroll') }).disabled).toBe(false);
+    expect(opener.disabled).toBe(false);
+    expect(document.activeElement).toBe(opener);
+  });
+
+  it('requires confirmation before removing a saved method with its compact action', async () => {
+    health.methods = [passkey, emergency];
+    services.revokeRecoveryMethod.mockImplementation(async (_, methodId) => {
+      health = { ...health, methods: health.methods.filter((method) => method.id !== methodId) };
+      return { ok: true };
+    });
+    render(<PrayerProtection userId={userId} lang={lang} />);
+    await screen.findByText(t(lang, 'protectionTestRecorded'));
+    openDetails('protectionOptions'); openDetails('protectionManageMethods');
+    const remove = screen.getByRole('button', { name: `${t(lang, 'protectionRemove')}: Saved emergency code` });
+    fireEvent.click(remove);
+    const confirmation = screen.getByRole('dialog', { name: t(lang, 'protectionRemove') });
+    expect(within(confirmation).getByText(t(lang, 'protectionRemoveConfirm'))).toBeTruthy();
+    expect(services.revokeRecoveryMethod).not.toHaveBeenCalled();
+    fireEvent.click(within(confirmation).getByRole('button', { name: t(lang, 'cancel') }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(services.revokeRecoveryMethod).not.toHaveBeenCalled();
+    fireEvent.click(remove);
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t(lang, 'protectionRemove') }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(services.revokeRecoveryMethod).toHaveBeenCalledWith(userId, emergency.id);
+    expect(screen.queryByRole('button', { name: `${t(lang, 'protectionRemove')}: Saved emergency code` })).toBeNull();
+    expect(screen.getByRole('button', { name: `${t(lang, 'protectionRemove')}: Saved passkey` })).toBeTruthy();
   });
 
   it.each([

@@ -1,0 +1,95 @@
+<am>
+- የጸሎት ጥበቃ ገጾች ይበልጥ የተረጋጋና ግልጽ ንድፍ አግኝተዋል።
+- መዳረሻን ማረጋገጥና የመጠባበቂያ ኮድ ማዘጋጀት ቀላል ሆነዋል።
+- የተቀመጡ መዳረሻዎችን ማስተዳደር ቀላል ሆኗል።
+</am>
+
+<ar>
+- تصميم أكثر هدوءًا ووضوحًا لحماية صلواتك.
+- تحقق أبسط من الوصول وإعداد أسهل للرمز الاحتياطي.
+- إدارة أسهل لطرق الوصول المحفوظة.
+</ar>
+
+<de-DE>
+- Ruhigeres, übersichtlicheres Design für den Gebetsschutz.
+- Einfachere Zugangsprüfung und Einrichtung von Ersatzcodes.
+- Gespeicherte Zugänge lassen sich leichter verwalten.
+</de-DE>
+
+<en-US>
+- A calmer, clearer design for prayer protection.
+- Simpler access verification and backup-code setup.
+- Easier management of saved access methods.
+</en-US>
+
+<es-ES>
+- Un diseño más sereno y claro para proteger tus oraciones.
+- Verificación de acceso y configuración del código de respaldo más sencillas.
+- Gestión más fácil de los accesos guardados.
+</es-ES>
+
+<fa>
+- طراحی آرام‌تر و واضح‌تر برای محافظت از دعاها.
+- بررسی دسترسی و تنظیم کد پشتیبان ساده‌تر شده است.
+- مدیریت آسان‌تر روش‌های دسترسی ذخیره‌شده.
+</fa>
+
+<fil>
+- Mas maaliwalas at malinaw na disenyo para sa proteksiyon ng mga panalangin.
+- Mas simpleng pag-verify ng access at pag-set up ng backup code.
+- Mas madaling pamamahala ng mga naka-save na access.
+</fil>
+
+<fr-FR>
+- Un design plus soigné et plus lisible pour protéger vos prières.
+- Une vérification d’accès et des codes de secours plus simples.
+- Une gestion plus claire de vos accès enregistrés.
+</fr-FR>
+
+<hi-IN>
+- प्रार्थना सुरक्षा के लिए अधिक शांत और स्पष्ट डिज़ाइन।
+- ऐक्सेस की जाँच और बैकअप कोड सेट करना अधिक आसान।
+- सहेजे गए ऐक्सेस के तरीकों का आसान प्रबंधन।
+</hi-IN>
+
+<id>
+- Tampilan perlindungan doa yang lebih tenang dan jelas.
+- Verifikasi akses dan pengaturan kode cadangan yang lebih sederhana.
+- Pengelolaan akses tersimpan yang lebih mudah.
+</id>
+
+<ja-JP>
+- 祈りの保護画面を、より落ち着いた見やすいデザインに。
+- アクセスの確認と予備のコードの設定を簡単に。
+- 保存したアクセス方法を管理しやすくしました。
+</ja-JP>
+
+<ko-KR>
+- 기도 보호 화면을 더욱 차분하고 알아보기 쉽게 개선했습니다.
+- 접근 방법 확인과 백업 코드 설정이 더 간단해졌습니다.
+- 저장된 접근 방법을 더 쉽게 관리할 수 있습니다.
+</ko-KR>
+
+<pt-BR>
+- Um visual mais tranquilo e claro para proteger suas orações.
+- Verificação de acesso e configuração do código de reserva mais simples.
+- Gerenciamento mais fácil dos acessos salvos.
+</pt-BR>
+
+<ru-RU>
+- Более спокойный и понятный дизайн защиты молитв.
+- Более простая проверка доступа и настройка запасного кода.
+- Удобное управление сохранёнными способами доступа.
+</ru-RU>
+
+<sw>
+- Muonekano mtulivu na wazi zaidi wa ulinzi wa maombi.
+- Ukaguzi wa ufikiaji na kuweka msimbo wa akiba vimerahisishwa.
+- Usimamizi rahisi wa njia za ufikiaji zilizohifadhiwa.
+</sw>
+
+<zh-CN>
+- 祷告保护界面更加简洁清晰。
+- 访问验证和备用码设置更简单。
+- 更方便地管理已保存的访问方式。
+</zh-CN>

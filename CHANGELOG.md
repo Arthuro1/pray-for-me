@@ -6,6 +6,19 @@ and rollback notes. Unreleased entries are moved into a dated version at release
 
 ## Unreleased
 
+### Changed — clearer prayer protection and recovery
+
+- Prayer protection dialogs have a soft violet header, restrained headings,
+  clearer action spacing, and one focused success confirmation. Backup saving
+  and copy verification share a persistent two-step guide.
+- Saved access methods sit in one framed panel with distinct icons, compact
+  removal controls, and an add-access footer. Labels in all 16 interface languages are
+  shorter; keyboard focus, verification, and removal confirmation are preserved.
+- Android wrapper 1.0.5 (versionCode 6) is prepared as a new signed release.
+  The website build is packaged alongside it because the wrapper loads
+  qetoret.com; the UI reaches Android users through deployment of that website.
+
+
 ### Changed — Today as one altar card; a warmer FAQ; two lines removed
 
 - **Today** drops the "Your altar today" eyebrow: the deep-violet card says it.

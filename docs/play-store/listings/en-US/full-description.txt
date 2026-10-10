@@ -1,29 +1,16 @@
-Qetoret is a Christian prayer companion for bringing what is on your heart before God, returning to it with intention and remembering answers over time.
+Qetoret is a Christian prayer companion for bringing what is on your heart before God, returning to prayer with intention and remembering answers over time.
 
-BEGIN WITH A PRAYER
-Start a quiet prayer moment without creating an account. When you choose to save your prayer, sign in to keep it in your personal journal.
+Start a quiet prayer moment without an account. Sign in to save requests in your personal journal. Write prayers for yourself or others, add updates and notes, and record answered prayers and testimonies.
 
-KEEP A PRAYER JOURNAL
-Write requests for yourself or others, add updates and prayer notes, and record answered prayers and testimonies. Organize what you carry in prayer through circles such as your household, church and the nations.
+Build a rhythm with prayers for today, recurring schedules, a calendar and optional reminders. Explore guided prayer plans, Bible passages and readings, and keep your reflections as you go.
 
-BUILD A RHYTHM
-Find the prayers due today, set a recurring rhythm and plan follow-ups. Use the calendar to see what is coming and enable optional reminders.
+Create or join prayer groups. Share selected requests with their members, carry one another's prayers and encourage each other with updates. Add photos, voice recordings or video to supported updates and testimonies.
 
-GROW THROUGH SCRIPTURE
-Explore guided prayer plans, Bible passages and readings about prayer and the Christian life. Walk through a plan at your own pace and keep personal reflections along the way.
+Private journal content is encrypted in your browser before upload. Group content is encrypted for its members, who can read and keep what you share. Set up optional vault recovery before changing devices or browsers so you can unlock your encrypted journal there.
 
-PRAY TOGETHER
-Create or join prayer groups, share selected requests with their members, carry one another's prayers and encourage each other with updates. Choose what to share and with whom.
+An account is needed for syncing and community features. Some journal actions work offline and sync when a connection returns. Sign-in, media uploads and other online features need internet access.
 
-CAPTURE MORE THAN WORDS
-Add photos, voice recordings or video to supported updates and testimonies. Record a note during a prayer session and return to it later.
-
-PRIVACY AND RECOVERY
-Private journal content is encrypted in your browser before upload. Shared group content is encrypted for its members, who can read and keep what you share. Set up optional vault recovery before changing devices or browsers so you can unlock your encrypted journal there.
-
-You can start as a guest. An account is needed for syncing and community features. Some journal actions work offline and sync when a connection returns; sign-in, media uploads and other online features need internet access.
-
-Qetoret is free to use and available in 16 interface languages, including English and French.
+Qetoret is free to use and offers 16 interface languages. Android 7.0 or later is required.
 
 Website: https://qetoret.com
 Privacy: https://qetoret.com/privacy.html

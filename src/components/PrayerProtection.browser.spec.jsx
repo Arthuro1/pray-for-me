@@ -101,6 +101,13 @@ describe('Prayer protection presentation', () => {
     expect(bounds.top).toBeGreaterThanOrEqual(0); expect(bounds.bottom).toBeLessThanOrEqual(height);
     expect(next.disabled).toBe(false);
     expect(next.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
+    const nextBounds = next.getBoundingClientRect();
+    expect(nextBounds.left - bounds.left).toBeGreaterThanOrEqual(16);
+    expect(bounds.right - nextBounds.right).toBeGreaterThanOrEqual(16);
+    const close = within(dialog).getByRole('button', { name: t(lang, 'cancel') });
+    checkHorizontalFit(close, width);
+    expect(close.getBoundingClientRect().width).toBeGreaterThanOrEqual(44);
+    expect(close.getBoundingClientRect().height).toBeGreaterThanOrEqual(44);
     if (lang === 'fr') await page.screenshot({ path: `../../design-qa/prayer-protection-guide-${width > 500 ? 'desktop' : 'mobile'}.png`, element: dialog });
   });
 
@@ -116,20 +123,45 @@ describe('Prayer protection presentation', () => {
     expect(await screen.findByRole('dialog', { name: t('fr', 'protectionBackupTitle') })).toBeTruthy();
   });
 
-  it('shows a separate save step and a compact backup dialog on a phone', async () => {
-    await page.viewport(390, 740); document.documentElement.dataset.theme = 'dark';
-    showProtection('fr');
-    fireEvent.click(await screen.findByRole('button', { name: t('fr', 'protectionPreferCode') }));
-    const dialog = await screen.findByRole('dialog', { name: t('fr', 'protectionBackupTitle') });
+  it.each([['fr', 1080], ['fr', 390], ['ar', 360]])('guides backup saving and checking at %s %ipx', async (lang, width) => {
+    await page.viewport(width, 800); await loadLocale(lang);
+    document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dataset.theme = 'dark';
+    showProtection(lang);
+    fireEvent.click(await screen.findByRole('button', { name: t(lang, 'protectionPreferCode') }));
+    const dialog = await screen.findByRole('dialog', { name: t(lang, 'protectionBackupTitle') });
+    const captureSize = lang === 'ar' ? 'rtl' : width > 500 ? 'desktop' : 'mobile';
+    await document.fonts.ready;
+    await page.screenshot({ path: `../../design-qa/prayer-protection-backup-start-${captureSize}.png`, element: dialog });
     expect(services.generateEmergencyRecovery).not.toHaveBeenCalled();
-    fireEvent.click(within(dialog).getByRole('button', { name: t('fr', 'protectionAddEmergency') }));
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionAddEmergency') }));
     await within(dialog).findByText('01234-56789-ABCDE-FGHJK-MNPQR-S'); await document.fonts.ready;
-    checkHorizontalFit(dialog, 390);
+    checkHorizontalFit(dialog, width);
     const bounds = dialog.getBoundingClientRect();
-    expect(bounds.top).toBeGreaterThanOrEqual(0); expect(bounds.bottom).toBeLessThanOrEqual(740);
-    expect(within(dialog).queryByLabelText(t('fr', 'protectionEmergency'))).toBeNull();
-    expect(within(dialog).getByRole('button', { name: t('fr', 'protectionCodeSaved') }).disabled).toBe(false);
-    await page.screenshot({ path: '../../design-qa/prayer-protection-backup.png', element: dialog });
+    expect(bounds.top).toBeGreaterThanOrEqual(0); expect(bounds.bottom).toBeLessThanOrEqual(800);
+    expect(within(dialog).queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+    expect(within(dialog).getByRole('button', { name: t(lang, 'protectionCodeSaved') }).disabled).toBe(false);
+    if (lang === 'fr' && width === 390) await page.screenshot({ path: '../../design-qa/prayer-protection-backup.png', element: dialog });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionCodeSaved') }));
+    expect(within(dialog).queryByText('01234-56789-ABCDE-FGHJK-MNPQR-S')).toBeNull();
+    const input = within(dialog).getByLabelText(t(lang, 'protectionEmergency'));
+    checkHorizontalFit(input, width);
+    expect(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }).disabled).toBe(true);
+    await page.screenshot({ path: `../../design-qa/prayer-protection-backup-check-${captureSize}.png`, element: dialog });
+    services.verifyEmergencyRecovery.mockImplementation(async () => {
+      services.getProtectionStatus.mockResolvedValue({ ok: true, methods: [
+        { id: 'synthetic-backup', type: 'emergency-code', status: 'active', revision: 1, wrapper: {} },
+      ], capability: { canEnroll: true, canProtectDevice: true } });
+      return { ok: true };
+    });
+    fireEvent.change(input, { target: { value: '01234-56789-ABCDE-FGHJK-MNPQR-S' } });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'protectionVerifyCode') }));
+    await within(dialog).findByRole('heading', { name: t(lang, 'protectionBackupDone') });
+    expect(within(dialog).queryByLabelText(t(lang, 'protectionEmergency'))).toBeNull();
+    expect(within(dialog).queryByText('01234-56789-ABCDE-FGHJK-MNPQR-S')).toBeNull();
+    expect(within(dialog).getByRole('button', { name: t(lang, 'doneBtn') }).disabled).toBe(false);
+    checkHorizontalFit(dialog, width);
+    await page.screenshot({ path: `../../design-qa/prayer-protection-backup-done-${captureSize}.png`, element: dialog });
   });
 
   it('opens the first saved access directly and keeps other choices collapsed', async () => {
@@ -175,6 +207,83 @@ describe('Prayer protection presentation', () => {
     await page.screenshot({ path: `../../design-qa/prayer-protection-ready-${width > 500 ? 'desktop' : 'mobile'}.png`, element: document.querySelector('main') });
   });
 
+  it.each([['fr', 1080], ['fr', 390], ['ar', 360]])('keeps saved access verification compact at %s %ipx', async (lang, width) => {
+    await page.viewport(width, 800); await loadLocale(lang);
+    document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dataset.theme = 'dark';
+    services.getProtectionStatus.mockResolvedValue({ ok: true, methods: [
+      { id: 'saved-access', type: 'passkey', status: 'active', revision: 1, wrapper: {} },
+    ], capability: { canEnroll: true, canProtectDevice: true } });
+    showProtection(lang);
+    const heading = await screen.findByRole('heading', { name: t(lang, 'protectionTestRecorded') });
+    const opener = within(heading.closest('.protection-card')).getByRole('button', { name: t(lang, 'protectionVerifyMethod') });
+    opener.focus(); fireEvent.click(opener);
+    const dialog = await screen.findByRole('dialog', { name: t(lang, 'protectionVerifyMethod') });
+    await document.fonts.ready;
+    checkHorizontalFit(dialog, width);
+    expect(within(dialog).queryByRole('textbox')).toBeNull();
+    expect(within(dialog).getByRole('button', { name: t(lang, 'protectionSetupContinue') }).disabled).toBe(false);
+    const captureSize = lang === 'ar' ? 'rtl' : width > 500 ? 'desktop' : 'mobile';
+    await page.screenshot({ path: `../../design-qa/prayer-protection-verify-${captureSize}.png`, element: dialog });
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'cancel') }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(document.activeElement).toBe(opener);
+    expect(services.verifyPasskeyRecovery).not.toHaveBeenCalled();
+  });
+  it.each([
+    ['fr', 1080, '100%'], ['fr', 390, '100%'], ['ar', 360, '100%'], ['de', 320, '150%'], ['de', 540, '150%'],
+  ])('keeps saved method actions readable with long labels at %s %ipx (%s text)', async (lang, width, textSize) => {
+    await page.viewport(width, 900); await loadLocale(lang);
+    document.documentElement.lang = lang; document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.dataset.theme = 'dark'; document.documentElement.style.fontSize = textSize;
+    const longLabel = `${t(lang, 'protectionEmergency')} ${t(lang, 'protectionPasskey')} ${t(lang, 'protectionEmergency')}`;
+    const methods = [
+      { id: 'saved-access', type: 'passkey', status: 'active', revision: 1, wrapper: {}, verifiedHere: true, label: t(lang, 'protectionPasskey') },
+      { id: 'saved-backup', type: 'emergency-code', status: 'active', revision: 1, wrapper: {}, label: longLabel, createdAt: '2026-10-10T10:00:00Z' },
+      { id: 'unfinished-backup', type: 'emergency-code', status: 'pending', revision: 1, wrapper: {}, label: `${longLabel} 2` },
+    ];
+    services.getProtectionStatus.mockResolvedValue({ ok: true, deviceProtected: true, methods,
+      capability: { canEnroll: true, canProtectDevice: true } });
+    showProtection(lang);
+    await screen.findByText(t(lang, 'protectionAccessReady')); await document.fonts.ready;
+    fireEvent.click(screen.getByText(t(lang, 'protectionOptions')));
+    fireEvent.click(screen.getByText((_, element) => element.textContent.includes(t(lang, 'protectionManageMethods')), { selector: 'summary' }));
+    const list = document.querySelector('.protection-methods');
+    expect(list.checkVisibility()).toBe(true);
+    const rows = Array.from(list.querySelectorAll('li'));
+    expect(rows).toHaveLength(methods.length);
+    rows.forEach((row, index) => {
+      checkHorizontalFit(row, width);
+      const remove = within(row).getByRole('button', { name: `${t(lang, 'protectionRemove')}: ${methods[index].label}` });
+      const removeBounds = remove.getBoundingClientRect();
+      expect(removeBounds.width).toBeGreaterThanOrEqual(44);
+      expect(removeBounds.height).toBeGreaterThanOrEqual(44);
+      expect(removeBounds.width).toBeLessThanOrEqual(56);
+      checkHorizontalFit(remove, width);
+      const body = row.querySelector('.protection-method__body').getBoundingClientRect();
+      const actions = removeBounds;
+      if (body.top < actions.bottom && actions.top < body.bottom) {
+        expect(body.right <= actions.left + 1 || actions.right <= body.left + 1).toBe(true);
+      }
+    });
+    expect(within(list).getByRole('button', { name: t(lang, 'protectionAddPasskey') }).disabled).toBe(false);
+    expect(within(rows[2]).getByRole('button', { name: t(lang, 'protectionVerifyMethod') }).disabled).toBe(false);
+    await page.screenshot({ path: `../../design-qa/prayer-protection-methods-${lang === 'ar' ? 'rtl' : lang === 'de' ? 'large-text-' + width : width > 500 ? 'desktop' : 'mobile'}.png`, element: list });
+    if (lang === 'fr') {
+      cleanup();
+      services.getProtectionStatus.mockResolvedValue({ ok: true, deviceProtected: true,
+        methods: methods.map((method, index) => ({ ...method, label: index === 0 ? t(lang, 'protectionPasskey') : `${t(lang, 'protectionEmergency')} ${index}` })),
+        capability: { canEnroll: true, canProtectDevice: true } });
+      showProtection(lang);
+      await screen.findByText(t(lang, 'protectionAccessReady'));
+      fireEvent.click(screen.getByText(t(lang, 'protectionOptions')));
+      fireEvent.click(screen.getByText((_, element) => element.textContent.includes(t(lang, 'protectionManageMethods')), { selector: 'summary' }));
+      const shortList = document.querySelector('.protection-methods');
+      checkHorizontalFit(shortList, width);
+      expect(shortList.querySelectorAll('li')).toHaveLength(3);
+      await page.screenshot({ path: `../../design-qa/prayer-protection-methods-short-${width > 500 ? 'desktop' : 'mobile'}.png`, element: shortList });
+    }
+  });
   it('keeps keyboard focus inside the explanation when it opens on its heading', async () => {
     await page.viewport(390, 740);
     showProtection('fr');
@@ -183,6 +292,8 @@ describe('Prayer protection presentation', () => {
     const heading = within(dialog).getByRole('heading', { name: t('fr', 'protectionSetupTitle') });
     expect(document.activeElement).toBe(heading);
     await userEvent.tab({ shift: true });
+    expect(document.activeElement).toBe(within(dialog).getByRole('button', { name: t('fr', 'protectionPreferCode') }));
+    await userEvent.tab();
     expect(document.activeElement).toBe(within(dialog).getByRole('button', { name: t('fr', 'cancel') }));
     await userEvent.tab();
     expect(document.activeElement).toBe(within(dialog).getByRole('button', { name: t('fr', 'protectionSetupContinue') }));

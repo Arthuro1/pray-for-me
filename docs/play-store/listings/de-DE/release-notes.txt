@@ -1,0 +1,3 @@
+- Ruhigeres, übersichtlicheres Design für den Gebetsschutz.
+- Einfachere Zugangsprüfung und Einrichtung von Ersatzcodes.
+- Gespeicherte Zugänge lassen sich leichter verwalten.

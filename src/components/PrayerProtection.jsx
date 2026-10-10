@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Check, Copy, Download, Fingerprint, KeyRound, Lock, ShieldCheck, Upload } from 'lucide-react';
+import { Check, ChevronDown, Copy, Download, Fingerprint, KeyRound, Lock, ShieldCheck, Trash2, Upload, X } from 'lucide-react';
 import { t } from '../i18n';
 import useVaultStore from '../store/vaultStore';
 import {
@@ -75,6 +75,7 @@ function AccessSetupDialog({ lang, method, busy, message, onContinue, onClose, o
       <div className="protection-dialog__heading">
         <span className="icon-tile tone-plum"><Fingerprint size={20} aria-hidden="true" /></span>
         <h2 id={titleId} tabIndex={-1} className="q-section-title">{t(lang, method ? 'protectionVerifyMethod' : 'protectionSetupTitle')}</h2>
+        <button type="button" className="icon-button protection-dialog__close" disabled={busy} onClick={onClose} aria-label={t(lang, 'cancel')}><X size={18} aria-hidden="true" /></button>
       </div>
       <p className="q-body-sm">{t(lang, method ? 'protectionOpenHint' : 'protectionSetupIntro')}</p>
       {!method && <ol className="protection-instructions">
@@ -82,9 +83,10 @@ function AccessSetupDialog({ lang, method, busy, message, onContinue, onClose, o
         <li>{t(lang, 'protectionSetupConfirm')}</li>
       </ol>}
       {message && <p role="alert" className="q-notice">{message}</p>}
-      <PrimaryButton icon={Fingerprint} disabled={busy} aria-busy={busy} onClick={onContinue}>{t(lang, 'protectionSetupContinue')}</PrimaryButton>
-      {onUseCode && <QuietButton disabled={busy} onClick={onUseCode}>{t(lang, 'protectionPreferCode')}</QuietButton>}
-      <QuietButton disabled={busy} onClick={onClose}>{t(lang, 'cancel')}</QuietButton>
+      <div className="protection-dialog__actions">
+        <PrimaryButton icon={Fingerprint} disabled={busy} aria-busy={busy} onClick={onContinue}>{t(lang, 'protectionSetupContinue')}</PrimaryButton>
+        {onUseCode && <QuietButton disabled={busy} onClick={onUseCode}>{t(lang, 'protectionPreferCode')}</QuietButton>}
+      </div>
     </div>
   </div>;
 }
@@ -144,16 +146,24 @@ function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onComplete
     finally { if (url) setTimeout(() => URL.revokeObjectURL(url), 0); }
   };
   return <div className="dialog-backdrop fixed inset-0 z-[90] flex items-end sm:items-center justify-center p-4">
-    <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="emergency-code-title" className="q-dialog protection-dialog">
-      <div className="protection-dialog__heading"><span className="icon-tile tone-plum"><KeyRound size={20} aria-hidden="true" /></span>
+    <div ref={ref} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="emergency-code-title" className={`q-dialog protection-dialog${step === 'done' ? ' protection-dialog--success' : ''}`}>
+      <div className="protection-dialog__heading"><span className={step === 'done' ? 'protection-success-icon' : 'icon-tile tone-plum'}>{step === 'done' ? <Check size={24} aria-hidden="true" /> : <KeyRound size={20} aria-hidden="true" />}</span>
         <h2 id="emergency-code-title" tabIndex={-1} className="q-section-title">{t(lang, step === 'done' ? 'protectionBackupDone' : 'protectionBackupTitle')}</h2>
+        {step !== 'done' && <button type="button" className="icon-button protection-dialog__close" disabled={busy} onClick={onClose} aria-label={t(lang, 'close')}><X size={18} aria-hidden="true" /></button>}
       </div>
+      {step !== 'done' && <ol className="protection-backup-preview" aria-label={t(lang, 'protectionStep', { step: step === 'check' ? 2 : 1, total: 2 })}>
+        <li className={step === 'check' ? 'is-complete' : 'is-current'} aria-current={step !== 'check' ? 'step' : undefined}>
+          {step === 'check' ? <Check size={17} aria-hidden="true" /> : <Download size={17} aria-hidden="true" />}<span>{t(lang, 'protectionSaveStep')}</span>
+        </li>
+        <li className={step === 'check' ? 'is-current' : ''} aria-current={step === 'check' ? 'step' : undefined}>
+          <Check size={17} aria-hidden="true" /><span>{t(lang, 'protectionCheckStep')}</span>
+        </li>
+      </ol>}
       {step === 'start' && <>
-        <p className="q-body-sm">{t(lang, 'protectionBackupIntro')}</p>
-        <PrimaryButton disabled={busy} aria-busy={busy} onClick={generate}>{t(lang, 'protectionAddEmergency')}</PrimaryButton>
+        <p className="q-body-sm">{t(lang, 'protectionBackupBody')}</p>
+        <div className="protection-dialog__actions"><PrimaryButton disabled={busy} aria-busy={busy} onClick={generate}>{t(lang, 'protectionAddEmergency')}</PrimaryButton></div>
       </>}
       {step === 'save' && <>
-        <p className="section-label">{t(lang, 'protectionSaveStep')}</p>
         <p className="q-body-sm">{t(lang, 'protectionSaveCode')}</p>
         <div className="protection-code" dir="ltr"><code>{result.code}</code></div>
         <div className="protection-actions">
@@ -163,22 +173,19 @@ function EmergencyCodeDialog({ lang, userId, existingMethod, onClose, onComplete
             catch { setMessage(t(lang, 'protectionSaveCode')); }
           }}>{t(lang, 'vaultCopyCode')}</QuietButton>
         </div>
-        <PrimaryButton onClick={() => { setMessage(''); setStep('check'); }}>{t(lang, 'protectionCodeSaved')}</PrimaryButton>
+        <div className="protection-dialog__actions"><PrimaryButton onClick={() => { setMessage(''); setStep('check'); }}>{t(lang, 'protectionCodeSaved')}</PrimaryButton></div>
       </>}
       {step === 'check' && <>
-        <p className="section-label">{t(lang, 'protectionCheckStep')}</p>
         <p className="q-body-sm">{t(lang, 'protectionRepeatCode')}</p>
         <BackupInput key={userId} lang={lang} code={code} onChange={setCode} disabled={busy} onError={setMessage} />
-        <PrimaryButton icon={Check} disabled={busy || !code.trim()} aria-busy={busy} onClick={verify}>{t(lang, 'protectionVerifyCode')}</PrimaryButton>
+        <div className="protection-dialog__actions"><PrimaryButton icon={Check} disabled={busy || !code.trim()} aria-busy={busy} onClick={verify}>{t(lang, 'protectionVerifyCode')}</PrimaryButton></div>
       </>}
       {step === 'done' && <>
-        <span className="protection-success-icon"><Check size={26} aria-hidden="true" /></span>
         <p className="q-body-sm">{t(lang, 'protectionBackupDoneBody')}</p>
-        <PrimaryButton onClick={onComplete}>{t(lang, 'doneBtn')}</PrimaryButton>
+        <div className="protection-dialog__actions"><PrimaryButton onClick={onComplete}>{t(lang, 'doneBtn')}</PrimaryButton></div>
       </>}
       {step === 'check' && existingMethod && <QuietButton disabled={busy} onClick={() => { setResult(null); setCode(''); setMessage(''); setStep('start'); }}>{t(lang, 'protectionAddEmergency')}</QuietButton>}
       {message && <p role="status" className="q-notice">{message}</p>}
-      {step !== 'done' && <QuietButton disabled={busy} onClick={onClose}>{t(lang, 'close')}</QuietButton>}
     </div>
   </div>;
 }
@@ -369,17 +376,17 @@ export default function PrayerProtection({ userId, lang = 'fr', showTitle = true
             </div> : <p className="protection-hint">{t(lang, 'protectionDeviceSetupBody')}</p>}
         </div>
         {methods.length > 0 && <details className="protection-details protection-methods">
-          <summary>{t(lang, 'protectionManageMethods')} <span className="protection-count">{methods.length}</span></summary>
-          {canEnroll && passkeys.length > 0 && <SecondaryButton icon={KeyRound} disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => openSetup(pendingPasskey)}>{t(lang, 'protectionEnroll')}</SecondaryButton>}
+          <summary><span>{t(lang, 'protectionManageMethods')}</span>{' '}<span className="protection-count">{methods.length}</span><ChevronDown size={17} aria-hidden="true" /></summary>
           <ul>{methods.map((method) => <li key={method.id}>
-            <KeyRound size={17} aria-hidden="true" /><div className="protection-method__body"><strong>{methodLabel(method, lang, methods)}</strong>
-              {method.status !== 'active' ? <p>{t(lang, 'protectionNeedsVerification')}</p> : Number.isFinite(Date.parse(method.createdAt)) && <p>{new Date(method.createdAt).toLocaleDateString(lang)}</p>}
+            <span className="protection-method__icon">{method.type === 'passkey' ? <Fingerprint size={19} aria-hidden="true" /> : <KeyRound size={19} aria-hidden="true" />}</span><div className="protection-method__body"><strong>{methodLabel(method, lang, methods)}</strong>
+              {method.status !== 'active' ? <p className="protection-method__pending">{t(lang, 'protectionNeedsVerification')}</p> : Number.isFinite(Date.parse(method.createdAt)) && <p><time dateTime={method.createdAt}>{new Date(method.createdAt).toLocaleDateString(lang)}</time></p>}
             </div>
-            <div className="protection-actions">
-              {method.status !== 'active' && canVerify(method) && <QuietButton disabled={busy} onClick={() => method.type === 'passkey' ? openSetup(method) : setEmergencyDialog({ method })}>{t(lang, 'protectionVerifyMethod')}</QuietButton>}
-              <QuietButton disabled={busy} aria-label={`${t(lang, 'protectionRemove')}: ${methodLabel(method, lang, methods)}`} onClick={() => setRevoke(method)}>{t(lang, 'protectionRemove')}</QuietButton>
+            <div className="protection-actions protection-method__actions">
+              {method.status !== 'active' && canVerify(method) && <QuietButton icon={Check} disabled={busy} onClick={() => method.type === 'passkey' ? openSetup(method) : setEmergencyDialog({ method })}>{t(lang, 'protectionVerifyMethod')}</QuietButton>}
+              <button type="button" className="icon-button protection-method__remove" disabled={busy} aria-label={`${t(lang, 'protectionRemove')}: ${methodLabel(method, lang, methods)}`} title={`${t(lang, 'protectionRemove')}: ${methodLabel(method, lang, methods)}`} onClick={() => setRevoke(method)}><Trash2 size={17} aria-hidden="true" /></button>
             </div>
           </li>)}</ul>
+          {canEnroll && passkeys.length > 0 && <div className="protection-methods__footer"><QuietButton icon={Fingerprint} className="protection-methods__add" disabled={busy || !checked || !health.capability?.canEnroll} onClick={() => openSetup(pendingPasskey)}>{t(lang, pendingPasskey ? 'protectionVerifyMethod' : 'protectionAddPasskey')}</QuietButton></div>}
         </details>}
         {hasLegacy && <details className="protection-details"><summary>{t(lang, 'protectionLegacySettings')}</summary>{legacyActions}</details>}
       </div>

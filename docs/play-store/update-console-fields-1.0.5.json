@@ -1,0 +1,81 @@
+{
+  "preparedAtUtc": "2026-10-10T07:35:31.760Z",
+  "status": "Prepared locally; not uploaded, submitted, published or deployed",
+  "app": {
+    "title": "Qetoret",
+    "applicationId": "space.praystead.twa",
+    "versionName": "1.0.5",
+    "versionCode": 6,
+    "webVersion": "1.0.5",
+    "minimumAndroid": "7.0",
+    "minSdk": 24,
+    "targetSdk": 36
+  },
+  "release": {
+    "name": "1.0.5 (6) - clearer prayer protection",
+    "aab": "android-twa/releases/1.0.5/qetoret-1.0.5-6.aab",
+    "aabSha256": "67413d674cdfe760e9830e2b721743d2622e608c639f69a765fd34374b1cc734",
+    "notes": "docs/play-store/release-notes-1.0.5-all-locales.txt",
+    "localeMapping": {
+      "am": "am",
+      "ar": "ar",
+      "de": "de-DE",
+      "en": "en-US",
+      "es": "es-ES",
+      "fa": "fa",
+      "tl": "fil",
+      "fr": "fr-FR",
+      "hi": "hi-IN",
+      "id": "id",
+      "ja": "ja-JP",
+      "ko": "ko-KR",
+      "pt": "pt-BR",
+      "ru": "ru-RU",
+      "sw": "sw",
+      "zh": "zh-CN"
+    },
+    "track": "Use intended update track; validate via internal testing before production",
+    "consoleVersionCodeUnused": "Not inspected",
+    "rolloutPercentage": "Owner selection; no percentage assumed"
+  },
+  "listing": {
+    "title": "Qetoret",
+    "shortAndFullDescriptions": "docs/play-store/qetoret-google-play-descriptions-16-languages.txt",
+    "existingGraphicsAction": "Reuse current icon, feature graphic and screenshots; no files regenerated or changed",
+    "assets": "docs/play-store/assets",
+    "imageCount": 26
+  },
+  "publicLinks": {
+    "website": "https://qetoret.com",
+    "privacyPolicy": "https://qetoret.com/privacy.html",
+    "accountDeletion": "https://qetoret.com/delete-account.html",
+    "terms": "https://qetoret.com/terms.html",
+    "digitalAssetLinks": "https://qetoret.com/.well-known/assetlinks.json"
+  },
+  "support": {
+    "email": "arthur.meteng@gmail.com",
+    "source": "Existing public legal/listing contact",
+    "monitoringConfirmed": "Owner confirmation required"
+  },
+  "appAccess": {
+    "restricted": true,
+    "instructionName": "Qetoret full review access",
+    "instructions": "docs/play-store/update-app-access-1.0.5.txt",
+    "credentials": "Enter verified disposable reviewer credentials and recovery details only in Play Console; not included in this pack"
+  },
+  "declarations": {
+    "delta": "Visual layout, wording/translations and version metadata only",
+    "guidance": "docs/play-store/update-declarations-1.0.5.md",
+    "productionAttestation": "Not performed"
+  },
+  "deployment": {
+    "sourceArchive": "android-twa/releases/1.0.5/qetoret-web-source-1.0.5.zip",
+    "frontendArchive": "android-twa/releases/1.0.5/qetoret-web-1.0.5.zip",
+    "instructions": "docs/play-store/update-deployment-1.0.5.md",
+    "webHosted": true,
+    "frontendIncludesServerlessApi": false,
+    "localProductionRecoveryEnrollmentEnabled": false,
+    "flagsChanged": false,
+    "performed": false
+  }
+}
