@@ -33,6 +33,7 @@
 // (`proseTranslations: []`). References resolve through the verse pipeline.
 import { DAYS } from './yourKingdomComeDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'father', from: 1, to: 6, titleKey: 'planKingdomMovementFather' },
@@ -52,6 +53,7 @@ export const YOUR_KINGDOM_COME = {
   titleKey: 'planKingdomTitle',
   subKey: 'planKingdomSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.kingdomCome14,
   movements: MOVEMENTS,
   intro: {

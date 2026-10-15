@@ -37,6 +37,7 @@
 // docs/PRAYER_PLANS.md). Research note: docs/plans/fruit10.md.
 import { DAYS } from './fruitOfTheSpiritDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'spirit', from: 1, to: 4, titleKey: 'planFruitMovementSpirit' },
@@ -56,6 +57,7 @@ export const FRUIT_OF_THE_SPIRIT = {
   titleKey: 'planFruitTitle',
   subKey: 'planFruitSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.fruit10,
   movements: MOVEMENTS,
   intro: {

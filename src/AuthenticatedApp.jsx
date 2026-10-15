@@ -40,6 +40,7 @@ import useTranslationStore from './store/translationStore';
 import useCommunityStore from './store/communityStore';
 import useNotificationStore from './store/notificationStore';
 import useVaultStore from './store/vaultStore';
+import useChurchStore from './store/churchStore';
 import VaultLockScreen from './components/VaultLockScreen';
 import AccountKeyRecoveryScreen from './components/AccountKeyRecoveryScreen';
 import AccountKeyUnavailableScreen from './components/AccountKeyUnavailableScreen';
@@ -312,6 +313,14 @@ export default function AuthenticatedApp({
     }
   }, [user?.id, loadTranslations, fetchPendingCount]);
 
+  // The church anchor is encrypted under the account key, so it is read only
+  // once the vault is open, and forgotten when the account or lock changes.
+  useEffect(() => {
+    const { load, reset } = useChurchStore.getState();
+    if (!user?.id || !vaultUnlocked) { reset(); return; }
+    load(user.id);
+  }, [user?.id, vaultUnlocked]);
+
   // An anonymous visitor opening an invite link only ever sees the auth screen
   // (the router below is gated on `user`), so remember the intended path. After
   // sign-in — even a round-trip through email confirmation or OAuth — replay it
@@ -503,7 +512,7 @@ export default function AuthenticatedApp({
           <ErrorBoundary lang={lang} resetKey={location.pathname}>
             <Suspense fallback={<PageLoader />}>
               <Routes>
-              <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} />} />
+              <Route path="/" element={<HomeTab onAdd={openAdd} onEdit={openEdit} onAddInCircle={openAddInCircle} />} />
               <Route path="/prayers" element={<PrayersTab onAdd={openAdd} onAddInCircle={openAddInCircle} />} />
               <Route path="/prayers/:id" element={<PersonalPrayerPage onEdit={openEdit} onPrayInCircle={openAddInCircle} />} />
               {/* The answered gallery is the Journal's second segment now; the

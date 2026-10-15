@@ -1,0 +1,34 @@
+{
+  "locale": "id",
+  "status": "draft",
+  "note": "AI-drafted detection patterns, not native approval. Patterns flag risks for a human reviewer; they never approve or reject wording on their own.",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": ["allah", "tuhan", "bapa", "yesus", "kristus", "roh kudus", "roh", "abba", "mahakuasa", "juruselamat", "pencipta", "yang mahatinggi"],
+  "prayerDirections": ["mintalah", "minta(?:lah)? kepada (?:allah|tuhan)", "berdoalah", "berdoa", "bersyukurlah", "ucapkan syukur", "bawalah", "akuilah", "sebutkan", "katakan kepada (?:allah|tuhan)"],
+  "qualifiers": [
+    "mungkin", "barangkali", "dapat", "bisa", "berharap", "harapan", "berdoa (?:agar|supaya|untuk)", "doakan (?:agar|supaya)", "mintalah (?:kepada )?(?:allah|tuhan)",
+    "jika (?:itu )?kehendak(?:-nya|nya| tuhan)", "sesuai kehendak(?:-nya|nya)", "tidak (?:selalu|setiap|semua)", "tidak ada (?:janji|jaminan)", "tidak (?:menjanjikan|menjamin)",
+    "kita tidak (?:dapat|bisa) tahu", "(?:alkitab|firman) (?:mengajarkan|menjanjikan|mengatakan)", "serahkan(?:lah)? kepada (?:allah|tuhan)"
+  ],
+  "negations": ["tidak", "tak", "bukan", "jangan", "tanpa", "tidak pernah", "bukannya", "alih-alih", "daripada"],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": ["allah (?:telah |sudah )?(?:berkata|berfirman|mengatakan) kepadamu", "tuhan (?:telah |sudah )?(?:berkata|berfirman|mengatakan) kepadamu", "allah sedang (?:berbicara|berkata) kepadamu (?:tentang|melalui|hari ini)", "allah ingin aku (?:memberitahumu|mengatakan kepadamu)", "ini (?:firman|pesan) allah untukmu"],
+    "GUARANTEED_OUTCOME": ["allah (?:pasti|pastilah|tentu) akan (?:memberimu|memberikan kepadamu|menjawab|mengabulkan)", "(?:terobosan|mukjizat|jawaban)mu (?:sudah dekat|sedang dalam perjalanan|dijamin)", "(?:jawaban|hasil|mukjizat|terobosan) yang dijamin"],
+    "PRAYER_TECHNIQUE": ["jika kamu berdoa (?:dengan benar|cukup|cukup lama|dengan cara yang benar)", "doakan (?:doa ini|kata-kata ini) dan allah (?:pasti akan|harus)", "allah (?:harus|wajib|terpaksa) (?:menjawab|bertindak)", "(?:doa|rumus) (?:rahasia|yang benar|sempurna) (?:untuk|agar) (?:memaksa|menggerakkan) allah"],
+    "CERTAINTY_CLAIM": ["allah (?:telah|sudah) (?:memilih|menyiapkan|mempersiapkan) (?:pasangan|suami|istri|jodoh)mu", "(?:dia|orang ini) (?:adalah )?pilihan allah (?:untukmu|bagimu)", "ini (?:pasti|jelas) kehendak allah (?:untukmu|bagimu|untuk hidupmu)", "(?:penderitaan|penyakit|kehilangan|pencobaan|rasa sakit) ini (?:terjadi|datang|dikirim) (?:karena|supaya|untuk mengajarmu)"],
+    "GUARANTEED_HEALING": ["allah (?:pasti|tentu) akan menyembuhkan(?:mu| dia| mereka)?", "(?:kamu|engkau) (?:pasti|tentu) akan (?:sembuh|disembuhkan)", "kesembuhan(?:mu)? (?:dijamin|pasti|sedang dalam perjalanan)"],
+    "GUARANTEED_MARRIAGE": ["allah (?:pasti|tentu) akan (?:memberimu|mengirimkan|mendatangkan) (?:pasangan|suami|istri|jodoh)", "(?:pasangan|suami|istri|jodoh)mu (?:sedang menunggumu|sedang dalam perjalanan|sudah dekat)", "(?:kamu|engkau) (?:pasti|tentu) akan menikah"],
+    "PROSPERITY_PROMISE": ["allah akan membuatmu kaya", "allah akan memberkatimu (?:secara finansial|dengan uang|dengan kekayaan)", "(?:tabur(?:kan)?|berikan|persembahkan) (?:benih|uang|perpuluhan(?:mu)?|persembahan ini) (?:dan|maka) (?:tuai|terima|kamu akan menuai)", "(?:terobosan|berkat) (?:finansial|keuangan) (?:dijamin|akan datang)", "seratus kali lipat"],
+    "FAITH_DEFICIT_BLAME": ["(?:jika|kalau|karena) (?:kamu|engkau) (?:punya|memiliki|tidak punya|tidak memiliki) (?:cukup|lebih banyak) iman", "tidak sembuh karena (?:kurang iman|ketidakpercayaan|imannya lemah|imanmu lemah)", "(?:kurangnya iman|ketidakpercayaan|keraguan)mu (?:adalah|menjadi) (?:alasan|penghalang)"],
+    "SUFFERING_BLAME": ["(?:penderitaan|penyakit|rasa sakit|kehilangan|kemandulan|keguguran|depresi)(?:mu| ini)? (?:adalah )?(?:akibat|hukuman|konsekuensi) (?:dari )?dosa", "dosa (?:tersembunyi|rahasia|yang belum diakui) (?:adalah|menjadi) (?:penyebab|akar)", "allah sedang menghukummu"],
+    "SHAME_LANGUAGE": ["(?:kamu|engkau) (?:sekarang )?(?:sudah )?(?:najis|kotor|tidak berharga|cemar|rusak)", "tidak lagi (?:layak|cukup murni) (?:untuk|bagi) (?:cinta|pernikahan)", "(?:permen karet bekas|mawar layu|kertas kusut)", "barang rusak"],
+    "ABUSE_ENDANGERMENT": ["tetap(?:lah)? (?:bersama|tinggal (?:dengan|dalam)) (?:suami|istri|pasangan|hubungan|rumah tangga|pernikahan) yang (?:kasar|melakukan kekerasan|menganiaya)", "tunduk (?:pada|kepada) (?:kekerasan|penganiayaan|pelaku)", "(?:hadapi|konfrontasi) (?:pelaku|penganiaya)(?:mu)? (?:sendirian|seorang diri)", "mengampuni (?:berarti|artinya) (?:kembali|tetap tinggal)", "(?:kekerasan|penganiayaan) (?:adalah )?(?:salibmu|kehendak allah)", "jangan (?:lapor(?:kan)?|beri tahu) (?:ke |kepada )?polisi"],
+    "CARE_REPLACEMENT": ["(?:berhenti|hentikan) (?:minum|mengonsumsi) (?:obat|obat-obatan|antidepresan|pengobatan)", "(?:kamu|engkau) tidak (?:perlu|butuh) (?:dokter|terapis|konselor|psikiater|obat|pengobatan|bantuan profesional)", "doa (?:menggantikan|sebagai ganti) (?:obat|pengobatan|dokter|terapi)", "(?:depresi|kecemasan|gangguan jiwa) (?:hanyalah|hanya|sekadar) (?:kurang iman|serangan rohani|dosa)"],
+    "COERCIVE_CONFRONTATION": ["(?:tegur|konfrontasi)(?:lah)? (?:dia|mereka) sampai (?:dia|mereka) (?:bertobat|mengaku)", "(?:paksa|desak)(?:lah)? (?:dia|mereka) (?:untuk )?(?:bertobat|mengaku|kembali|meminta maaf)", "(?:putuskan|tahan) (?:kontak|kasih|pengampunan) sampai"],
+    "SPIRITUAL_MANIPULATION": ["allah akan (?:menghukum|mengutuk|meninggalkan)mu (?:jika|kalau)", "jika (?:kamu|engkau) tidak [^.!?]{0,40}(?:allah akan (?:menghukum|mengutuk)mu|kamu akan terkutuk)", "(?:keselamatan|berkat|kesembuhan)(?:mu)? (?:bergantung|tergantung) (?:pada )?(?:seberapa banyak|seberapa sering|seberapa lama) (?:kamu )?(?:berdoa|memberi|berpuasa)", "taati (?:gembala|pemimpin|nabi)(?:mu)? tanpa (?:bertanya|mempertanyakan)", "mempertanyakan (?:gembala|pemimpin|nabi)(?:mu)? (?:adalah )?(?:pemberontakan|dosa)"],
+    "SELF_HELP_LANGUAGE": ["hukum tarik[- ]menarik", "alam semesta (?:akan|ingin|mengirim)", "energi positif", "versi terbaik (?:dari )?dirimu", "(?:tingkatkan|naikkan) (?:vibrasi|getaran)(?:mu)?", "(?:kamu|engkau) layak (?:mendapatkan )?(?:yang terbaik|bahagia)", "manifestasikan (?:keinginan|kelimpahan)"],
+    "COACHING_TONE": ["kamu pasti bisa", "keluar dari zona nyaman(?:mu)?", "percaya(?:lah)? pada dirimu sendiri", "kamu sudah cukup", "percaya(?:lah)? pada prosesnya", "buka potensimu"],
+    "LITERAL_CALQUE": ["pada akhir hari", "allah itu baik sepanjang waktu"]
+  }
+}

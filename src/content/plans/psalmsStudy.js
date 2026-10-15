@@ -36,6 +36,7 @@
 // authored here.
 import { DAYS } from './psalmsStudyDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'praise', from: 1, to: 7, titleKey: 'planPsalmsMovementPraise' },
@@ -59,6 +60,7 @@ export const PSALMS_STUDY = {
   titleKey: 'planPsalmsTitle',
   subKey: 'planPsalmsSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.psalms42,
   movements: MOVEMENTS,
   intro: {

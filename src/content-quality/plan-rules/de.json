@@ -1,0 +1,107 @@
+{
+  "locale": "de",
+  "status": "draft",
+  "note": "AI-drafted detection patterns, not native approval. Patterns flag risks for a human reviewer; they never approve or reject wording on their own.",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": [
+    "gott\\p{L}*", "herr(?:n|en)?", "vater", "jesus", "jesu", "christus", "christi", "heilige(?:r|n)? geist(?:es)?", "geist(?:es)?",
+    "abba", "allmächtige(?:r|n)?", "retter", "erlöser", "schöpfer", "höchste(?:r|n)?"
+  ],
+  "prayerDirections": ["bitte(?: gott| den herrn)?", "bete", "danke(?: gott)?", "bring", "bekenne", "nenne", "sag gott"],
+  "qualifiers": [
+    "vielleicht", "möglicherweise", "kann", "könnte", "mag", "hoff\\p{L}*", "bete(?:n)? (?:für|dass|darum)", "bitte(?:n)? (?:gott|ihn|den herrn)",
+    "wenn es (?:sein|dein|gottes) wille ist", "nach (?:seinem|deinem) willen", "nicht jede(?:r|s|n)?", "kein(?:e)? (?:versprechen|garantie)",
+    "verspricht nicht", "garantiert nicht", "wir können (?:es )?nicht wissen", "die (?:schrift|bibel) (?:lehrt|verheißt|sagt)", "vertrau(?:e)? (?:ihm|gott)"
+  ],
+  "negations": ["nicht", "nie", "niemals", "kein\\p{L}*", "niemand", "nichts", "ohne", "statt", "anstatt"],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": [
+      "gott (?:hat )?(?:dir|ihnen) gesagt", "gott sagt dir,? dass", "der herr (?:hat )?(?:dir|ihnen) gesagt", "der herr sagt dir,? dass",
+      "gott spricht (?:gerade |heute )?zu dir (?:über|durch)", "gott will, dass ich dir sage", "das ist gottes (?:wort|botschaft) an dich"
+    ],
+    "GUARANTEED_OUTCOME": [
+      "gott wird (?:dir )?(?:ganz )?(?:sicher|bestimmt|garantiert) (?:geben|schenken|erfüllen|antworten)",
+      "gott wird dir (?:alles )?geben, (?:was|worum) du (?:willst|bittest)",
+      "dein (?:durchbruch|wunder) (?:ist|kommt) (?:schon unterwegs|garantiert|sicher)",
+      "(?:eine )?garantierte (?:antwort|erhörung|lösung)"
+    ],
+    "PRAYER_TECHNIQUE": [
+      "wenn du (?:richtig|genug|lange genug|auf die richtige (?:art|weise)) betest",
+      "bete (?:diese worte|dieses gebet),? und gott (?:wird|muss)",
+      "gott (?:muss|ist verpflichtet,? zu) (?:antworten|handeln|erhören)",
+      "(?:das )?(?:richtige|geheime|perfekte) (?:gebet|formel),? (?:um|das|die) gott"
+    ],
+    "CERTAINTY_CLAIM": [
+      "gott hat (?:dir )?(?:schon |bereits )?(?:deinen|deine|einen|eine) (?:zukünftige[nr]? )?(?:ehepartner(?:in)?|ehemann|ehefrau|partner(?:in)?) (?:ausgewählt|ausgesucht|vorbereitet)",
+      "(?:er|sie|diese person) ist gottes wahl für dich",
+      "das ist (?:ganz )?(?:sicher|eindeutig|klar) gottes wille für (?:dich|dein leben)",
+      "(?:dieses leid|dieses leiden|diese krankheit|diese prüfung|dieser verlust) (?:ist geschehen|kam|wurde (?:dir )?geschickt),? (?:weil|damit|um dich)"
+    ],
+    "GUARANTEED_HEALING": [
+      "gott wird (?:dich|ihn|sie) (?:ganz )?(?:sicher |bestimmt )?heilen",
+      "du wirst (?:ganz )?(?:sicher |bestimmt )?(?:geheilt|gesund) werden",
+      "(?:deine|die) heilung ist (?:garantiert|sicher|schon unterwegs)"
+    ],
+    "GUARANTEED_MARRIAGE": [
+      "gott wird dir (?:ganz )?(?:sicher |bestimmt )?(?:einen|eine|deinen|deine) (?:zukünftige[nr]? )?(?:ehepartner(?:in)?|ehemann|ehefrau|partner(?:in)?) (?:geben|schenken|schicken)",
+      "dein(?:e)? (?:zukünftige[r]? )?(?:ehepartner(?:in)?|ehemann|ehefrau) (?:wartet|ist (?:schon )?unterwegs)",
+      "du wirst (?:ganz )?(?:sicher |bestimmt )?heiraten"
+    ],
+    "PROSPERITY_PROMISE": [
+      "gott wird dich (?:reich machen|finanziell segnen)",
+      "(?:säe|gib|spende) (?:einen samen|geld|deinen zehnten|diese gabe),? und (?:ernte|empfange|erhalte|du wirst ernten)",
+      "finanzieller (?:durchbruch|segen) (?:ist garantiert|kommt)",
+      "hundertfach zurück"
+    ],
+    "FAITH_DEFICIT_BLAME": [
+      "(?:wenn|weil) du (?:nicht )?genug glauben (?:hättest|hast|hattest)",
+      "nicht geheilt,? weil (?:dein|ihr|der) (?:glaube zu (?:schwach|klein) (?:war|ist)|unglaube)",
+      "dein (?:mangel an glauben|unglaube|zweifel) (?:ist|war) (?:der grund|schuld)"
+    ],
+    "SUFFERING_BLAME": [
+      "(?:dein|dieses|ihr) (?:leid|leiden) (?:ist|war) (?:die )?(?:folge|strafe) (?:deiner|ihrer|einer) (?:verborgenen |geheimen )?sünde",
+      "(?:deine|diese|ihre) (?:krankheit|unfruchtbarkeit|fehlgeburt|depression) (?:ist|war) (?:die )?(?:folge|strafe) (?:deiner|ihrer|einer) (?:verborgenen |geheimen )?sünde",
+      "(?:verborgene|geheime|unbekannte) sünde (?:ist|war) (?:der grund|die ursache|die wurzel)",
+      "gott (?:bestraft|straft) dich"
+    ],
+    "SHAME_LANGUAGE": [
+      "du bist (?:jetzt )?(?:beschmutzt|schmutzig|wertlos|unrein|verdorben|beschädigt)",
+      "(?:nicht mehr|nicht) (?:würdig|rein genug) (?:für die|der) (?:liebe|ehe)",
+      "(?:gekauter kaugummi|zerknittertes papier)", "beschädigte ware"
+    ],
+    "ABUSE_ENDANGERMENT": [
+      "bleib(?:e)? (?:bei|in) (?:einem|einer|deinem|deiner) (?:gewalttätigen|missbräuchlichen) (?:mann|frau|partner|partnerin|beziehung|ehe)",
+      "(?:dich )?(?:der gewalt|dem missbrauch|deinem peiniger) unterordnen",
+      "stell(?:e)? (?:deinen|den) (?:peiniger|täter) allein zur rede",
+      "vergeben (?:heißt|bedeutet) (?:zurückkehren|bleiben|zurückgehen)",
+      "(?:gewalt|missbrauch) ist (?:dein kreuz|gottes wille)",
+      "(?:sag|melde) es (?:nicht|niemals) der polizei"
+    ],
+    "CARE_REPLACEMENT": [
+      "(?:setz|setze) (?:deine )?(?:medikamente|tabletten|antidepressiva|behandlung) ab",
+      "hör auf,? (?:deine )?(?:medikamente|tabletten) zu nehmen",
+      "du brauchst (?:keinen|keine) (?:arzt|ärztin|therapeuten|therapie|seelsorger|psychiater|medikamente|behandlung)",
+      "(?:gebet|glaube) (?:statt|anstelle von|ersetzt) (?:medikamente|therapie|arzt|behandlung)",
+      "(?:depression|angst|psychische krankheit) ist (?:nur |einfach )?(?:ein mangel an glauben|ein geistlicher angriff|sünde)"
+    ],
+    "COERCIVE_CONFRONTATION": [
+      "stell(?:e)? (?:ihn|sie) zur rede, bis (?:er|sie) (?:umkehrt|bereut|gesteht)",
+      "(?:zwing|dräng)(?:e)? (?:ihn|sie) (?:zur umkehr|zum geständnis|zurückzukommen|sich zu entschuldigen)",
+      "(?:verweigere|entzieh(?:e)?) (?:den kontakt|deine liebe|deine vergebung),? bis"
+    ],
+    "SPIRITUAL_MANIPULATION": [
+      "gott wird dich (?:bestrafen|verfluchen|verlassen),? wenn",
+      "wenn du nicht [^.!?]{0,40}(?:wird gott dich (?:bestrafen|verfluchen)|bist du verflucht)",
+      "(?:dein|deine) (?:heil|segen|heilung) hängt davon ab, wie (?:viel|oft|lange) du (?:betest|gibst|fastest)",
+      "gehorche (?:deinem|dem) (?:pastor|leiter|propheten) (?:ohne zu fragen|bedingungslos)",
+      "(?:deinen|den) (?:pastor|leiter|propheten) (?:zu )?(?:hinterfragen|anzuzweifeln) ist (?:rebellion|sünde)"
+    ],
+    "SELF_HELP_LANGUAGE": [
+      "manifestiere (?:deine wünsche|fülle|was du willst)", "das universum (?:wird|will|schickt)", "positive energie",
+      "(?:die )?beste version deiner selbst", "gesetz der anziehung", "(?:hohe|deine) schwingung", "selbstliebe", "du verdienst (?:es|das beste|glück)"
+    ],
+    "COACHING_TONE": ["du schaffst das", "verlass deine komfortzone", "glaub an dich", "du bist genug", "vertrau dem prozess", "entfalte dein (?:volles )?potenzial"],
+    "LITERAL_CALQUE": ["macht (?:keinen )?sinn", "einen unterschied machen", "am ende des tages", "gottes timing"]
+  }
+}

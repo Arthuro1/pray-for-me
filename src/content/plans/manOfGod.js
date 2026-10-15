@@ -36,6 +36,7 @@
 // 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { DAYS } from './manOfGodDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'before', from: 1, to: 5, titleKey: 'planManOfGodMovementBefore' },
@@ -56,6 +57,7 @@ export const MAN_OF_GOD = {
   titleKey: 'planManOfGodTitle',
   subKey: 'planManOfGodSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile({ audience: 'men', disputedTopics: ['gender-roles'] }),
   review: NEW_PLAN_APPROVALS.manOfGod21,
   movements: MOVEMENTS,
   intro: {

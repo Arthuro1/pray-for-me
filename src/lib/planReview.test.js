@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LANG_CODES } from '../i18n';
 import {
-  canUsePlan, hasReviewSignoff, isPlanPreviewOn, isPlanReviewed, setPlanPreview, syncPlanPreviewFromUrl,
+  canUsePlan, hasNativeReviewEvidence, hasReviewSignoff, isPlanPreviewOn, isPlanReviewed, setPlanPreview, syncPlanPreviewFromUrl,
 } from './planReview';
 
 const signoff = { status: 'approved', reviewer: 'named-reviewer', reviewedAt: '2026-08-26' };
@@ -32,6 +32,16 @@ describe('plan content release gate', () => {
   it('allows draft preview only through an explicit development switch', () => {
     expect(canUsePlan(pending, { preview: false })).toBe(false);
     expect(canUsePlan(pending, { preview: true })).toBe(true);
+  });
+
+  it('counts a native-Christian quality review only with a named, dated, self-attested reviewer', () => {
+    const reviewer = { name: 'Native reviewer', reviewedAt: '2026-10-12', nativeSpeaker: true, christianReview: true };
+    expect(hasNativeReviewEvidence(reviewer)).toBe(true);
+    expect(hasNativeReviewEvidence({ ...reviewer, name: ' ' })).toBe(false);
+    expect(hasNativeReviewEvidence({ ...reviewer, reviewedAt: '2026-13-01' })).toBe(false);
+    expect(hasNativeReviewEvidence({ ...reviewer, nativeSpeaker: false })).toBe(false);
+    expect(hasNativeReviewEvidence({ ...reviewer, christianReview: undefined })).toBe(false);
+    expect(hasNativeReviewEvidence(null)).toBe(false);
   });
 });
 

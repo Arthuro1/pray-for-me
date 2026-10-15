@@ -2,6 +2,17 @@
   "locale": "hi",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "IN",
+    "christianRegister": "प्रोटेस्टेंट (हिंदी ओ.वी. शब्दावली)",
+    "prayerRegister": "आदरपूर्ण, परमेश्वर को \"तू/आप\"",
+    "readerAddress": "आप",
+    "godAddress": "तू या आप (एक ही प्रार्थना में एक)",
+    "notes": [
+      "हिंदू या इस्लामी पूजा-शब्दों से बचें जहाँ मसीही शब्द प्रचलित है।"
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "प्रार्थना निवेदन",
@@ -129,6 +140,76 @@
       "avoid": [],
       "example": "त्याग की प्रार्थना में आप उस बात का नाम लेते हैं जिससे आप मुड़ते हैं।",
       "note": "छुटकारे की सेवकाई का शब्द। मूल वक्ता से जाँच आवश्यक।"
+    },
+    "sanctification": {
+      "preferred": "पवित्रीकरण",
+      "allowed": [
+        "पवित्रता में बढ़ना"
+      ],
+      "avoid": [],
+      "example": "पवित्रीकरण हम में परमेश्वर का कार्य है।",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "बुलाहट",
+      "allowed": [],
+      "avoid": [],
+      "example": "अपनी बुलाहट के लिए प्रार्थना करें।",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "समर्पण",
+      "allowed": [],
+      "avoid": [],
+      "example": "परमेश्वर के प्रति समर्पण भरोसा है, हार नहीं।",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "मसीह में बने रहना",
+      "allowed": [],
+      "avoid": [],
+      "example": "जैसे डाली दाखलता में बनी रहती है, वैसे मसीह में बने रहें।",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "आराधना",
+      "allowed": [
+        "स्तुति"
+      ],
+      "avoid": [],
+      "example": "आराधना परमेश्वर की ओर देखने से शुरू होती है।",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "पाप का अंगीकार",
+      "allowed": [
+        "अंगीकार"
+      ],
+      "avoid": [],
+      "example": "पाप का अंगीकार क्षमा का मार्ग खोलता है।",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "क्षमा",
+      "allowed": [
+        "माफ़ी"
+      ],
+      "avoid": [],
+      "example": "परमेश्वर की क्षमा हमें स्वतंत्र करती है।",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "प्रार्थना",
+      "allowed": [],
+      "avoid": [
+        "नमाज़"
+      ],
+      "example": "प्रार्थना परमेश्वर से बात करना है।",
+      "note": "Speaking with God; never a meditation technique or positive thinking.",
+      "variants": [
+        "प्रार्थना",
+        "दुआ"
+      ]
     }
   }
 }

@@ -2,6 +2,17 @@
   "locale": "fa",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "IR",
+    "christianRegister": "پروتستان (واژگان ترجمه قدیمی)",
+    "prayerRegister": "محترمانه، خطاب به خدا با «تو»",
+    "readerAddress": "تو",
+    "godAddress": "تو",
+    "notes": [
+      "از واژه‌های مخصوص آیین اسلامی (مانند نماز) پرهیز شود."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "درخواست دعا",
@@ -50,7 +61,11 @@
       "allowed": [],
       "avoid": [],
       "example": "توبه",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "توبه",
+        "پشیمانی"
+      ]
     },
     "salvation": {
       "preferred": "نجات",
@@ -71,7 +86,11 @@
       "allowed": [],
       "avoid": [],
       "example": "روح‌القدس",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "روح‌القدس|روح القدس",
+        "روح مقدس"
+      ]
     },
     "scripture": {
       "preferred": "کتاب‌مقدس",
@@ -127,6 +146,72 @@
       "avoid": [],
       "example": "در دعای ترک، آنچه را از آن رو برمی‌گردانی نام می‌بری.",
       "note": "واژهٔ خدمت رهایی. نیاز به بازبینی گویشور بومی."
+    },
+    "sanctification": {
+      "preferred": "تقدیس",
+      "allowed": [
+        "رشد در قدوسیت"
+      ],
+      "avoid": [],
+      "example": "تقدیس کار خدا در ماست.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "دعوت",
+      "allowed": [],
+      "avoid": [],
+      "example": "برای دعوت خدا در زندگی‌ات دعا کن.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "تسلیم به خدا",
+      "allowed": [
+        "سپردن خود به خدا"
+      ],
+      "avoid": [],
+      "example": "سپردن خود به خدا اعتماد است، نه ناامیدی.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "ماندن در مسیح",
+      "allowed": [],
+      "avoid": [],
+      "example": "در مسیح بمان، مانند شاخه در تاک.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "پرستش",
+      "allowed": [
+        "ستایش"
+      ],
+      "avoid": [],
+      "example": "پرستش با نگاه به خدا آغاز می‌شود.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "اعتراف به گناه",
+      "allowed": [],
+      "avoid": [],
+      "example": "اعتراف به گناه راه بخشش را باز می‌کند.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "بخشش",
+      "allowed": [
+        "آمرزش"
+      ],
+      "avoid": [],
+      "example": "بخشش خدا ما را آزاد می‌کند.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "دعا",
+      "allowed": [],
+      "avoid": [
+        "نماز"
+      ],
+      "example": "دعا گفت‌وگو با خداست.",
+      "note": "Speaking with God; never a meditation technique or positive thinking. «نماز» نماز آیینی اسلامی است."
     }
   }
 }

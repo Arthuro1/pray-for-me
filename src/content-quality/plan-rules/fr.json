@@ -1,0 +1,231 @@
+{
+  "locale": "fr",
+  "status": "draft",
+  "note": "Motifs de détection rédigés par IA, sans validation native. Ils signalent un risque à un relecteur humain ; ils n'approuvent ni ne rejettent rien seuls.",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": [
+    "dieu",
+    "seigneur",
+    "père",
+    "jésus",
+    "christ",
+    "saint-esprit",
+    "esprit saint",
+    "esprit",
+    "abba",
+    "tout-puissant",
+    "sauveur",
+    "très-haut",
+    "éternel",
+    "créateur",
+    "auteur du ciel"
+  ],
+  "prayerDirections": [
+    "demande(?: à dieu| au seigneur)?",
+    "prie",
+    "rends grâce",
+    "remercie(?: dieu| le seigneur)?",
+    "apporte",
+    "confesse",
+    "nomme",
+    "dis à dieu"
+  ],
+  "qualifiers": [
+    "peut-être",
+    "pourrait",
+    "puisse",
+    "puisses",
+    "peut",
+    "espér\\p{L}*",
+    "espoir",
+    "pri(?:e|er|ons|ez) (?:pour|que)",
+    "demand(?:e|er|ons) (?:à dieu|au seigneur|lui)",
+    "si c['’]est (?:sa|ta) volonté",
+    "selon (?:sa|ta) volonté",
+    "pas (?:toujours|chaque|tous)",
+    "aucune (?:promesse|garantie)",
+    "ne (?:promet|garantit) pas",
+    "n['’](?:est|était) pas (?:promis|garanti)",
+    "ne promet jamais",
+    "nous ne pouvons pas savoir",
+    "l['’]écriture (?:enseigne|promet|dit)",
+    "la bible (?:enseigne|promet|dit)",
+    "confie-lui",
+    "quoi qu['’]il"
+  ],
+  "negations": [
+    "ne",
+    "n['’]",
+    "pas",
+    "jamais",
+    "aucun(?:e)?",
+    "personne",
+    "rien",
+    "sans",
+    "plutôt que",
+    "au lieu de"
+  ],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": [
+      "dieu t['’]a dit",
+      "dieu te dit que",
+      "le seigneur t['’]a dit",
+      "le seigneur te dit que",
+      "dieu (?:te parle|t['’]a parlé) (?:de|à travers|aujourd['’]hui|maintenant)",
+      "dieu veut (?:que je te dise|que tu saches que)",
+      "voici (?:la parole|le message) de dieu pour toi",
+      "dieu vous (?:a dit|dit que)"
+    ],
+    "GUARANTEED_OUTCOME": [
+      "dieu (?:va|te) (?:certainement |sûrement |forcément )?(?:te )?(?:donner|accorder|apporter) (?:ce que tu|tout ce que tu|ta (?:percée|réponse)|ton (?:miracle|désir))",
+      "dieu (?:va|te donnera) (?:certainement|sûrement|forcément)",
+      "ta (?:percée|réponse) (?:est|sera) (?:imminente|garantie|en route|assurée)",
+      "ton miracle (?:est|sera) (?:imminent|garanti|en route|assuré)",
+      "(?:une )?(?:réponse|issue|percée) garantie"
+    ],
+    "PRAYER_TECHNIQUE": [
+      "si tu pries (?:correctement|comme il faut|assez|assez longtemps|de la bonne façon)",
+      "prie (?:cette prière|ces mots) et dieu (?:va|doit)",
+      "dieu (?:doit|est obligé de|est tenu de) (?:répondre|agir|exaucer)",
+      "(?:la )?(?:bonne|formule|prière) (?:secrète|parfaite|magique)"
+    ],
+    "CERTAINTY_CLAIM": [
+      "dieu a (?:déjà )?(?:choisi|préparé|mis à part) (?:ton|ta|un|une) (?:futur(?:e)? )?(?:conjoint(?:e)?|époux|épouse|mari|femme)",
+      "(?:la bonne personne|l['’]âme sœur) que dieu (?:a|t['’]a) (?:choisie|prévue)",
+      "(?:il|elle|cette personne) est le choix de dieu pour toi",
+      "c['’]est (?:certainement |clairement )?la volonté de dieu pour (?:toi|ta vie)",
+      "cette (?:souffrance|maladie|perte|épreuve|douleur) (?:est arrivée|est venue|t['’]a été envoyée) (?:parce que|pour t['’]apprendre|afin que)"
+    ],
+    "GUARANTEED_HEALING": [
+      "dieu va (?:certainement |sûrement )?(?:te |le |la |les )?guérir",
+      "dieu (?:te |le |la |les )?guérira",
+      "tu (?:seras|vas être) (?:certainement |sûrement )?guéri(?:e)?",
+      "(?:ta|cette|la) guérison est (?:garantie|certaine|assurée|en route)"
+    ],
+    "GUARANTEED_MARRIAGE": [
+      "dieu (?:va|te) (?:certainement |sûrement )?(?:te )?(?:donner|amener|envoyer) (?:un|une|ton|ta) (?:futur(?:e)? )?(?:conjoint(?:e)?|époux|épouse|mari|femme)",
+      "ton (?:futur )?(?:conjoint|époux|mari) (?:t['’]attend|arrive|est en route)",
+      "ta (?:future )?(?:conjointe|épouse|femme) (?:t['’]attend|arrive|est en route)",
+      "tu (?:vas|te) (?:certainement |sûrement )?(?:te marier|marieras|trouver (?:ton|ta) (?:conjoint|conjointe|mari|femme))"
+    ],
+    "PROSPERITY_PROMISE": [
+      "dieu va te (?:rendre riche|bénir financièrement|combler de richesses)",
+      "(?:sème|donne|verse) (?:une semence|de l['’]argent|ta dîme|cette offrande) (?:et|pour) (?:récolter|recevoir) (?:une moisson|de l['’]argent|un retour)",
+      "(?:percée|bénédiction) financière (?:est garantie|arrive|t['’]attend)",
+      "au centuple"
+    ],
+    "FAITH_DEFICIT_BLAME": [
+      "(?:si|parce que) tu (?:avais|as|n['’]avais pas|n['’]as pas) (?:assez|plus|suffisamment) de foi",
+      "(?:pas|n['’]a pas été|n['’]as pas été) guéri(?:e)? (?:à cause de|parce que) (?:ton|ton manque de|leur|ta) (?:manque de foi|incrédulité|petite foi|doute)",
+      "ton (?:manque de foi|incrédulité|doute) (?:est|était) (?:la raison|ce qui bloque|la cause)"
+    ],
+    "SUFFERING_BLAME": [
+      "(?:ta|cette|leur|la) (?:souffrance|maladie|douleur|perte|infertilité|fausse couche|dépression) (?:est|était) (?:le résultat|la punition|la conséquence|le signe) (?:d['’]un|de ton|de leur|d['’]un) péché",
+      "(?:un )?péché (?:caché|secret|non confessé) (?:est|était|doit être) (?:la (?:raison|cause|racine))",
+      "dieu (?:te punit|t['’]a puni)"
+    ],
+    "SHAME_LANGUAGE": [
+      "(?:tu es|tu es devenu(?:e)?|tu es maintenant) (?:souillé(?:e)?|sale|abîmé(?:e)?|sans valeur|impur(?:e)?|gâché(?:e)?)",
+      "(?:plus|pas) (?:digne|assez pur(?:e)?) (?:de|pour) (?:l['’]amour|le mariage|dieu)",
+      "(?:chewing-gum mâché|rose fanée|papier froissé)",
+      "marchandise abîmée"
+    ],
+    "ABUSE_ENDANGERMENT": [
+      "(?:reste|rester|demeure) (?:avec|dans) (?:un|une|ton|ta) (?:mari|époux|épouse|conjoint|conjointe|relation|foyer|mariage) (?:violent(?:e)?|abusi(?:f|ve))",
+      "(?:te )?soumettre (?:à la violence|aux abus|à ton agresseur)",
+      "(?:confronte|affronte) (?:ton|ta|l['’]) (?:agresseur|agresseuse) (?:seul(?:e)?|tout(?:e)? seul(?:e)?)",
+      "pardonner (?:signifie|veut dire) (?:retourner|rester|revenir)",
+      "(?:la violence|les abus) (?:est|sont) (?:ta croix|la volonté de dieu)",
+      "n['’]en parle (?:pas )?(?:à la police|aux autorités|à ton pasteur)"
+    ],
+    "CARE_REPLACEMENT": [
+      "arrête(?:r)? (?:de prendre )?(?:tes|ton|ses) (?:médicaments|traitement|antidépresseurs)",
+      "(?:tu )?n['’]as pas besoin (?:d['’]un|de) (?:médecin|thérapeute|conseiller|psychiatre|traitement|médicaments|aide professionnelle)",
+      "la (?:prière|foi) (?:remplace|plutôt que|au lieu de) (?:les médicaments|la thérapie|le médecin|le traitement)",
+      "(?:la dépression|l['’]anxiété|la maladie mentale) (?:n['’]est qu['’]|est simplement |est )(?:un manque de foi|une attaque spirituelle|un péché)"
+    ],
+    "COERCIVE_CONFRONTATION": [
+      "(?:confronte|reprends)-(?:le|la|les) jusqu['’]à ce qu['’](?:il|elle|ils) se repente",
+      "(?:force|oblige|pousse)-(?:le|la|les) à (?:se repentir|avouer|revenir|s['’]excuser)",
+      "(?:refuse|retire) (?:tout contact|ton amour|ton pardon) jusqu['’]à ce qu"
+    ],
+    "SPIRITUAL_MANIPULATION": [
+      "dieu (?:va te|te) (?:punir|maudire|abandonner|retirer son amour)(?:a)? si",
+      "si tu ne [^.!?]{0,40}(?:dieu (?:te punira|va te punir|te maudira)|tu seras maudit(?:e)?)",
+      "(?:ton|ta) (?:salut|bénédiction|guérison) dépend de (?:combien|la fréquence|la durée)",
+      "obéis à (?:ton|ta|au) (?:pasteur|leader|prophète|homme de dieu) (?:sans discuter|quoi qu['’]il)",
+      "(?:douter de|remettre en question) (?:ton|le) (?:pasteur|leader|prophète) (?:est|c['’]est) (?:de la rébellion|un péché)"
+    ],
+    "SELF_HELP_LANGUAGE": [
+      "manifester (?:tes désirs|l['’]abondance|ce que tu veux)",
+      "l['’]univers (?:va|veut|t['’]envoie)",
+      "énergie positive",
+      "(?:la )?meilleure version de toi-même",
+      "loi de l['’]attraction",
+      "(?:hautes |élever (?:tes|ta) )vibrations?",
+      "amour de soi",
+      "tu mérites (?:le meilleur|d['’]être heureux)",
+      "état d['’]esprit gagnant"
+    ],
+    "COACHING_TONE": [
+      "tu (?:vas y arriver|en es capable)",
+      "sors de ta zone de confort",
+      "crois en toi",
+      "tu es suffisant(?:e)?",
+      "fais confiance au processus",
+      "libère ton potentiel"
+    ],
+    "LITERAL_CALQUE": [
+      "faire du sens",
+      "fait du sens",
+      "adresser (?:ce|le|un|les) problème",
+      "être en charge de",
+      "dieu est bon tout le temps"
+    ]
+  },
+  "markers": {
+    "spiritual-gifts": [
+      "parl(?:er|ant|e) en langues",
+      "pri(?:er|ant|e) en langues",
+      "don des langues",
+      "prophétis(?:er|ant|e)",
+      "parole de prophétie",
+      "baptême (?:dans|du) (?:le )?saint-esprit",
+      "baptisé(?:e)? dans le saint-esprit"
+    ],
+    "deliverance": [
+      "ministère de délivrance",
+      "(?:malédiction|lien|alliance)s? (?:générationnel|ancestra)\\p{L}*",
+      "renonc(?:er|e) (?:à )?(?:toute |tout |aux? )?(?:occultisme|sorcellerie|esprits?|alliances?|malédictions?|pratiques occultes)",
+      "bris(?:er|e) (?:toute |la |une )?malédictions?",
+      "chass(?:er|e) (?:les |un |le )?(?:démons?|esprits?) (?:de toi|de ta vie)",
+      "combat spirituel",
+      "li(?:er|e) (?:l['’]ennemi|les démons|les esprits)"
+    ],
+    "gender-roles": [
+      "soumi(?:se|ses|ssion) à (?:ton|son) mari",
+      "chef (?:de famille|du foyer|de la maison)",
+      "femmes,? soyez soumises",
+      "autorité du mari"
+    ],
+    "hearing-god": [
+      "entendre (?:la voix de dieu|sa voix)",
+      "dieu (?:te parle|te dit)",
+      "l['’]esprit te parle",
+      "parole de connaissance",
+      "prière d['’]écoute"
+    ],
+    "divine-healing": [
+      "dons? de guérison",
+      "ministère de guérison",
+      "impos(?:er|ition) (?:les|des) mains"
+    ],
+    "saint-intercession": [
+      "pri(?:er|ant) (?:marie|les saints)",
+      "intercession (?:de marie|des saints)",
+      "je vous salue marie",
+      "chapelet"
+    ]
+  }
+}

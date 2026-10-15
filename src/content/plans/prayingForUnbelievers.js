@@ -37,6 +37,7 @@
 // (`proseTranslations: []`). Scripture is referenced, never quoted.
 import { DAYS } from './prayingForUnbelieversDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'heart', from: 1, to: 7, titleKey: 'planUnbelieversMovementHeart' },
@@ -57,6 +58,7 @@ export const PRAYING_FOR_UNBELIEVERS = {
   titleKey: 'planUnbelieversTitle',
   subKey: 'planUnbelieversSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.unbelievers30,
   movements: MOVEMENTS,
   intro: {

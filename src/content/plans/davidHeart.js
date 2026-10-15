@@ -1,5 +1,6 @@
 import { DAYS } from './davidHeartDays';
 import { PLAN_APPROVALS } from '../reviews/paul20260903';
+import { theologyProfile } from '../theologyProfiles';
 
 // Study-first curriculum on the shared daily-plan engine, approved by Paul.
 export const DAVID_HEART = {
@@ -15,6 +16,7 @@ export const DAVID_HEART = {
   titleKey: 'planDavidTitle',
   subKey: 'planDavidSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: PLAN_APPROVALS.david12,
   movements: [
     { id: 'rooted', from: 1, to: 3, titleKey: 'planDavidRooted' },

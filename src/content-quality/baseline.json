@@ -278443,6 +278443,13 @@
     },
     {
       "locale": "fa",
+      "id": "plans/discernment28:days[5].reflection",
+      "rule": "term:prayer:نماز",
+      "message": "Avoid “نماز”; consider “دعا” in context.",
+      "fingerprint": "1305d727b9f26b5a19181bf65ff1806db3dcd0c600ca47e1e9f893989a02441a"
+    },
+    {
+      "locale": "fa",
       "id": "plans/covenant21:biblical.text",
       "rule": "missing-copy",
       "message": "Missing or empty authored wording; runtime may use a fallback.",

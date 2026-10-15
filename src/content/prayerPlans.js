@@ -36,6 +36,7 @@ import { HEALING_FROM_CHURCH_HURT } from './plans/healingFromChurchHurt';
 import { PSALMS_STUDY } from './plans/psalmsStudy';
 import { AT_THE_ALTAR } from './plans/atTheAltar';
 import { canUsePlan } from '../lib/planReview';
+import { theologyProfile } from './theologyProfiles';
 
 // Plans are grouped in the UI by CATEGORY so the list stays browsable as it
 // grows. `id` is stable; the label is an i18n key resolved at render.
@@ -73,6 +74,7 @@ export const PLANS = [
     category: 'seeking',
     primaryCircle: 'self',
     circles: ['self'],
+    theologyProfile: theologyProfile(),
     emoji: '🕯️',
     count: 3,
     titleKey: 'planFast3Title',
@@ -99,6 +101,7 @@ export const PLANS = [
     category: 'seeking',
     primaryCircle: 'self',
     circles: ['self'],
+    theologyProfile: theologyProfile(),
     emoji: '🕊️',
     count: 7,
     titleKey: 'planAltar7Title',
@@ -129,6 +132,7 @@ export const PLANS = [
     category: 'seeking',
     primaryCircle: 'self',
     circles: ['self'],
+    theologyProfile: theologyProfile(),
     emoji: '🌅',
     count: 7,
     titleKey: 'planWeek7Title',
@@ -159,6 +163,7 @@ export const PLANS = [
     category: 'seeking',
     primaryCircle: 'church',
     circles: ['church', 'kingdom'],
+    theologyProfile: theologyProfile({ disputedTopics: ['spiritual-gifts'] }),
     emoji: '🔥',
     count: 10,
     titleKey: 'planUpperRoomTitle',
@@ -192,6 +197,7 @@ export const PLANS = [
     category: 'seeking',
     primaryCircle: 'self',
     circles: ['self'],
+    theologyProfile: theologyProfile(),
     emoji: '⚡',
     count: 21,
     titleKey: 'planTheme21Title',
@@ -236,6 +242,7 @@ export const PLANS = [
     category: 'others',
     primaryCircle: 'people',
     circles: ['people', 'household', 'nations'],
+    theologyProfile: theologyProfile(),
     emoji: '🤝',
     count: 30,
     titleKey: 'plan30Title',

@@ -2,6 +2,17 @@
   "locale": "ar",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "Levant/Egypt (MSA)",
+    "christianRegister": "إنجيلي (مفردات ترجمة فاندايك)",
+    "prayerRegister": "خشوع، مخاطبة الله بـ«أنت»",
+    "readerAddress": "أنت",
+    "godAddress": "أنت",
+    "notes": [
+      "تجنّب المفردات التي تحمل دلالة إسلامية حين يوجد بديل مسيحي مألوف."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "طلب صلاة",
@@ -129,6 +140,77 @@
       "avoid": [],
       "example": "في صلاة التبرؤ تسمّي ما تتركه.",
       "note": "مفردات خدمة التحرير. تحتاج مراجعة من متحدث أصلي."
+    },
+    "sanctification": {
+      "preferred": "التقديس",
+      "allowed": [
+        "النمو في القداسة"
+      ],
+      "avoid": [],
+      "example": "التقديس هو عمل الله فينا.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "الدعوة",
+      "allowed": [],
+      "avoid": [],
+      "example": "صلِّ من أجل دعوة الله لحياتك.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "التسليم لله",
+      "allowed": [
+        "الخضوع لمشيئة الله"
+      ],
+      "avoid": [
+        "الاستسلام"
+      ],
+      "example": "التسليم لله ثقة لا يأس.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity. «الاستسلام» يوحي بالهزيمة."
+    },
+    "abidingInChrist": {
+      "preferred": "الثبات في المسيح",
+      "allowed": [],
+      "avoid": [],
+      "example": "اثبت في المسيح كالغصن في الكرمة.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "العبادة",
+      "allowed": [
+        "التسبيح"
+      ],
+      "avoid": [],
+      "example": "العبادة تبدأ بالنظر إلى الله.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "الاعتراف بالخطايا",
+      "allowed": [
+        "الاعتراف"
+      ],
+      "avoid": [],
+      "example": "الاعتراف بالخطايا يفتح طريق الغفران.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "الغفران",
+      "allowed": [
+        "المغفرة",
+        "المسامحة"
+      ],
+      "avoid": [],
+      "example": "غفران الله يحررنا.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "الصلاة",
+      "allowed": [
+        "الدعاء"
+      ],
+      "avoid": [],
+      "example": "الصلاة حديث مع الله.",
+      "note": "Speaking with God; never a meditation technique or positive thinking. «الدعاء» وحده قد يحمل دلالة إسلامية."
     }
   }
 }

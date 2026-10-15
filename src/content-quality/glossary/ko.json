@@ -2,6 +2,17 @@
   "locale": "ko",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "KR",
+    "christianRegister": "개신교 (개역개정 어휘)",
+    "prayerRegister": "경어체, 하나님께 존댓말",
+    "readerAddress": "당신 (가능하면 생략)",
+    "godAddress": "주님/하나님 + 존칭",
+    "notes": [
+      "개신교 독자 기준: 하느님이 아닌 하나님."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "기도 제목",
@@ -50,7 +61,11 @@
       "allowed": [],
       "avoid": [],
       "example": "회개",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "회개",
+        "참회"
+      ]
     },
     "salvation": {
       "preferred": "구원",
@@ -71,7 +86,11 @@
       "allowed": [],
       "avoid": [],
       "example": "성령",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "성령",
+        "성신"
+      ]
     },
     "scripture": {
       "preferred": "성경",
@@ -127,6 +146,77 @@
       "avoid": [],
       "example": "끊음의 기도에서 떠날 것을 입으로 고백합니다.",
       "note": "축사·해방 사역 용어. 원어민 확인 필요."
+    },
+    "sanctification": {
+      "preferred": "성화",
+      "allowed": [
+        "거룩해져 감"
+      ],
+      "avoid": [],
+      "example": "성화는 우리 안에서 일하시는 하나님의 일입니다.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "부르심",
+      "allowed": [
+        "소명"
+      ],
+      "avoid": [],
+      "example": "당신을 향한 부르심을 위해 기도하세요.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "내어드림",
+      "allowed": [
+        "순복",
+        "맡김"
+      ],
+      "avoid": [
+        "항복"
+      ],
+      "example": "하나님께 내어드림은 포기가 아니라 신뢰입니다.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "그리스도 안에 거하다",
+      "allowed": [],
+      "avoid": [],
+      "example": "가지가 포도나무에 붙어 있듯 그리스도 안에 거하세요.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "예배",
+      "allowed": [
+        "찬양"
+      ],
+      "avoid": [],
+      "example": "예배는 하나님을 바라보는 데서 시작됩니다.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "죄의 고백",
+      "allowed": [
+        "자백"
+      ],
+      "avoid": [
+        "고해성사"
+      ],
+      "example": "죄의 고백은 용서의 길을 엽니다.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "용서",
+      "allowed": [],
+      "avoid": [],
+      "example": "하나님의 용서는 우리를 자유롭게 합니다.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "기도",
+      "allowed": [],
+      "avoid": [],
+      "example": "기도는 하나님과 대화하는 것입니다.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

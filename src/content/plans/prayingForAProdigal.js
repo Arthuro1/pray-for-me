@@ -35,6 +35,7 @@
 // docs/plans/prodigal30.md.
 import { DAYS } from './prayingForAProdigalDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'father', from: 1, to: 7, titleKey: 'planProdigalMovementFather' },
@@ -55,6 +56,7 @@ export const PRAYING_FOR_A_PRODIGAL = {
   titleKey: 'planProdigalTitle',
   subKey: 'planProdigalSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.prodigal30,
   movements: MOVEMENTS,
   intro: {

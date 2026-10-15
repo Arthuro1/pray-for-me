@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ArrowRight, BookOpen, ChevronDown, Flame, HandHeart, Quote } from 'lucide-react';
+import { ArrowDown, ArrowRight, BookOpen, ChevronDown, Church, Flame, HandHeart, Quote, Wind } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import { t } from '../i18n';
 import { APP_NAME } from '../lib/brand';
@@ -8,7 +8,7 @@ import { CIRCLES, circleLabelKey } from '../lib/circles';
 import { EVENTS, track } from '../lib/analytics';
 import { localizeRef } from '../content/teaching';
 import { AUTHOR, AUTHOR_REFS } from '../content/author';
-import { ACCESS_REFS, HEBREW_NAME, NAME_REFS, TRANSLITERATION } from '../content/identity';
+import { ACCESS_REFS, CHURCH_REFS, HEBREW_NAME, NAME_REFS, SPIRIT_REFS, TRANSLITERATION } from '../content/identity';
 import { useCircleTeaching } from '../hooks/useCircleTeaching';
 import CircleRings from '../components/circles/CircleRings';
 import { reducedMotion, useRingReveal } from '../hooks/useRingReveal';
@@ -19,7 +19,8 @@ import { PageHeader, PrimaryButton } from '../components/shared/Primitives';
 import RiseMark from '../components/shared/RiseMark';
 import VerseAccordion from '../components/VerseAccordion';
 
-// "About Qetoret": the name, the access it rests on and the circles, then the
+// "About Qetoret": the name, the access it rests on, the Spirit and the Church,
+// the circles, then the
 // author's own word on how it began — a short
 // biblical foundation (docs/QETORET_IDENTITY.md), never a substitute for
 // Scripture. Scripture is cited by reference only; tapping one unfolds the
@@ -27,6 +28,8 @@ import VerseAccordion from '../components/VerseAccordion';
 const FOUNDATIONS = [
   { id: 'name', icon: Flame, tone: 'amber', titleKey: 'aboutNameTitle', bodyKey: 'aboutNameBody', refs: NAME_REFS },
   { id: 'access', icon: LatinCross, tone: 'plum', titleKey: 'aboutAccessTitle', bodyKey: 'aboutAccessBody', refs: ACCESS_REFS },
+  { id: 'spirit', icon: Wind, tone: 'sky', titleKey: 'aboutSpiritTitle', bodyKey: 'aboutSpiritBody', refs: SPIRIT_REFS },
+  { id: 'church', icon: Church, tone: 'church', titleKey: 'aboutChurchTitle', bodyKey: 'aboutChurchBody', refs: CHURCH_REFS },
 ];
 
 const LETTER_ID = 'about-letter';
@@ -140,8 +143,9 @@ function Hero({ lang }) {
   );
 }
 
-// The name and the access it rests on, as two cards side by side where there
-// is room: what Qetoret means, and why anyone may come at all.
+// The foundations, as cards two by two where there is room: what Qetoret
+// means, why anyone may come at all (to the Father, through the Son), the
+// Spirit who helps us pray, and the Church we pray with — never in its place.
 function Foundations({ lang }) {
   return (
     <div className="about-foundations">

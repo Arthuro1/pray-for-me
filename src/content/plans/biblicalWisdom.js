@@ -1,5 +1,6 @@
 import { DAYS } from './biblicalWisdomDays';
 import { WISDOM_PLAN_APPROVAL } from '../reviews/paulWisdom20260908';
+import { theologyProfile } from '../theologyProfiles';
 
 // A new curriculum has its own review record; earlier approvals do not cover it.
 export const BIBLICAL_WISDOM = {
@@ -15,6 +16,7 @@ export const BIBLICAL_WISDOM = {
   titleKey: 'planWisdomTitle',
   subKey: 'planWisdomSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: WISDOM_PLAN_APPROVAL,
   movements: Array.from({ length: 6 }, (_, i) => ({
     id: `week${i + 1}`, from: i * 7 + 1, to: (i + 1) * 7, titleKey: `planWisdomWeek${i + 1}`,

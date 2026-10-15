@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { ArrowLeft, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, BellOff, CalendarClock, Flag, UserX, Pencil, Lock, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, Church, Plus, Trash2, Edit2, CheckCircle, Lightbulb, Loader2, BookOpen, Share2, Languages, Users, Pin, Repeat, Bell, BellOff, CalendarClock, Flag, UserX, Pencil, Lock, ShieldCheck, Sparkles } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
+import useChurchStore from '../store/churchStore';
 import useTranslationStore from '../store/translationStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
@@ -194,6 +195,7 @@ const EMPTY_OVERRIDES = {};
 
 export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, lang = 'en', planDayKey = null, onShowToday = null, onGoToDay = null, onOpenCircle = null, onPrayInCircle = null, initialFocus = null }) {
   const isCommunity = !!communityPrayer;
+  const churchName = useChurchStore((s) => s.anchor.church);
 
   // ── Personal mode state ──────────────────────────────────────────────────
   // The answered flow is a DISCLOSURE opened by the "Mark answered" action, not
@@ -1802,6 +1804,11 @@ export default function PrayerDetail({ prayer, communityPrayer, onBack, onEdit, 
             <p className="text-xs" role="status" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'answerMarked')}</p>
             <p className="prayer-activity-panel__title mt-2">{t(lang, 'answerNextTitle')}</p>
             <p className="mb-3 text-xs" style={{ color: 'var(--q-text-tertiary)' }}>{t(lang, 'answerNextBody')}</p>
+            {/* A testimony belongs to the gathered body too (Psalm 22:22). */}
+            <p className="mb-3 flex items-start gap-1.5 text-xs" style={{ color: 'var(--q-text-secondary)' }}>
+              <Church size={13} className="mt-0.5 shrink-0" aria-hidden="true" />
+              <span>{churchName ? t(lang, 'answerNextChurchNamed', { church: churchName }) : t(lang, 'answerNextChurch')}</span>
+            </p>
             {addingNextStep ? (
               <UpdateComposer
                 lang={lang}

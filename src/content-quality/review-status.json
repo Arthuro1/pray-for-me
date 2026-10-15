@@ -5923,5 +5923,439 @@
       "contentHash": "6e26643d0d9f83f8e73942ccdcadf2e7204cab7c862f5806fec6393e3c1c2a1c",
       "sourceHash": "87df00da206acfe1e742a6cb82a093b84c229eb18029bd328737556c2fe67596"
     }
+  },
+  "planQuality": {
+    "am/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "85114466c138b0baf0c7e2283877660e308edd5e2a871d20637153c246bb38af",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "ar/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "b37844b11e12fc6aeb57f657b956ede0cecd3c7a49ed120f13b12d7b891fa6fb",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "de/covenant21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "288a8b24c358e43edc9c14fe41de1e94eaa9a353fe4f8366fe9478f2b50e9374",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 and the 2026-10-08 re-review approval of the de/ru/es/pt rewrite; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "es/covenant21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "eda078ec6c172f7ee4756f71371b49bbb00b41e34e175db3de545fd71ad59527",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 and the 2026-10-08 re-review approval of the de/ru/es/pt rewrite; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "fa/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "54c7c19dc2568ff627df60f4a615a6925fe43b2eac739794d440163617402ec6",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "hi/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "c6abb0ec458212b23771f9777c1fe175e4c6f369b181eeef634f1d60d8327be9",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "id/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "0826a7bdaf8bf1f1bb6b91c35c299a5f2e55ad3b18e5d8056cd8dca1079f8065",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "ja/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "a8e37863a60583016ad384990a5133a48e1d392ebc8a7ee809624a706e69d352",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "ko/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "c6340fe6f42fa5be459ccce68f6e30f9adbc9a2bde71a56b5d47f03ba2f3ce60",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "pt/covenant21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "5bcfcf5a9ae9a9eecfb7c230f4cf607748b9de7bdbac31a50888028180f6274d",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 and the 2026-10-08 re-review approval of the de/ru/es/pt rewrite; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ru/covenant21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "a096edc2fda6870ab450bf39c867028e1e1c3abd78703537b869559156f82b01",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 and the 2026-10-08 re-review approval of the de/ru/es/pt rewrite; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "sw/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "817ff81eb7e5da1a8dc5349ead8b5faa630abbc32315d9a8e4cfbcfeda71c26a",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "tl/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "c2a2eeb572583036c820011783dcf60a1b142725429858d06fa10e94633eae9a",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "zh/covenant21": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "675b678ea19896668c7fb66a1df4695c4f6d9f924b80ba3b039557957af885ec",
+      "sourceHash": "9c8a9ea4c443a2f0446ec91855385ac1f2b65e508b7cf4b7362161bdf38b5b4c"
+    },
+    "am/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "f79f1fc9d2ab7afa046e76cc06878c7a901cedde41486e81b0ed165bfc5dfa4c",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ar/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "6df8e3c38ac13a4af9f2522ef4579186635a824cd3f090a39c5c169d3f6377f9",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "de/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "3af518cecc2e37f9a13ba89f88623e6fa2ff9b1b85488feedae08ba37896bcf9",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "es/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "09de31d8049159f7ed1eda2ad3dcf7c50ddc86c26e204f4f391a391bff3164ff",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "fa/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "3ccf6c54ef4b6efdec0b809a6dd1d1da41658255ed5d5de48e0d704931db2d5c",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "hi/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "7d728bcd755043c643556e79ae4b4931bf809675467599c0d1201cf9543581af",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "id/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "cbabd6909a3d96df9e52eb476a091d8b48ddea1b177ee841f160166974b94e3c",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ja/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "26d01e95a3818d276bfaabcb6c643a7172bcea2b8fcb0dd65a0a4420a4c13765",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ko/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "ebdfeed8cbdbcb73379462040c9efdf0a048b85256db1803225bae17020f5a6b",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "pt/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "48264004ba2cfe18f103734619d3a3e6d6a24d51609d9b7a1520f4bbcd1e7f8c",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ru/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "13a90e9b753dbda108d9ebd5298e9682b23e26434348d2de37d45df23c79f4d3",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "sw/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "40b11c580f41c1198b838c7903f9ba081be6cd4ca49fdd6ac141955fefd0f1df",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "tl/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "38a32ca7c9b31abb9dfe987f51b581f97d122fa963045ecd35075193a6f79ccd",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "zh/discernment28": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "d93c2fd74cdc52e8a3e6f5397789620308faee66d6733ba6922db6a06fed8ce8",
+      "sourceHash": "ecb4ecf8fb9d44a1225861e7e979937af4a2a60c2328adb0409bbf4e993d5bdb",
+      "since": "2026-10-12",
+      "basis": "Paul's locale sign-off of 2026-09-03 (scope: current complete translation) and the 2026-10-08 re-review approval; not a native-language audit.",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "am/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "d81784dd988587fa56bd03cc3b20ab99411b896d4703c0851e1ef3b555c46690",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "ar/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "af22b7620d41d794e25086210b55b89ef62ce7e967753c217f794a4578ec5e71",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "de/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "4680fce168d9c60f4d19fbe7c141de68bbccfaad216b4f466de235fa3f857e49",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "es/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "5e79b1a5a6690720cbcd8b33fada6b8830d81deb26f272f71b000e09de48fa73",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "fa/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "06f079835ffcef8af641c413f8e8ec9ed26c0fb761ba02c9a657ca91f0e87111",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "hi/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "5ae42c31442693de3c7a684e16613b672cb8dc306724bbacc6ee5bd717620e25",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "id/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "2b3698152a9901ea0c12feae6d0a46d021892834984a9a6b46a0d9b503eb5764",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "ja/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "94d05fdc303c7dba577e05c898d836d2c63fd1ae96ab896ca078f7ae1efa668f",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "ko/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "2b09e96a9a37ada5e23a40ac512692b25525fabd7dc44efffdebc5b0acaa3ac1",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "pt/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "32fbc0c0f3e638582ed3746163926ebb99675eb49daddd535d35a80821d291e3",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "ru/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "7260b176321f7d5c379ac6e526f777c056819db6ca08e5f8d5a078da45b8a4d9",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "sw/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "3b841152924f5d159b062d3cb2b30487d062535c3aec36289d9af378ffe104a4",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "tl/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "dd6123da1af1a0391380423ab9c04ef649cce2387e421a8edff409dcd3393ca9",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "zh/marriage30": {
+      "status": "needs-review",
+      "contentVersion": 1,
+      "overlayHash": "f64b8f50e34b2270f62f5207667dc198b0d2b8ac3ebff25ed3bc019d43315bae",
+      "sourceHash": "4b0b0f377f33abdf09fea3be72770843492830052ed3c3cd00a69e5892437750"
+    },
+    "am/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "fdbbe4b10c4f92d1ce8834f1f18faf68baa65bd9414158aca40c61a6e9396992",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ar/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "cd85967a51b9cdf27165c7f48c0455dffd79690d3fa9a39ac50de42bcbe310fd",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "de/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "f28aedc98bf0c29e75507ce96678151fba3a07cde210306af13fc31b04b1d6ab",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "es/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "e41d2de7980163d4f33cab443e794c5a4043b4826681d82a41f58eb45f19fb58",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "fa/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "f78713308285e2644ab943d1ace66c708eb45089eddf360808e09a66b92a9601",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "hi/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "1ff6bff1e8353408d2bc90f512ddc3f4dd3e58370d9e792e632f4137412944b0",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "id/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "583e221d45d23702853b0b78ceea4723302f0de043f50631d3d25e36637bc3d0",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ja/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "2bec824664372ae20ea3b3833ec6e58fa5dbacb00e8905eeac7be8722fef0d01",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ko/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "c393b037300e200004c55fd1a09bf4c757b28bf59ca06bd9dd8ce6797026b3af",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "pt/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "e04d1ae5cbe3c76e91699ddbbb00069ac3e81d5933bbdace65a7f9319fc5b749",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "ru/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "658a72fb5b8e68e8108c02e2cb79985a88d87f198b7e29a1cdc9f611ad00b01f",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "sw/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "e9556aedc8108ec95f7a16f81a86f83b512b8d70831e7e3dceb11e51e63f0c2e",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "tl/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "467c3129e7bac4cec2f77a80e91e4138c5136eced9ba769c0272a1eda4b004e0",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    },
+    "zh/preparing21": {
+      "status": "legacy-owner-approved",
+      "contentVersion": 1,
+      "overlayHash": "0eca32448b46482345f80bddd9be9a07e5e2c0c76289b28be5f55a4c152c69b2",
+      "sourceHash": "ec6fd91d9a627e847bee6c06d0efc5daf32a37e1a716bccf06d60023e4c7e566",
+      "since": "2026-10-12",
+      "basis": "proseTranslations: true before 2026-10-12; plan released under the legacy rule (no review record).",
+      "note": "Served before the plan-quality framework existed. Grandfathered by the product owner, not reviewed by a native Christian speaker. Any change to this overlay voids this record."
+    }
   }
 }

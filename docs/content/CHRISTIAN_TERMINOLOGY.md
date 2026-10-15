@@ -25,6 +25,15 @@ When native feedback changes a term, update its example and note, review uses
 in context, rerun the content checks, and reset affected reviews to needs-review.
 Only a named human can mark a glossary human-approved with a review date.
 
+Each glossary also carries a `profile` (region, Christian register, prayer
+register, how the reader and God are addressed, regional notes). The eight
+plan concepts added on 2026-10-12 are sanctification, calling, surrender,
+abidingInChrist, worship, confession, forgiveness and prayer. An optional
+`variants` list names *competing* renderings that must not be mixed in one plan
+(Saint-Esprit / Esprit saint, 圣灵 / 圣神, покаяние / раскаяние). The plan-quality
+checks report mixing as `TERM_INCONSISTENCY`. All of this is an AI draft
+awaiting native review; see `docs/PRAYER_PLAN_QUALITY.md`.
+
 ## Qetoret vocabulary (AI-drafted 2026-10-06 — needs native review)
 
 The rebrand added a small, fixed vocabulary (docs/QETORET_IDENTITY.md §10).

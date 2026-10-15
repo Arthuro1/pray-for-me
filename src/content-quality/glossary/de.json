@@ -2,6 +2,28 @@
   "locale": "de",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "DE",
+    "christianRegister": "modern-protestant (freikirchlich)",
+    "prayerRegister": "conversational-reverent",
+    "readerAddress": "du",
+    "godAddress": "du (kleingeschrieben)",
+    "notes": [
+      "Freikirchliche und landeskirchliche Leser verstehen beide den Wortschatz der Lutherbibel 2017."
+    ],
+    "regions": {
+      "de-CH": {
+        "notes": [
+          "Schweizer Hochdeutsch schreibt ss statt ß."
+        ]
+      },
+      "de-AT": {
+        "notes": [
+          "Österreichische Varianten (z. B. Jänner) erst nach muttersprachlicher Prüfung."
+        ]
+      }
+    }
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "Gebetsanliegen",
@@ -58,7 +80,11 @@
       ],
       "avoid": [],
       "example": "Umkehr heißt, sich Gott neu zuzuwenden.",
-      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically.",
+      "variants": [
+        "umkehr\\p{L}*",
+        "bu(?:ß|ss)e"
+      ]
     },
     "salvation": {
       "preferred": "Errettung",
@@ -142,6 +168,82 @@
       "avoid": [],
       "example": "Im Gebet der Lossagung benennst du, wovon du dich abwendest.",
       "note": "Befreiungsdienst-Vokabular. Nicht „Absage“ für die Lossagung verwenden (klingt nach einem abgesagten Termin); als Ablehnung einer Anfrage ist „Absage“ richtig."
+    },
+    "sanctification": {
+      "preferred": "Heiligung",
+      "allowed": [
+        "Wachstum in der Heiligkeit"
+      ],
+      "avoid": [
+        "Selbstoptimierung"
+      ],
+      "example": "Heiligung ist Gottes Werk in uns.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "Berufung",
+      "allowed": [],
+      "avoid": [],
+      "example": "Bete über deine Berufung.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "Hingabe",
+      "allowed": [
+        "sich Gott überlassen"
+      ],
+      "avoid": [
+        "Kapitulation"
+      ],
+      "example": "Hingabe ist Vertrauen, keine Resignation.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "in Christus bleiben",
+      "allowed": [],
+      "avoid": [],
+      "example": "Bleib in Christus wie die Rebe am Weinstock.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "Anbetung",
+      "allowed": [
+        "Lobpreis"
+      ],
+      "avoid": [],
+      "example": "Anbetung beginnt mit dem Blick auf Gott.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "Sündenbekenntnis",
+      "allowed": [
+        "Bekenntnis"
+      ],
+      "avoid": [],
+      "example": "Das Sündenbekenntnis öffnet den Weg zur Vergebung.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith. „Beichte“ klingt sakramental; im freikirchlichen Register „Bekenntnis“.",
+      "variants": [
+        "(?:sünden)?bekenntnis\\p{L}*",
+        "beichte"
+      ]
+    },
+    "forgiveness": {
+      "preferred": "Vergebung",
+      "allowed": [],
+      "avoid": [],
+      "example": "Gottes Vergebung macht frei.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger.",
+      "variants": [
+        "vergebung",
+        "verzeihung"
+      ]
+    },
+    "prayer": {
+      "preferred": "Gebet",
+      "allowed": [],
+      "avoid": [],
+      "example": "Beten heißt, mit Gott reden.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

@@ -13,7 +13,7 @@ import {
   sendPush,
   json,
 } from '../_shared/reminders.ts';
-import { dailyPayload, normalizeDetail } from '../_shared/notify.ts';
+import { dailyPayload, isSundayKey, normalizeDetail, sundayPayload } from '../_shared/notify.ts';
 import { prayersForDay, type PlannerCategory, type PlannerPrayer } from '../_shared/planner.ts';
 import { dailyReminderDue } from '../_shared/reminderSchedule.ts';
 
@@ -50,7 +50,20 @@ Deno.serve(async (req) => {
         count = prayersForDay((prayers as PlannerPrayer[]) || [], (cats as PlannerCategory[]) || [], dayKey).length;
       }
 
-      const payload = dailyPayload(sub.lang, detail, count);
+      // On a Sunday, an account that opted into Sunday preparation gets the
+      // worship wording instead. The flag is read only on Sundays; a missing
+      // column (migration not applied) simply leaves the daily wording.
+      let sundayPrep = false;
+      if (isSundayKey(dayKey)) {
+        const { data: prefs } = await supabase
+          .from('user_settings')
+          .select('sunday_prep_enabled')
+          .eq('user_id', sub.user_id)
+          .maybeSingle();
+        sundayPrep = prefs?.sunday_prep_enabled === true;
+      }
+
+      const payload = sundayPrep ? sundayPayload(sub.lang) : dailyPayload(sub.lang, detail, count);
 
       const result = await sendPush(sub, payload);
       if (result.gone) {

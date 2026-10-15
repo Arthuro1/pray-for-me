@@ -21,9 +21,19 @@ const COLUMNS = {
   notificationDetail: 'notification_detail',
 };
 
+// Columns added after the original table. They are read when present and
+// written in their own request, so a client that ships before the migration
+// (supabase/migrations/20261015120000_church_anchor_and_sunday_prep.sql) is
+// applied loses only that one preference, never the core settings above.
+const LATER_COLUMNS = {
+  sundayPrepEnabled: 'sunday_prep_enabled',
+};
+
+const ALL_COLUMNS = { ...COLUMNS, ...LATER_COLUMNS };
+
 // True when a settings patch touches anything that lives server-side.
 export function touchesSyncedSettings(updates) {
-  return Object.keys(updates).some((k) => k in COLUMNS);
+  return Object.keys(updates).some((k) => k in ALL_COLUMNS);
 }
 
 // The user's account settings in store shape, or null when no row exists yet
@@ -37,7 +47,7 @@ export async function fetchUserSettings(userId) {
     .maybeSingle();
   if (error || !data) return null;
   const out = {};
-  for (const [key, col] of Object.entries(COLUMNS)) {
+  for (const [key, col] of Object.entries(ALL_COLUMNS)) {
     if (data[col] !== null && data[col] !== undefined) out[key] = data[col];
   }
   return out;
@@ -50,4 +60,11 @@ export async function saveUserSettings(userId, settings) {
     if (settings[key] !== undefined) row[col] = settings[key];
   }
   await supabase.from('user_settings').upsert(row, { onConflict: 'user_id' });
+
+  const later = {};
+  for (const [key, col] of Object.entries(LATER_COLUMNS)) {
+    if (settings[key] !== undefined) later[col] = settings[key];
+  }
+  if (Object.keys(later).length === 0) return;
+  await supabase.from('user_settings').update(later).eq('user_id', userId);
 }

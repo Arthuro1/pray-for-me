@@ -54,6 +54,41 @@ export const FOLLOWUP_MSG: Record<string, { title: string; generic: string }> = 
   tl: { title: 'Follow-up ng panalangin', generic: 'Makipag-ugnayan sa mga ipinananalangin mo — kasama ang sarili mo — at tingnan kung paano gumagalaw ang Diyos. Idagdag ito sa detalye ng panalangin.' },
 };
 
+// Sunday preparation — an opt-in replacement for the daily reminder's wording
+// on a Sunday (user_settings.sunday_prep_enabled). Always generic: it never
+// names the user's church or any prayer.
+export const SUNDAY_MSG: Record<string, { title: string; body: string }> = {
+  en: { title: 'The Lord’s day', body: 'Prepare your heart for worship, and pray for your church.' },
+  fr: { title: 'Le jour du Seigneur', body: 'Préparez votre cœur pour le culte, et priez pour votre église.' },
+  de: { title: 'Der Tag des Herrn', body: 'Bereite dein Herz auf den Gottesdienst vor und bete für deine Gemeinde.' },
+  pt: { title: 'O dia do Senhor', body: 'Prepare o seu coração para o culto e ore pela sua igreja.' },
+  es: { title: 'El día del Señor', body: 'Prepara tu corazón para el culto y ora por tu iglesia.' },
+  zh: { title: '主日', body: '预备你的心来敬拜，也为你的教会祷告。' },
+  ja: { title: '主の日', body: '礼拝に向けて心を整え、あなたの教会のために祈りましょう。' },
+  ko: { title: '주일', body: '예배를 위해 마음을 준비하고, 섬기는 교회를 위해 기도하세요.' },
+  ru: { title: 'День Господень', body: 'Приготовьте сердце к богослужению и помолитесь о своей церкви.' },
+  ar: { title: 'يوم الرب', body: 'هيّئ قلبك للعبادة، وصلِّ لأجل كنيستك.' },
+  fa: { title: 'روز خداوند', body: 'دل خود را برای پرستش آماده کنید و برای کلیسای خود دعا کنید.' },
+  hi: { title: 'प्रभु का दिन', body: 'आराधना के लिए अपना मन तैयार करें, और अपनी कलीसिया के लिए प्रार्थना करें।' },
+  sw: { title: 'Siku ya Bwana', body: 'Andaa moyo wako kwa ibada, na uliombee kanisa lako.' },
+  am: { title: 'የጌታ ቀን', body: 'ልብዎን ለአምልኮ ያዘጋጁ፤ ለቤተ ክርስቲያንዎም ይጸልዩ።' },
+  id: { title: 'Hari Tuhan', body: 'Siapkan hati Anda untuk ibadah, dan doakan gereja Anda.' },
+  tl: { title: 'Araw ng Panginoon', body: 'Ihanda ang iyong puso sa pagsamba, at ipanalangin ang iyong iglesya.' },
+};
+
+// Builds the Sunday preparation push payload — generic by construction.
+export function sundayPayload(lang: string): string {
+  const m = SUNDAY_MSG[lang] || SUNDAY_MSG.en;
+  return JSON.stringify({ title: m.title, body: m.body, url: '/', tag: 'daily-reminder' });
+}
+
+// True when a local "YYYY-MM-DD" day key falls on a Sunday.
+export function isSundayKey(dayKey: string): boolean {
+  const [y, m, d] = String(dayKey).split('-').map(Number);
+  if (![y, m, d].every(Number.isFinite)) return false;
+  return new Date(Date.UTC(y!, m! - 1, d!)).getUTCDay() === 0;
+}
+
 // Normalizes any stored value to a known level, defaulting to the safe 'generic'.
 export function normalizeDetail(value: unknown): NotificationDetail {
   return value === 'count' || value === 'titles' ? value : 'generic';

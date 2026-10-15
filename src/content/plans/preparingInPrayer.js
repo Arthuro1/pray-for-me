@@ -32,6 +32,7 @@
 // stable part — a running plan keeps working across a content revision.
 
 import { DAYS } from './preparingInPrayerDays';
+import { theologyProfile } from '../theologyProfiles';
 
 // The four movements. Kept in the content model (each day names its movement)
 export const MOVEMENTS = [
@@ -65,6 +66,7 @@ export const PREPARING_IN_PRAYER = {
   // their own plan's shelf rather than this one.
   resourceDomains: ['relationships'],
   lifeStage: 'single',
+  theologyProfile: theologyProfile({ audience: 'singles', disputedTopics: ['gender-roles'] }),
   titleKey: 'planPreparingTitle',
   subKey: 'planPreparingSub',
   // This plan's prose is translated into the other 14 languages as overlays

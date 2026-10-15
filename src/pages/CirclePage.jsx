@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from 'react';
-import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Church } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
+import useChurchStore from '../store/churchStore';
 import { t } from '../i18n';
 import { circleLabelKey, isCircle, plansForCircle } from '../lib/circles';
 import { PLANS } from '../content/prayerPlans';
@@ -41,6 +43,7 @@ export default function CirclePage({ onPrayInCircle }) {
   const { circleId } = useParams();
   const lang = usePrayerStore((s) => s.settings.language) || 'fr';
   const prayers = usePrayerStore((s) => s.prayers);
+  const churchAnchor = useChurchStore((s) => s.anchor);
   const navigate = useNavigate();
   const location = useLocation();
   const teaching = useCircleTeaching(lang);
@@ -97,6 +100,19 @@ export default function CirclePage({ onPrayInCircle }) {
             onPray={pray}
             headingLevel={1}
           />
+        )}
+
+        {/* His Church begins with a real one: the person's own congregation,
+            named privately in Settings (encrypted, never shared). */}
+        {circle === 'church' && (
+          <p className="circle-page__church q-meta">
+            <Church size={14} aria-hidden="true" />
+            {churchAnchor.church ? (
+              <span>{t(lang, 'churchCircleNamed', { church: churchAnchor.church })}</span>
+            ) : (
+              <Link to="/settings#church" className="underline underline-offset-2" style={{ color: 'var(--q-royal-text)' }}>{t(lang, 'churchCircleSet')}</Link>
+            )}
+          </p>
         )}
 
         {plans.length > 0 && (

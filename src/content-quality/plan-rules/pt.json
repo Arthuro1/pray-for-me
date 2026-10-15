@@ -1,0 +1,90 @@
+{
+  "locale": "pt",
+  "status": "draft",
+  "note": "AI-drafted detection patterns, not native approval. Patterns flag risks for a human reviewer; they never approve or reject wording on their own.",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": [
+    "deus", "senhor", "pai", "jesus", "cristo", "espírito santo", "espírito", "aba", "todo-poderoso", "salvador", "criador", "altíssimo"
+  ],
+  "prayerDirections": ["peça(?: a deus| ao senhor)?", "ore", "dê graças", "agradeça(?: a deus)?", "traga", "confesse", "nomeie", "diga a deus"],
+  "qualifiers": [
+    "talvez", "pode", "poderia", "possa", "esper\\p{L}*", "or(?:e|ar|emos) (?:por|para que|que)", "peç(?:a|amos) (?:a deus|ao senhor|que)",
+    "se (?:for|é) (?:a sua|a tua) vontade", "segundo a (?:sua|tua) vontade", "nem (?:todos|toda|sempre)", "nenhuma (?:promessa|garantia)",
+    "não (?:promete|garante)", "não podemos saber", "a (?:escritura|bíblia) (?:ensina|promete|diz)", "confie(?:-lhe)? (?:a deus|nele)"
+  ],
+  "negations": ["não", "nunca", "jamais", "ninguém", "nada", "nenhum", "nenhuma", "sem", "em vez de", "ao invés de"],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": [
+      "deus (?:te|lhe) (?:disse|falou)", "deus (?:está|esta) (?:te|lhe) dizendo", "o senhor (?:te|lhe) (?:disse|falou|está dizendo)",
+      "deus quer que (?:eu te diga|você saiba que)", "esta é a mensagem de deus para (?:você|ti)"
+    ],
+    "GUARANTEED_OUTCOME": [
+      "deus (?:vai|irá) (?:com certeza |certamente |definitivamente )?(?:te |lhe )?dar (?:o que você|tudo o que|a sua (?:resposta|vitória)|o seu milagre)",
+      "deus (?:certamente|definitivamente|com certeza) (?:vai|irá)",
+      "(?:o seu|seu|teu) milagre (?:está a caminho|é garantido|vem aí)",
+      "(?:resposta|resultado|milagre) garantid[oa]"
+    ],
+    "PRAYER_TECHNIQUE": [
+      "se você orar (?:corretamente|direito|o suficiente|da maneira certa)", "ore (?:esta oração|estas palavras) e deus (?:vai|deve|tem que)",
+      "deus (?:deve|tem que|é obrigado a) (?:responder|agir)", "(?:a )?(?:oração|fórmula) (?:secreta|perfeita|certa) (?:para|que) (?:mover|obrigar) deus"
+    ],
+    "CERTAINTY_CLAIM": [
+      "deus (?:já )?(?:escolheu|preparou) (?:o seu|a sua|seu|sua|um|uma) (?:futur[oa] )?(?:cônjuge|espos[oa]|marido|parceir[oa])",
+      "(?:ele|ela|essa pessoa) é a escolha de deus para (?:você|ti)",
+      "esta é (?:com certeza |claramente )?a vontade de deus para (?:você|ti|sua vida)",
+      "(?:este|esta) (?:sofrimento|doença|perda|provação|dor) (?:aconteceu|veio|foi enviad[oa]) (?:porque|para que|para te ensinar)"
+    ],
+    "GUARANTEED_HEALING": [
+      "deus (?:vai|irá) (?:te |lhe |o |a )?curar", "deus (?:te |o |a )?curará", "você (?:será|vai ser) curad[oa]", "(?:a sua|sua) cura (?:é garantida|é certa|está a caminho)"
+    ],
+    "GUARANTEED_MARRIAGE": [
+      "deus (?:vai|irá) (?:te |lhe )?(?:dar|trazer|enviar) (?:um|uma|o seu|a sua) (?:futur[oa] )?(?:cônjuge|espos[oa]|marido)",
+      "(?:o seu|seu|a sua|sua) (?:futur[oa] )?(?:cônjuge|espos[oa]|marido) (?:está (?:te )?esperando|está a caminho|já vem)",
+      "você (?:vai|irá) (?:com certeza |certamente )?(?:se casar|casar)"
+    ],
+    "PROSPERITY_PROMISE": [
+      "deus (?:vai|irá) (?:te |lhe )?(?:fazer rico|deixar ric[oa])", "deus (?:vai|irá) (?:te |lhe )?abençoar (?:financeiramente|com riquezas|com dinheiro)",
+      "(?:semeie|dê|oferte) (?:uma semente|dinheiro|o seu dízimo|esta oferta) e (?:colha|receba|receberá)",
+      "(?:vitória|bênção) financeira (?:é garantida|está a caminho)", "cem vezes mais"
+    ],
+    "FAITH_DEFICIT_BLAME": [
+      "(?:se|porque) você (?:tivesse|tem|não tem|não tinha) (?:fé suficiente|mais fé)", "não (?:foi|foram) curad[oa]s? por (?:falta de fé|incredulidade|pouca fé)",
+      "(?:a sua|sua) (?:falta de fé|incredulidade|dúvida) (?:é|foi) (?:o motivo|a razão|o que bloqueia)"
+    ],
+    "SUFFERING_BLAME": [
+      "(?:o seu|seu|este|esta|a sua|sua) (?:sofrimento|doença|dor|perda|infertilidade|aborto espontâneo|depressão) (?:é|foi) (?:o resultado|o castigo|a consequência|a punição) de (?:um |seu |sua )?pecado",
+      "(?:um )?pecado (?:oculto|secreto|não confessado) (?:é|foi|deve ser) (?:o motivo|a causa|a raiz)", "deus (?:está|esta) (?:te|lhe) (?:castigando|punindo)"
+    ],
+    "SHAME_LANGUAGE": [
+      "você (?:é|está|ficou) (?:suj[oa]|impur[oa]|sem valor|indign[oa]|estragad[oa])", "não (?:é )?mais (?:dign[oa]|pur[oa]) (?:de|para) (?:amor|o casamento)",
+      "(?:chiclete mastigado|rosa murcha|papel amassado)", "mercadoria danificada"
+    ],
+    "ABUSE_ENDANGERMENT": [
+      "(?:fique|permaneça|continue) (?:com|em) (?:um|uma|o seu|a sua) (?:marido|esposa|parceir[oa]|relacionamento|lar|casamento) (?:violent[oa]|abusiv[oa])",
+      "submeter-se (?:ao abuso|à violência|ao agressor)", "(?:confronte|enfrente) (?:o seu |seu |o )?agressor sozinh[oa]",
+      "perdoar (?:significa|é) (?:voltar|ficar|retornar)", "(?:o abuso|a violência) é (?:a sua cruz|a vontade de deus)", "não (?:conte|denuncie) à polícia"
+    ],
+    "CARE_REPLACEMENT": [
+      "(?:pare|deixe) de tomar (?:os seus |seus )?(?:remédios|medicamentos|antidepressivos|tratamento)",
+      "você não precisa de (?:médico|terapeuta|conselheiro|psiquiatra|remédios|medicamentos|tratamento|ajuda profissional)",
+      "a (?:oração|fé) (?:em vez de|substitui|no lugar de) (?:os remédios|a terapia|o médico|o tratamento)",
+      "(?:a depressão|a ansiedade|a doença mental) é (?:só |apenas |simplesmente )?(?:falta de fé|um ataque espiritual|pecado)"
+    ],
+    "COERCIVE_CONFRONTATION": [
+      "confronte-(?:o|a) até que se arrependa", "(?:obrigue|pressione)-(?:o|a) a (?:se arrepender|confessar|voltar|pedir desculpas)",
+      "(?:negue|retire) (?:o contato|o seu amor|o seu perdão) até que"
+    ],
+    "SPIRITUAL_MANIPULATION": [
+      "deus (?:vai|irá) (?:te |lhe )?(?:castigar|amaldiçoar|abandonar) se", "se você não [^.!?]{0,40}(?:deus (?:vai|irá) (?:te |lhe )?(?:castigar|amaldiçoar)|você será amaldiçoad[oa])",
+      "(?:a sua|sua|o seu|seu) (?:salvação|bênção|cura) depende de quanto você (?:ora|dá|jejua)", "obedeça ao seu (?:pastor|líder|profeta) sem questionar",
+      "questionar o seu (?:pastor|líder|profeta) é (?:rebeldia|rebelião|pecado)"
+    ],
+    "SELF_HELP_LANGUAGE": [
+      "manifeste (?:os seus desejos|a abundância|o que você quer)", "o universo (?:vai|quer|te envia)", "energia positiva", "(?:a )?melhor versão de (?:você mesm[oa]|si mesm[oa])",
+      "lei da atração", "(?:alta|sua) vibração", "amor-próprio", "você merece (?:o melhor|ser feliz)"
+    ],
+    "COACHING_TONE": ["você consegue", "saia da sua zona de conforto", "acredite em você", "você é suficiente", "confie no processo", "desbloqueie o seu potencial"],
+    "LITERAL_CALQUE": ["realizar que", "aplicar para (?:uma vaga|um emprego)", "tomar vantagem de", "deus é bom o tempo todo"]
+  }
+}

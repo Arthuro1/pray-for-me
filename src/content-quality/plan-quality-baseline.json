@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "note": "Existing prayer-plan quality findings, not approvals. See docs/PRAYER_PLAN_QUALITY.md.",
+  "issues": [
+    {
+      "locale": "de",
+      "id": "plans/preparing21:plan.forgiveness",
+      "rule": "plan:TERM_INCONSISTENCY",
+      "severity": "warning",
+      "message": "“forgiveness” is rendered in 2 competing ways in one plan (vergebung ×2, verzeihung ×1). Choose one, or record why both belong.",
+      "fingerprint": "c9c4ce58914ffeaeaf8b91e3af292eb85563b146e9ce2a92ac1ec3f94382f81c"
+    },
+    {
+      "locale": "zh",
+      "id": "plans/discernment28:plan.prayer",
+      "rule": "plan:TERM_INCONSISTENCY",
+      "severity": "warning",
+      "message": "“prayer” is rendered in 2 competing ways in one plan (祷告 ×20, 祈祷 ×3). Choose one, or record why both belong.",
+      "fingerprint": "3046f247de0b5ec0b28d1aa4eefd11f2c3c5c0bd7b1d9da03d6843034b5517e8"
+    },
+    {
+      "locale": "ja",
+      "id": "plans/discernment28:plan.repentance",
+      "rule": "plan:TERM_INCONSISTENCY",
+      "severity": "warning",
+      "message": "“repentance” is rendered in 2 competing ways in one plan (悔い改め ×1, 改心 ×1). Choose one, or record why both belong.",
+      "fingerprint": "7feb3bc8c10b920b7dc20cc3c67c63ce75fca468c925109ef6cf32022c98f007"
+    },
+    {
+      "locale": "fr",
+      "id": "plans/psalms42:plan.holySpirit",
+      "rule": "plan:TERM_INCONSISTENCY",
+      "severity": "warning",
+      "message": "“holySpirit” is rendered in 2 competing ways in one plan (esprit[- ]saint ×1, saint-esprit ×2). Choose one, or record why both belong.",
+      "fingerprint": "aa956f4ede40a68bd3aed08adc3809370cdf26127263caf52f98424663140cd2"
+    }
+  ]
+}

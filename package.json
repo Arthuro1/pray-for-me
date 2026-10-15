@@ -26,7 +26,9 @@
     "test:db": "supabase test db",
     "test:watch": "vitest",
     "check:content": "node scripts/audit-copy.mjs",
-    "review:translations": "node scripts/review-translations.mjs"
+    "review:translations": "node scripts/review-translations.mjs",
+    "build:plan-review": "node scripts/build-plan-review.mjs",
+    "import:plan-review": "node scripts/import-plan-review.mjs"
   },
   "dependencies": {
     "@ffmpeg/core": "^0.12.10",

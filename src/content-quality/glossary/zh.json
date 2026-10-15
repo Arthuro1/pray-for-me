@@ -2,6 +2,23 @@
   "locale": "zh",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "CN",
+    "christianRegister": "基督新教（和合本词汇，神版）",
+    "prayerRegister": "敬虔、亲切，称神为\"你\"",
+    "readerAddress": "你",
+    "godAddress": "你",
+    "notes": [
+      "简体中文、大陆用语；不得出现繁体字。"
+    ],
+    "regions": {
+      "zh-TW": {
+        "notes": [
+          "繁体与台湾用语需单独的语言版本，不能作为 zh 的变体发布。"
+        ]
+      }
+    }
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "代祷事项",
@@ -50,7 +67,11 @@
       "allowed": [],
       "avoid": [],
       "example": "悔改",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "悔改",
+        "忏悔"
+      ]
     },
     "salvation": {
       "preferred": "救恩",
@@ -64,14 +85,22 @@
       "allowed": [],
       "avoid": [],
       "example": "恩典",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "恩典",
+        "恩惠"
+      ]
     },
     "holySpirit": {
       "preferred": "圣灵",
       "allowed": [],
       "avoid": [],
       "example": "圣灵",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "圣灵",
+        "圣神"
+      ]
     },
     "scripture": {
       "preferred": "圣经",
@@ -127,6 +156,83 @@
       "avoid": [],
       "example": "在弃绝的祷告中，你说出要离弃的事。",
       "note": "释放事工用语。"
+    },
+    "sanctification": {
+      "preferred": "成圣",
+      "allowed": [
+        "在圣洁上长进"
+      ],
+      "avoid": [],
+      "example": "成圣是神在我们里面的工作。",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "呼召",
+      "allowed": [
+        "召命"
+      ],
+      "avoid": [],
+      "example": "为你的呼召祷告。",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "降服",
+      "allowed": [
+        "交托"
+      ],
+      "avoid": [
+        "投降"
+      ],
+      "example": "降服于神不是放弃，而是信靠。",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "住在基督里",
+      "allowed": [
+        "常在基督里"
+      ],
+      "avoid": [],
+      "example": "住在基督里，就像枝子连在葡萄树上。",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "敬拜",
+      "allowed": [
+        "赞美"
+      ],
+      "avoid": [],
+      "example": "敬拜从仰望神开始。",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "认罪",
+      "allowed": [],
+      "avoid": [
+        "告解"
+      ],
+      "example": "认罪打开了蒙赦免的路。",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith. \"告解\"指天主教圣事。"
+    },
+    "forgiveness": {
+      "preferred": "饶恕",
+      "allowed": [
+        "赦免",
+        "原谅"
+      ],
+      "avoid": [],
+      "example": "神的赦免使我们得自由。",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger. 神赦罪多用\"赦免\"，彼此之间多用\"饶恕\"。"
+    },
+    "prayer": {
+      "preferred": "祷告",
+      "allowed": [],
+      "avoid": [],
+      "example": "祷告就是与神说话。",
+      "note": "Speaking with God; never a meditation technique or positive thinking.",
+      "variants": [
+        "祷告",
+        "祈祷"
+      ]
     }
   }
 }

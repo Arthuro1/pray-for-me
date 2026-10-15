@@ -84,7 +84,11 @@ export default {
     "nameTitle": "The name",
     "nameBody": "Qetoret is the Hebrew word for the incense offered before God. In Scripture, rising incense becomes a picture of the prayers of God's people. Qetoret takes its name from this image: a life of prayer continually brought before God.",
     "christTitle": "Through Christ",
-    "christBody": "Qetoret is a tool for prayer, never a go-between. We come to the Father through Jesus Christ, our Great High Priest. In Him, believers are called a royal priesthood: invited to draw near, to intercede for others and to live as His witnesses — under His authority, never over other people."
+    "christBody": "Qetoret is a tool for prayer, never a go-between. We come to the Father through Jesus Christ, our Great High Priest. In Him, believers are called a royal priesthood: invited to draw near, to intercede for others and to live as His witnesses — under His authority, never over other people.",
+    "spiritTitle": "In the Spirit",
+    "spiritBody": "Through Christ we have access to the Father in one Spirit. The Holy Spirit helps us in our weakness and intercedes for us when we do not know how to pray as we should. Prayer is not a technique: it is born of His presence, and He is the one who makes it bear fruit.",
+    "churchTitle": "With the Church",
+    "churchBody": "Qetoret does not replace your local church: it helps you pray with your church and for it. The first believers prayed together, shared their lives and broke bread as one family. Personal prayer is nourished by shared prayer: gather together, and carry one another."
   },
   "bring": {
     "title": "Bring what is on your heart",

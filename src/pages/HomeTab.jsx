@@ -35,6 +35,7 @@ import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
 import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
 import RemainWithGod from '../components/RemainWithGod';
+import SundayCard from '../components/SundayCard';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -79,7 +80,7 @@ function FoldPrayer({ prayer, lang, dayKey, tr, detail }) {
 // what was missed fold into one quiet panel (grace, not guilt); the verse of
 // the day closes the page. Statistics live in the Journal; planning and
 // everything else in More.
-export default function HomeTab({ onAdd, onEdit }) {
+export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
   const navigate = useNavigate();
   const { getEntriesForDay, getCompletedPrayersForDay, getCatchUp, markPrayedOn, completions, categories, prayers, settings, loading } = usePrayerStore(
     useShallow((s) => ({
@@ -108,7 +109,8 @@ export default function HomeTab({ onAdd, onEdit }) {
   // session open.
   const [session, setSession] = useState(null);
   const [catchUpOpen, setCatchUpOpen] = useState(false);
-  const [remaining, setRemaining] = useState(false);
+  // The quiet space open over the page ('remain' | 'spirit' | 'noWords'), or null.
+  const [quietSpace, setQuietSpace] = useState(null);
   const [prayedOpen, setPrayedOpen] = useState(false);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
@@ -204,7 +206,7 @@ export default function HomeTab({ onAdd, onEdit }) {
       {sharingVerse && verse && (
         <VerseShareModal verse={verse} lang={lang} dayKey={dayKey} onClose={() => setSharingVerse(false)} />
       )}
-      {remaining && <RemainWithGod lang={lang} onFinish={() => setRemaining(false)} />}
+      {quietSpace && <RemainWithGod lang={lang} variant={quietSpace} onFinish={() => setQuietSpace(null)} />}
       {session && session.prayers.length > 0 && (
         <PrayerSession
           prayers={session.prayers}
@@ -253,6 +255,10 @@ export default function HomeTab({ onAdd, onEdit }) {
             <PrimaryButton onClick={() => openSession(remainingPrayers)} className="today-focus__begin">
               {t(lang, 'beginPrayer')}
             </PrimaryButton>
+            {/* When the words won't come, coming is still enough (Romans 8:26). */}
+            <QuietButton onClick={() => setQuietSpace('noWords')} className="today-no-words">
+              {t(lang, 'noWordsLink')}
+            </QuietButton>
             <TodayReminder reminder={reminder} lang={lang} className="today-focus__reminder" />
           </section>
         )}
@@ -266,8 +272,11 @@ export default function HomeTab({ onAdd, onEdit }) {
             <p className="today-focus__context">{tp(lang, 'todayPrayedCount', completedToday.length)}</p>
             <p id="today-complete-title" className="today-focus__title" role="status">{t(lang, 'todayCompleteTitle')}</p>
             <div className="today-focus__actions">
-              <SecondaryButton onClick={() => setRemaining(true)}>
+              <SecondaryButton onClick={() => setQuietSpace('remain')}>
                 {t(lang, 'remainWithGod')}
+              </SecondaryButton>
+              <SecondaryButton onClick={() => setQuietSpace('spirit')}>
+                {t(lang, 'spiritPrayTitle')}
               </SecondaryButton>
               {todayEntries.length > 0 && (
                 <QuietButton onClick={() => openSession(todayEntries.map((e) => e.prayer))}>
@@ -282,6 +291,8 @@ export default function HomeTab({ onAdd, onEdit }) {
         {remainingPrayers.length === 0 && !dayComplete && (
           <TodayReminder reminder={reminder} lang={lang} className="q-meta mb-6 flex items-center justify-center gap-1.5" />
         )}
+
+        <SundayCard lang={lang} onPrayInCircle={onAddInCircle} />
 
         {!loading && prayers.length > 0 && (
           <>

@@ -35,6 +35,7 @@
 // docs/PRAYER_PLANS.md). Day numbers and references are the stable part.
 import { DAYS } from './identityInChristDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'rescued', from: 1, to: 5, titleKey: 'planIdentityMovementRescued' },
@@ -55,6 +56,7 @@ export const IDENTITY_IN_CHRIST = {
   titleKey: 'planIdentityTitle',
   subKey: 'planIdentitySub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.identity21,
   movements: MOVEMENTS,
   intro: {

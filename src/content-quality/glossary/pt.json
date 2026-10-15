@@ -2,6 +2,23 @@
   "locale": "pt",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "BR",
+    "christianRegister": "evangélico (vocabulário ARA/NVI)",
+    "prayerRegister": "reverente, Deus tratado por \"tu\" ou \"Senhor\"",
+    "readerAddress": "você",
+    "godAddress": "tu",
+    "notes": [
+      "Português do Brasil; validar com um revisor europeu antes de servir pt-PT."
+    ],
+    "regions": {
+      "pt-PT": {
+        "notes": [
+          "Em Portugal: \"tu\" para o leitor, \"telemóvel\", \"equipa\"."
+        ]
+      }
+    }
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "pedido de oração",
@@ -50,7 +67,11 @@
       "allowed": [],
       "avoid": [],
       "example": "arrependimento",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "arrependimento",
+        "penitência"
+      ]
     },
     "salvation": {
       "preferred": "salvação",
@@ -129,6 +150,74 @@
       "avoid": [],
       "example": "Numa oração de renúncia você nomeia aquilo de que se afasta.",
       "note": "Vocabulário de libertação."
+    },
+    "sanctification": {
+      "preferred": "santificação",
+      "allowed": [
+        "crescer em santidade"
+      ],
+      "avoid": [],
+      "example": "A santificação é obra de Deus em nós.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "chamado",
+      "allowed": [
+        "vocação"
+      ],
+      "avoid": [],
+      "example": "Ore sobre o seu chamado.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "rendição",
+      "allowed": [
+        "entrega a Deus"
+      ],
+      "avoid": [
+        "capitulação"
+      ],
+      "example": "A entrega a Deus não é resignação.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "permanecer em Cristo",
+      "allowed": [],
+      "avoid": [],
+      "example": "Permanecer em Cristo é continuar ligado a ele.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "adoração",
+      "allowed": [
+        "louvor"
+      ],
+      "avoid": [],
+      "example": "A adoração começa ao olhar para Deus.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "confissão",
+      "allowed": [
+        "confessar o pecado"
+      ],
+      "avoid": [],
+      "example": "A confissão abre o caminho para o perdão.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "perdão",
+      "allowed": [],
+      "avoid": [],
+      "example": "O perdão de Deus nos liberta.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "oração",
+      "allowed": [],
+      "avoid": [],
+      "example": "Oração é conversar com Deus.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

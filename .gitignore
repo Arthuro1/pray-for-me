@@ -50,3 +50,5 @@ public/screenshots/more.jpeg
 
 # Local editorial review packages
 reports/content-review/
+# Generated plan review pages (rebuild with npm run build:plan-review)
+reports/plan-review/

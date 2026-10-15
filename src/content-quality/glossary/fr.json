@@ -2,6 +2,23 @@
   "locale": "fr",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "FR",
+    "christianRegister": "évangélique (vocabulaire Segond)",
+    "prayerRegister": "tutoiement de Dieu, révérencieux",
+    "readerAddress": "vous pour l'interface, tu pour la prose dévotionnelle",
+    "godAddress": "tu",
+    "notes": [
+      "Lectorat francophone européen et africain : éviter les tournures propres à une seule région."
+    ],
+    "regions": {
+      "fr-CA": {
+        "notes": [
+          "Valider les usages québécois (courriel, etc.) avant toute variante régionale."
+        ]
+      }
+    }
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "sujet de prière",
@@ -53,7 +70,11 @@
       "allowed": [],
       "avoid": [],
       "example": "Tourne-toi vers Dieu dans la repentance.",
-      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically.",
+      "variants": [
+        "repentance",
+        "pénitence"
+      ]
     },
     "salvation": {
       "preferred": "salut",
@@ -74,7 +95,11 @@
       "allowed": [],
       "avoid": [],
       "example": "Demande au Saint-Esprit de te guider.",
-      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically.",
+      "variants": [
+        "saint-esprit",
+        "esprit[- ]saint"
+      ]
     },
     "scripture": {
       "preferred": "les Écritures",
@@ -133,6 +158,83 @@
       "avoid": [],
       "example": "Dans une prière de renonciation, tu nommes ce que tu rejettes.",
       "note": "Vocabulaire de délivrance ; « renoncement » peut aussi signifier l’abnégation, vérifier le contexte."
+    },
+    "sanctification": {
+      "preferred": "sanctification",
+      "allowed": [
+        "croissance dans la sainteté"
+      ],
+      "avoid": [],
+      "example": "La sanctification est l'œuvre de Dieu en nous.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "appel",
+      "allowed": [
+        "vocation"
+      ],
+      "avoid": [],
+      "example": "Prie au sujet de l'appel de Dieu sur ta vie.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "abandon à Dieu",
+      "allowed": [
+        "remise à Dieu",
+        "s'abandonner à Dieu"
+      ],
+      "avoid": [
+        "capitulation",
+        "reddition"
+      ],
+      "example": "L'abandon à Dieu n'est pas de la résignation.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "demeurer en Christ",
+      "allowed": [
+        "rester attaché à Christ"
+      ],
+      "avoid": [],
+      "example": "Demeurer en Christ, c'est rester attaché à lui comme le sarment au cep.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine.",
+      "variants": [
+        "demeur\\p{L}* en (?:christ|lui|moi)",
+        "rest\\p{L}* en (?:christ|lui|moi)"
+      ]
+    },
+    "worship": {
+      "preferred": "adoration",
+      "allowed": [
+        "louange",
+        "culte"
+      ],
+      "avoid": [],
+      "example": "L'adoration commence en regardant à Dieu.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "confession",
+      "allowed": [
+        "reconnaître ses péchés"
+      ],
+      "avoid": [],
+      "example": "La confession ouvre le chemin du pardon.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "pardon",
+      "allowed": [],
+      "avoid": [],
+      "example": "Le pardon de Dieu nous libère.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "prière",
+      "allowed": [],
+      "avoid": [],
+      "example": "La prière, c'est parler avec Dieu.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

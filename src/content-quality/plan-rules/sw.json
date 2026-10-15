@@ -1,0 +1,37 @@
+{
+  "locale": "sw",
+  "status": "draft",
+  "note": "AI-drafted detection patterns, not native approval. Swahili marks negation inside the verb, so patterns name the affirmative forms. Patterns flag risks for a human reviewer; they never approve or reject wording on their own.",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": ["mungu", "bwana", "baba", "yesu", "kristo", "roho mtakatifu", "roho", "aba", "mwenyezi", "mwokozi", "muumba", "aliye juu"],
+  "prayerDirections": ["omba", "mwombe(?: mungu| bwana)?", "shukuru", "mshukuru(?: mungu)?", "toa shukrani", "leta", "ungama", "taja", "mwambie mungu"],
+  "qualifiers": [
+    "huenda", "labda", "inawezekana", "anaweza", "tumaini", "matumaini", "tunaomba", "omba (?:ili|kwamba)", "mwombe mungu", "ikiwa ni mapenzi (?:yake|yako|ya mungu)",
+    "kwa mapenzi yake", "si (?:kila|mara zote)", "hakuna (?:ahadi|hakikisho)", "hai(?:ahidi|hakikishi)", "hatuwezi kujua", "maandiko (?:yanafundisha|yanaahidi|yanasema)",
+    "biblia (?:inafundisha|inaahidi|inasema)", "mkabidhi mungu"
+  ],
+  "negations": [
+    "si", "kamwe", "bila", "badala ya", "hapana", "usi\\p{L}+",
+    "(?:hai|hazi|hali|haya|havi|hau|haku|hatu|ham|hawa)\\p{L}{3,}", "hu(?:wezi|na|hitaji|tak\\p{L}*)"
+  ],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": ["mungu (?:amekuambia|alikuambia|anakuambia)", "bwana (?:amekuambia|alikuambia|anakuambia)", "mungu anazungumza nawe (?:kuhusu|kupitia|leo)", "mungu anataka nikuambie", "hili ni neno la mungu kwako", "huu ni ujumbe wa mungu kwako"],
+    "GUARANTEED_OUTCOME": ["mungu (?:hakika|kwa hakika|bila shaka) (?:atakupa|atajibu|atatenda)", "mungu atakupa (?:kila kitu|chochote) (?:unachoomba|unachotaka)", "(?:mafanikio yako|muujiza wako|jibu lako) (?:yanakuja|unakuja|linakuja|yamehakikishwa|umehakikishwa)", "(?:jibu lililohakikishwa|matokeo yaliyohakikishwa|muujiza uliohakikishwa)"],
+    "PRAYER_TECHNIQUE": ["ukiomba (?:ipasavyo|vya kutosha|kwa njia sahihi|kwa muda wa kutosha)", "omba (?:sala hii|maneno haya) na mungu (?:atakupa|lazima)", "mungu (?:lazima|analazimika) (?:ajibu|atende|kujibu|kutenda)", "(?:sala|fomula) (?:ya siri|sahihi|kamili) (?:ya kumfanya|itakayomfanya) mungu"],
+    "CERTAINTY_CLAIM": ["mungu (?:ameshakuchagulia|amekuchagulia|amekuandalia) (?:mwenzi|mume|mke)", "(?:yeye|mtu huyu) ndiye chaguo la mungu kwako", "haya ni (?:hakika|wazi) mapenzi ya mungu kwako", "(?:mateso|ugonjwa|msiba|jaribu|maumivu) (?:haya|huu|hili) (?:yalitokea|ulitokea|lilitokea|yamekuja|umekuja|yalitumwa) (?:kwa sababu|ili kukufundisha)"],
+    "GUARANTEED_HEALING": ["mungu (?:hakika |kwa hakika )?atakuponya", "(?:utapona|utaponywa) (?:hakika|kwa hakika|bila shaka)", "uponyaji wako (?:umehakikishwa|ni hakika|unakuja)"],
+    "GUARANTEED_MARRIAGE": ["mungu (?:hakika |kwa hakika )?(?:atakupa|atakuletea|atakutumia) (?:mwenzi|mume|mke)", "(?:mwenzi|mume|mke) wako (?:wa baadaye )?(?:anakusubiri|yuko njiani)", "(?:utaolewa|utaoa) (?:hakika|kwa hakika|bila shaka)"],
+    "PROSPERITY_PROMISE": ["mungu atakufanya (?:tajiri|uwe tajiri)", "mungu atakubariki (?:kifedha|kwa pesa|kwa mali)", "(?:panda|toa) (?:mbegu|pesa|zaka|sadaka hii) (?:na|ili) (?:uvune|upokee)", "(?:mafanikio|baraka) (?:ya )?kifedha (?:yamehakikishwa|yanakuja)", "mara mia zaidi"],
+    "FAITH_DEFICIT_BLAME": ["(?:kama ungekuwa na|kwa sababu huna) imani (?:ya kutosha|zaidi)", "hakupona kwa sababu ya (?:kukosa imani|kutoamini|imani haba)", "(?:kukosa imani|kutoamini|shaka) (?:kwako|yako) (?:ndiyo|ndio) (?:sababu|kizuizi)"],
+    "SUFFERING_BLAME": ["(?:mateso|ugonjwa|maumivu|msiba|utasa|mimba kuharibika|msongo) (?:yako|wako|haya|huu) (?:ni matokeo ya|ni adhabu ya) dhambi", "dhambi (?:iliyofichwa|ya siri|isiyoungamwa) (?:ndiyo|ndio) (?:sababu|chanzo|mzizi)", "mungu anakuadhibu"],
+    "SHAME_LANGUAGE": ["(?:umechafuka|wewe ni mchafu|huna thamani tena|si safi tena|umeharibika)", "(?:hustahili|hufai) (?:tena )?(?:upendo|ndoa)", "(?:bidhaa iliyoharibika|ua lililonyauka|karatasi iliyokunjwa)"],
+    "ABUSE_ENDANGERMENT": ["(?:baki|endelea kukaa) (?:na|katika) (?:mume|mke|mwenzi|uhusiano|nyumba|ndoa) (?:mkatili|mnyanyasaji|wa vurugu|yenye vurugu|wenye unyanyasaji)", "(?:jinyenyekeze|tii) (?:kwa )?(?:unyanyasaji|vurugu|mnyanyasaji)", "(?:mkabili|kabiliana na) (?:mnyanyasaji|mtesaji) (?:peke yako|wewe mwenyewe)", "kusamehe (?:ni|kunamaanisha) kurudi", "(?:unyanyasaji|vurugu) ni (?:msalaba wako|mapenzi ya mungu)", "usi(?:ripoti|waambie) polisi"],
+    "CARE_REPLACEMENT": ["acha (?:kunywa |kutumia )?(?:dawa|vidonge|matibabu)", "huhitaji (?:daktari|mshauri|mtaalamu|dawa|matibabu|msaada wa kitaalamu)", "maombi (?:badala ya|yanachukua nafasi ya) (?:dawa|matibabu|daktari)", "(?:msongo wa mawazo|wasiwasi|ugonjwa wa akili) ni (?:tu )?(?:ukosefu wa imani|shambulio la kiroho|dhambi)"],
+    "COERCIVE_CONFRONTATION": ["(?:mkemee|mkabili) hadi (?:atubu|akiri)", "(?:mlazimishe|mshinikize) (?:atubu|akiri|arudi|aombe msamaha)", "(?:katisha|zuia) (?:mawasiliano|upendo|msamaha) hadi"],
+    "SPIRITUAL_MANIPULATION": ["mungu (?:atakuadhibu|atakulaani|atakuacha) (?:kama|usipo\\p{L}*)", "usipo\\p{L}* [^.!?]{0,40}(?:mungu atakuadhibu|utalaaniwa)", "wokovu wako (?:unategemea|hutegemea) (?:kiasi|mara ngapi) (?:unaomba|unatoa|unafunga)", "mtii (?:mchungaji|kiongozi|nabii) wako bila (?:kuuliza|swali)", "kumtilia shaka (?:mchungaji|kiongozi|nabii) ni (?:uasi|dhambi)"],
+    "SELF_HELP_LANGUAGE": ["sheria ya mvuto", "ulimwengu (?:utakupa|unataka)", "nishati chanya", "toleo bora (?:la|zaidi la) wewe mwenyewe", "(?:ongeza|inua) mtetemo", "unastahili (?:bora zaidi|furaha)", "dhihirisha (?:matamanio|wingi)"],
+    "COACHING_TONE": ["unaweza kufanya hivi", "toka nje ya eneo lako la faraja", "jiamini", "unatosha", "amini mchakato", "fungua uwezo wako"],
+    "LITERAL_CALQUE": []
+  }
+}

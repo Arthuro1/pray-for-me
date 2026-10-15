@@ -2,6 +2,7 @@
 // References are resolved by the existing Scripture reader.
 import { DAYS } from './prayingForOurMarriageDays';
 import { PLAN_APPROVALS } from '../reviews/paul20260903';
+import { theologyProfile } from '../theologyProfiles';
 
 export const PRAYING_FOR_OUR_MARRIAGE = {
   id: 'marriage30',
@@ -25,6 +26,7 @@ export const PRAYING_FOR_OUR_MARRIAGE = {
   proseTranslations: [],
   onboarding: 'married',
   renewable: true,
+  theologyProfile: theologyProfile({ audience: 'married', disputedTopics: ['gender-roles'] }),
   review: PLAN_APPROVALS.marriage30,
   analyticsEvents: {
     started: 'marriage_plan_started',

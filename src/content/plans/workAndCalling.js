@@ -38,6 +38,7 @@
 // 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { DAYS } from './workAndCallingDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'stewardship', from: 1, to: 5, titleKey: 'planWorkMovementStewardship' },
@@ -58,6 +59,7 @@ export const WORK_AND_CALLING = {
   titleKey: 'planWorkTitle',
   subKey: 'planWorkSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.work21,
   movements: MOVEMENTS,
   intro: {

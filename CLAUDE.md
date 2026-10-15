@@ -68,6 +68,7 @@ Private prayers, updates, testimonies and attachments are encrypted in the brows
 - Publication gate (`src/lib/planReview.js`): a plan ships only when its theology, safety and all 16 locale sign-offs each name a reviewer and an ISO date. **Only a named human may write a sign-off; never write or edit one yourself.** Drafts are visible in dev builds, or on any build with `?planPreview=1`.
 - After adding or changing a shareable plan, run `npx vitest run api/planPreview.test.js -u` (regenerates `api/_planPreviewData.js`), then `npm run build:plan-og`.
 - The "Go deeper" resources (`src/content/resources/`, `docs/RESOURCES.md`) are gated the same way: an entry that isn't approved, or a sensitive entry missing either sign-off, shows nothing.
+- Content quality (`docs/PRAYER_PLAN_QUALITY.md`): every plan declares a `theologyProfile`. A language in `proseTranslations` needs a serving basis in `review-status.json → planQuality`, either a native-Christian review or the closed legacy list, and `planQualityGate.test.js` enforces this. `src/lib/planQuality.js` and the detectors are CI tooling only. Native reviewers get an offline page from `npm run build:plan-review -- --lang <code>`, and their downloaded file is recorded with `npm run import:plan-review -- <file>`. **Never write a `human-reviewed` quality record yourself, and never import a review file you created.**
 
 ### Scripture rule
 Never author, translate or AI-generate Bible text. Content stores **references** only. The text is resolved at render time through, in order: the offline bundle (`src/lib/verseBundle.js`, built by `build:verses`), the shared cache, and YouVersion (`api/youversion.js`). If none of those has it, the app links to the reader's own Bible. A book used in a reference must exist in `BOOK_NAMES` (`src/content/dailyVerses.js`).
@@ -249,6 +250,32 @@ Authority in Qetoret is always:
 - expressed through love;
 - connected to obedience;
 - never separated from humility.
+
+---
+
+# 3A. THE HOLY SPIRIT AND THE CHURCH
+
+Access to God is Trinitarian: **to the Father, through the Son, in the Spirit** (Ephesians 2:18).
+
+Prayer cannot be separated from the Holy Spirit. The Spirit helps believers in their weakness and intercedes for them when they do not know how to pray (Romans 8:26–27). Believers are called to pray in the Spirit (Ephesians 6:18; Jude 20). Prayer is not a technique the app enables: it is born of the Spirit's presence, and He bears its fruit (Galatians 5:22–23).
+
+Therefore Qetoret:
+
+- invites dependence on the Spirit at the start of prayer ("Holy Spirit, help me pray");
+- frames stillness and listening as being led by the Spirit, never as the app speaking for God;
+- makes room to pray in the Spirit freely, without written words — and, for those who have received the gift, praying in tongues (1 Corinthians 14:14–15) — without imposing any one tradition's practice;
+- welcomes those who have no words: coming before God is enough.
+
+Prayer is also ecclesial. The first believers devoted themselves together to prayer and fellowship (Acts 2:42). Personal prayer is nourished by the gathered Church, and the Church is where testimony strengthens others (Hebrews 10:24–25; James 5:16).
+
+Therefore Qetoret:
+
+- **never replaces the local church** and says so plainly;
+- points users back to their own congregation and small group (named privately, encrypted);
+- takes its rhythm from the Lord's day: preparing hearts for worship and receiving what was given;
+- sends testimony back to the body, not only into a private journal.
+
+The altar is personal, but it is never private religion. The Spirit gathers a people.
 
 ---
 

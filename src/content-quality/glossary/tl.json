@@ -2,6 +2,17 @@
   "locale": "tl",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "PH",
+    "christianRegister": "ebanghelikal (bokabularyo ng MBB/ADB)",
+    "prayerRegister": "magalang, \"Ikaw\" sa Diyos",
+    "readerAddress": "ikaw",
+    "godAddress": "Ikaw",
+    "notes": [
+      "Iwasan ang Taglish sa mga panalangin; pormal ngunit natural na Filipino."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "kahilingan sa panalangin",
@@ -71,7 +82,11 @@
       "allowed": [],
       "avoid": [],
       "example": "ang Espiritu Santo",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "espiritu santo",
+        "banal na espiritu"
+      ]
     },
     "scripture": {
       "preferred": "Banal na Kasulatan",
@@ -127,6 +142,76 @@
       "avoid": [],
       "example": "Sa panalangin ng pagtalikod, pinangangalanan mo ang iyong iniiwan.",
       "note": "Salita sa ministeryo ng paglaya. Kailangan ng katutubong tagasuri."
+    },
+    "sanctification": {
+      "preferred": "pagpapakabanal",
+      "allowed": [
+        "paglago sa kabanalan"
+      ],
+      "avoid": [],
+      "example": "Ang pagpapakabanal ay gawain ng Diyos sa atin.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "pagkatawag",
+      "allowed": [
+        "tawag ng Diyos"
+      ],
+      "avoid": [],
+      "example": "Ipanalangin ang tawag ng Diyos sa iyong buhay.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "pagsuko sa Diyos",
+      "allowed": [
+        "pagpapaubaya sa Diyos"
+      ],
+      "avoid": [],
+      "example": "Ang pagsuko sa Diyos ay pagtitiwala, hindi kawalan ng pag-asa.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "pananatili kay Cristo",
+      "allowed": [],
+      "avoid": [],
+      "example": "Manatili kay Cristo gaya ng sanga sa puno ng ubas.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "pagsamba",
+      "allowed": [
+        "papuri"
+      ],
+      "avoid": [],
+      "example": "Nagsisimula ang pagsamba sa pagtingin sa Diyos.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "pagtatapat ng kasalanan",
+      "allowed": [
+        "pagpapahayag ng kasalanan"
+      ],
+      "avoid": [],
+      "example": "Ang pagtatapat ng kasalanan ay nagbubukas ng daan sa kapatawaran.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "kapatawaran",
+      "allowed": [
+        "pagpapatawad"
+      ],
+      "avoid": [],
+      "example": "Pinalalaya tayo ng kapatawaran ng Diyos.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "panalangin",
+      "allowed": [
+        "dalangin"
+      ],
+      "avoid": [],
+      "example": "Ang panalangin ay pakikipag-usap sa Diyos.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

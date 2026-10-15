@@ -11,6 +11,28 @@ export function hasReviewSignoff(review) {
   return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
 }
 
+// The publication pipeline, in order:
+//
+//   valid plan → translation integrity → linguistic quality → Christian
+//   language → theology → pastoral safety → native Christian review →
+//   all locale sign-offs → production
+//
+// isPlanReviewed() below is the final gate for a PLAN (its theology, safety
+// and locale sign-offs). The stages before it are judged per locale by
+// src/lib/planQuality.js. A prose overlay is served only when the plan lists
+// its language in `proseTranslations`, and CI proves every listed language has
+// a serving basis there — a native-Christian quality review, or the closed
+// pre-framework legacy list (src/content/plans/planQualityGate.test.js).
+
+// A native-Christian quality review is evidence only with a named reviewer, a
+// real date, and the reviewer's own attestation that they read it as a native
+// speaker and as a Christian. Scores alone are not.
+export function hasNativeReviewEvidence(reviewer) {
+  return hasReviewSignoff({ status: 'approved', reviewer: reviewer?.name, reviewedAt: reviewer?.reviewedAt })
+    && reviewer.nativeSpeaker === true
+    && reviewer.christianReview === true;
+}
+
 export function isPlanReviewed(plan) {
   if (!plan) return false;
   // Existing plans keep their established release behavior.

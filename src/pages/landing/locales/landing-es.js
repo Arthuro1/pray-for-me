@@ -84,7 +84,11 @@ export default {
     "nameTitle": "El nombre",
     "nameBody": "Qetoret es la palabra hebrea para el incienso que se ofrecía delante de Dios. En la Escritura, el incienso que sube se convierte en una imagen de las oraciones del pueblo de Dios. Qetoret toma su nombre de esta imagen: una vida de oración presentada continuamente delante de Dios.",
     "christTitle": "Por medio de Cristo",
-    "christBody": "Qetoret es una herramienta para la oración, nunca un intermediario. Venimos al Padre por medio de Jesucristo, nuestro gran sumo sacerdote. En él, los creyentes son llamados real sacerdocio: invitados a acercarse, a interceder por otros y a vivir como sus testigos — bajo su autoridad, nunca por encima de los demás."
+    "christBody": "Qetoret es una herramienta para la oración, nunca un intermediario. Venimos al Padre por medio de Jesucristo, nuestro gran sumo sacerdote. En él, los creyentes son llamados real sacerdocio: invitados a acercarse, a interceder por otros y a vivir como sus testigos — bajo su autoridad, nunca por encima de los demás.",
+    "spiritTitle": "En el Espíritu",
+    "spiritBody": "Por medio de Cristo tenemos acceso al Padre en un mismo Espíritu. El Espíritu Santo nos ayuda en nuestra debilidad e intercede por nosotros cuando no sabemos orar como conviene. La oración no es una técnica: nace de su presencia, y es él quien le da fruto.",
+    "churchTitle": "Con la Iglesia",
+    "churchBody": "Qetoret no reemplaza a tu iglesia local: te ayuda a orar con ella y por ella. Los primeros creyentes oraban juntos, compartían su vida y partían el pan como una sola familia. La oración personal se nutre de la oración en comunidad: reúnanse y sopórtense unos a otros en oración."
   },
   "bring": {
     "title": "Presenta lo que hay en tu corazón",

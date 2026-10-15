@@ -47,6 +47,7 @@
 // docs/plans/churchHurt21.md.
 import { DAYS } from './healingFromChurchHurtDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'lament', from: 1, to: 5, titleKey: 'planChurchHurtMovementLament' },
@@ -67,6 +68,7 @@ export const HEALING_FROM_CHURCH_HURT = {
   titleKey: 'planChurchHurtTitle',
   subKey: 'planChurchHurtSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.churchHurt21,
   movements: MOVEMENTS,
   intro: {

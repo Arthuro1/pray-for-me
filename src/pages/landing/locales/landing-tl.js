@@ -84,7 +84,11 @@ export default {
     "nameTitle": "Ang pangalan",
     "nameBody": "Ang Qetoret ay salitang Hebreo para sa insenso na inihahandog sa harap ng Diyos. Sa Kasulatan, ang pumapailanlang na insenso ay nagiging larawan ng mga panalangin ng bayan ng Diyos. Mula sa larawang ito nagmula ang pangalang Qetoret: isang buhay ng panalanging patuloy na idinudulog sa Diyos.",
     "christTitle": "Sa pamamagitan ni Cristo",
-    "christBody": "Ang Qetoret ay kasangkapan lamang para sa panalangin, hindi kailanman tagapamagitan. Lumalapit tayo sa Ama sa pamamagitan ni Jesu-Cristo, ang ating dakilang Punong Saserdote. Sa Kanya, tinatawag ang mga mananampalataya na maharlikang pagkasaserdote: inaanyayahang lumapit, mamagitan para sa iba at mamuhay bilang Kanyang mga saksi — sa ilalim ng Kanyang awtoridad, hindi kailanman sa ibabaw ng iba."
+    "christBody": "Ang Qetoret ay kasangkapan lamang para sa panalangin, hindi kailanman tagapamagitan. Lumalapit tayo sa Ama sa pamamagitan ni Jesu-Cristo, ang ating dakilang Punong Saserdote. Sa Kanya, tinatawag ang mga mananampalataya na maharlikang pagkasaserdote: inaanyayahang lumapit, mamagitan para sa iba at mamuhay bilang Kanyang mga saksi — sa ilalim ng Kanyang awtoridad, hindi kailanman sa ibabaw ng iba.",
+    "spiritTitle": "Sa Espiritu",
+    "spiritBody": "Sa pamamagitan ni Cristo, may daan tayo patungo sa Ama sa iisang Espiritu. Tinutulungan tayo ng Espiritu Santo sa ating kahinaan at namamagitan Siya para sa atin kapag hindi natin alam kung paano manalangin nang nararapat. Ang panalangin ay hindi isang teknik: nagmumula ito sa Kanyang presensya, at Siya ang nagpapabunga rito.",
+    "churchTitle": "Kasama ang Iglesya",
+    "churchBody": "Hindi pinapalitan ng Qetoret ang iyong lokal na iglesya: tinutulungan ka nitong manalangin kasama nito at para rito. Ang mga unang mananampalataya ay sama-samang nananalangin, nagbabahagi ng kanilang buhay at naghahati-hati ng tinapay bilang iisang pamilya. Napapalakas ang personal na panalangin ng sama-samang panalangin: magtipon kayo, at pasanin ang pasanin ng isa't isa."
   },
   "bring": {
     "title": "Idulog ang nasa iyong puso",

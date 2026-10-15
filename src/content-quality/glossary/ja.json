@@ -2,6 +2,17 @@
   "locale": "ja",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "JP",
+    "christianRegister": "プロテスタント（新改訳・新共同訳の語彙）",
+    "prayerRegister": "丁寧語、神を「あなた」と呼ぶ",
+    "readerAddress": "あなた",
+    "godAddress": "あなた",
+    "notes": [
+      "教会で一般的な言葉を用い、仏教的・神道的な連想を避ける。"
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "祈りの課題",
@@ -50,7 +61,12 @@
       "allowed": [],
       "avoid": [],
       "example": "悔い改め",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "悔い改め",
+        "改心",
+        "懺悔"
+      ]
     },
     "salvation": {
       "preferred": "救い",
@@ -71,7 +87,11 @@
       "allowed": [],
       "avoid": [],
       "example": "聖霊",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "聖霊",
+        "聖神"
+      ]
     },
     "scripture": {
       "preferred": "聖書",
@@ -127,6 +147,78 @@
       "avoid": [],
       "example": "断ち切りの祈りで、離れるものを言い表します。",
       "note": "解放のミニストリーの用語。ネイティブ確認が必要。"
+    },
+    "sanctification": {
+      "preferred": "聖化",
+      "allowed": [
+        "きよめ"
+      ],
+      "avoid": [],
+      "example": "聖化は私たちの内にある神のみわざです。",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "召し",
+      "allowed": [
+        "召命"
+      ],
+      "avoid": [],
+      "example": "あなたへの召しのために祈りましょう。",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "明け渡し",
+      "allowed": [
+        "ゆだねること"
+      ],
+      "avoid": [
+        "降伏"
+      ],
+      "example": "神様への明け渡しは、あきらめではなく信頼です。",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "キリストにとどまる",
+      "allowed": [],
+      "avoid": [],
+      "example": "枝がぶどうの木にとどまるように、キリストにとどまりましょう。",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "礼拝",
+      "allowed": [
+        "賛美"
+      ],
+      "avoid": [],
+      "example": "礼拝は神様を仰ぐことから始まります。",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "罪の告白",
+      "allowed": [
+        "告白"
+      ],
+      "avoid": [
+        "懺悔"
+      ],
+      "example": "罪の告白は赦しへの道を開きます。",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "赦し",
+      "allowed": [],
+      "avoid": [
+        "許し"
+      ],
+      "example": "神様の赦しは私たちを自由にします。",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger. 罪の赦しは「赦し」、「許し」は許可の意味。"
+    },
+    "prayer": {
+      "preferred": "祈り",
+      "allowed": [],
+      "avoid": [],
+      "example": "祈りは神様と語り合うことです。",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

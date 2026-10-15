@@ -2,6 +2,17 @@
   "locale": "ru",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "RU",
+    "christianRegister": "евангельский (лексика Синодального перевода)",
+    "prayerRegister": "благоговейный, к Богу на «Ты» с прописной",
+    "readerAddress": "ты",
+    "godAddress": "Ты",
+    "notes": [
+      "Читатели из разных стран СНГ: избегать узкорегиональной лексики."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "молитвенная просьба",
@@ -50,7 +61,11 @@
       "allowed": [],
       "avoid": [],
       "example": "покаяние",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "покаяни\\p{L}*",
+        "раскаяни\\p{L}*"
+      ]
     },
     "salvation": {
       "preferred": "спасение",
@@ -129,6 +144,73 @@
       "avoid": [],
       "example": "В молитве отречения вы называете то, от чего отворачиваетесь.",
       "note": "Лексика служения освобождения."
+    },
+    "sanctification": {
+      "preferred": "освящение",
+      "allowed": [
+        "возрастание в святости"
+      ],
+      "avoid": [],
+      "example": "Освящение — это Божья работа в нас.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "призвание",
+      "allowed": [],
+      "avoid": [],
+      "example": "Молись о своём призвании.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "предание себя Богу",
+      "allowed": [
+        "покорность Божьей воле"
+      ],
+      "avoid": [
+        "капитуляция"
+      ],
+      "example": "Предание себя Богу — это доверие, а не безысходность.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "пребывать во Христе",
+      "allowed": [],
+      "avoid": [],
+      "example": "Пребывать во Христе — значит оставаться в Нём, как ветвь на лозе.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "поклонение",
+      "allowed": [
+        "прославление",
+        "хвала"
+      ],
+      "avoid": [],
+      "example": "Поклонение начинается со взгляда на Бога.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "исповедание грехов",
+      "allowed": [
+        "исповедь"
+      ],
+      "avoid": [],
+      "example": "Исповедание грехов открывает путь к прощению.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith. «Исповедь» может звучать как православное таинство."
+    },
+    "forgiveness": {
+      "preferred": "прощение",
+      "allowed": [],
+      "avoid": [],
+      "example": "Божье прощение освобождает.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "молитва",
+      "allowed": [],
+      "avoid": [],
+      "example": "Молитва — это разговор с Богом.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

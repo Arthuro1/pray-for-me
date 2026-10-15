@@ -44,6 +44,7 @@ export function validateMetadata(entries, metadata, glossaries, locales) {
       if (!item || !item.preferred || !Array.isArray(item.allowed) || !Array.isArray(item.avoid) || !item.example || !item.note) errors.push(`Incomplete glossary: ${locale}/${term}`);
     }
     if (glossary?.status === 'human-approved' && (!glossary.reviewer || !validDate(glossary.reviewedAt))) errors.push(`Glossary approval lacks human evidence: ${locale}`);
+    errors.push(...glossaryProfileErrors(locale, glossary));
   }
   for (const [id, group] of groupEntries(entries)) {
     const record = metadata.bundles?.[id];
@@ -54,6 +55,31 @@ export function validateMetadata(entries, metadata, glossaries, locales) {
       if (record.contentHash !== current.contentHash || record.sourceHash !== current.sourceHash) errors.push(`Stale review: ${id}; reset to needs-review.`);
     }
     if (record.status === 'human-approved' && (!record.reviewer?.trim() || !validDate(record.reviewedAt) || !record.nativeLanguageReview || (group[0].sensitivity === 'sensitive' && !record.christianReview))) errors.push(`Human approval lacks required evidence: ${id}`);
+  }
+  return errors;
+}
+
+// A locale's Christian-language profile: how Christians who speak it write and
+// pray, and which competing renderings of a concept must not be mixed in one
+// plan (`variants`, regular expressions). See docs/PRAYER_PLAN_QUALITY.md.
+const PROFILE_FIELDS = ['region', 'christianRegister', 'prayerRegister', 'readerAddress', 'godAddress'];
+const compiles = (pattern) => {
+  try { return typeof pattern === 'string' && !!new RegExp(pattern, 'iu'); } catch { return false; }
+};
+
+export function glossaryProfileErrors(locale, glossary) {
+  const errors = [];
+  const profile = glossary?.profile;
+  const complete = profile && PROFILE_FIELDS.every((field) => typeof profile[field] === 'string' && profile[field].trim())
+    && Array.isArray(profile.notes) && profile.regions && typeof profile.regions === 'object';
+  if (!complete) errors.push(`Incomplete glossary profile: ${locale}`);
+  for (const [tag, region] of Object.entries(profile?.regions || {})) {
+    if (!tag.startsWith(`${locale}-`) || !Array.isArray(region?.notes)) errors.push(`Invalid regional profile: ${locale}/${tag}`);
+  }
+  for (const [term, item] of Object.entries(glossary?.terms || {})) {
+    if (item.variants !== undefined && !(Array.isArray(item.variants) && item.variants.length >= 2 && item.variants.every(compiles))) {
+      errors.push(`Invalid variants: ${locale}/${term}`);
+    }
   }
   return errors;
 }

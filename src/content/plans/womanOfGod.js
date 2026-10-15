@@ -42,6 +42,7 @@
 // 2026-09-30 (src/content/reviews/paulNewPlans20260930.js).
 import { DAYS } from './womanOfGodDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'before', from: 1, to: 5, titleKey: 'planWomanOfGodMovementBefore' },
@@ -62,6 +63,7 @@ export const WOMAN_OF_GOD = {
   titleKey: 'planWomanOfGodTitle',
   subKey: 'planWomanOfGodSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile({ audience: 'women', disputedTopics: ['gender-roles', 'spiritual-gifts'] }),
   review: NEW_PLAN_APPROVALS.womanOfGod21,
   movements: MOVEMENTS,
   intro: {

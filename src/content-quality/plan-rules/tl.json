@@ -1,0 +1,34 @@
+{
+  "locale": "tl",
+  "status": "draft",
+  "note": "AI-drafted detection patterns, not native approval. Patterns flag risks for a human reviewer; they never approve or reject wording on their own.",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": ["diyos", "panginoon", "ama", "hesus", "jesus", "kristo", "cristo", "espiritu santo", "banal na espiritu", "espiritu", "abba", "makapangyarihan", "tagapagligtas", "maylalang", "lumikha", "kataas-taasan"],
+  "prayerDirections": ["hilingin(?: sa diyos)?", "humingi", "manalangin", "ipanalangin", "magpasalamat", "pasalamatan(?: ang diyos)?", "dalhin", "ipagtapat", "pangalanan", "sabihin sa diyos"],
+  "qualifiers": [
+    "marahil", "baka", "siguro", "maaaring", "maaari", "pag-asa", "umaasa", "ipanalangin (?:na|para)", "manalangin (?:na|para)", "hilingin sa (?:diyos|panginoon)",
+    "kung (?:ito ay )?(?:kanyang|iyong) kalooban", "ayon sa (?:kanyang|iyong) kalooban", "hindi (?:lahat|palagi)", "walang (?:pangako|garantiya)",
+    "hindi (?:nangangako|ginagarantiya)", "hindi natin malalaman", "(?:itinuturo|ipinangangako|sinasabi) ng (?:kasulatan|bibliya)", "ipagkatiwala sa (?:diyos|kanya)"
+  ],
+  "negations": ["hindi", "huwag", "wala", "kailanman", "nang walang", "sa halip na"],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": ["sinabi (?:sa iyo )?ng diyos(?: sa iyo)?", "sinasabi ng diyos sa iyo", "sinabi ng panginoon sa iyo", "nagsasalita ang diyos sa iyo (?:tungkol|sa pamamagitan|ngayon)", "gusto ng diyos na sabihin ko sa iyo", "ito ang (?:salita|mensahe) ng diyos para sa iyo"],
+    "GUARANTEED_OUTCOME": ["(?:tiyak|siguradong) ibibigay (?:sa iyo )?ng diyos", "ibibigay ng diyos ang lahat ng (?:hinihingi|gusto) mo", "ang (?:iyong )?(?:tagumpay|himala|sagot) ay (?:paparating na|garantisado|sigurado)", "garantisadong (?:sagot|resulta|himala)"],
+    "PRAYER_TECHNIQUE": ["kung mananalangin ka (?:nang tama|nang sapat|sa tamang paraan)", "ipanalangin ang (?:panalanging ito|mga salitang ito) at (?:tiyak na|kailangang) (?:sumagot|kumilos) ang diyos", "(?:kailangang|obligadong) (?:sumagot|kumilos) ang diyos", "(?:lihim|tamang|perpektong) (?:panalangin|pormula) (?:para|upang) (?:pilitin|pakilusin) ang diyos"],
+    "CERTAINTY_CLAIM": ["(?:pinili|inihanda) na ng diyos (?:ang )?(?:iyong )?(?:mapapangasawa|asawa|kapareha)", "(?:siya|ang taong ito) ang pinili ng diyos para sa iyo", "ito ay (?:tiyak|malinaw) na kalooban ng diyos para sa iyo", "(?:ang pagdurusang ito|ang sakit na ito|ang pagkawalang ito|ang pagsubok na ito) ay (?:nangyari|dumating|ipinadala) (?:dahil|upang turuan ka)"],
+    "GUARANTEED_HEALING": ["(?:tiyak|siguradong) pagagalingin (?:ka )?ng diyos", "pagagalingin ka ng diyos,? (?:tiyak|sigurado)", "(?:tiyak|siguradong) gagaling ka", "ang (?:iyong )?paggaling ay (?:garantisado|tiyak|paparating)"],
+    "GUARANTEED_MARRIAGE": ["(?:tiyak|siguradong) (?:bibigyan ka|padadalhan ka) ng diyos ng (?:mapapangasawa|asawa|kapareha)", "ang (?:iyong )?(?:magiging )?(?:asawa|mapapangasawa) ay (?:naghihintay sa iyo|paparating na)", "(?:tiyak|siguradong) mag-aasawa ka"],
+    "PROSPERITY_PROMISE": ["payayamanin ka ng diyos", "pagpapalain ka ng diyos (?:sa pananalapi|ng pera|ng kayamanan)", "(?:magtanim|magbigay|ihandog) (?:ng )?(?:binhi|pera|ikapu|handog na ito) at (?:aani|tatanggap) ka", "(?:tagumpay|pagpapala) sa pananalapi ay (?:garantisado|paparating)", "sandaang ulit"],
+    "FAITH_DEFICIT_BLAME": ["kung (?:may sapat|mas marami) kang pananampalataya", "dahil (?:kulang|mahina) ang (?:iyong )?pananampalataya", "(?:hindi (?:siya |ka )?gumaling) dahil sa (?:kawalan ng pananampalataya|kakulangan ng pananampalataya|pag-aalinlangan)"],
+    "SUFFERING_BLAME": ["ang (?:iyong |itong )?(?:pagdurusa|sakit|pagkawala|pagkabaog|pagkalaglag|depresyon) ay (?:bunga|parusa|resulta) ng (?:iyong |nakatagong |lihim na )?kasalanan", "(?:nakatago|lihim)(?:ng|na) kasalanan ang (?:dahilan|ugat)", "pinarurusahan ka ng diyos"],
+    "SHAME_LANGUAGE": ["(?:ikaw ay|ikaw ay ngayon) (?:marumi|wala nang halaga|sira na|may dungis)", "hindi ka na (?:karapat-dapat|sapat na malinis) (?:sa|para sa) (?:pag-ibig|kasal)", "(?:nginuyang bubble gum|lantang rosas|lukot na papel)"],
+    "ABUSE_ENDANGERMENT": ["manatili (?:ka )?(?:sa|kasama ang) (?:marahas|mapang-abusong) (?:asawa|kapareha|relasyon|tahanan|pagsasama)", "magpasakop (?:ka )?sa (?:pang-aabuso|karahasan|nang-aabuso)", "harapin (?:mo )?ang (?:nang-aabuso|umaabuso) nang mag-isa", "ang pagpapatawad ay (?:nangangahulugang|ibig sabihin ay) bumalik", "ang (?:pang-aabuso|karahasan) ay (?:iyong krus|kalooban ng diyos)", "huwag (?:mong )?(?:isumbong|sabihin) sa pulis"],
+    "CARE_REPLACEMENT": ["(?:itigil|tumigil sa pag-inom ng) (?:ang )?(?:iyong )?(?:gamot|antidepressant|paggamot)", "hindi mo kailangan ng (?:doktor|therapist|tagapayo|psychiatrist|gamot|paggamot|propesyonal na tulong)", "(?:panalangin|pananampalataya) (?:sa halip na|ang kapalit ng) (?:gamot|paggamot|doktor|therapy)", "ang (?:depresyon|pagkabalisa|sakit sa isip) ay (?:kakulangan lang ng pananampalataya|espirituwal na atake|kasalanan)"],
+    "COERCIVE_CONFRONTATION": ["(?:sawayin|komprontahin) (?:mo )?(?:siya|sila) hanggang (?:magsisi|umamin)", "pilitin (?:mo )?(?:siya|sila) na (?:magsisi|umamin|bumalik|humingi ng tawad)", "(?:putulin|ipagkait) (?:ang )?(?:ugnayan|pagmamahal|pagpapatawad) hanggang"],
+    "SPIRITUAL_MANIPULATION": ["(?:parurusahan|susumpain|iiwan) ka ng diyos kung", "kung hindi mo [^.!?]{0,40}(?:parurusahan ka ng diyos|susumpain ka)", "ang (?:iyong )?(?:kaligtasan|pagpapala|paggaling) ay nakasalalay sa (?:kung gaano karami|kung gaano kadalas|kung gaano katagal)", "sundin (?:mo )?(?:ang iyong )?(?:pastor|lider|propeta) nang walang tanong", "ang pagdududa sa (?:pastor|lider|propeta) ay (?:paghihimagsik|kasalanan)"],
+    "SELF_HELP_LANGUAGE": ["batas ng pang-akit", "ang uniberso ay (?:magbibigay|nais|nagpapadala)", "positibong enerhiya", "pinakamahusay na bersyon ng iyong sarili", "(?:itaas|taasan) ang (?:iyong )?vibration", "karapat-dapat ka sa (?:pinakamahusay|kaligayahan)", "i-manifest"],
+    "COACHING_TONE": ["kaya mo (?:yan|iyan|ito)", "lumabas sa (?:iyong )?comfort zone", "maniwala ka sa (?:iyong )?sarili", "sapat ka na", "magtiwala sa proseso", "i-unlock ang iyong potensyal"],
+    "LITERAL_CALQUE": ["sa dulo ng araw"]
+  }
+}

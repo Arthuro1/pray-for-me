@@ -161,6 +161,15 @@ are **never** translated, so the journey is structurally identical in every
 language. A missing overlay, day or field simply keeps its
 authored en/fr value — a partially translated plan is never blank or broken.
 
+Listing a language in `proseTranslations` also needs a **serving basis**: a
+native-Christian quality review recorded in
+`src/content-quality/review-status.json → planQuality`, or the closed list of
+overlays already served when the quality framework arrived (2026-10-12).
+`src/content/plans/planQualityGate.test.js` fails CI otherwise. The dimensions,
+thresholds, terminology and theology profiles, God-claim and safety rules, and
+the approval steps are in `docs/PRAYER_PLAN_QUALITY.md`. Every plan declares a
+`theologyProfile` (`src/content/theologyProfiles.js`).
+
 `scripts/prune-overlay-duplicates.mjs` removes values an overlay repeats where
 the source does not, so the field falls back rather than saying the same thing
 five days running.
@@ -307,6 +316,8 @@ emitted with no properties. The day event fires from `markPrayedOn` in the store
 7. Review the role-specific reflections against `docs/I18N_REVIEW.md` *and* with
    whoever owns doctrine for this app.
 8. Review all 16 translations for **meaning**, not just key parity.
+9. Declare the plan's `theologyProfile`, and serve a translated overlay only
+   after a native Christian review (`docs/PRAYER_PLAN_QUALITY.md`).
 
 New drafts remain in the data catalogue but are hidden from ordinary readers
 unless review preview is enabled. Production use requires `review.status`, theology

@@ -35,6 +35,7 @@
 // docs/PRAYER_PLANS.md). Day numbering, ids and references are the stable part.
 import { DAYS } from './prayingForUnbornChildDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'known', from: 1, to: 5, titleKey: 'planUnbornMovementKnown' },
@@ -55,6 +56,7 @@ export const PRAYING_FOR_UNBORN_CHILD = {
   titleKey: 'planUnbornTitle',
   subKey: 'planUnbornSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: NEW_PLAN_APPROVALS.unborn21,
   movements: MOVEMENTS,
   intro: {

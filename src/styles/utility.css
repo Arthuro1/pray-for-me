@@ -1036,3 +1036,6 @@ a.menu-row { text-decoration: none; }
 .ai-outgoing { display: grid; gap: var(--q-space-3); margin: 0 0 var(--q-space-4); padding: var(--q-space-1) 0 var(--q-space-1) var(--q-space-4); border-inline-start: 2px solid var(--q-border-strong); }
 .ai-outgoing__value { margin: var(--q-space-1) 0 0; color: var(--q-text); font-size: 0.9375rem; line-height: 1.5; overflow-wrap: anywhere; }
 .ai-outgoing__value--long { color: var(--q-text-secondary); white-space: pre-wrap; }
+
+/* The church circle's own congregation, one quiet line under its teaching. */
+.circle-page__church { display: flex; align-items: center; gap: var(--q-space-2); margin: var(--q-space-4) 0 0; }

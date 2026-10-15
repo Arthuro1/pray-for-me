@@ -86,6 +86,22 @@ through persistence. *Royal* because we belong to the King. *Priestly* because w
 are invited to draw near and intercede. *Missional* because prayer sends us back
 into the world in obedience.
 
+### The Spirit and the Church
+
+Access is Trinitarian: to the Father, through the Son, **in the Spirit**
+(Ephesians 2:18). The Holy Spirit helps us pray and intercedes for us (Romans
+8:26–27); believers pray in the Spirit (Ephesians 6:18; Jude 20). Prayer is
+also ecclesial (Acts 2:42; Hebrews 10:24–25): the app **never replaces the
+local church**, and points back to it.
+
+In the product: the opening line "Holy Spirit, help me pray" (can be hidden in
+Settings); Remain with God framed as being led by the Spirit; "Pray in the
+Spirit" (naming praying in tongues gently, for those who have the gift);
+"When words fail"; the About and landing cards *In the Spirit* and *With the
+Church*; the encrypted "My church" anchor; the Lord's-day card and opt-in
+Sunday reminder; and a line after a testimony inviting the user to tell their
+church.
+
 ## 4. The seven movements
 
 Every significant feature serves at least one.

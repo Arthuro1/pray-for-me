@@ -2,6 +2,17 @@
   "locale": "sw",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "KE/TZ",
+    "christianRegister": "Kiprotestanti (msamiati wa Union Version)",
+    "prayerRegister": "heshima, Mungu anaitwa \"wewe\"",
+    "readerAddress": "wewe",
+    "godAddress": "wewe",
+    "notes": [
+      "Wasomaji wa Kenya na Tanzania: epuka misamiati ya eneo moja tu."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "hitaji la maombi",
@@ -55,7 +66,11 @@
       "allowed": [],
       "avoid": [],
       "example": "toba",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "toba|kutubu|tubu\\p{L}*",
+        "majuto|kujuta"
+      ]
     },
     "salvation": {
       "preferred": "wokovu",
@@ -132,6 +147,77 @@
       "avoid": [],
       "example": "Katika maombi ya kukataa unataja kile unachokiacha.",
       "note": "Msamiati wa huduma ya ukombozi. Unahitaji mhakiki asilia."
+    },
+    "sanctification": {
+      "preferred": "utakaso",
+      "allowed": [
+        "kukua katika utakatifu"
+      ],
+      "avoid": [],
+      "example": "Utakaso ni kazi ya Mungu ndani yetu.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "wito",
+      "allowed": [],
+      "avoid": [],
+      "example": "Omba kuhusu wito wa Mungu maishani mwako.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "kujisalimisha kwa Mungu",
+      "allowed": [
+        "kujiachilia kwa Mungu"
+      ],
+      "avoid": [],
+      "example": "Kujisalimisha kwa Mungu ni kumwamini, si kukata tamaa.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "kukaa ndani ya Kristo",
+      "allowed": [],
+      "avoid": [],
+      "example": "Kaa ndani ya Kristo kama tawi katika mzabibu.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "ibada",
+      "allowed": [
+        "kuabudu",
+        "sifa"
+      ],
+      "avoid": [],
+      "example": "Ibada huanza kwa kumtazama Mungu.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "kuungama dhambi",
+      "allowed": [
+        "maungamo"
+      ],
+      "avoid": [],
+      "example": "Kuungama dhambi kunafungua njia ya msamaha.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "msamaha",
+      "allowed": [],
+      "avoid": [],
+      "example": "Msamaha wa Mungu hutuweka huru.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "maombi",
+      "allowed": [
+        "sala"
+      ],
+      "avoid": [],
+      "example": "Maombi ni kuzungumza na Mungu.",
+      "note": "Speaking with God; never a meditation technique or positive thinking. Wakristo wa Kiprotestanti husema \"maombi\"; \"sala\" ni ya kiliturujia zaidi.",
+      "variants": [
+        "maombi",
+        "sala"
+      ]
     }
   }
 }

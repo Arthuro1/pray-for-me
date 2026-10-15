@@ -2,6 +2,7 @@
 // References are identifiers for the existing reader, never authored verse text.
 import { DAYS } from './preparingForCovenantDays';
 import { PLAN_APPROVALS } from '../reviews/paul20260903';
+import { theologyProfile } from '../theologyProfiles';
 
 export const PREPARING_FOR_COVENANT = {
   id: 'covenant21',
@@ -26,6 +27,7 @@ export const PREPARING_FOR_COVENANT = {
   // translationQuality.test.js enforces that.
   proseTranslations: ['de', 'es', 'pt', 'ru'],
   onboarding: 'engaged',
+  theologyProfile: theologyProfile({ audience: 'engaged', disputedTopics: ['gender-roles'] }),
   review: PLAN_APPROVALS.covenant21,
   analyticsEvents: {
     started: 'engaged_plan_started',

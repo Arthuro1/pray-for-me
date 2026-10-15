@@ -2,6 +2,17 @@
   "locale": "id",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "ID",
+    "christianRegister": "Protestan (kosakata TB LAI)",
+    "prayerRegister": "hormat, Allah disapa \"Engkau\"",
+    "readerAddress": "kamu",
+    "godAddress": "Engkau",
+    "notes": [
+      "Umat Kristen Indonesia menyebut Allah; jangan ganti dengan istilah dari luar."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "pokok doa",
@@ -50,7 +61,11 @@
       "allowed": [],
       "avoid": [],
       "example": "pertobatan",
-      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage."
+      "note": "Short heading example only; a native reviewer must supply a sentence example and validate usage.",
+      "variants": [
+        "pertobatan|bertobat",
+        "penyesalan|menyesal"
+      ]
     },
     "salvation": {
       "preferred": "keselamatan",
@@ -130,6 +145,72 @@
       "avoid": [],
       "example": "Dalam doa penolakan kamu menyebut apa yang kamu tinggalkan.",
       "note": "Kosakata pelayanan pelepasan. Perlu tinjauan penutur asli."
+    },
+    "sanctification": {
+      "preferred": "pengudusan",
+      "allowed": [
+        "bertumbuh dalam kekudusan"
+      ],
+      "avoid": [],
+      "example": "Pengudusan adalah karya Allah di dalam kita.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "panggilan",
+      "allowed": [],
+      "avoid": [],
+      "example": "Doakan panggilan Allah dalam hidupmu.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "penyerahan diri",
+      "allowed": [
+        "berserah kepada Allah"
+      ],
+      "avoid": [],
+      "example": "Berserah kepada Allah adalah percaya, bukan putus asa.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "tinggal di dalam Kristus",
+      "allowed": [],
+      "avoid": [],
+      "example": "Tinggallah di dalam Kristus seperti ranting pada pokok anggur.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "penyembahan",
+      "allowed": [
+        "pujian"
+      ],
+      "avoid": [],
+      "example": "Penyembahan dimulai dengan memandang Allah.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "pengakuan dosa",
+      "allowed": [],
+      "avoid": [],
+      "example": "Pengakuan dosa membuka jalan pengampunan.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "pengampunan",
+      "allowed": [],
+      "avoid": [],
+      "example": "Pengampunan Allah memerdekakan kita.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "doa",
+      "allowed": [],
+      "avoid": [],
+      "example": "Doa adalah berbicara dengan Allah.",
+      "note": "Speaking with God; never a meditation technique or positive thinking.",
+      "variants": [
+        "doa|berdoa",
+        "sembahyang"
+      ]
     }
   }
 }

@@ -15,20 +15,19 @@ import { RESOURCES } from '../../resources/catalogue';
 import { resolveResources } from '../../../lib/resources';
 import { NEW_PLAN_APPROVALS, NEW_PLAN_IDS } from '../../reviews/paulNewPlans20260930';
 import rules from '../../../content-quality/content-rules.json';
+import { compilePattern } from '../../../content-quality/planChecks';
+import { planRulesFor } from '../../../content-quality/planQualityData';
 
 const SOURCE_LANGS = ['en', 'fr'];
 const TRADITIONAL_ONLY = new Set([...rules.forbiddenCharacters.zh.chars]);
 
 // Wording no day of any plan may use, in any context: Qetoret never speaks
-// for God to the reader.
-const NEVER = [
-  /\bGod (?:has )?told you\b/i,
-  /\bGod is telling you\b/i,
-  /\bthe Lord (?:has )?told you\b/i,
-  /\bDieu t['’]a dit\b/i,
-  /\bDieu te dit que\b/i,
-  /\ble Seigneur t['’]a dit\b/i,
-];
+// for God to the reader. The patterns are the plan-quality rules' own
+// (src/content-quality/plan-rules/{en,fr}.json → GOD_SPEAKS_FOR_READER).
+const NEVER = SOURCE_LANGS.flatMap((lang) => {
+  const { patterns, wordBoundaries } = planRulesFor(lang);
+  return patterns.GOD_SPEAKS_FOR_READER.map((pattern) => compilePattern(pattern, wordBoundaries));
+});
 
 // Every EN/FR string a reader can see in the plan: meta, days, study layers.
 export function proseOf(plan) {

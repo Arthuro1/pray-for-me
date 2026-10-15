@@ -28,6 +28,7 @@
 // through pick() elsewhere (`proseTranslations: []`).
 import { DAYS } from './atTheAltarDays';
 import { AT_THE_ALTAR_APPROVAL } from '../reviews/paulPlanReviews20261008';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'altar', from: 1, to: 3, titleKey: 'planZechariahMovementAltar' },
@@ -49,6 +50,7 @@ export const AT_THE_ALTAR = {
   titleKey: 'planZechariahTitle',
   subKey: 'planZechariahSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile(),
   review: AT_THE_ALTAR_REVIEW,
   movements: MOVEMENTS,
   intro: {

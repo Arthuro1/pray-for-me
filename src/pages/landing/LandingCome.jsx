@@ -1,17 +1,20 @@
-import { Flame } from 'lucide-react';
+import { Church, Flame, Wind } from 'lucide-react';
 import LatinCross from '../../components/shared/LatinCross';
-import { ACCESS_REFS, NAME_REFS } from '../../content/identity';
+import { ACCESS_REFS, CHURCH_REFS, NAME_REFS, SPIRIT_REFS } from '../../content/identity';
 import { BeatLabel, LandingRefs } from './LandingBeat';
 
 // Come — where the story begins: Zechariah went in to offer the incense, and
 // through Christ every believer may now draw near. Then, as on the About page,
-// what the name means and why anyone may come at all — identity before
-// activity, and the app named as a tool, never a go-between.
+// what the name means, why anyone may come at all, the Spirit who helps us
+// pray and the Church we pray with — identity before activity, and the app
+// named as a tool, never a go-between and never a substitute for the Church.
 export default function LandingCome({ copy, label, lang }) {
   const { come } = copy;
   const cards = [
     { id: 'name', icon: Flame, tone: 'amber', title: come.nameTitle, body: come.nameBody, refs: NAME_REFS },
     { id: 'christ', icon: LatinCross, tone: 'plum', title: come.christTitle, body: come.christBody, refs: ACCESS_REFS },
+    { id: 'spirit', icon: Wind, tone: 'sky', title: come.spiritTitle, body: come.spiritBody, refs: SPIRIT_REFS },
+    { id: 'church', icon: Church, tone: 'church', title: come.churchTitle, body: come.churchBody, refs: CHURCH_REFS },
   ];
 
   return (

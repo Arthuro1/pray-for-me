@@ -37,6 +37,7 @@
 // VERSIONING: bump `version` when a day's meaning changes (docs/PRAYER_PLANS.md).
 import { DAYS } from './intimacyWithTheSpiritDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'know', from: 1, to: 5, titleKey: 'planHolySpiritMovementKnow' },
@@ -58,6 +59,7 @@ export const INTIMACY_WITH_THE_SPIRIT = {
   titleKey: 'planHolySpiritTitle',
   subKey: 'planHolySpiritSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile({ disputedTopics: ['spiritual-gifts', 'hearing-god'] }),
   review: NEW_PLAN_APPROVALS.holySpirit21,
   movements: MOVEMENTS,
   intro: {

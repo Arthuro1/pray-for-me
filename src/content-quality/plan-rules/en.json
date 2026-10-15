@@ -1,0 +1,226 @@
+{
+  "locale": "en",
+  "status": "draft",
+  "note": "AI-drafted detection patterns, not native approval. Patterns flag risks for a human; they never approve or reject wording on their own. Keys under `patterns` are issue codes (src/lib/planQuality.js).",
+  "wordBoundaries": true,
+  "negationScope": "before",
+  "godReferences": [
+    "god(?:['’]s)?",
+    "lord(?:['’]s)?",
+    "father",
+    "jesus(?:['’])?",
+    "christ(?:['’]s)?",
+    "holy spirit",
+    "spirit",
+    "abba",
+    "almighty",
+    "savio(?:u)?r",
+    "most high",
+    "yahweh",
+    "creator",
+    "maker of heaven"
+  ],
+  "prayerDirections": [
+    "ask(?: god| the lord| him)?",
+    "pray",
+    "give thanks",
+    "thank (?:god|him|the lord)",
+    "bring",
+    "tell god",
+    "confess",
+    "name"
+  ],
+  "qualifiers": [
+    "may",
+    "might",
+    "perhaps",
+    "whether",
+    "hope\\p{L}*",
+    "pray(?:s|ing)? (?:that|for)",
+    "ask(?:s|ing)? (?:him|god|the lord)",
+    "if it is (?:his|your|god['’]s) will",
+    "according to (?:his|your) will",
+    "not every",
+    "no (?:promise|guarantee)",
+    "(?:does|do|did|can|could|will) not (?:promise|guarantee|mean)",
+    "never (?:promise[sd]?|guarantee[sd]?)",
+    "isn['’]t (?:promised|guaranteed)",
+    "we (?:cannot|can['’]t) know",
+    "scripture (?:teaches|promises|says)",
+    "the bible (?:teaches|promises|says)",
+    "trust (?:him|god) with",
+    "whatever (?:he|god) (?:gives|decides)"
+  ],
+  "negations": [
+    "not",
+    "never",
+    "no",
+    "no one",
+    "nobody",
+    "nothing",
+    "without",
+    "rather than",
+    "instead of",
+    "\\p{L}+n['’]t"
+  ],
+  "patterns": {
+    "GOD_SPEAKS_FOR_READER": [
+      "god (?:has )?told you",
+      "god is telling you",
+      "the lord (?:has )?told you",
+      "the lord is telling you",
+      "god (?:is saying|says) to you",
+      "god (?:is speaking|has spoken) to you (?:about|through|today|now)",
+      "god wants (?:me to tell you|you to know that)",
+      "this is (?:god['’]s|the lord['’]s) (?:word|message) (?:to|for) you"
+    ],
+    "GUARANTEED_OUTCOME": [
+      "god will (?:surely |definitely |certainly )?(?:give|grant|bring) you (?:this|that|what you|everything you|your (?:breakthrough|miracle|desire|answer))",
+      "god (?:definitely|certainly|surely) will",
+      "god will (?:definitely|certainly|surely)",
+      "your (?:breakthrough|miracle|answer) (?:is|will be) (?:coming|on its way|guaranteed|due|near)",
+      "you will (?:surely |definitely |certainly )?(?:receive|get|see) (?:what you (?:ask|asked|want)|your (?:breakthrough|miracle|answer))",
+      "(?:a )?guaranteed (?:answer|outcome|breakthrough|miracle)"
+    ],
+    "PRAYER_TECHNIQUE": [
+      "if you pray (?:correctly|right|the right way|hard enough|long enough|enough)",
+      "pray (?:this|these words) and god (?:will|must)",
+      "god (?:must|has to|is obligated to|is bound to) (?:answer|act|respond)",
+      "(?:the )?(?:right|correct|secret|perfect) (?:words|formula|prayer) (?:to|that|will) (?:unlock|move god|guarantee|force)"
+    ],
+    "CERTAINTY_CLAIM": [
+      "god has (?:already )?(?:chosen|picked|prepared|set apart) (?:your|a|the) (?:future )?(?:spouse|husband|wife|partner)",
+      "(?:the one|your soulmate|the person) god has (?:for|chosen for) you",
+      "(?:he|she|this person) is god['’]s (?:choice|chosen one|will) for you",
+      "this is (?:definitely |certainly |clearly )?god['’]s will for (?:you|your life)",
+      "this (?:suffering|illness|loss|trial|pain|crisis) (?:happened|came|is happening|was sent) (?:because|so that|to teach)"
+    ],
+    "GUARANTEED_HEALING": [
+      "god will (?:surely |definitely |certainly )?heal (?:you|your|him|her|them)",
+      "you (?:will|shall) (?:surely |definitely )?be healed",
+      "(?:your|this|the) healing is (?:guaranteed|certain|assured|on its way|coming)"
+    ],
+    "GUARANTEED_MARRIAGE": [
+      "god will (?:surely |definitely )?(?:give|bring|send) you (?:a|your) (?:future )?(?:spouse|husband|wife|partner)",
+      "your (?:future )?(?:spouse|husband|wife) is (?:waiting|coming|on (?:the|his|her) way)",
+      "you will (?:surely |definitely |certainly )?(?:get married|marry|find (?:your|a) (?:spouse|husband|wife))",
+      "(?:the one|your soulmate) is (?:coming|waiting|on (?:the|his|her) way)"
+    ],
+    "PROSPERITY_PROMISE": [
+      "god will (?:make you rich|bless you with (?:wealth|money|riches|financial))",
+      "(?:sow|give|tithe)(?:s|ing)? (?:a seed|money|your tithe|this offering|generously) (?:and|to) (?:receive|reap|get) (?:a |your )?(?:harvest|return|money|financial)",
+      "financial (?:breakthrough|blessing|increase) is (?:coming|guaranteed|yours)",
+      "(?:hundredfold|100-fold) return"
+    ],
+    "FAITH_DEFICIT_BLAME": [
+      "(?:if|because|unless) you (?:had|have|lack(?:ed)?|didn['’]t have|don['’]t have) (?:enough|more|real|true|sufficient|stronger) faith",
+      "(?:not|wasn['’]t|weren['’]t|isn['’]t) (?:healed|answered) because (?:of )?(?:your|their|a) (?:lack of faith|unbelief|weak faith|little faith|doubt)",
+      "your (?:lack of faith|unbelief|weak faith|doubt) (?:is|was) (?:why|the reason|blocking|stopping)"
+    ],
+    "SUFFERING_BLAME": [
+      "(?:your|this|their|the) (?:suffering|illness|sickness|pain|loss|infertility|miscarriage|disability|depression|childlessness) (?:is|was) (?:a |the )?(?:result|punishment|consequence|sign) of (?:your|their|hidden|secret|unconfessed)? ?sin",
+      "(?:hidden|secret|unconfessed) sin (?:is|was|must be) (?:why|the (?:reason|cause|root))",
+      "god (?:is|was) punishing you"
+    ],
+    "SHAME_LANGUAGE": [
+      "(?:damaged|used|spoiled) goods",
+      "(?:you are|you['’]re|you became|you are now) (?:damaged|dirty|defiled|ruined|worthless|unclean)",
+      "(?:no longer|not) (?:worthy|pure enough) (?:of|for) (?:love|marriage|god)",
+      "(?:chewed[- ]gum|used rose|crumpled paper)"
+    ],
+    "ABUSE_ENDANGERMENT": [
+      "(?:stay|remain) (?:with|in) (?:an? |your )?(?:abusive|violent) (?:husband|wife|spouse|partner|relationship|home|marriage)",
+      "submit to (?:abuse|(?:his|her|their|an?) abus(?:e|er|ive))",
+      "(?:confront|face) (?:your|the|an?) abuser (?:alone|on your own|by yourself)",
+      "forgiv(?:e|eness|ing) (?:means|requires) (?:going back|returning|staying|reconciling)",
+      "(?:abuse|violence) is (?:your )?(?:a )?(?:cross to bear|god['’]s will)",
+      "(?:don['’]t|do not|never) (?:tell|report (?:it )?to) (?:the police|the authorities|your pastor|a counsel(?:l)?or)"
+    ],
+    "CARE_REPLACEMENT": [
+      "(?:stop|quit) taking (?:your )?(?:medication|medicine|pills|antidepressants|treatment)",
+      "(?:don['’]t|do not|won['’]t|will not) need (?:a |any )?(?:doctor|therapist|counsel(?:l)?or|psychiatrist|medication|treatment|professional help)",
+      "(?:prayer|faith) (?:instead of|rather than|replaces|is a substitute for) (?:medicine|medication|therapy|a doctor|treatment|counsel(?:l)?ing)",
+      "(?:depression|anxiety|mental illness) is (?:just |only |simply )?(?:a )?(?:lack of faith|spiritual (?:problem|attack)|sin)"
+    ],
+    "COERCIVE_CONFRONTATION": [
+      "(?:confront|rebuke) (?:them|him|her) until (?:they|he|she) (?:repent|admit|confess)(?:s|es)?",
+      "(?:force|pressure|make) (?:them|him|her) (?:to )?(?:repent|confess|come back|apologi[sz]e)",
+      "(?:refuse|withhold) (?:contact|love|forgiveness) until (?:they|he|she) (?:repent|change|apologi[sz]e)(?:s|es)?"
+    ],
+    "SPIRITUAL_MANIPULATION": [
+      "god will (?:punish|curse|abandon|stop loving|turn away from) you (?:if|unless)",
+      "if you (?:don['’]t|do not|fail to|refuse to) [^.!?]{0,40}(?:god will (?:punish|curse|abandon)|you will (?:lose (?:your|god['’]s)|be cursed))",
+      "(?:your|their) (?:salvation|blessing|healing) depends on (?:how much|how often|how long) you (?:pray|give|fast)",
+      "(?:obey|submit to) (?:your|the) (?:pastor|leader|prophet|man of god) (?:without question|no matter what)",
+      "(?:questioning|doubting) (?:your|the) (?:pastor|leader|prophet) is (?:rebellion|a sin)"
+    ],
+    "SELF_HELP_LANGUAGE": [
+      "manifest(?:ing)? (?:your|what you want|abundance|your desires)",
+      "the universe (?:will|has|wants|is)",
+      "positive (?:energy|vibes)",
+      "(?:the )?best version of yourself",
+      "law of attraction",
+      "(?:raise|high) (?:your )?vibration",
+      "self-love",
+      "you deserve (?:it|this|happiness|the best)",
+      "mindset shift",
+      "empower yourself",
+      "inner (?:power|goddess)"
+    ],
+    "COACHING_TONE": [
+      "you(?:['’]ve| have) got this",
+      "(?:step|get) out of your comfort zone",
+      "believe in yourself",
+      "you are enough",
+      "trust the process",
+      "crush (?:it|your goals)",
+      "unlock your (?:potential|power)",
+      "level up"
+    ],
+    "LITERAL_CALQUE": []
+  },
+  "markers": {
+    "spiritual-gifts": [
+      "(?:speak(?:ing)?|pray(?:ing)?) in tongues",
+      "gift of tongues",
+      "prophesy(?:ing)?",
+      "word of prophecy",
+      "baptism (?:in|with) the (?:holy )?spirit",
+      "baptized (?:in|with) the (?:holy )?spirit"
+    ],
+    "deliverance": [
+      "deliverance ministry",
+      "(?:generational|ancestral|family[- ]line) (?:curse|bondage|covenant)s?",
+      "renounc(?:e|ing) (?:every |all |any )?(?:occult|witchcraft|spirits?|covenants?|curses?|ancestral)",
+      "break(?:ing)? (?:every |the |a )?curses?",
+      "cast(?:ing)? out (?:a |the |any )?(?:demons?|spirits?) (?:from|of) (?:you|yourself|me)",
+      "spiritual warfare",
+      "bind(?:ing)? (?:the )?(?:enemy|demons?|spirits?)"
+    ],
+    "gender-roles": [
+      "submi(?:t|ssion|ssive) to (?:your|her|his) husband",
+      "headship",
+      "head of (?:the|his|your) (?:home|household|wife|family)",
+      "wives,? submit",
+      "spiritual (?:head|leader) of the (?:home|household)"
+    ],
+    "hearing-god": [
+      "hear(?:ing)? (?:god['’]s|his) voice",
+      "god (?:is )?(?:speaking|telling) (?:to )?you",
+      "the spirit (?:speaks|is speaking) to you",
+      "word of knowledge",
+      "listening prayer"
+    ],
+    "divine-healing": [
+      "gifts? of healing",
+      "healing ministry",
+      "lay(?:ing)? hands on"
+    ],
+    "saint-intercession": [
+      "pray(?:ing)? to (?:mary|the saints)",
+      "intercession of (?:mary|the saints)",
+      "hail mary",
+      "rosary"
+    ]
+  }
+}

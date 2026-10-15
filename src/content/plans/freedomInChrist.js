@@ -50,6 +50,7 @@
 // authored content and language fallbacks, not nonexistent prose translations.
 import { DAYS } from './freedomInChristDays';
 import { PLAN_APPROVALS } from '../reviews/paul20260903';
+import { theologyProfile } from '../theologyProfiles';
 
 // The five movements. A reader sees these as calm milestones; the content model
 // is what actually carries them (every day names its movement).
@@ -134,6 +135,7 @@ export const FREEDOM_IN_CHRIST = {
     dayCompleted: 'deliverance_plan_day_completed',
     completed: 'deliverance_plan_completed',
   },
+  theologyProfile: theologyProfile({ disputedTopics: ['deliverance'] }),
   review: PLAN_APPROVALS.freedom30,
   movements: MOVEMENTS,
   continueThemes: CONTINUE_THEMES,

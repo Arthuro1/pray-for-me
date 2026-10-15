@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Lock, HandHeart, Loader2, X } from 'lucide-react';
+import { Church, Lock, HandHeart, Loader2, X } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useTranslationStore from '../store/translationStore';
 import { t } from '../i18n';
@@ -205,6 +205,11 @@ export default function FirstPrayerFlow({ mode = 'member', lang = 'en', onFinish
           <p className="first-prayer__note">
             <Lock size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
             {t(lang, isGuest ? 'firstPrayerDeviceNote' : 'onboardPrivateNote')}
+          </p>
+          {/* Said once, at the start: the app serves prayer with the Church. */}
+          <p className="first-prayer__note">
+            <Church size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+            {t(lang, 'onboardChurchNote')}
           </p>
         </div>
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, ClipboardCheck, Download, Flag, Heart, KeyRound, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Moon, Pencil, Shield, ShieldCheck, Sun, SunMoon, Sunrise, Trash2, WifiOff } from 'lucide-react';
+import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, ChevronRight, Church, ClipboardCheck, Download, Flag, Heart, KeyRound, LogOut, MessageCircleHeart, MessageSquare, MessageSquareText, Moon, Pencil, Shield, ShieldCheck, Sun, SunMoon, Sunrise, Trash2, WifiOff, Wind } from 'lucide-react';
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
@@ -23,6 +23,7 @@ import { isOriginalAppOrigin } from '../lib/originMigration';
 import { originMigrationCopy } from '../lib/originMigrationCopy';
 import AiDisclaimer from '../components/shared/AiDisclaimer';
 import NotificationPreferences from '../components/NotificationPreferences';
+import ChurchSettings from '../components/ChurchSettings';
 import Switch from '../components/shared/Switch';
 import SettingsRow from '../components/shared/SettingsRow';
 import { hasAiConsent, revokeAiConsent } from '../lib/aiConsent';
@@ -208,7 +209,7 @@ export default function SettingsTab() {
   // Privacy & Security is ONE consolidated section (visibility, vault,
   // notification previews, AI consent, export, deletion) — reachable from More.
   const [openSections, setOpenSections] = useState({
-    privacy: false, notifications: false, appearance: false, support: false,
+    privacy: false, church: false, prayer: false, notifications: false, appearance: false, support: false,
   });
   const toggleSection = (key) => setOpenSections((s) => ({ ...s, [key]: !s[key] }));
   // Privacy & Security's internal rows start compact too — each expands alone.
@@ -593,6 +594,16 @@ export default function SettingsTab() {
                   )}
                 </SettingsRow>
 
+                {/* Sunday rides on the daily reminder: same time, worship wording. */}
+                <SettingsRow
+                  icon={Church}
+                  tone="church"
+                  label={t(lang, 'sundayPrepSetting')}
+                  sub={t(lang, settings.dailyReminderEnabled ? 'sundayPrepSettingDesc' : 'sundayPrepNeedsDaily')}
+                  enabled={settings.dailyReminderEnabled && !!settings.sundayPrepEnabled}
+                  onToggle={settings.dailyReminderEnabled ? () => updateSettings({ sundayPrepEnabled: !settings.sundayPrepEnabled }) : undefined}
+                />
+
                 <SettingsRow icon={MessageCircleHeart} tone="teal" label={t(lang, 'followUp')} sub={t(lang, 'followUpSub')} enabled={settings.followUpEnabled} onToggle={handleToggleFollowUp}>
                   {settings.followUpEnabled && (
                     <div className="settings-row__extra settings-inline-fields">
@@ -637,6 +648,23 @@ export default function SettingsTab() {
             <Group title={t(lang, 'notifPrefsTitle')} sub={t(lang, 'notifPrefsSub')}>
               <NotificationPreferences />
             </Group>
+          </SettingsSection>
+
+          {/* ── My church — the congregation the app points back to ── */}
+          <SettingsSection id="church" title={t(lang, 'churchSectionTitle')} icon={Church} tone="church" open={openSections.church} onToggle={() => toggleSection('church')}>
+            <ChurchSettings lang={lang} userId={user?.id} />
+          </SettingsSection>
+
+          {/* ── Time of prayer ── */}
+          <SettingsSection id="prayer" title={t(lang, 'settingsSecPrayer')} icon={Wind} tone="sky" open={openSections.prayer} onToggle={() => toggleSection('prayer')}>
+            <div className="settings-card">
+              <SettingsRow
+                label={t(lang, 'spiritOpeningSetting')}
+                sub={t(lang, 'spiritOpeningSettingDesc')}
+                enabled={settings.spiritOpening !== false}
+                onToggle={() => updateSettings({ spiritOpening: settings.spiritOpening === false })}
+              />
+            </div>
           </SettingsSection>
 
           {/* ── Appearance & language ── */}

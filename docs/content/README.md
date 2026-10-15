@@ -43,6 +43,16 @@ Only after reviewing accepted legacy findings, run
 `npm run check:content -- --write-baseline`. Never run it automatically in CI.
 The resulting baseline diff must be reviewed; a baseline is not an approval.
 
+## Prayer plans
+
+`check:content` also runs the prayer-plan quality checks
+(`docs/PRAYER_PLAN_QUALITY.md`). It reports findings in the authored EN/FR
+prose and in every served overlay against `plan-quality-baseline.json`, and it
+validates `review-status.json → planQuality`. Those records are pinned to the
+exact overlay text, and `--sync-metadata` creates or resets them to
+`needs-review`. A `human-reviewed` record holds a named native Christian
+reviewer's 0–5 scores. Only a human writes one.
+
 ## Wording reports
 
 Settings → Support → Report wording opens a catalogue of authored text in the

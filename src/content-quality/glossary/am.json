@@ -2,6 +2,17 @@
   "locale": "am",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "ET",
+    "christianRegister": "ወንጌላውያን (ከኦርቶዶክስ አንባቢዎች ጋር የሚግባባ)",
+    "prayerRegister": "በአክብሮት፣ እግዚአብሔርን «አንተ»",
+    "readerAddress": "አንተ/አንቺ",
+    "godAddress": "አንተ",
+    "notes": [
+      "ዝቅተኛ እምነት፡ የአማርኛ ተናጋሪ ክርስቲያን ገምጋሚ ሁሉንም ግቤቶች ማረጋገጥ አለበት።"
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "የጸሎት ርዕስ",
@@ -127,6 +138,68 @@
       "avoid": [],
       "example": "በመተው ጸሎት የምትተወውን ትጠራለህ።",
       "note": "የነጻነት አገልግሎት ቃል። የአፍ መፍቻ ተናጋሪ ግምገማ ያስፈልጋል።"
+    },
+    "sanctification": {
+      "preferred": "መቀደስ",
+      "allowed": [
+        "በቅድስና ማደግ"
+      ],
+      "avoid": [],
+      "example": "መቀደስ እግዚአብሔር በእኛ ውስጥ የሚሠራው ሥራ ነው።",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "ጥሪ",
+      "allowed": [],
+      "avoid": [],
+      "example": "ስለ እግዚአብሔር ጥሪ ጸልይ።",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "ራስን ለእግዚአብሔር መስጠት",
+      "allowed": [],
+      "avoid": [],
+      "example": "ራስን ለእግዚአብሔር መስጠት መታመን ነው።",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "በክርስቶስ መኖር",
+      "allowed": [],
+      "avoid": [],
+      "example": "ቅርንጫፍ በግንዱ እንደሚኖር በክርስቶስ ኑር።",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "አምልኮ",
+      "allowed": [
+        "ውዳሴ"
+      ],
+      "avoid": [],
+      "example": "አምልኮ እግዚአብሔርን በማየት ይጀምራል።",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "ኃጢአትን መናዘዝ",
+      "allowed": [],
+      "avoid": [],
+      "example": "ኃጢአትን መናዘዝ የይቅርታን መንገድ ይከፍታል።",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "ይቅርታ",
+      "allowed": [
+        "ስርየት"
+      ],
+      "avoid": [],
+      "example": "የእግዚአብሔር ይቅርታ ነጻ ያወጣናል።",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "ጸሎት",
+      "allowed": [],
+      "avoid": [],
+      "example": "ጸሎት ከእግዚአብሔር ጋር መነጋገር ነው።",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

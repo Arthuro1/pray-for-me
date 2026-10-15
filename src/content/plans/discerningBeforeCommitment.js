@@ -5,6 +5,7 @@ import themes from './discernment/themes.json';
 import scripture from './discernment/references.json';
 import { LANG_CODES } from '../../i18n';
 import { DISCERNMENT_PLAN_APPROVAL } from '../reviews/paulDiscernment20260903';
+import { theologyProfile } from '../theologyProfiles';
 
 const localized = (french, english) => ({ fr: french, en: english });
 
@@ -30,6 +31,7 @@ export const DISCERNING_BEFORE_COMMITMENT = {
   circles: ['self'],
   titleKey: 'planDiscernmentTitle', subKey: 'planDiscernmentSub',
   proseTranslations: LANG_CODES.filter((lang) => !['en', 'fr'].includes(lang)),
+  theologyProfile: theologyProfile({ audience: 'singles', disputedTopics: ['hearing-god'] }),
   review: DISCERNMENT_PLAN_APPROVAL,
   movements: MOVEMENTS,
   intro: localized(fr.intro.replace(/\n{3,}/g, '\n\n').replace(/ - /g, '\n- '), en.intro),

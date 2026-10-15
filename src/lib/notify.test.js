@@ -8,6 +8,9 @@ import {
   normalizeDetail,
   DAILY_MSG,
   FOLLOWUP_MSG,
+  SUNDAY_MSG,
+  sundayPayload,
+  isSundayKey,
 } from '../../supabase/functions/_shared/notify.ts';
 
 // A representative piece of sensitive prayer content. It is never passed to the
@@ -72,5 +75,30 @@ describe('notification payloads carry no prayer content by default', () => {
   it('falls back to English for an unknown language without leaking', () => {
     const p = JSON.parse(dailyPayload('xx'));
     expect(p.body).toBe(DAILY_MSG.en.generic);
+  });
+});
+
+describe('sundayPayload', () => {
+  it('has Sunday wording for every daily-reminder language', () => {
+    expect(Object.keys(SUNDAY_MSG).sort()).toEqual([...LANGS].sort());
+  });
+
+  it('is generic: a title and body only, with the daily-reminder tag', () => {
+    for (const lang of LANGS) {
+      const payload = JSON.parse(sundayPayload(lang));
+      expect(Object.keys(payload).sort()).toEqual(['body', 'tag', 'title', 'url']);
+      expect(payload.tag).toBe('daily-reminder');
+      expect(payload.body).toBe(SUNDAY_MSG[lang].body);
+    }
+  });
+
+  it('falls back to English for an unknown language', () => {
+    expect(JSON.parse(sundayPayload('xx')).title).toBe(SUNDAY_MSG.en.title);
+  });
+
+  it('recognises a Sunday day key', () => {
+    expect(isSundayKey('2026-10-18')).toBe(true);
+    expect(isSundayKey('2026-10-17')).toBe(false);
+    expect(isSundayKey('not-a-day')).toBe(false);
   });
 });

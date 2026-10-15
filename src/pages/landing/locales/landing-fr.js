@@ -84,7 +84,11 @@ export default {
     "nameTitle": "Le nom",
     "nameBody": "Qetoret est le mot hébreu qui désigne l'encens offert devant Dieu. Dans l'Écriture, l'encens qui monte devient une image des prières du peuple de Dieu. Qetoret tire son nom de cette image : une vie de prière sans cesse présentée à Dieu.",
     "christTitle": "Par le Christ",
-    "christBody": "Qetoret est un outil pour la prière, jamais un intermédiaire. Nous venons au Père par Jésus-Christ, notre grand-prêtre. En lui, les croyants sont appelés un sacerdoce royal : invités à s'approcher, à intercéder pour les autres et à vivre comme ses témoins — sous son autorité, jamais au-dessus des autres."
+    "christBody": "Qetoret est un outil pour la prière, jamais un intermédiaire. Nous venons au Père par Jésus-Christ, notre grand-prêtre. En lui, les croyants sont appelés un sacerdoce royal : invités à s'approcher, à intercéder pour les autres et à vivre comme ses témoins — sous son autorité, jamais au-dessus des autres.",
+    "spiritTitle": "Dans l'Esprit",
+    "spiritBody": "Par le Christ, nous avons accès auprès du Père dans un même Esprit. Le Saint-Esprit nous aide dans notre faiblesse et intercède pour nous quand nous ne savons pas prier comme il faut. La prière n'est pas une technique : elle naît de sa présence, et c'est lui qui en produit le fruit.",
+    "churchTitle": "Avec l'Église",
+    "churchBody": "Qetoret ne remplace pas votre église locale : elle vous aide à prier avec elle et pour elle. Les premiers croyants priaient ensemble, partageaient leur vie et rompaient le pain comme une seule famille. La prière personnelle se nourrit de la prière commune : rassemblez-vous, et portez-vous les uns les autres."
   },
   "bring": {
     "title": "Apportez ce que vous avez sur le cœur",

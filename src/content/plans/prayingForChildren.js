@@ -34,6 +34,7 @@
 // English through pick(). Scripture is stored as references only.
 import { DAYS } from './prayingForChildrenDays';
 import { NEW_PLAN_APPROVALS } from '../reviews/paulNewPlans20260930';
+import { theologyProfile } from '../theologyProfiles';
 
 export const MOVEMENTS = [
   { id: 'belonging', from: 1, to: 5, titleKey: 'planChildrenMovementBelonging' },
@@ -54,6 +55,7 @@ export const PRAYING_FOR_CHILDREN = {
   titleKey: 'planChildrenTitle',
   subKey: 'planChildrenSub',
   proseTranslations: [],
+  theologyProfile: theologyProfile({ audience: 'parents' }),
   review: NEW_PLAN_APPROVALS.children21,
   movements: MOVEMENTS,
   intro: {

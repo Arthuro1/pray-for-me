@@ -2,6 +2,17 @@
   "locale": "en",
   "status": "draft",
   "note": "Editorial seed, not native approval. Validate denominational and regional usage before approval.",
+  "profile": {
+    "region": "international",
+    "christianRegister": "contemporary-evangelical",
+    "prayerRegister": "conversational-reverent",
+    "readerAddress": "you",
+    "godAddress": "You (capitalised where the source prays to God)",
+    "notes": [
+      "English is the semantic source; write as an international, plain-spoken evangelical, never in King James pastiche."
+    ],
+    "regions": {}
+  },
   "terms": {
     "prayerRequest": {
       "preferred": "prayer request",
@@ -71,7 +82,11 @@
       "allowed": [],
       "avoid": [],
       "example": "Ask the Holy Spirit to guide you.",
-      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically."
+      "note": "Use in context; preserve meaning rather than replacing synonyms mechanically.",
+      "variants": [
+        "holy spirit",
+        "holy ghost"
+      ]
     },
     "scripture": {
       "preferred": "Scripture",
@@ -125,6 +140,74 @@
       "avoid": [],
       "example": "A prayer of renunciation names what you turn away from.",
       "note": "Deliverance vocabulary: a spoken turning away in Christ’s name, not self-denial in general."
+    },
+    "sanctification": {
+      "preferred": "sanctification",
+      "allowed": [
+        "growing in holiness"
+      ],
+      "avoid": [],
+      "example": "Sanctification is God's work in us.",
+      "note": "God's work of making believers holy over time; never self-improvement or self-optimisation."
+    },
+    "calling": {
+      "preferred": "calling",
+      "allowed": [
+        "vocation"
+      ],
+      "avoid": [],
+      "example": "Pray about your calling.",
+      "note": "God's call on a life; not career branding or 'purpose' coaching."
+    },
+    "surrender": {
+      "preferred": "surrender",
+      "allowed": [
+        "yielding to God"
+      ],
+      "avoid": [],
+      "example": "Surrender to God is trust, not resignation.",
+      "note": "Entrusting oneself and one's desires to God's will (Gethsemane); not resignation, defeat or passivity."
+    },
+    "abidingInChrist": {
+      "preferred": "abiding in Christ",
+      "allowed": [
+        "remaining in Christ"
+      ],
+      "avoid": [],
+      "example": "Abide in Christ as a branch in the vine.",
+      "note": "John 15: remaining joined to Christ in trust and obedience, as a branch to the vine."
+    },
+    "worship": {
+      "preferred": "worship",
+      "allowed": [
+        "praise"
+      ],
+      "avoid": [],
+      "example": "Worship begins by looking to God.",
+      "note": "Honouring God for who He is; praise is one expression of worship."
+    },
+    "confession": {
+      "preferred": "confession",
+      "allowed": [
+        "confessing sin"
+      ],
+      "avoid": [],
+      "example": "Confession opens the way to forgiveness.",
+      "note": "Telling God the truth about sin (1 John 1:9); distinct from a confession of faith."
+    },
+    "forgiveness": {
+      "preferred": "forgiveness",
+      "allowed": [],
+      "avoid": [],
+      "example": "God's forgiveness sets us free.",
+      "note": "God's forgiveness of sin, and forgiving others; forgiving never requires returning to danger."
+    },
+    "prayer": {
+      "preferred": "prayer",
+      "allowed": [],
+      "avoid": [],
+      "example": "Prayer is speaking with God.",
+      "note": "Speaking with God; never a meditation technique or positive thinking."
     }
   }
 }

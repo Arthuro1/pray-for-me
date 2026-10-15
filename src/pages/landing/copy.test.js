@@ -65,6 +65,10 @@ describe('landing locale chunks', () => {
       expect(copy.letter.title, `${code}: the letter's title`).toBe(app.aboutStoryTitle);
       expect(copy.come.nameBody, `${code}: the name`).toBe(app.aboutNameBody);
       expect(copy.come.christBody, `${code}: through Christ`).toBe(app.aboutAccessBody);
+      expect(copy.come.spiritTitle, `${code}: in the Spirit`).toBe(app.aboutSpiritTitle);
+      expect(copy.come.spiritBody, `${code}: in the Spirit`).toBe(app.aboutSpiritBody);
+      expect(copy.come.churchTitle, `${code}: with the Church`).toBe(app.aboutChurchTitle);
+      expect(copy.come.churchBody, `${code}: with the Church`).toBe(app.aboutChurchBody);
       expect(copy.hero.title, `${code}: the tagline`).toBe(app.aboutTagline);
     }
   });
