@@ -229,11 +229,13 @@ export default function AuthenticatedApp({
   };
   // A new prayer begun inside one Intercession Circle (the Journal's circle
   // groups, a circle page, a finished plan's "keep carrying"): the circle is preselected and its question frames
-  // the field. An optional `prompt` ("Pray this") is shown above the empty
-  // field as a starting point, never written into it.
-  const openAddInCircle = (circle, { prompt = null } = {}) => {
+  // the field. An optional `prompt` (Sunday, "keep carrying") is shown above
+  // the empty field as a starting point, never written into it; a `prefill`
+  // ("Pray this" on a circle's theme, lib/circlePrayer.js) fills the form with
+  // that theme for the person to edit before saving.
+  const openAddInCircle = (circle, { prompt = null, prefill = null } = {}) => {
     setEditPrayer(null);
-    setFormPrefill(null);
+    setFormPrefill(prefill);
     setFormOptions({ circle, prompt });
     setShowForm(true);
   };

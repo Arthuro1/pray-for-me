@@ -405,6 +405,11 @@
 .settings-row__label { margin: 0; color: var(--q-text); font-size: 0.9375rem; }
 .settings-row__sub { margin: 2px 0 0; color: var(--q-text-tertiary); font-size: var(--q-type-meta); line-height: 1.45; }
 .settings-row__extra { margin-block-start: var(--q-space-3); }
+
+/* My church: its name and a save button on one line, wrapping on a phone. */
+.church-form { display: grid; gap: var(--q-space-2); }
+.church-form__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-3); }
+.church-form__row > .q-input { flex: 1 1 14rem; min-width: 0; }
 /* A row led by an icon tile: its tile, its words, its control; whatever it
    opens lines up under the words, past the tile. */
 .settings-row--icon > .settings-row__main { gap: var(--q-space-3); }

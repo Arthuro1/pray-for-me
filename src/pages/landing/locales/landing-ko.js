@@ -130,7 +130,8 @@ export default {
         "desc": "복음, 정의, 긍휼"
       }
     ],
-    "close": "닫기"
+    "close": "닫기",
+    "facetHint": "성령의 열매 가운데 하나를 눌러 살펴보고 기도하세요."
   },
   "together": {
     "label": "함께",

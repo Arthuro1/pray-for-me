@@ -130,7 +130,8 @@ export default {
         "desc": "Ang ebanghelyo, katarungan at awa"
       }
     ],
-    "close": "Isara"
+    "close": "Isara",
+    "facetHint": "I-tap ang isang bahagi ng bunga ng Espiritu para makilala ito at manalangin."
   },
   "together": {
     "label": "Sama-sama",

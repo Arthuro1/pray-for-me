@@ -130,7 +130,8 @@ export default {
         "desc": "ወንጌል፣ ፍትሕና ምሕረት"
       }
     ],
-    "close": "ዝጋ"
+    "close": "ዝጋ",
+    "facetHint": "ከመንፈስ ፍሬ አንዱን ገጽታ ይንኩ፣ ይወቁት እና ይጸልዩ።"
   },
   "together": {
     "label": "በጋራ",

@@ -130,7 +130,8 @@ export default {
         "desc": "O evangelho, a justiça e a misericórdia"
       }
     ],
-    "close": "Fechar"
+    "close": "Fechar",
+    "facetHint": "Toque em um aspecto do fruto para descobri-lo e orar."
   },
   "together": {
     "label": "Juntos",

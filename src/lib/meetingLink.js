@@ -58,3 +58,13 @@ export function meetingPlatform(text) {
   const match = PLATFORMS.find(([suffix]) => host === suffix || host.endsWith(`.${suffix}`));
   return match ? match[1] : null;
 }
+
+// Where an in-person meeting's place opens: the address searched in Google Maps,
+// or the place's own map link when one was pasted ("https://maps.app.goo.gl/…").
+// The place leaves the device only when a member opens that link.
+export function placeMapUrl(place) {
+  const text = String(place || '').trim();
+  if (!text) return null;
+  if (/^https?:\/\//i.test(text)) return safeMeetingUrl(text);
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(text)}`;
+}

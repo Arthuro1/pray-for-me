@@ -5,12 +5,47 @@
 import { parseKey } from './schedule';
 import { safeMeetingUrl } from './meetingLink';
 
-export const REPEATS = Object.freeze(['weekly', 'biweekly', 'monthly', 'daily', 'once']);
+// The rhythms offered, most frequent first.
+export const REPEATS = Object.freeze(['daily', 'weekly', 'biweekly', 'monthly', 'once']);
 export const DURATIONS = Object.freeze([30, 45, 60, 90, 120]);
+// Any other length is set by its end time, from a short gathering to a night of
+// prayer. The database holds the same bounds (group_meetings_duration).
+export const DURATION_MIN = 15;
+export const DURATION_MAX = 720;
 export const MEETING_TEXT_MAX = 80;
 export const MEETING_NOTES_MAX = 500;
 
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const DAY_MINUTES = 24 * 60;
 const weekdayOf = (key) => parseKey(key).getDay();
+const minutesOf = (hhmm) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3, 5));
+const pad = (n) => String(n).padStart(2, '0');
+
+export const isPresetDuration = (minutes) => DURATIONS.includes(minutes);
+
+// "20:00" + 90 → "21:30"; past midnight it wraps ("21:00" + 480 → "05:00").
+export function endTimeOf(start, duration) {
+  if (!TIME_RE.test(start || '') || !Number.isInteger(duration)) return '';
+  const end = (minutesOf(start) + duration) % DAY_MINUTES;
+  return `${pad(Math.floor(end / 60))}:${pad(end % 60)}`;
+}
+
+// Minutes from a start to an end time; an end at or before the start is read as
+// the next morning, the way a night of prayer is written ("21:00 → 05:00").
+export function durationBetween(start, end) {
+  if (!TIME_RE.test(start || '') || !TIME_RE.test(end || '')) return null;
+  const diff = (minutesOf(end) - minutesOf(start) + DAY_MINUTES) % DAY_MINUTES;
+  return diff === 0 ? DAY_MINUTES : diff;
+}
+
+// "45 min", "2 h", "8 h 30 min", in the reader's language.
+export function durationLabel(minutes, lang) {
+  const unit = (n, unitName) => new Intl.NumberFormat(lang, { style: 'unit', unit: unitName, unitDisplay: 'short' }).format(n);
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  if (!hours) return unit(rest, 'minute');
+  return rest ? `${unit(hours, 'hour')} ${unit(rest, 'minute')}` : unit(hours, 'hour');
+}
 
 export function newMeetingDraft(todayKey, timezone) {
   return {
@@ -78,7 +113,8 @@ export function meetingDraftError(d, todayKey) {
     const day = Number(d.dayOfMonth);
     if (!Number.isInteger(day) || day < 1 || day > 31) return 'meetingDayOfMonthInvalid';
   }
-  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(d.time)) return 'meetingTimeRequired';
+  if (!TIME_RE.test(d.time)) return 'meetingTimeRequired';
+  if (!Number.isInteger(d.duration) || d.duration < DURATION_MIN || d.duration > DURATION_MAX) return 'meetingDurationInvalid';
   return null;
 }
 

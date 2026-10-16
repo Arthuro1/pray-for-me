@@ -305,6 +305,10 @@ button.together-row.q-card:hover { border-color: var(--q-border-strong); backgro
 .meeting-card .together-row__name,
 .meeting-card .together-row__meta { white-space: normal; overflow-wrap: anywhere; }
 .meeting-card__locked { display: inline-flex; align-items: center; gap: var(--q-space-1); }
+/* The place reads as an address that opens a map. */
+.meeting-card__place { display: inline-flex; align-items: center; gap: var(--q-space-1); width: fit-content; color: var(--q-royal-text); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.meeting-card__place > svg { flex: 0 0 auto; }
+.meeting-form__map { display: inline-flex; align-items: center; gap: var(--q-space-1); width: fit-content; margin-block-start: var(--q-space-2); color: var(--q-royal-text); font-size: var(--q-type-meta); text-decoration: underline; text-underline-offset: 3px; }
 .meeting-card__notes { display: block; margin-block-start: var(--q-space-2); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
 .meeting-card__join { display: inline-flex; align-items: center; gap: var(--q-space-2); text-decoration: none; }
 @media (max-width: 520px) {
@@ -312,7 +316,99 @@ button.together-row.q-card:hover { border-color: var(--q-border-strong); backgro
   .meeting-card .together-row__actions > .meeting-card__join { flex: 1 1 auto; justify-content: center; }
 }
 
-.meeting-form { display: grid; gap: var(--q-space-4); }
+/* The meeting form: its name, then each part of the meeting on its own ground
+   (where, when), a note, and the card the group will see. */
+.meeting-form { display: grid; gap: var(--q-space-5); }
+.meeting-form__intro { margin: 0; color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.55; }
 .meeting-form__short { max-width: 9rem; }
+.meeting-form__section {
+  display: grid;
+  gap: var(--q-space-4);
+  padding: var(--q-space-4);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-canvas);
+}
+.meeting-form__section-title { display: flex; align-items: center; gap: var(--q-space-2); margin: 0; color: var(--q-text); font-family: var(--q-font-ui); font-size: 0.9375rem; font-weight: 650; line-height: 1.3; }
+.meeting-form__preview { display: grid; gap: var(--q-space-2); }
+.meeting-form__notes { display: grid; gap: var(--q-space-2); }
+
+/* Online or in person: two tiles, each with its icon, its name and what it
+   means; the chosen one is outlined in royal. */
+.meeting-mode { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--q-space-2); }
+.meeting-mode__option {
+  display: flex;
+  min-height: 44px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--q-space-2);
+  padding: var(--q-space-3) var(--q-space-3) var(--q-space-4);
+  border: 1px solid var(--q-border-strong);
+  border-radius: var(--q-radius-control);
+  background: var(--q-surface);
+  text-align: start;
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease), box-shadow var(--q-motion-micro) var(--q-ease);
+}
+.meeting-mode__option:hover { border-color: var(--q-royal); }
+.meeting-mode__option[aria-pressed="true"] { border-color: var(--q-royal); background: var(--q-selected); box-shadow: inset 0 0 0 1px var(--q-royal); }
+.meeting-mode__label { color: var(--q-text); font-size: 0.9375rem; font-weight: 600; line-height: 1.25; }
+.meeting-mode__hint { margin-block-start: calc(-1 * var(--q-space-1)); color: var(--q-text-tertiary); font-size: 0.75rem; line-height: 1.4; }
+
+/* The days of a weekly meeting: seven round buttons, the chosen ones filled. */
+.meeting-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--q-space-1); }
+.meeting-days__day {
+  display: inline-flex;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--q-border-strong);
+  border-radius: var(--q-radius-pill);
+  background: var(--q-surface);
+  color: var(--q-text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  transition: background-color var(--q-motion-micro) var(--q-ease), border-color var(--q-motion-micro) var(--q-ease), color var(--q-motion-micro) var(--q-ease);
+}
+.meeting-days__day:hover { border-color: var(--q-royal); }
+.meeting-days__day[aria-pressed="true"] { border-color: var(--q-action-primary); background: var(--q-action-primary); color: var(--q-on-action); }
+
+/* From when until when, side by side; a length that is not a quick pick shows
+   as a chip of its own. */
+.meeting-times { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: var(--q-space-2); }
+.meeting-times__arrow { margin-block-start: 41px; color: var(--q-text-tertiary); }
+.meeting-times__custom { border-color: var(--q-royal); background: var(--q-selected); color: var(--q-royal-text); }
 .meeting-form__note { display: flex; align-items: flex-start; gap: var(--q-space-2); margin: 0; }
 .meeting-form__note > svg { flex: 0 0 auto; margin-block-start: 3px; }
+
+/* Import from a calendar: a quiet row that folds open, like the prayer form's
+   optional parts, onto a file button, a link field and — for a calendar with
+   several events — the events to choose from. */
+.meeting-import__toggle {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  gap: var(--q-space-2);
+  color: var(--q-royal-text);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.meeting-import__chevron { margin-inline-start: auto; transition: transform var(--q-motion-standard) var(--q-ease); }
+.meeting-import__toggle[aria-expanded="true"] .meeting-import__chevron { transform: rotate(180deg); }
+.meeting-import__panel { display: grid; gap: var(--q-space-4); margin-block-start: var(--q-space-2); padding: var(--q-space-4); border-radius: var(--q-radius-surface); background: var(--q-surface-muted); }
+.meeting-import__link { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2); }
+.meeting-import__link > .q-input { flex: 1 1 14rem; min-width: 0; }
+.meeting-import__choices { display: grid; gap: var(--q-space-2); margin: 0; padding: 0; list-style: none; }
+.meeting-import__choice {
+  display: grid;
+  width: 100%;
+  gap: 2px;
+  padding: var(--q-space-3) var(--q-space-4);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-control);
+  background: var(--q-surface);
+  text-align: start;
+}
+.meeting-import__choice:hover { background: var(--q-hover); }
+.meeting-import__choice-title { color: var(--q-text); font-weight: 600; overflow-wrap: anywhere; }

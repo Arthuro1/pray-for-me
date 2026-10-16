@@ -77,7 +77,8 @@ function DetailRow({ id, icon, label, value, unset = false, hint = null, open, o
 
 function initialForm(editPrayer, prefill, lang, context = null) {
   // A new prayer may be seeded with an optional, fully-editable prefill (e.g. a
-  // starter prompt from the gospel journey). Editing always wins over prefill.
+  // starter prompt from the gospel journey, or a circle's theme from "Pray
+  // this"). Editing always wins over prefill.
   // New prayers default to the bounded weekly rhythm (stated on its row);
   // an edited prayer keeps exactly the schedule it already has — including the
   // legacy "no schedule" (weekly category plan), which is never migrated.
@@ -121,9 +122,9 @@ export default function PrayerForm({
   onCommunitySubmit,
   prefill,
   // { circle, prompt } when the person came from a circle (a Journal circle
-  // group, a circle page, a finished plan): its question frames the empty field
-  // and the circle is preselected. A `prompt` ("Pray this") sits above the
-  // field as a starting point — never written into the person's own words.
+  // group, a circle page, a finished plan): its question frames the field and
+  // the circle is preselected. A `prompt` (Sunday, "keep carrying") sits above
+  // the field as a starting point — never written into the person's own words.
   context = null,
   initialDetail = null,
   onEditSaved,
@@ -184,7 +185,7 @@ export default function PrayerForm({
   // Three cases are excluded. Editing already has a saved row. A community
   // request is written for other people to read and gets no local copy. And a
   // PREFILLED form was opened to write one specific thing (a starter prompt from
-  // Grow), so restoring an unrelated draft over it — or letting that prompt take
+  // Grow, a circle's theme), so restoring an unrelated draft over it — or letting that prompt take
   // the slot a later blank Add would restore from — would both be wrong.
   const draftEnabled = !editPrayer && !communityMode && !prefill;
   const { restored, commit: commitDraft, discard: discardDraft } = useFormDraft({

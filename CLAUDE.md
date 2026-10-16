@@ -84,6 +84,7 @@ Never author, translate or AI-generate Bible text. Content stores **references**
 ### Server side
 - `api/anthropic.js` is the only place that builds AI prompts, picks the model and sets budgets. The browser sends only `{ task, input }`. The Vite dev server runs this same handler through a plugin in `vite.config.js`, so dev and prod behave the same.
 - `api/plan-preview.js` serves link previews to crawlers through user-agent rewrites in `vercel.json`.
+- `api/calendar-import.js` fetches a calendar address a member pasted into the meeting form (signed-in only, https on port 443, private and reserved IPs refused at connection time, iCalendar replies only, the address never logged). The browser parses the text itself (`src/lib/icsImport.js`). The Vite dev server runs the same handler.
 - Anything prefixed `VITE_` ships in the bundle and is fixed at build time. For example, changing `VITE_YOUVERSION_ENABLED` needs a rebuild and redeploy.
 - The CSP is defined twice, in `vercel.json` (prod) and `vite.config.js` `server.headers` (dev). Update both when adding an origin.
 - Edge Functions in `supabase/functions/` handle the daily reminder, follow-up and event notification pushes. They are deployed with `--no-verify-jwt` and called by `pg_cron` with Vault-stored secrets.

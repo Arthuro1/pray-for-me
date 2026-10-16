@@ -18,7 +18,8 @@ import { PrimaryButton, QuietButton, SecondaryButton } from '../../components/sh
 
 // The shared modal shell (Esc-to-close + focus trap). Exported because GroupView
 // in CommunityTab builds its own group dialogs on the same shell.
-export function Modal({ title, onClose, lang, children }) {
+// A `footer` (a long form's actions) stays in view below the scrolling body.
+export function Modal({ title, onClose, lang, footer = null, children }) {
   useEscapeKey(onClose);
   const trapRef = useFocusTrap();
   return (
@@ -30,7 +31,8 @@ export function Modal({ title, onClose, lang, children }) {
             <X size={18} aria-hidden="true" />
           </button>
         </div>
-        <div className="overflow-y-auto px-6 pb-6 sm:px-8 sm:pb-8">{children}</div>
+        <div className={`overflow-y-auto px-6 sm:px-8 ${footer ? 'pb-5' : 'pb-6 sm:pb-8'}`}>{children}</div>
+        {footer && <div className="q-dialog__footer shrink-0 px-6 pb-6 pt-4 sm:px-8">{footer}</div>}
       </div>
     </div>
   );

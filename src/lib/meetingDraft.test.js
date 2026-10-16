@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  draftFromMeeting, meetingDetails, meetingDraftError, newMeetingDraft, scheduleFromMeetingDraft,
+  draftFromMeeting, durationBetween, durationLabel, endTimeOf, meetingDetails, meetingDraftError, newMeetingDraft,
+  scheduleFromMeetingDraft,
 } from './meetingDraft';
-import { meetingPlatform, safeMeetingUrl } from './meetingLink';
+import { meetingPlatform, placeMapUrl, safeMeetingUrl } from './meetingLink';
 import { buildMeetingICS } from '../utils/ics';
 
 const TODAY = '2026-10-16'; // a Friday
@@ -24,6 +25,14 @@ describe('meeting links', () => {
     expect(meetingPlatform('https://myteam.slack.com/huddle/x')).toBe('Slack');
     expect(meetingPlatform('https://evilzoom.us/j/1')).toBeNull();
     expect(meetingPlatform('https://example.org/call')).toBeNull();
+  });
+
+  it('opens a place in Google Maps, or the map link that was pasted', () => {
+    expect(placeMapUrl('Église Saint-Jean, Yaoundé'))
+      .toBe('https://www.google.com/maps/search/?api=1&query=%C3%89glise%20Saint-Jean%2C%20Yaound%C3%A9');
+    expect(placeMapUrl('https://maps.app.goo.gl/abc123')).toBe('https://maps.app.goo.gl/abc123');
+    expect(placeMapUrl('javascript:alert(1)')).toBe('https://www.google.com/maps/search/?api=1&query=javascript%3Aalert(1)');
+    expect(placeMapUrl('   ')).toBeNull();
   });
 });
 
@@ -66,6 +75,26 @@ describe('meeting draft', () => {
     expect(meetingDraftError({ ...online, repeat: 'once', date: '2026-10-01' }, TODAY)).toBe('meetingDateRequired');
     expect(meetingDraftError({ ...online, repeat: 'monthly', dayOfMonth: '32' }, TODAY)).toBe('meetingDayOfMonthInvalid');
     expect(meetingDraftError({ ...d, mode: 'in_person', place: '  ' }, TODAY)).toBe('meetingPlaceRequired');
+    expect(meetingDraftError({ ...online, duration: null }, TODAY)).toBe('meetingDurationInvalid');
+    expect(meetingDraftError({ ...online, duration: 721 }, TODAY)).toBe('meetingDurationInvalid');
+    expect(meetingDraftError({ ...online, duration: 480 }, TODAY)).toBeNull();
+  });
+
+  it('sets any length by its end time, a night of prayer included', () => {
+    expect(endTimeOf('20:00', 90)).toBe('21:30');
+    expect(endTimeOf('21:00', 480)).toBe('05:00');
+    expect(endTimeOf('', 60)).toBe('');
+    expect(durationBetween('20:00', '21:30')).toBe(90);
+    expect(durationBetween('21:00', '05:00')).toBe(480);
+    expect(durationBetween('20:00', '20:00')).toBe(1440);
+    expect(durationBetween('20:00', '')).toBeNull();
+  });
+
+  it('names a length in the language of the reader', () => {
+    expect(durationLabel(45, 'en')).toBe('45 min');
+    expect(durationLabel(120, 'en')).toBe('2 hr');
+    // French separates a number from its unit with a narrow no-break space.
+    expect(durationLabel(510, 'fr').replace(/\s/g, ' ')).toBe('8 h 30 min');
   });
 
   it('encrypts only what belongs to the chosen place', () => {

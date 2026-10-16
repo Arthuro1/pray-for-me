@@ -18,12 +18,14 @@ import CircleThemeSheet from './CircleThemeSheet';
 // Shell-independent on purpose: the landing page shows the brief layout, the
 // app's circle page the full one. The host supplies the circle's display name
 // (each shell already names the circles), the word for closing a sheet, the
-// Scripture reference control (the landing loads the reader on demand; the app
-// has it at hand) and what praying means there.
+// line inviting a tap on the fruit of the Spirit's facets, the Scripture
+// reference control (the landing loads the reader on demand; the app has it at
+// hand) and what praying means there.
 //
 // `teaching` is localizeCircle()'s output and `ui` localizeCircleUi()'s, both in
-// `lang`. `onPray({ prompt })` starts a prayer; the composer it opens never
-// writes the person's words for them.
+// `lang`. `onPray({ prompt, guide })` starts a prayer: `prompt` is the prayer
+// chosen, if any, and `guide` the theme or facet it belongs to, so the host can
+// open its composer ready to pray it (lib/circlePrayer.js).
 function useCircleDeep(circle, allowed, lang) {
   const [raw, setRaw] = useState(null);
   useEffect(() => {
@@ -58,7 +60,7 @@ function ThemeCards({ themes, deep, onOpen }) {
 }
 
 export default function CircleTeaching({
-  teaching, ui, lang, name, closeLabel, ScriptureRef, onPray, id, headingLevel = 3, layout = 'full', className = '',
+  teaching, ui, lang, name, closeLabel, facetHint = null, ScriptureRef, onPray, id, headingLevel = 3, layout = 'full', className = '',
 }) {
   const [openTheme, setOpenTheme] = useState(null);
   const Heading = `h${headingLevel}`;
@@ -126,6 +128,7 @@ export default function CircleTeaching({
           onPray={onPray}
           onClose={() => setOpenTheme(null)}
           closeLabel={closeLabel}
+          facetHint={facetHint}
         />
       )}
     </section>

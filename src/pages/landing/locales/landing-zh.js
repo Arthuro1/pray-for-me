@@ -130,7 +130,8 @@ export default {
         "desc": "福音、公义和怜悯"
       }
     ],
-    "close": "关闭"
+    "close": "关闭",
+    "facetHint": "点按圣灵果子的一个方面，了解它并为此祷告。"
   },
   "together": {
     "label": "一起祷告",

@@ -2,7 +2,7 @@ import { CalendarPlus, ExternalLink, Lock, MapPin, Pencil, Trash2, Video } from 
 import { t } from '../../i18n';
 import { scheduleSummary } from '../../lib/scheduleDraft';
 import { deviceTimeZone } from '../../lib/meetingTime';
-import { meetingPlatform, safeMeetingUrl } from '../../lib/meetingLink';
+import { meetingPlatform, placeMapUrl, safeMeetingUrl } from '../../lib/meetingLink';
 import { buildMeetingICS } from '../../utils/ics';
 import { FILE_PREFIX } from '../../lib/brand';
 import { StatusLabel } from '../../components/shared/Primitives';
@@ -30,7 +30,27 @@ function downloadCalendar(meeting, title) {
   URL.revokeObjectURL(url);
 }
 
-export default function GroupMeetingCard({ meeting, next, lang, canManage, onEdit, onEnd, now = new Date() }) {
+// The place to meet, opening in Google Maps (lib/meetingLink.js).
+function MeetingPlace({ place, lang }) {
+  const href = placeMapUrl(place);
+  if (!href) return <span className="together-row__meta">{place}</span>;
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="together-row__meta meeting-card__place"
+      aria-label={t(lang, 'meetingOpenMapFor', { place })}
+    >
+      <MapPin size={12} aria-hidden="true" />
+      <span>{place}</span>
+    </a>
+  );
+}
+
+// `preview`: the meeting form showing the card its answers make — the join
+// link works (a way to test it), the menu is left out.
+export default function GroupMeetingCard({ meeting, next, lang, canManage = false, onEdit, onEnd, preview = false, now = new Date() }) {
   const locked = !!meeting._locked;
   const online = meeting.mode !== 'in_person';
   const title = (!locked && meeting.title) || t(lang, 'meetingDefaultTitle');
@@ -45,7 +65,7 @@ export default function GroupMeetingCard({ meeting, next, lang, canManage, onEdi
   const when = next && next.start.toLocaleDateString(lang, { weekday: 'long', day: 'numeric', month: 'long' });
 
   const menuItems = [];
-  if (!locked && next) {
+  if (!preview && !locked && next) {
     menuItems.push({ key: 'calendar', icon: CalendarPlus, label: t(lang, 'meetingAddToCalendar'), onClick: () => downloadCalendar(meeting, title) });
   }
   if (canManage && !locked) menuItems.push({ key: 'edit', icon: Pencil, label: t(lang, 'edit'), onClick: onEdit });
@@ -60,7 +80,7 @@ export default function GroupMeetingCard({ meeting, next, lang, canManage, onEdi
         <span className="together-row__name together-row__name--editorial">{title}</span>
         <span className="together-row__meta">
           {scheduleSummary(meeting.schedule, lang)}
-          {next && <> · {timeIn(next.start, lang)}</>}
+          {next && <> · {timeIn(next.start, lang)}–{timeIn(next.end, lang)}</>}
         </span>
         {next ? (
           <span className="together-row__meta">
@@ -76,10 +96,10 @@ export default function GroupMeetingCard({ meeting, next, lang, canManage, onEdi
         )}
         {locked ? (
           <span className="together-row__meta meeting-card__locked"><Lock size={12} aria-hidden="true" /> {t(lang, 'meetingLocked')}</span>
+        ) : online ? (
+          <span className="together-row__meta">{platform || t(lang, 'meetingOnline')}</span>
         ) : (
-          <span className="together-row__meta">
-            {online ? (platform || t(lang, 'meetingOnline')) : meeting.place}
-          </span>
+          <MeetingPlace place={meeting.place} lang={lang} />
         )}
         {!locked && meeting.notes && <span className="meeting-card__notes">{meeting.notes}</span>}
       </span>

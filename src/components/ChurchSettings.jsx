@@ -44,15 +44,10 @@ export default function ChurchSettings({ lang, userId }) {
   };
 
   return (
-    <form onSubmit={submit} className="grid gap-3">
-      <p className="settings-row__sub flex items-start gap-1.5">
-        <Lock size={13} className="mt-0.5 shrink-0" aria-hidden="true" /> {t(lang, 'churchSectionDesc')}
-      </p>
-      <label className="grid gap-1.5">
-        <span className="settings-row__label">{t(lang, 'churchNameLabel')}</span>
-        <Input value={church} maxLength={CHURCH_NAME_MAX} onChange={(e) => setChurch(e.target.value)} placeholder={t(lang, 'churchNamePlaceholder')} autoComplete="off" />
-      </label>
-      <div>
+    <form onSubmit={submit} className="church-form">
+      <label htmlFor="church-name" className="settings-row__label">{t(lang, 'churchNameLabel')}</label>
+      <div className="church-form__row">
+        <Input id="church-name" value={church} maxLength={CHURCH_NAME_MAX} onChange={(e) => setChurch(e.target.value)} placeholder={t(lang, 'churchNamePlaceholder')} autoComplete="off" />
         <SecondaryButton type="submit" disabled={!changed || saving}>{t(lang, 'save')}</SecondaryButton>
       </div>
     </form>

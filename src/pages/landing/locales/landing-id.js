@@ -130,7 +130,8 @@ export default {
         "desc": "Injil, keadilan, dan belas kasihan"
       }
     ],
-    "close": "Tutup"
+    "close": "Tutup",
+    "facetHint": "Ketuk salah satu sisi buah Roh untuk mengenalnya dan berdoa."
   },
   "together": {
     "label": "Bersama",

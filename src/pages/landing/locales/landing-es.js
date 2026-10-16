@@ -130,7 +130,8 @@ export default {
         "desc": "El evangelio, la justicia y la misericordia"
       }
     ],
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "facetHint": "Toca un aspecto del fruto para descubrirlo y orar."
   },
   "together": {
     "label": "Juntos",

@@ -189,7 +189,11 @@ approvals.
   circle's name as the page's `h1`, the seven circles as a switcher
   (`components/circles/CircleLinks.jsx`), and "Go deeper": the circle's plans from
   authored metadata (`plansForCircle`, primary circle first). Praying calls
-  `openAddInCircle(circle, { prompt })`. The back link returns to the path in
+  `openAddInCircle(circle)`; "Pray this" on a theme's prayer calls
+  `openAddInCircle(circle, { prefill })`, where `lib/circlePrayer.js` turns the
+  theme (or the fruit-of-the-Spirit facet) into a title and a note: what to pray
+  for, the prayer points with the chosen one first, and the passages by
+  reference only. The back link returns to the path in
   router state `{ from, fromState }` (Plans by default; only in-app paths).
   Opened from Plans ("Explore plans by circle"), the Journal's circle headings
   (which reopen "By circle" on return) and the prayer detail's circle sheet.
@@ -200,8 +204,10 @@ approvals.
   reading seven circles. Offered only when the prayer can be encrypted.
   `context={ circle, prompt }` (from `openAddInCircle` in `AuthenticatedApp.jsx`)
   preselects the circle and swaps the field label for the circle's question; a
-  `prompt` shows above the EMPTY field as a starting point and is never saved or
-  written into it.
+  `prompt` (the Sunday card, a finished plan's "keep carrying") shows above the
+  EMPTY field as a starting point and is never saved or written into it. A
+  `prefill` (a circle theme's "Pray this") fills the title and note instead;
+  the person edits it freely and nothing is saved until they save.
 - **Journal** (`PrayersTab.jsx`): "By circle" is the Journal's ONE
   circle-oriented way to find prayers — there is no circle selector in the
   filter sheet (`lib/journalSearch.js` has no circle filter). Offered once a

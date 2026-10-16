@@ -2,8 +2,9 @@
 //
 // A circle inside the app: its teaching as a doorway into prayer, the plans
 // that shape prayer in it (authored metadata only), and a way back to where it
-// was opened from. Praying opens the composer in that circle — never a prayer
-// written on the person's behalf.
+// was opened from. Praying opens the composer in that circle; "Pray this" on a
+// theme fills it with that theme — title, prayer points, passages by reference —
+// for the person to make their own.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -85,8 +86,35 @@ describe('CirclePage', () => {
     const sheet = screen.getByRole('dialog', { name: 'L’unité' });
     expect(within(sheet).getByRole('button', { name: t(lang, 'close') })).toBeTruthy();
     fireEvent.click(within(sheet).getAllByRole('button', { name: CIRCLE_UI.prayThis.fr })[0]);
-    expect(onPrayInCircle).toHaveBeenCalledWith('church', { prompt: 'Rends ton Église une, en Christ et dans la vérité.' });
+    const [circle, { prefill }] = onPrayInCircle.mock.calls[0];
+    expect(circle).toBe('church');
+    expect(prefill.title).toBe('L’unité');
+    const lines = prefill.description.split('\n');
+    expect(lines).toContain(`**${t(lang, 'circlePrayerPoints')}**`);
+    expect(lines[lines.indexOf(`**${t(lang, 'circlePrayerPoints')}**`) + 1]).toBe('- Rends ton Église une, en Christ et dans la vérité.');
+    expect(lines).toContain(`**${CIRCLE_UI.scripture.fr}**`);
+    expect(lines).toContain('- Jean 17:20-23');
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('shows the fruit of the Spirit as facets to tap, each praying with its own passage', async () => {
+    const onPrayInCircle = vi.fn();
+    renderCircle('self', { onPrayInCircle });
+    fireEvent.click(await screen.findByRole('button', { name: 'Le fruit de l’Esprit' }));
+    const sheet = screen.getByRole('dialog', { name: 'Le fruit de l’Esprit' });
+    expect(within(sheet).getByText(t(lang, 'circleFacetHint'))).toBeTruthy();
+    const kindness = within(sheet).getByRole('button', { name: 'La bonté' });
+    expect(kindness.getAttribute('aria-pressed')).toBe('false');
+
+    fireEvent.click(kindness);
+    expect(kindness.getAttribute('aria-pressed')).toBe('true');
+    const detail = within(sheet).getByRole('heading', { name: 'La bonté' }).parentElement;
+    fireEvent.click(within(detail).getByRole('button', { name: CIRCLE_UI.prayThis.fr }));
+
+    const [, { prefill }] = onPrayInCircle.mock.calls[0];
+    expect(prefill.title).toBe('Le fruit de l’Esprit — La bonté');
+    expect(prefill.description).toContain('- Éphésiens 4:32');
+    expect(prefill.description).toContain('- Galates 5:22-25');
   });
 
   it('offers all seven circles, marking the one on screen', () => {

@@ -11,7 +11,7 @@
 // every database query answers empty, so nothing is queued, synced, encrypted
 // or sent anywhere. Never shipped.
 import { useEffect, useState } from 'react';
-import { Link, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, Route, Routes, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
 import useCommunityStore from '../store/communityStore';
@@ -381,6 +381,9 @@ function TodayPreview({ done }) {
 export default function DesignScreens({ screen }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  // What a circle page handed the composer ("Pray this" on a theme), if anything.
+  const bring = useLocation().state;
+  const prayInCircle = (circle, options = {}) => navigate('/__design/bring-circle', { state: { circle, ...options } });
   const [ready, setReady] = useState(false);
   const lang = usePrayerStore((s) => s.settings.language) || 'en';
 
@@ -444,7 +447,7 @@ export default function DesignScreens({ screen }) {
       {/* A circle page needs its :circleId — rendered at that location. */}
       {screen === 'circle' && (
         <Routes location={{ pathname: `/circles/${searchParams.get('c') || 'household'}` }}>
-          <Route path="/circles/:circleId" element={<CirclePage onPrayInCircle={() => navigate('/__design/bring-circle')} />} />
+          <Route path="/circles/:circleId" element={<CirclePage onPrayInCircle={prayInCircle} />} />
         </Routes>
       )}
       {screen === 'more' && <MoreTab />}
@@ -485,7 +488,13 @@ export default function DesignScreens({ screen }) {
         </div></div>
       )}
       {screen === 'bring-circle' && <HomeTab onAdd={() => {}} onEdit={() => {}} />}
-      {screen === 'bring-circle' && <PrayerForm context={{ circle: 'kingdom', prompt: 'Send workers into the harvest.' }} onClose={() => navigate('/__design/circle?c=kingdom')} />}
+      {screen === 'bring-circle' && (
+        <PrayerForm
+          prefill={bring?.prefill}
+          context={{ circle: bring?.circle || 'kingdom', prompt: bring ? bring.prompt : 'Send workers into the harvest.' }}
+          onClose={() => navigate(`/__design/circle?c=${bring?.circle || 'kingdom'}`)}
+        />
+      )}
       {screen === 'bring' && <PrayerForm editPrayer={usePrayerStore.getState().prayers.find((p) => p.id === 'd4')} onClose={() => navigate('/__design/today')} />}
       {nav}
     </Layout>

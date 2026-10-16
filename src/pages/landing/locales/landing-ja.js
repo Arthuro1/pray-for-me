@@ -130,7 +130,8 @@ export default {
         "desc": "福音、正義、あわれみ"
       }
     ],
-    "close": "閉じる"
+    "close": "閉じる",
+    "facetHint": "御霊の実の一つの面をタップして、その意味を知り、祈りましょう。"
   },
   "together": {
     "label": "ともに祈る",

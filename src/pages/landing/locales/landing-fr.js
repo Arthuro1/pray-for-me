@@ -130,7 +130,8 @@ export default {
         "desc": "L'Évangile, la justice et la miséricorde"
       }
     ],
-    "close": "Fermer"
+    "close": "Fermer",
+    "facetHint": "Touchez un aspect du fruit pour le découvrir et prier."
   },
   "together": {
     "label": "Ensemble",

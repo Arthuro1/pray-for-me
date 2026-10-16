@@ -557,6 +557,9 @@ a.q-card:hover {
 
 .q-dialog__actions { display: flex; gap: var(--q-space-3); margin-block-start: var(--q-space-5); }
 .q-dialog__actions > * { flex: 1 1 0; }
+/* A long form keeps its actions in view, below a hairline. */
+.q-dialog__footer { border-block-start: 1px solid var(--q-border); }
+.q-dialog__footer > .q-dialog__actions { margin-block-start: 0; }
 .q-dialog__section + .q-dialog__section { margin-block-start: var(--q-space-6); }
 .q-dialog__section > .section-label { margin-block-end: var(--q-space-2); }
 .q-dialog__text { margin: var(--q-space-5) 0 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; }

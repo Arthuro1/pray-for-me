@@ -130,7 +130,8 @@ export default {
         "desc": "The gospel, justice and mercy"
       }
     ],
-    "close": "Close"
+    "close": "Close",
+    "facetHint": "Tap an aspect of the fruit to explore it and pray."
   },
   "together": {
     "label": "Together",

@@ -130,7 +130,8 @@ export default {
         "desc": "Injili, haki na rehema"
       }
     ],
-    "close": "Funga"
+    "close": "Funga",
+    "facetHint": "Gusa sehemu moja ya tunda la Roho uijue na uombe."
   },
   "together": {
     "label": "Pamoja",

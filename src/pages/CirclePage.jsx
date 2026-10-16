@@ -11,6 +11,7 @@ import { runningPlanProgress } from '../lib/planner';
 import { todayKey } from '../lib/prayedLog';
 import { EVENTS, track } from '../lib/analytics';
 import { PLAN_SOURCES } from '../lib/planAnalytics';
+import { circlePrayerPrefill } from '../lib/circlePrayer';
 import { useCircleTeaching } from '../hooks/useCircleTeaching';
 import CircleTeaching from '../components/circles/CircleTeaching';
 import CircleLinks from '../components/circles/CircleLinks';
@@ -37,8 +38,9 @@ function returnTarget(state) {
 // deeper"), chosen from authored plan metadata only. Opened from the Plans
 // page, the Journal's circle groups, a prayer's circle and About.
 //
-// Praying from here opens the composer with the circle preselected; a "Pray
-// this" prompt shows above the empty field and is never written into it.
+// Praying from here opens the composer with the circle preselected. "Pray
+// this" on a theme opens it filled with that theme — title, what to pray for,
+// prayer points and passages by reference — for the person to make their own.
 export default function CirclePage({ onPrayInCircle }) {
   const { circleId } = useParams();
   const lang = usePrayerStore((s) => s.settings.language) || 'fr';
@@ -65,9 +67,18 @@ export default function CirclePage({ onPrayInCircle }) {
   const name = t(lang, circleLabelKey(circle));
   const content = teaching?.circle(circle);
 
-  const pray = ({ prompt } = {}) => {
+  const pray = ({ prompt, guide } = {}) => {
     track(EVENTS.CIRCLE_PRAYER_STARTED, { source: 'app' });
-    onPrayInCircle?.(circle, { prompt });
+    if (!guide) {
+      onPrayInCircle?.(circle, { prompt });
+      return;
+    }
+    const prefill = circlePrayerPrefill(guide, prompt, {
+      lang: teaching.lang,
+      pointsLabel: t(lang, 'circlePrayerPoints'),
+      scriptureLabel: teaching.ui.scripture,
+    });
+    onPrayInCircle?.(circle, { prefill });
   };
 
   // A running plan opens where it is being prayed; any other opens its details
@@ -97,6 +108,7 @@ export default function CirclePage({ onPrayInCircle }) {
             lang={teaching.lang}
             name={name}
             closeLabel={t(lang, 'close')}
+            facetHint={t(lang, 'circleFacetHint')}
             ScriptureRef={ScriptureRefButton}
             onPray={pray}
             headingLevel={1}

@@ -130,7 +130,8 @@ export default {
         "desc": "Evangelium, Gerechtigkeit und Barmherzigkeit"
       }
     ],
-    "close": "Schließen"
+    "close": "Schließen",
+    "facetHint": "Tippe auf einen Aspekt der Frucht, um ihn zu entdecken und zu beten."
   },
   "together": {
     "label": "Gemeinsam",

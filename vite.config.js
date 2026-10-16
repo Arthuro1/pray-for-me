@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import { handleAiRequest, MAX_REQUEST_BYTES } from './api/ai.js'
 import { handleRecoveryRequest, MAX_RECOVERY_REQUEST_BYTES } from './api/recovery.js'
+import { handleCalendarImport, MAX_URL_LENGTH } from './api/calendar-import.js'
 import { loadRecoveryTestEnvironment } from './server/recoveryTestEnvironment.js'
 
 // Single source of truth for the app version: package.json. Injected as the
@@ -100,6 +101,34 @@ function recoveryApiPlugin(env) {
   }
 }
 
+// The meeting form's calendar-link import runs the same handler as production
+// (api/calendar-import.js): authenticated, public hosts only, never logged.
+function calendarImportApiPlugin(env) {
+  return {
+    name: 'qetoret-calendar-import-api',
+    configureServer(server) {
+      server.middlewares.use('/api/calendar-import', async (req, res) => {
+        const apiRes = {
+          setHeader(name, value) { res.setHeader(name, value); return apiRes },
+          status(code) { res.statusCode = code; return apiRes },
+          json(value) {
+            res.setHeader('Content-Type', 'application/json; charset=utf-8')
+            res.setHeader('Cache-Control', 'no-store')
+            res.end(JSON.stringify(value))
+            return apiRes
+          },
+        }
+        try { req.body = await readJsonBody(req, MAX_URL_LENGTH * 2) }
+        catch {
+          apiRes.status(400).json({ error: 'invalid_url' })
+          return
+        }
+        await handleCalendarImport(req, apiRes, { env })
+      })
+    },
+  }
+}
+
 export default defineConfig(({ mode, command }) => {
   // Load env WITHOUT the VITE_ prefix filter so the dev proxy can read the
   // server-only Anthropic credentials. This is read in the Node server only and is
@@ -137,6 +166,7 @@ export default defineConfig(({ mode, command }) => {
     react(),
     aiApiPlugin(env),
     recoveryApiPlugin(env),
+    calendarImportApiPlugin(env),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['logo.svg', 'logo-dark.svg', 'icons/*.png'],

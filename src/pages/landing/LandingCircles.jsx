@@ -120,6 +120,7 @@ export default function LandingCircles({ lang, label, copy, onBeginPrayer }) {
             lang={teaching.lang}
             name={copy.items[shownIndex]?.name}
             closeLabel={copy.close}
+            facetHint={copy.facetHint}
             ScriptureRef={ScriptureRefButton}
             onPray={pray(shown)}
             layout="brief"
