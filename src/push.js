@@ -6,6 +6,12 @@ export function pushSupported() {
   return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
 }
 
+// True when this device could receive push from this build: the browser
+// supports it and the build carries a VAPID key.
+export function pushAvailable() {
+  return pushSupported() && !!VAPID_PUBLIC_KEY;
+}
+
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');

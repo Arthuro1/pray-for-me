@@ -37,6 +37,8 @@ import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
 import PrayInTheSpirit from '../components/PrayInTheSpirit';
 import SundayCard from '../components/SundayCard';
 import WhatsNewCard from '../components/WhatsNewCard';
+import NotificationAskCard from '../components/NotificationAskCard';
+import useNotificationAsk from '../hooks/useNotificationAsk';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -116,6 +118,7 @@ export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
   const { swipeActions } = usePrayerActions(lang);
+  const notificationAsk = useNotificationAsk();
 
   // Completion state drives everything on this page: what remains, what's been
   // prayed, and whether the day is complete — all derived from the per-prayer
@@ -288,8 +291,18 @@ export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
 
         <SundayCard lang={lang} onPrayInCircle={onAddInCircle} />
         <WhatsNewCard lang={lang} />
+        {/* Asking for notifications comes first: while it is open, the
+            teaching nudges below wait (one prompt at a time). */}
+        {notificationAsk.visible && (
+          <NotificationAskCard
+            lang={lang}
+            busy={notificationAsk.busy}
+            onTurnOn={notificationAsk.turnOn}
+            onDismiss={notificationAsk.dismiss}
+          />
+        )}
 
-        {!loading && prayers.length > 0 && (
+        {!loading && prayers.length > 0 && !notificationAsk.visible && (
           <>
             <ActivationNudge
               prayers={prayers}

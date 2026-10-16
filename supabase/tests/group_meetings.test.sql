@@ -99,14 +99,11 @@ select set_config('role', 'authenticated', true),
        set_config('request.jwt.claims', '{"sub":"66666666-6666-4666-8666-666666666666","role":"authenticated"}', true);
 select is((select count(*)::integer from public.group_meetings), 1, 'another member sees the meeting');
 
-select is(
-  (with moved as (update public.group_meetings set start_time = '06:00' returning 1) select count(*)::integer from moved),
-  0, 'a member who did not schedule it cannot move it'
-);
-select is(
-  (with ended as (delete from public.group_meetings returning 1) select count(*)::integer from ended),
-  0, 'nor end it'
-);
+-- A data-modifying WITH must sit at the top level, so the assertion reads from it.
+with moved as (update public.group_meetings set start_time = '06:00' returning 1)
+select is(count(*)::integer, 0, 'a member who did not schedule it cannot move it') from moved;
+with ended as (delete from public.group_meetings returning 1)
+select is(count(*)::integer, 0, 'nor end it') from ended;
 
 select set_config('role', 'authenticated', true),
        set_config('request.jwt.claims', '{"sub":"44444444-4444-4444-8444-444444444444","role":"authenticated"}', true);
@@ -124,10 +121,8 @@ $$, '42501', null, 'and cannot schedule one for a group they are not in');
 -- ── The scheduler moves it; nobody re-homes it ──────────────────────────────
 select set_config('role', 'authenticated', true),
        set_config('request.jwt.claims', '{"sub":"33333333-3333-4333-8333-333333333333","role":"authenticated"}', true);
-select is(
-  (with moved as (update public.group_meetings set start_time = '20:30' returning 1) select count(*)::integer from moved),
-  1, 'the scheduler moves the meeting'
-);
+with moved as (update public.group_meetings set start_time = '20:30' returning 1)
+select is(count(*)::integer, 1, 'the scheduler moves the meeting') from moved;
 select throws_ok(
   $$ update public.group_meetings set group_id = gen_random_uuid() $$,
   '42501', null, 'but cannot move it to another group'
@@ -162,10 +157,8 @@ select is(
 -- ── An admin may end what a member scheduled ────────────────────────────────
 select set_config('role', 'authenticated', true),
        set_config('request.jwt.claims', '{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}', true);
-select is(
-  (with ended as (delete from public.group_meetings returning 1) select count(*)::integer from ended),
-  1, 'a group admin ends the meeting'
-);
+with ended as (delete from public.group_meetings returning 1)
+select is(count(*)::integer, 1, 'a group admin ends the meeting') from ended;
 
 select * from finish();
 rollback;

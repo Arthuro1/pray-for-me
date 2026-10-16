@@ -6,7 +6,8 @@ import { Bell, BellRing, BookOpen, CalendarClock, CalendarDays, ChevronDown, Che
 import { t, LANGUAGES } from '../i18n';
 import { toast } from '../store/toastStore';
 import { confirm } from '../store/confirmStore';
-import { dailyReminderStartDay, enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
+import { enablePush, updatePushPrefs, getFollowUpLastSent } from '../push';
+import useTurnOnReminders from '../hooks/useTurnOnReminders';
 import { buildExport } from '../utils/export';
 import { nextReminder, nextFollowUp } from '../utils/reminder';
 import { normalizeTheme } from '../utils/theme';
@@ -217,6 +218,7 @@ export default function SettingsTab() {
   const togglePrivacyRow = (key) => setOpenPrivacyRows((s) => ({ ...s, [key]: !s[key] }));
 
   const lang = settings.language || 'fr';
+  const turnOnReminders = useTurnOnReminders();
   // Derived from synced settings so consent granted/revoked anywhere (another
   // tab, another browser) is reflected here without a remount.
   const aiOn = hasAiConsent('prayer') || hasAiConsent('home');
@@ -267,30 +269,7 @@ export default function SettingsTab() {
 
   const handleToggleNotifications = async () => {
     if (!settings.dailyReminderEnabled) {
-      // Flip the preference immediately so the switch responds, then enable push
-      // as best-effort. Only an explicit permission denial reverts it.
-      updateSettings({ dailyReminderEnabled: true });
-      track(EVENTS.REMINDER_SET, { method: 'daily' });
-      const lastDailySentOn = dailyReminderStartDay(settings.dailyReminderTime);
-      let res;
-      try { res = await enablePush(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true, lastDailySentOn }); }
-      catch { res = { error: 'failed' }; }
-      if (res?.error === 'denied') {
-        updateSettings({ dailyReminderEnabled: false });
-        toast.error(t(lang, 'pushDenied'));
-      } else {
-        if (res?.error) {
-          // Reminder saved, but this device/browser can't deliver push (e.g. dev
-          // server with no service worker). In-app reminders still show while open.
-          toast.info(t(lang, 'pushUnavailable'));
-        } else {
-          updateSettings({ notificationsGranted: true });
-          toast.success(t(lang, 'remindersOn'));
-        }
-        // The toggle is account-level: align every other signed-in device's
-        // subscription row too (enablePush only wrote this one's).
-        try { await updatePushPrefs(user?.id, { reminderTime: settings.dailyReminderTime, lang, enabled: true, lastDailySentOn }); } catch { /* best-effort */ }
-      }
+      await turnOnReminders();
     } else {
       updateSettings({ dailyReminderEnabled: false });
       // Subscription rows stay (the scheduler skips enabled=false) so

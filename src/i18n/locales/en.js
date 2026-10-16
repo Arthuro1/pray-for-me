@@ -1750,4 +1750,8 @@ export default {
   "whatsNew106ChurchBody": "Name your local church, kept private and encrypted. On Sunday, Today helps you prepare for worship, then bring before God what you received.",
   "whatsNew106CirclesTitle": "Clearer circle pages",
   "whatsNew106CirclesBody": "Each theme opens with its meaning, a reflection and Scripture, all on one page.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "Turn on notifications",
+  "notifyAskBody": "A daily reminder to return to prayer, and news from your groups and prayer times. You can change this in Settings.",
+  "notifyAskCta": "Turn on",
 };

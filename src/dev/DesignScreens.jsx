@@ -4,8 +4,9 @@
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
 // /vault-setup, /privacy, /feedback, /donate, /ai-consent, /confirm,
 // /first-prayer, /calendar, /saved, /labels, /ai-preview, /circle (?c=<circle>),
-// /bring-circle, /plan-done (?p=<plan id>) and /whats-new (Today shows the
-// release card with ?news=1) render
+// /bring-circle, /plan-done (?p=<plan id>), /whats-new (Today shows the
+// release card with ?news=1) and /notify-ask (the notifications card, which
+// Today only shows on a device that never answered) render
 // the REAL screens inside the real app shell with sample prayers (the vault and
 // key gates replace the shell, as in the app). Every store write is replaced
 // by a local no-op first, and
@@ -37,6 +38,7 @@ import SettingsTab from '../pages/SettingsTab';
 import PlanTab from '../pages/PlanTab';
 import NotificationsPage from '../pages/NotificationsPage';
 import WhatsNewPage from '../pages/WhatsNewPage';
+import NotificationAskCard from '../components/NotificationAskCard';
 import AuthPage from '../pages/AuthPage';
 import GuestPrayerFlow from '../components/GuestPrayerFlow';
 import VaultLockScreen from '../components/VaultLockScreen';
@@ -143,7 +145,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group', 'group-prayer',
-  'circle', 'bring-circle', 'spirit', 'meeting', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview', 'whats-new',
+  'circle', 'bring-circle', 'spirit', 'meeting', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview', 'whats-new', 'notify-ask',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -469,6 +471,9 @@ export default function DesignScreens({ screen }) {
       {screen === 'ai-preview' && <AiOutgoingPreview lang={lang} title="Healing and peace for Sarah" description="For her recovery after surgery." update="The surgery went well." onSend={() => {}} onCancel={() => navigate('/__design/detail')} />}
       {screen === 'inbox' && <InboxPreview />}
       {screen === 'whats-new' && <WhatsNewPage />}
+      {screen === 'notify-ask' && (
+        <div className="phase-content max-w-2xl pt-6"><NotificationAskCard lang={lang} busy={false} onTurnOn={() => {}} onDismiss={() => navigate('/__design/today')} /></div>
+      )}
       {['vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm'].includes(screen) && <SettingsTab />}
       {screen === 'vault-setup' && <VaultModal lang={lang} initialMode="setup" userId="design-user" onClose={() => navigate('/__design/settings')} />}
       {screen === 'privacy' && <PrivacyCenter lang={lang} onClose={() => navigate('/__design/settings')} />}

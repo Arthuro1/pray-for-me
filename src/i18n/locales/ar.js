@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "اذكر كنيستك المحلية، وتُحفظ بشكل خاص ومشفّر. في يوم الأحد، تساعدك صفحة «اليوم» على الاستعداد للعبادة، ثم على تقديم ما نلته أمام الله.",
   "whatsNew106CirclesTitle": "صفحات دوائر أوضح",
   "whatsNew106CirclesBody": "يبدأ كل موضوع بمعناه، ثم تأمّل، ثم الكتاب المقدس، وكلها في صفحة واحدة.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "تفعيل الإشعارات",
+  "notifyAskBody": "تذكير يومي للعودة إلى الصلاة، وأخبار مجموعاتك وأوقات الصلاة. يمكنك تغيير ذلك من الإعدادات.",
+  "notifyAskCta": "تفعيل",
 };

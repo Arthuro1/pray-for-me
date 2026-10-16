@@ -1746,4 +1746,8 @@ export default {
   "whatsNew106ChurchBody": "Gib deine Ortsgemeinde an, privat und verschlüsselt. Am Sonntag hilft dir „Heute“, dich auf den Gottesdienst vorzubereiten und danach vor Gott zu bringen, was du empfangen hast.",
   "whatsNew106CirclesTitle": "Klarere Kreisseiten",
   "whatsNew106CirclesBody": "Jedes Thema beginnt mit seiner Bedeutung, einem Impuls und der Schrift, alles auf einer Seite.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "Benachrichtigungen aktivieren",
+  "notifyAskBody": "Eine tägliche Erinnerung, zum Gebet zurückzukehren, und Neues aus deinen Gruppen und Gebetszeiten. Du kannst das in den Einstellungen ändern.",
+  "notifyAskCta": "Aktivieren",
 };

@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "Informe sua igreja local, mantida privada e criptografada. No domingo, Hoje ajuda você a se preparar para o culto e, depois, a levar a Deus o que recebeu.",
   "whatsNew106CirclesTitle": "Páginas dos círculos mais claras",
   "whatsNew106CirclesBody": "Cada tema começa com seu significado, uma reflexão e as Escrituras, tudo em uma única página.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "Ativar notificações",
+  "notifyAskBody": "Um lembrete diário para voltar à oração, e novidades dos seus grupos e tempos de oração. Você pode mudar isso em Configurações.",
+  "notifyAskCta": "Ativar",
 };

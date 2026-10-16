@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "출석 교회를 등록하세요. 비공개로 암호화되어 저장됩니다. 주일에는 '오늘'이 예배를 준비하고, 받은 것을 하나님께 가져가도록 돕습니다.",
   "whatsNew106CirclesTitle": "더 명확해진 중보의 원 페이지",
   "whatsNew106CirclesBody": "각 주제가 의미, 묵상, 성경 말씀 순으로 한 페이지에 담겼습니다.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "알림 켜기",
+  "notifyAskBody": "매일 기도로 돌아오도록 알려 드리고, 그룹과 기도 시간 소식도 전해 드립니다. 설정에서 언제든 바꿀 수 있습니다.",
+  "notifyAskCta": "켜기",
 };

@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "Ilagay ang iyong lokal na iglesya, pribado at naka-encrypt. Tuwing Linggo, tinutulungan ka ng Ngayon na maghanda para sa pagsamba, at pagkatapos ay dalhin sa Diyos ang iyong natanggap.",
   "whatsNew106CirclesTitle": "Mas malinaw na mga pahina ng bilog",
   "whatsNew106CirclesBody": "Bawat tema ay nagsisimula sa kahulugan nito, isang pagninilay, at ang Kasulatan, lahat sa iisang pahina.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "I-on ang mga abiso",
+  "notifyAskBody": "Isang araw-araw na paalala na bumalik sa panalangin, at mga balita mula sa iyong mga grupo at oras ng panalangin. Mababago mo ito sa Mga Setting.",
+  "notifyAskCta": "I-on",
 };

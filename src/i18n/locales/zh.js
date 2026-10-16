@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "填写你的地方教会，内容保密并已加密。主日那天，“今天”页面帮助你预备心来敬拜，之后把所领受的带到神面前。",
   "whatsNew106CirclesTitle": "更清晰的代祷圈页面",
   "whatsNew106CirclesBody": "每个主题依次呈现其含义、一段默想和经文，全部在同一页。",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "开启通知",
+  "notifyAskBody": "每天提醒你回到祷告中，并接收群组和祷告时间的消息。你可以在“设置”中更改。",
+  "notifyAskCta": "开启",
 };

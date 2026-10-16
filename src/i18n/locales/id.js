@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "Tuliskan gereja lokal Anda, disimpan secara pribadi dan terenkripsi. Pada hari Minggu, Hari ini membantu Anda bersiap untuk ibadah, lalu membawa kepada Allah apa yang Anda terima.",
   "whatsNew106CirclesTitle": "Halaman lingkaran yang lebih jelas",
   "whatsNew106CirclesBody": "Setiap tema dibuka dengan maknanya, sebuah renungan, dan firman Tuhan, semuanya dalam satu halaman.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "Aktifkan notifikasi",
+  "notifyAskBody": "Pengingat harian untuk kembali berdoa, serta kabar dari grup dan waktu doa Anda. Anda dapat mengubahnya di Pengaturan.",
+  "notifyAskCta": "Aktifkan",
 };

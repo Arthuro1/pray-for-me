@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "Andika kanisa lako la mahali, linalohifadhiwa kwa faragha na kwa usimbaji fiche. Jumapili, Leo inakusaidia kujiandaa kwa ibada, kisha kuleta mbele za Mungu ulichopokea.",
   "whatsNew106CirclesTitle": "Kurasa za duara zilizo wazi zaidi",
   "whatsNew106CirclesBody": "Kila mada inaanza na maana yake, tafakari na Maandiko, yote katika ukurasa mmoja.",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "Washa arifa",
+  "notifyAskBody": "Kikumbusho cha kila siku cha kurudi kwenye maombi, na habari za vikundi vyako na muda wa maombi. Unaweza kubadilisha hili katika Mipangilio.",
+  "notifyAskCta": "Washa",
 };

@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "የአካባቢ ቤተ ክርስቲያንዎን ስም ያስገቡ፤ በግል እና በምስጠራ ይቀመጣል። በእሁድ «ዛሬ» ለአምልኮ እንዲዘጋጁ፣ ከዚያም የተቀበሉትን በእግዚአብሔር ፊት እንዲያቀርቡ ይረዳዎታል።",
   "whatsNew106CirclesTitle": "ይበልጥ ግልጽ የሆኑ የክበብ ገጾች",
   "whatsNew106CirclesBody": "እያንዳንዱ ርዕስ በትርጉሙ፣ በማሰላሰል እና በቅዱሳት መጻሕፍት ይጀምራል፤ ሁሉም በአንድ ገጽ።",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "ማሳወቂያዎችን ያብሩ",
+  "notifyAskBody": "ወደ ጸሎት ለመመለስ የዕለት ማስታወሻ፣ እንዲሁም የቡድኖችዎ እና የጸሎት ጊዜዎች ዜና። ይህንን በቅንብሮች ውስጥ መቀየር ይችላሉ።",
+  "notifyAskCta": "አብራ",
 };

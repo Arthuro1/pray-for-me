@@ -1745,4 +1745,8 @@ export default {
   "whatsNew106ChurchBody": "所属教会を登録できます（非公開・暗号化）。日曜日には「今日」が、礼拝への備えと、受けたものを神の前に持って行くことを助けます。",
   "whatsNew106CirclesTitle": "わかりやすくなったサークルのページ",
   "whatsNew106CirclesBody": "各テーマが、その意味、黙想、聖書の順に、1ページにまとまりました。",
+  // Today's card that asks a device to turn notifications on (useNotificationAsk).
+  "notifyAskTitle": "通知をオンにする",
+  "notifyAskBody": "毎日、祈りに立ち返るためのリマインダーと、グループや祈りの時間のお知らせが届きます。「設定」でいつでも変更できます。",
+  "notifyAskCta": "オンにする",
 };
