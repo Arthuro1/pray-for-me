@@ -15,6 +15,8 @@
 // meetings starting within the next 15 minutes (_shared/meetingTime.ts decides
 // with the shared schedule engine; queue_group_meeting_reminder fans out one
 // deduped 'prayer_meeting' notification per member), then delivers as usual.
+// It also delivers release announcements ('app_news', queue_app_news()) from
+// their own queue, to the members for whom it is now daytime (10:00–20:00).
 //
 // Idempotency + concurrency: rows are claimed via SECURITY DEFINER RPCs that flip
 // pending/failed → processing with FOR UPDATE SKIP LOCKED, so the webhook and the
@@ -35,6 +37,10 @@ type Notification = {
   group_id: string | null;
   metadata: Record<string, unknown>;
 };
+
+// Release announcements sent per run, on top of the usual batch. They come
+// from their own queue, so they never delay an ordinary notification.
+const APP_NEWS_BATCH = 100;
 
 type Pref = { in_app: boolean; push: boolean; mode: string; quiet_start: string | null; quiet_end: string | null; tz: string | null };
 
@@ -248,7 +254,8 @@ Deno.serve(async (req) => {
       // large group is reminded before its meeting rather than five minutes later.
       const limit = (Number.isFinite(body?.limit) ? body.limit : 20) + Math.min(meetingReminders, 500);
       const { data } = await supabase.rpc('claim_notifications_for_delivery', { p_limit: limit });
-      claimed = data || [];
+      const { data: news } = await supabase.rpc('claim_app_news_for_delivery', { p_limit: APP_NEWS_BATCH });
+      claimed = [...(data || []), ...(news || [])];
     }
 
     const summary: Record<string, number> = { sent: 0, skipped: 0, failed: 0, delayed: 0 };

@@ -37,6 +37,8 @@ export function notificationRoute(notification) {
       return '/community';
     case 'prayer_meeting':
       return isUuid(group) ? `/community/group/${group}` : '/community';
+    case 'app_news':
+      return '/whats-new';
     default:
       return '/community';
   }

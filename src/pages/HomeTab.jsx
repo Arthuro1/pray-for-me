@@ -36,6 +36,7 @@ import { readActivationProgress } from '../lib/activationProgress';
 import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
 import PrayInTheSpirit from '../components/PrayInTheSpirit';
 import SundayCard from '../components/SundayCard';
+import WhatsNewCard from '../components/WhatsNewCard';
 
 const DAY_NAMES = {
   fr: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
@@ -286,6 +287,7 @@ export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
         )}
 
         <SundayCard lang={lang} onPrayInCircle={onAddInCircle} />
+        <WhatsNewCard lang={lang} />
 
         {!loading && prayers.length > 0 && (
           <>

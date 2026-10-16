@@ -7,7 +7,10 @@
 // prayer content — no titles, descriptions, update or testimony text, or person
 // names. Bodies are fixed, generic, localized strings. The URL and tag are
 // built only from identifiers in `metadata`; anything that isn't a valid UUID is
-// dropped and the payload falls back to a safe internal route.
+// dropped and the payload falls back to a safe internal route. 'app_news' (a
+// release announcement) takes its fixed copy from appNews.ts.
+
+import { appNewsCopy, appNewsVersion } from './appNews.ts';
 
 export type EventType =
   | 'friend_request'
@@ -303,6 +306,8 @@ export function eventUrl(type: string, meta: Record<string, unknown> = {}): stri
       return '/community';
     case 'prayer_meeting':
       return isUuid(group) ? `/community/group/${group}` : '/community';
+    case 'app_news':
+      return '/whats-new';
     default:
       return '/community';
   }
@@ -314,6 +319,8 @@ export function eventTag(type: string, meta: Record<string, unknown> = {}): stri
   const prayer = meta.community_prayer_id;
   const group = meta.group_id;
   const meeting = meta.meeting_id;
+  const version = type === 'app_news' ? appNewsVersion(meta) : null;
+  if (version) return `${type}:${version}`;
   if (isUuid(prayer)) return `${type}:${prayer}`;
   if (isUuid(meeting)) return `${type}:${meeting}`;
   if (isUuid(group)) return `${type}:${group}`;
@@ -328,7 +335,8 @@ export function eventPayload(
   notificationId?: string,
 ): string {
   const table = pick(lang);
-  const copy = table[type as EventType] || EVENT_MSG.en[type as EventType] || {
+  const copy = (type === 'app_news' ? appNewsCopy(appNewsVersion(meta), lang) : null)
+    || table[type as EventType] || EVENT_MSG.en[type as EventType] || {
     title: 'Qetoret 🙏',
     body: 'You have a new notification.',
   };

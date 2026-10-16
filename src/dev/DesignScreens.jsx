@@ -4,7 +4,8 @@
 // /about, /settings, /inbox, /auth, /auth-save, /vault-lock, /key-missing,
 // /vault-setup, /privacy, /feedback, /donate, /ai-consent, /confirm,
 // /first-prayer, /calendar, /saved, /labels, /ai-preview, /circle (?c=<circle>),
-// /bring-circle and /plan-done (?p=<plan id>) render
+// /bring-circle, /plan-done (?p=<plan id>) and /whats-new (Today shows the
+// release card with ?news=1) render
 // the REAL screens inside the real app shell with sample prayers (the vault and
 // key gates replace the shell, as in the app). Every store write is replaced
 // by a local no-op first, and
@@ -35,6 +36,7 @@ import AboutTab from '../pages/AboutTab';
 import SettingsTab from '../pages/SettingsTab';
 import PlanTab from '../pages/PlanTab';
 import NotificationsPage from '../pages/NotificationsPage';
+import WhatsNewPage from '../pages/WhatsNewPage';
 import AuthPage from '../pages/AuthPage';
 import GuestPrayerFlow from '../components/GuestPrayerFlow';
 import VaultLockScreen from '../components/VaultLockScreen';
@@ -57,6 +59,7 @@ import GuideReader from '../components/GuideReader';
 import { buildGuidedPlanPrayer, planById } from '../lib/guidedPlan';
 import { supabase } from '../lib/supabase';
 import { guides } from '../content/teaching';
+import { LATEST_RELEASE } from '../content/releaseNotes';
 import CirclePicker from '../components/CirclePicker';
 import Toaster from '../components/shared/Toaster';
 import useToastStore, { toast } from '../store/toastStore';
@@ -140,7 +143,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group', 'group-prayer',
-  'circle', 'bring-circle', 'spirit', 'meeting', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
+  'circle', 'bring-circle', 'spirit', 'meeting', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview', 'whats-new',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -272,6 +275,7 @@ function InboxPreview() {
     const noop = async () => {};
     useNotificationStore.setState({
       notifications: [
+        { id: 'n0', type: 'app_news', group_id: null, metadata: { version: LATEST_RELEASE.version }, created_at: hoursAgo(0.5), read_at: null },
         { id: 'n1', type: 'reaction_bucket', group_id: null, created_at: hoursAgo(1), read_at: null },
         { id: 'n2', type: 'plan_invitation', group_id: null, created_at: hoursAgo(5), read_at: null },
         { id: 'n3', type: 'testimony', group_id: null, created_at: hoursAgo(28), read_at: hoursAgo(20) },
@@ -279,7 +283,7 @@ function InboxPreview() {
         { id: 'n5', type: 'friend_request', group_id: null, created_at: hoursAgo(220), read_at: null },
         { id: 'n6', type: 'friend_request', group_id: null, created_at: hoursAgo(360), read_at: null },
       ],
-      unreadCount: 5, loading: false, error: null, hasMore: false,
+      unreadCount: 6, loading: false, error: null, hasMore: false,
       fetchNotifications: noop, fetchMoreNotifications: noop, markRead: noop, markAllRead: noop,
     });
   });
@@ -366,8 +370,14 @@ function CarryPreview({ lang, open: initiallyOpen }) {
 
 // Today, or (?done=1) Today once every prayer of the day is prayed, with the
 // daily reminder on so the altar card says when it next rings.
-function TodayPreview({ done }) {
+function TodayPreview({ done, news }) {
   useState(() => {
+    if (news) {
+      useNotificationStore.setState({
+        notifications: [{ id: 'n0', type: 'app_news', metadata: { version: LATEST_RELEASE.version }, created_at: hoursAgo(0.5), read_at: null }],
+        unreadCount: 1,
+      });
+    }
     if (!done) return;
     const today = todayKey();
     usePrayerStore.setState((s) => ({
@@ -458,6 +468,7 @@ export default function DesignScreens({ screen }) {
       {screen === 'labels' && <Modal label="labels" onClose={() => navigate('/__design/journal')}><LabelsManager lang={lang} tr={(text) => text} onDone={() => navigate('/__design/journal')} /></Modal>}
       {screen === 'ai-preview' && <AiOutgoingPreview lang={lang} title="Healing and peace for Sarah" description="For her recovery after surgery." update="The surgery went well." onSend={() => {}} onCancel={() => navigate('/__design/detail')} />}
       {screen === 'inbox' && <InboxPreview />}
+      {screen === 'whats-new' && <WhatsNewPage />}
       {['vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm'].includes(screen) && <SettingsTab />}
       {screen === 'vault-setup' && <VaultModal lang={lang} initialMode="setup" userId="design-user" onClose={() => navigate('/__design/settings')} />}
       {screen === 'privacy' && <PrivacyCenter lang={lang} onClose={() => navigate('/__design/settings')} />}
@@ -480,7 +491,7 @@ export default function DesignScreens({ screen }) {
         <TendAltar prayers={usePrayerStore.getState().prayers.slice(1, 5)} completions={{}} lang={lang} tr={(text) => text} onRelease={() => {}} onClose={() => navigate('/__design/journal')} />
       )}
       {(screen === 'today' || screen === 'bring' || screen === 'circles' || !SCREENS.includes(screen)) && (
-        <TodayPreview done={screen === 'today' && searchParams.get('done') === '1'} />
+        <TodayPreview done={screen === 'today' && searchParams.get('done') === '1'} news={screen === 'today' && searchParams.get('news') === '1'} />
       )}
       {screen === 'plan-done' && planById(searchParams.get('p') || 'kingdomCome14') && (
         <div className="phase-page"><div className="phase-content">

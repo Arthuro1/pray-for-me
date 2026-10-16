@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 // there, so Vitest can transpile it) — the exact builder send-event-notifications
 // uses, so the privacy guarantees asserted here hold in production.
 import { eventPayload, eventUrl, eventTag, digestPayload, EVENT_MSG, DIGEST_MSG } from '../../supabase/functions/_shared/eventNotify.ts';
+import { APP_NEWS_BODY, APP_NEWS_TITLE } from '../../supabase/functions/_shared/appNews.ts';
 
 const TYPES = Object.keys(EVENT_MSG.en);
 const LANGS = Object.keys(EVENT_MSG);
@@ -62,6 +63,27 @@ describe('eventUrl builds safe internal routes from validated ids only', () => {
     // The reminder never names the meeting, its place or its link.
     const p = JSON.parse(eventPayload('prayer_meeting', 'fr', { group_id: GROUP, meeting_id: PRAYER, link: 'https://zoom.us/j/1' }));
     expect(JSON.stringify(p)).not.toContain('zoom');
+  });
+
+  it("opens a release announcement on What's new, tagged per release, in every language", () => {
+    for (const lang of LANGS) {
+      const p = JSON.parse(eventPayload('app_news', lang, { version: '1.0.6' }, 'n1'));
+      expect(p).toEqual({
+        title: APP_NEWS_TITLE[lang],
+        body: APP_NEWS_BODY['1.0.6'][lang],
+        tag: 'app_news:1.0.6',
+        url: '/whats-new',
+        notificationId: 'n1',
+      });
+    }
+  });
+
+  it('never trusts a malformed release version', () => {
+    const p = JSON.parse(eventPayload('app_news', 'fr', { version: '<script>' }));
+    expect(p.tag).toBe('app_news');
+    expect(p.body).toBe('');
+    expect(p.title).toBe(APP_NEWS_TITLE.fr);
+    expect(JSON.parse(eventPayload('app_news', 'xx', { version: '1.0.6' })).body).toBe(APP_NEWS_BODY['1.0.6'].en);
   });
 
   it('falls back safely when ids are missing or malformed', () => {

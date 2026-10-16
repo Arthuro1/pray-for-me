@@ -33,6 +33,7 @@ const PrayerDetail = lazy(() => import('./pages/PrayerDetail'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage'));
+const WhatsNewPage = lazy(() => import('./pages/WhatsNewPage'));
 const PlanSharePublicPage = lazy(() => import('./pages/planShare/PlanSharePublicPage'));
 const PlanJoinPage = lazy(() => import('./pages/planShare/PlanJoinPage'));
 import usePrayerStore from './store/prayerStore';
@@ -537,6 +538,7 @@ export default function AuthenticatedApp({
               <Route path="/plan" element={<Navigate to="/calendar" replace />} />
               <Route path="/grow" element={<Navigate to="/guidance" replace />} />
               <Route path="/notifications" element={<NotificationsPage />} />
+              <Route path="/whats-new" element={<WhatsNewPage />} />
               <Route path="/settings" element={<SettingsTab />} />
               <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

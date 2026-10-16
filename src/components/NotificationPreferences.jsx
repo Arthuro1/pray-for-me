@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Inbox, Loader2, MoonStar, Smartphone } from 'lucide-react';
+import { Inbox, Loader2, MoonStar, ScrollText, Smartphone } from 'lucide-react';
 import usePrayerStore from '../store/prayerStore';
 import useAuthStore from '../store/authStore';
-import { fetchNotificationPrefs, savePref, currentTimezone } from '../lib/notificationPrefs';
+import { fetchNotificationPrefs, savePref, clearPref, currentTimezone } from '../lib/notificationPrefs';
 import { subscribeDeviceForPush } from '../push';
 import { toast } from '../store/toastStore';
 import { t } from '../i18n';
@@ -10,8 +10,9 @@ import { Input } from './shared/Primitives';
 import SettingsRow from './shared/SettingsRow';
 
 // Account-level notification preferences: master in-app / push toggles and
-// quiet hours (in the device's IANA timezone). Per-type delivery choices are
-// no longer offered here; any a user saved earlier still apply on the server.
+// quiet hours (in the device's IANA timezone), plus whether to hear about new
+// releases (app news). Other per-type delivery choices are no longer offered
+// here; any a user saved earlier still apply on the server.
 export default function NotificationPreferences() {
   const lang = usePrayerStore((s) => s.settings.language || 'fr');
   const { user } = useAuthStore();
@@ -32,6 +33,7 @@ export default function NotificationPreferences() {
   const acct = prefs._account || {};
   const inAppOn = acct.in_app_enabled !== false;
   const pushOn = acct.push_enabled !== false;
+  const appNewsOn = prefs.app_news?.delivery_mode !== 'off';
 
   const persist = async (type, patch, optimistic) => {
     setPrefs((p) => ({ ...p, [type]: { ...(p[type] || {}), ...optimistic } }));
@@ -59,6 +61,17 @@ export default function NotificationPreferences() {
     }
   };
 
+  // App news off writes a type row that stops it; on removes that row, so the
+  // announcements follow the in-app and push switches above again.
+  const toggleAppNews = async () => {
+    const next = !appNewsOn;
+    setPrefs((p) => ({ ...p, app_news: next ? undefined : { delivery_mode: 'off' } }));
+    const { error } = next
+      ? await clearPref(user.id, 'app_news')
+      : await savePref(user.id, 'app_news', { delivery_mode: 'off' });
+    if (error) { toast.error(t(lang, 'errorGeneric')); load(); }
+  };
+
   if (loading) {
     return (
       <div className="q-loading">
@@ -84,6 +97,14 @@ export default function NotificationPreferences() {
         onToggle={togglePush}
         label={t(lang, 'notifPush')}
         sub={t(lang, 'notifPushSub')}
+      />
+      <SettingsRow
+        icon={ScrollText}
+        tone="plum"
+        enabled={appNewsOn}
+        onToggle={toggleAppNews}
+        label={t(lang, 'notifAppNewsSetting')}
+        sub={t(lang, 'notifAppNewsSettingSub')}
       />
 
       {/* Quiet hours: push waits until morning; the inbox still fills. */}

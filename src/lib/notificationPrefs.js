@@ -18,6 +18,7 @@ export const NOTIF_TYPES = [
   'group_prayer_added',
   'testimony',
   'prayer_meeting',
+  'app_news',
 ];
 
 // Type-aware default delivery mode — mirrors default_delivery_mode() in
@@ -60,6 +61,19 @@ export async function isEventPushEnabled(userId) {
     .is('group_id', null)
     .maybeSingle();
   return data ? data.push_enabled !== false : true;
+}
+
+// Drop one account-scope preference row, so the type follows the account's own
+// switches again (a type row would otherwise override them).
+export async function clearPref(userId, type) {
+  if (!userId || !type) return { error: 'missing' };
+  const { error } = await supabase
+    .from('notification_preferences')
+    .delete()
+    .eq('user_id', userId)
+    .eq('type', type)
+    .is('group_id', null);
+  return { error };
 }
 
 // Upsert (find-then-write) one account-scope preference row.

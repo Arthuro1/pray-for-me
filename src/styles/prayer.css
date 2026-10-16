@@ -169,6 +169,17 @@
 .today-sunday__body { margin: 0; color: var(--q-text-secondary); line-height: 1.6; }
 .today-sunday__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); }
 
+/* "What's new" — a release's card on Today and its page (/whats-new). */
+.today-news { display: grid; gap: var(--q-space-3); margin-block-end: var(--q-space-6); padding: var(--q-space-5); }
+.today-news__head { display: flex; align-items: flex-start; gap: var(--q-space-3); }
+.today-news__head .section-label { margin: 0 0 var(--q-space-1); }
+.today-news__title { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.1875rem; font-weight: 450; line-height: 1.3; }
+.today-news__body { margin: 0; color: var(--q-text-secondary); line-height: 1.6; }
+.whats-new { display: grid; gap: var(--q-space-3); margin: 0; padding: 0; list-style: none; }
+.whats-new__item { display: flex; align-items: flex-start; gap: var(--q-space-3); padding: var(--q-space-5); }
+.whats-new__title { margin: 0 0 var(--q-space-1); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; font-weight: 450; line-height: 1.35; }
+.whats-new__body { margin: 0; color: var(--q-text-secondary); line-height: 1.6; }
+
 /* The verse of the day: Scripture on a card of its own, warmed with a trace
    of gold so it never reads as one more prayer. */
 .today-verse {
