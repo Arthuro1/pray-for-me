@@ -1,0 +1,678 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[{"id":"lang","type":"enum","label":"Language","default":"en","options":[{"value":"en","label":"English"},{"value":"de","label":"Deutsch"},{"value":"fr","label":"Français"}]}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Qetoret 1.0.6 — What's new</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* Newsreader (SIL OFL 1.1, assets/fonts/OFL.txt) — the app's editorial serif. */
+      @font-face {
+        font-family: "Newsreader";
+        font-style: normal;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-opsz-normal.woff2") format("woff2-variations");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: "Newsreader";
+        font-style: normal;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-ext-opsz-normal.woff2") format("woff2-variations");
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+A720-A7FF;
+      }
+      @font-face {
+        font-family: "Newsreader";
+        font-style: italic;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-wght-italic.woff2") format("woff2-variations");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: "Newsreader";
+        font-style: italic;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-ext-wght-italic.woff2") format("woff2-variations");
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+A720-A7FF;
+      }
+
+      :root {
+        --deep: #29213f;
+        --deeper: #1b1529;
+        --cream: #f7f5ef;
+        --muted: #cac5d2;
+        --gold: #c6a15c;
+        --serif: "Newsreader", Georgia, serif;
+        --sans: system-ui, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--deep);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--deep);
+        color: var(--cream);
+        font-family: var(--sans);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* Ground: deep violet with a faint gold glow where the incense rises. */
+      #bg {
+        background:
+          radial-gradient(70% 38% at 50% 12%, rgba(198, 161, 92, 0.16), transparent 70%),
+          radial-gradient(90% 50% at 50% 100%, rgba(75, 58, 120, 0.55), transparent 75%),
+          linear-gradient(180deg, var(--deep) 0%, var(--deeper) 100%);
+      }
+      #wisps {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 2200px;
+      }
+      #wisps path {
+        fill: none;
+        stroke: var(--gold);
+        stroke-linecap: round;
+      }
+
+      /* Intro and outro */
+      .center-stack {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .symbol {
+        display: block;
+        width: 240px;
+        height: auto;
+      }
+      .wordmark {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 104px;
+        letter-spacing: 0.01em;
+        line-height: 1;
+        margin-top: 28px;
+      }
+      .rule {
+        width: 120px;
+        height: 3px;
+        background: var(--gold);
+        margin: 56px 0 40px;
+        border-radius: 2px;
+      }
+      .eyebrow {
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 28px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .intro-title {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 128px;
+        line-height: 1.04;
+        margin-top: 18px;
+        text-wrap: balance;
+      }
+      .outro-symbol {
+        width: 150px;
+      }
+      .outro-head {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 76px;
+        line-height: 1.1;
+        margin-top: 44px;
+        text-wrap: balance;
+      }
+      /* Where to get it: one row per kind of device. */
+      .ways {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        width: 900px;
+        margin-top: 64px;
+      }
+      .way {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+        padding: 34px 40px;
+        border-radius: 36px;
+        border: 2px solid rgba(247, 245, 239, 0.14);
+        background: rgba(247, 245, 239, 0.06);
+        text-align: left;
+      }
+      .way-icon {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 104px;
+        height: 104px;
+        border-radius: 28px;
+        background: rgba(198, 161, 92, 0.16);
+      }
+      .way-icon svg {
+        width: 56px;
+        height: 56px;
+        fill: none;
+        stroke: var(--gold);
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .way-label {
+        display: block;
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 30px;
+        letter-spacing: 0.03em;
+        color: var(--gold);
+      }
+      .way-text {
+        display: block;
+        margin-top: 10px;
+        font-family: var(--sans);
+        font-size: 40px;
+        line-height: 1.28;
+        color: var(--cream);
+      }
+      .tagline {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        font-size: 58px;
+        color: var(--gold);
+        margin-top: 72px;
+      }
+
+      /* Feature captions */
+      .caption {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 140px;
+      }
+      .caption .eyebrow {
+        display: block;
+      }
+      .caption .eyebrow .of {
+        color: #9d95ae;
+      }
+      .caption h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 78px;
+        line-height: 1.06;
+        margin-top: 22px;
+        text-wrap: balance;
+      }
+      .subs {
+        position: relative;
+        height: 168px;
+        margin-top: 26px;
+      }
+      .sub {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        font-family: var(--sans);
+        font-size: 40px;
+        line-height: 1.32;
+        color: var(--muted);
+        text-wrap: pretty;
+      }
+
+      /* The phone */
+      .phone-wrap {
+        position: absolute;
+        left: 260px;
+        top: 612px;
+        width: 560px;
+        height: 1179px;
+      }
+      .phone {
+        width: 560px;
+        height: 1179px;
+        padding: 14px;
+        border-radius: 66px;
+        background: #0f0c18;
+        border: 2px solid rgba(247, 245, 239, 0.1);
+        box-shadow:
+          0 50px 120px rgba(0, 0, 0, 0.5),
+          0 0 0 10px rgba(198, 161, 92, 0.05);
+      }
+      .screen {
+        position: relative;
+        width: 528px;
+        height: 1147px;
+        border-radius: 52px;
+        overflow: hidden;
+        background: #f7f5ef;
+      }
+      .layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 528px;
+        height: 1147px;
+        opacity: 0;
+      }
+      .layer img {
+        display: block;
+        width: 528px;
+        height: 1147px;
+        object-fit: cover;
+      }
+      .zoom {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 528px;
+        height: 1147px;
+      }
+      .spotlight {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 528px;
+        height: 1147px;
+        opacity: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(41, 33, 63, 0.55) 0%,
+          rgba(41, 33, 63, 0.55) 26%,
+          rgba(41, 33, 63, 0) 32%,
+          rgba(41, 33, 63, 0) 68%,
+          rgba(41, 33, 63, 0.55) 74%,
+          rgba(41, 33, 63, 0.55) 100%
+        );
+      }
+      .tap {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        margin-left: -60px;
+        margin-top: -60px;
+        border-radius: 50%;
+        opacity: 0;
+      }
+      .tap--light {
+        background: rgba(247, 245, 239, 0.28);
+        border: 3px solid rgba(247, 245, 239, 0.75);
+      }
+      .tap--royal {
+        background: rgba(75, 58, 120, 0.22);
+        border: 3px solid rgba(75, 58, 120, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="35"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Ground + rising incense -->
+      <div id="bg" class="clip" data-start="0" data-duration="35" data-track-index="0">
+        <svg id="wisps" viewBox="0 0 1080 2200" aria-hidden="true">
+          <path id="wisp-a" d="M180 2200 C 120 1900, 260 1700, 190 1450 S 140 1000, 230 760 S 210 300, 160 0" stroke-width="3" opacity="0.13" />
+          <path id="wisp-b" d="M900 2200 C 960 1950, 820 1750, 890 1500 S 950 1050, 850 820 S 880 360, 940 0" stroke-width="2.5" opacity="0.1" />
+          <path id="wisp-c" d="M560 2200 C 500 2000, 620 1850, 560 1650 S 470 1300, 540 1100" stroke-width="2" opacity="0.08" />
+        </svg>
+      </div>
+
+      <!-- Intro -->
+      <section id="intro" class="clip" data-start="0" data-duration="4.4" data-track-index="1">
+        <div id="intro-stack" class="center-stack">
+          <img id="intro-symbol" class="symbol" src="assets/brand/qetoret-symbol-dark.svg" alt="" />
+          <div id="intro-wordmark" class="wordmark">Qetoret</div>
+          <div id="intro-rule" class="rule"></div>
+          <div id="intro-eyebrow" class="eyebrow" data-t="introEyebrow">Version 1.0.6</div>
+          <div id="intro-title" class="intro-title" data-t="introTitle">What's new</div>
+        </div>
+      </section>
+
+      <!-- Feature captions -->
+      <section id="cap1" class="clip" data-start="4" data-duration="6.8" data-track-index="2">
+        <div class="caption">
+          <span id="cap1-eyebrow" class="eyebrow">01 <span class="of">/ 04</span></span>
+          <h2 id="cap1-title" data-t="s1Title">Pray in the Spirit</h2>
+          <div class="subs">
+            <p id="cap1-a" class="sub" data-t="s1a">One quiet space to pray freely, with or without words.</p>
+            <p id="cap1-b" class="sub" data-t="s1b">Choose a length or no timer; the screen stays on.</p>
+          </div>
+        </div>
+      </section>
+      <section id="cap2" class="clip" data-start="10.6" data-duration="6.8" data-track-index="2">
+        <div class="caption">
+          <span id="cap2-eyebrow" class="eyebrow">02 <span class="of">/ 04</span></span>
+          <h2 id="cap2-title" data-t="s2Title">Praying together</h2>
+          <div class="subs">
+            <p id="cap2-a" class="sub" data-t="s2a">Schedule a prayer time for your group, in person or online.</p>
+            <p id="cap2-b" class="sub" data-t="s2b">Members get a reminder 15 minutes before and can join the call.</p>
+          </div>
+        </div>
+      </section>
+      <section id="cap3" class="clip" data-start="17.2" data-duration="6.4" data-track-index="2">
+        <div class="caption">
+          <span id="cap3-eyebrow" class="eyebrow">03 <span class="of">/ 04</span></span>
+          <h2 id="cap3-title" data-t="s3Title">Your church and the Lord's day</h2>
+          <div class="subs">
+            <p id="cap3-a" class="sub" data-t="s3a">Name your local church, kept private and encrypted.</p>
+            <p id="cap3-b" class="sub" data-t="s3b">On Sunday, Today helps you prepare for worship.</p>
+          </div>
+        </div>
+      </section>
+      <section id="cap4" class="clip" data-start="23.4" data-duration="5.8" data-track-index="2">
+        <div class="caption">
+          <span id="cap4-eyebrow" class="eyebrow">04 <span class="of">/ 04</span></span>
+          <h2 id="cap4-title" data-t="s4Title">Clearer circle pages</h2>
+          <div class="subs">
+            <p id="cap4-a" class="sub" data-t="s4a">Each theme opens with its meaning, a reflection and Scripture, all on one page.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- The phone with the real app screens -->
+      <section id="phone-clip" class="clip" data-start="4" data-duration="25.4" data-track-index="3">
+        <div id="phone-wrap" class="phone-wrap">
+          <div class="phone">
+            <div class="screen">
+              <div id="l-spirit-choose" class="layer">
+                <div id="z-spirit-choose" class="zoom">
+                  <img data-shot="spirit-choose" src="assets/screens/en-spirit-choose.png" alt="" />
+                  <div id="tap-begin" class="tap tap--light" style="left: 50%; top: 84.6%"></div>
+                </div>
+              </div>
+              <div id="l-spirit-still" class="layer">
+                <img data-shot="spirit-still" src="assets/screens/en-spirit-still.png" alt="" />
+              </div>
+              <div id="l-meeting" class="layer">
+                <img data-shot="meeting-form" src="assets/screens/en-meeting-form.png" alt="" />
+                <div id="tap-save" class="tap tap--royal" style="left: 70.4%; top: 92.6%"></div>
+              </div>
+              <div id="l-group" class="layer">
+                <div id="z-group" class="zoom">
+                  <img data-shot="group" src="assets/screens/en-group.png" alt="" />
+                  <div id="tap-join" class="tap tap--royal" style="left: 49.5%; top: 50.4%"></div>
+                </div>
+              </div>
+              <div id="l-sunday" class="layer">
+                <div id="z-sunday" class="zoom">
+                  <img data-shot="today-sunday" src="assets/screens/en-today-sunday.png" alt="" />
+                </div>
+                <div id="spot-sunday" class="spotlight"></div>
+              </div>
+              <div id="l-circle" class="layer">
+                <img data-shot="circle-church" src="assets/screens/en-circle-church.png" alt="" />
+              </div>
+              <div id="l-circle-deep" class="layer">
+                <img data-shot="circle-church-deep" src="assets/screens/en-circle-church-deep.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Outro -->
+      <section id="outro" class="clip" data-start="29" data-duration="6" data-track-index="4">
+        <div class="center-stack">
+          <img id="outro-symbol" class="symbol outro-symbol" src="assets/brand/qetoret-symbol-dark.svg" alt="" />
+          <p id="outro-head" class="outro-head" data-t="outroHead">Get the update</p>
+          <div class="ways">
+            <div id="way-android" class="way">
+              <span class="way-icon" aria-hidden="true">
+                <!-- A phone with a download arrow -->
+                <svg viewBox="0 0 24 24">
+                  <rect x="5" y="2" width="14" height="20" rx="2.5" />
+                  <path d="M12 7v7" />
+                  <path d="M9 11.5l3 3 3-3" />
+                  <path d="M10.5 18.5h3" />
+                </svg>
+              </span>
+              <span>
+                <span class="way-label">Android</span>
+                <span class="way-text" data-t="androidText">Install or update the app on Google Play</span>
+              </span>
+            </div>
+            <div id="way-web" class="way">
+              <span class="way-icon" aria-hidden="true">
+                <!-- A globe -->
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20" />
+                  <path d="M2 12h20" />
+                </svg>
+              </span>
+              <span>
+                <span class="way-label" data-t="webLabel">iPhone · computer</span>
+                <span class="way-text" data-t="webText">Open qetoret.com in your browser</span>
+              </span>
+            </div>
+          </div>
+          <p id="outro-tag" class="tagline" data-t="outroTag">Let your prayers rise.</p>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Copy per language. Feature lines come from the 1.0.6 release notes
+      // (whatsNew106* in src/i18n/locales); French keeps its non-breaking
+      // spaces before ; : ? !
+      const NB = " ";
+      const COPY = {
+        en: {
+          introEyebrow: "Version 1.0.6",
+          introTitle: "What’s new",
+          s1Title: "Pray in the Spirit",
+          s1a: "One quiet space to pray freely, with or without words.",
+          s1b: "Choose a length or no timer; the screen stays on.",
+          s2Title: "Praying together",
+          s2a: "Schedule a prayer time for your group, in person or online.",
+          s2b: "Members get a reminder 15 minutes before and can join the call.",
+          s3Title: "Your church and the Lord’s day",
+          s3a: "Name your local church, kept private and encrypted.",
+          s3b: "On Sunday, Today helps you prepare for worship.",
+          s4Title: "Clearer circle pages",
+          s4a: "Each theme opens with its meaning, a reflection and Scripture, all on one page.",
+          outroHead: "Get the update",
+          androidText: `Install or update the app on Google${NB}Play`,
+          webLabel: "iPhone · computer",
+          webText: "Open qetoret.com in your browser",
+          outroTag: "Let your prayers rise.",
+        },
+        de: {
+          introEyebrow: "Version 1.0.6",
+          introTitle: "Neuigkeiten",
+          s1Title: "Im Geist beten",
+          s1a: "Ein stiller Raum, um frei zu beten, mit oder ohne Worte.",
+          s1b: "Wähle eine Dauer oder keinen Timer; der Bildschirm bleibt an.",
+          s2Title: "Gemeinsam beten",
+          s2a: "Plane eine Gebetszeit für deine Gruppe, vor Ort oder online.",
+          s2b: "Mitglieder werden 15 Minuten vorher erinnert und können dem Anruf beitreten.",
+          s3Title: "Deine Gemeinde und der Tag des Herrn",
+          s3a: "Gib deine Ortsgemeinde an, privat und verschlüsselt.",
+          s3b: "Am Sonntag hilft dir „Heute“, dich auf den Gottesdienst vorzubereiten.",
+          s4Title: "Klarere Kreisseiten",
+          s4a: "Jedes Thema beginnt mit seiner Bedeutung, einem Impuls und der Schrift, alles auf einer Seite.",
+          outroHead: "Hol dir das Update",
+          androidText: `Installiere oder aktualisiere die App bei Google${NB}Play`,
+          webLabel: "iPhone · Computer",
+          webText: "Öffne qetoret.com in deinem Browser",
+          outroTag: "Lass deine Gebete aufsteigen.",
+        },
+        fr: {
+          introEyebrow: "Version 1.0.6",
+          introTitle: "Nouveautés",
+          s1Title: "Prier dans l’Esprit",
+          s1a: "Un seul espace calme pour prier librement, avec ou sans mots.",
+          s1b: `Choisissez une durée, ou aucune${NB}; l’écran reste allumé.`,
+          s2Title: "Prier ensemble",
+          s2a: "Planifiez un temps de prière pour votre groupe, sur place ou en ligne.",
+          s2b: "Les membres reçoivent un rappel 15 minutes avant et peuvent rejoindre l’appel.",
+          s3Title: "Votre Église et le jour du Seigneur",
+          s3a: "Indiquez votre Église locale, gardée privée et chiffrée.",
+          s3b: "Le dimanche, Aujourd’hui vous aide à vous préparer au culte.",
+          s4Title: "Des pages de cercle plus claires",
+          s4a: "Chaque thème s’ouvre sur son sens, une réflexion et l’Écriture, sur une seule page.",
+          outroHead: "Obtenez la mise à jour",
+          androidText: `Installez ou mettez à jour l’application sur Google${NB}Play`,
+          webLabel: "iPhone · ordinateur",
+          webText: "Ouvrez qetoret.com dans votre navigateur",
+          outroTag: "Que vos prières s’élèvent.",
+        },
+      };
+
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      const lang = COPY[vars.lang] ? vars.lang : "en";
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-t]").forEach((el) => {
+        el.textContent = COPY[lang][el.dataset.t];
+      });
+      document.querySelectorAll("[data-shot]").forEach((img) => {
+        img.src = `assets/screens/${lang}-${img.dataset.shot}.png`;
+      });
+      // Tapped buttons, measured in each language's screen (% of the viewport).
+      const TAPS = {
+        en: { begin: [50, 84.7], save: [70.5, 92.5], join: [49.5, 50.3] },
+        de: { begin: [50, 86.4], save: [70.5, 92.5], join: [49.5, 50.3] },
+        fr: { begin: [50, 84.7], save: [70.5, 92.5], join: [49.5, 50.3] },
+      };
+      Object.entries(TAPS[lang]).forEach(([name, [left, top]]) => {
+        const el = document.getElementById(`tap-${name}`);
+        el.style.left = `${left}%`;
+        el.style.top = `${top}%`;
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const calm = "power2.out";
+      const glide = "power2.inOut";
+
+      // Incense drifting upward through the whole video.
+      tl.fromTo("#wisps", { y: 0 }, { y: -280, duration: 35, ease: "none" }, 0);
+      tl.fromTo("#wisp-a", { x: 0 }, { x: 36, duration: 5.5, ease: "sine.inOut", yoyo: true, repeat: 5 }, 0);
+      tl.fromTo("#wisp-b", { x: 0 }, { x: -30, duration: 6.6, ease: "sine.inOut", yoyo: true, repeat: 4 }, 0);
+      tl.fromTo("#wisp-c", { x: 0 }, { x: 22, duration: 4.4, ease: "sine.inOut", yoyo: true, repeat: 7 }, 0);
+
+      // 0–4.4 · Intro: logo already present on frame 0 (the WhatsApp thumbnail).
+      tl.fromTo("#intro-symbol", { y: 16, scale: 0.97 }, { y: 0, scale: 1, duration: 1.6, ease: calm }, 0);
+      tl.fromTo("#intro-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: glide }, 0.5);
+      tl.fromTo("#intro-eyebrow", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: calm }, 0.8);
+      tl.fromTo("#intro-title", { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.9, ease: calm }, 1.05);
+      tl.to("#intro-stack", { opacity: 0, y: -60, duration: 0.6, ease: "power2.in" }, 3.75);
+
+      // Caption helper: eyebrow, title and first line rise in; the group leaves upward.
+      function caption(n, start, end, swapAt) {
+        tl.fromTo(`#cap${n}-eyebrow`, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: calm }, start + 0.1);
+        tl.fromTo(`#cap${n}-title`, { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.8, ease: calm }, start + 0.2);
+        tl.fromTo(`#cap${n}-a`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: calm }, start + 0.45);
+        if (swapAt) {
+          tl.to(`#cap${n}-a`, { opacity: 0, y: -14, duration: 0.45, ease: "power1.in" }, swapAt);
+          tl.fromTo(`#cap${n}-b`, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: calm }, swapAt + 0.35);
+        }
+        const leaving = [`#cap${n}-eyebrow`, `#cap${n}-title`, swapAt ? `#cap${n}-b` : `#cap${n}-a`];
+        tl.to(leaving, { opacity: 0, y: -24, duration: 0.4, ease: "power1.in", stagger: 0.04 }, end - 0.5);
+      }
+      tl.set(["#cap1-b", "#cap2-b", "#cap3-b"], { opacity: 0 }, 0);
+
+      // Screens: crossfade one layer into the next.
+      function showLayer(id, at, dur = 0.6) {
+        tl.fromTo(id, { opacity: 0 }, { opacity: 1, duration: dur, ease: glide }, at);
+      }
+      function hideLayer(id, at, dur = 0.6) {
+        tl.to(id, { opacity: 0, duration: dur, ease: glide }, at);
+      }
+      // A press: appears in a blink, then widens and fades. Starts from opacity 0
+      // so nothing shows before its moment, whichever frame is seeked first.
+      function tap(id, at) {
+        tl.fromTo(id, { opacity: 0, scale: 0.35 }, { opacity: 0.95, scale: 0.5, duration: 0.1, ease: "none" }, at);
+        tl.to(id, { opacity: 0, scale: 1.5, duration: 0.65, ease: "power2.out" }, at + 0.1);
+      }
+
+      // Phone rises in with the first feature, leaves before the outro.
+      tl.fromTo("#phone-wrap", { opacity: 0, y: 180 }, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out" }, 4.25);
+      tl.to("#phone-wrap", { opacity: 0, y: 160, duration: 0.7, ease: "power2.in" }, 28.6);
+
+      // 4.0–10.8 · Pray in the Spirit: choose a length, Begin, then stillness.
+      caption(1, 4.0, 10.8, 7.5);
+      showLayer("#l-spirit-choose", 4.25, 0.01);
+      tl.fromTo("#z-spirit-choose", { scale: 1 }, { scale: 1.035, duration: 3, ease: "sine.inOut", transformOrigin: "50% 60%" }, 4.3);
+      tap("#tap-begin", 6.85);
+      showLayer("#l-spirit-still", 7.25, 0.9);
+
+      // 10.6–17.4 · Praying together: the meeting form, then the group's meetings.
+      caption(2, 10.6, 17.4, 13.75);
+      showLayer("#l-meeting", 10.35, 0.7);
+      hideLayer("#l-spirit-still", 10.6, 0.5);
+      tap("#tap-save", 13.1);
+      showLayer("#l-group", 13.45, 0.6);
+      hideLayer("#l-meeting", 13.9, 0.3);
+      tl.fromTo("#z-group", { scale: 1 }, { scale: 1.14, duration: 1.8, ease: glide, transformOrigin: "50% 41%" }, 14.2);
+      tap("#tap-join", 15.85);
+
+      // 17.2–23.6 · Your church and the Lord's day: the Sunday card on Today.
+      caption(3, 17.2, 23.6, 20.3);
+      showLayer("#l-sunday", 16.95, 0.6);
+      hideLayer("#l-group", 17.4, 0.3);
+      tl.fromTo("#z-sunday", { scale: 1 }, { scale: 1.16, duration: 2.2, ease: glide, transformOrigin: "50% 50%" }, 18.1);
+      tl.fromTo("#spot-sunday", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: glide }, 18.4);
+
+      // 23.4–29.2 · Clearer circle pages: the meaning, then scroll to reflection and Scripture.
+      caption(4, 23.4, 29.2, null);
+      showLayer("#l-circle", 23.15, 0.6);
+      hideLayer("#l-sunday", 23.6, 0.3);
+      // The deeper circle text (meaning, reflection) isn't translated into German
+      // yet, so the German cut stays on the translated top of the page.
+      if (lang === "de") {
+        tl.fromTo("#l-circle", { scale: 1 }, { scale: 1.08, duration: 4.6, ease: "sine.inOut", transformOrigin: "50% 45%" }, 23.8);
+      } else {
+        tl.to("#l-circle", { y: -360, opacity: 0, duration: 0.9, ease: glide }, 25.9);
+        tl.fromTo("#l-circle-deep", { y: 360, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: glide }, 25.9);
+      }
+
+      // 29–33 · Outro.
+      tl.fromTo("#outro-symbol", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.9, ease: calm }, 29.15);
+      tl.fromTo("#outro-head", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.9, ease: calm }, 29.4);
+      tl.fromTo("#way-android", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: calm }, 29.9);
+      tl.fromTo("#way-web", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: calm }, 30.35);
+      tl.fromTo("#outro-tag", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.9, ease: calm }, 31.2);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

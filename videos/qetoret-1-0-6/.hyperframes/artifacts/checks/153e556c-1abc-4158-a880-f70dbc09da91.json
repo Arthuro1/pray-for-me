@@ -1,0 +1,317 @@
+{
+  "ok": true,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 10,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "duplicate_media_discovery_risk",
+        "severity": "warning",
+        "message": "Detected 2 matching img entries with the same source/start/duration.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Avoid duplicated media nodes that can be discovered twice during compilation."
+      },
+      {
+        "code": "timeline_track_too_dense",
+        "severity": "warning",
+        "message": "Track 2 has 4 timed elements in this HTML file. Smaller sub-compositions keep timelines easier to read, iterate on, and diff.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move coherent scene groups into separate .html files under compositions/ and mount them from the parent with data-composition-src so the timeline stays easier to inspect, revise, and validate."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<div id=\"bg\"> is a timeline element that contains nested <svg id=\"wisps\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#bg",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <div id=\"bg\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"intro\"> is a timeline element that contains nested <div id=\"intro-stack\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#intro",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"intro\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"cap1\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#cap1",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"cap1\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"cap2\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#cap2",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"cap2\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"cap3\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#cap3",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"cap3\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"cap4\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#cap4",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"cap4\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"phone-clip\"> is a timeline element that contains nested <div id=\"phone-wrap\">. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#phone-clip",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"phone-clip\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      },
+      {
+        "code": "nested_structure_needs_subcomposition",
+        "severity": "warning",
+        "message": "<section id=\"outro\"> is a timeline element that contains nested <div>. The timeline shows one row per top-level element, and the root composition is built only from sub-compositions.",
+        "selector": "#outro",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\T480s\\Desktop\\Ministry\\projets\\pray_for_me\\videos\\qetoret-1-0-6\\index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Move <section id=\"outro\"> and its contents into a sub-composition file and mount it with data-composition-src."
+      }
+    ],
+    "filesScanned": 1
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "duration": 33,
+    "samples": [
+      1.833,
+      5.5,
+      9.167,
+      12.833,
+      16.5,
+      20.167,
+      23.833,
+      27.5,
+      31.167
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 0,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 3,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.81:1; WCAG AA requires 3:1.",
+        "text": "/ 04",
+        "fg": "rgb(130,106,79)",
+        "bg": "rgb(47,38,62)",
+        "ratio": 2.81,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(134,111,85)",
+        "large": true,
+        "selector": "div > section:nth-of-type(2) > div > span > span",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 143,
+          "y": 140,
+          "width": 75.609375,
+          "height": 37
+        },
+        "time": 9.167,
+        "times": [
+          9.167
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.81:1; WCAG AA requires 3:1.",
+        "text": "/ 04",
+        "fg": "rgb(131,106,79)",
+        "bg": "rgb(48,38,62)",
+        "ratio": 2.81,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(135,111,85)",
+        "large": true,
+        "selector": "div > section:nth-of-type(3) > div > span > span",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 147.28125,
+          "y": 140,
+          "width": 75.609375,
+          "height": 37
+        },
+        "time": 16.5,
+        "times": [
+          16.5
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.78:1; WCAG AA requires 3:1.",
+        "text": "/ 04",
+        "fg": "rgb(131,106,79)",
+        "bg": "rgb(48,39,63)",
+        "ratio": 2.78,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(136,112,86)",
+        "large": true,
+        "selector": "div > section:nth-of-type(5) > div > span > span",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 147.859375,
+          "y": 142,
+          "width": 75.609375,
+          "height": 37
+        },
+        "time": 23.833,
+        "times": [
+          23.833
+        ]
+      }
+    ],
+    "enabled": true,
+    "samples": [
+      1.833,
+      9.167,
+      16.5,
+      23.833,
+      31.167
+    ],
+    "checked": 17,
+    "passed": 14
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}
