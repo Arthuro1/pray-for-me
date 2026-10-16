@@ -132,7 +132,10 @@ describe('prayerNoteDrafts — fail closed', () => {
   it('deletes a draft whose ciphertext cannot be decrypted', async () => {
     await saveNoteDraft({ prayerId: PRAYER, text: SECRET });
     const record = idbStore.get(SLOT);
-    idbStore.set(SLOT, { ...record, payload: { ...record.payload, ct: record.payload.ct.replace(/^./, 'A') } });
+    // The replacement must differ from the first character: a fixed 'A' left
+    // the ~1 ciphertext in 64 that already starts with 'A' untouched.
+    const { ct } = record.payload;
+    idbStore.set(SLOT, { ...record, payload: { ...record.payload, ct: `${ct[0] === 'A' ? 'B' : 'A'}${ct.slice(1)}` } });
     __resetMemoryForTests();
     expect(await loadNoteDraft(PRAYER)).toBeNull();
     expect(idbStore.has(SLOT)).toBe(false);

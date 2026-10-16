@@ -32,7 +32,10 @@ describe('plan personalization in a real browser', () => {
   it('fails closed and deletes a tampered record', async () => {
     await savePlanPersonalization(OWNER, RUN, { partner: { name: SECRET } });
     const stored = await idbGet(SLOT);
-    await idbSet(SLOT, { ...stored, payload: { ...stored.payload, ct: `A${stored.payload.ct.slice(1)}` } });
+    // The replacement must differ from the first character: a fixed 'A' left
+    // the ~1 ciphertext in 64 that already starts with 'A' untouched.
+    const { ct } = stored.payload;
+    await idbSet(SLOT, { ...stored, payload: { ...stored.payload, ct: `${ct[0] === 'A' ? 'B' : 'A'}${ct.slice(1)}` } });
     __resetPlanPersonalizationMemoryForTests();
     expect(await loadPlanPersonalization(OWNER, RUN)).toBeNull();
     expect(await idbGet(SLOT)).toBeUndefined();
