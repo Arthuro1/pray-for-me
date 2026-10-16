@@ -11,6 +11,11 @@
 //              { "record": { "id": "<uuid>" } }          ← Supabase DB Webhook
 //   • Batch:   {}  (or { "limit": 20 })                  ← retry cron backstop
 //
+// Each batch run (every 5 minutes) first queues the reminders for group prayer
+// meetings starting within the next 15 minutes (_shared/meetingTime.ts decides
+// with the shared schedule engine; queue_group_meeting_reminder fans out one
+// deduped 'prayer_meeting' notification per member), then delivers as usual.
+//
 // Idempotency + concurrency: rows are claimed via SECURITY DEFINER RPCs that flip
 // pending/failed → processing with FOR UPDATE SKIP LOCKED, so the webhook and the
 // retry cron can never double-send the same notification.
@@ -20,6 +25,7 @@
 //   supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=mailto:you@example.com
 import { initReminderEnv, requireInternalAuth, sendPush, json } from '../_shared/reminders.ts';
 import { eventPayload, digestPayload } from '../_shared/eventNotify.ts';
+import { remindersDue, type MeetingTiming } from '../_shared/meetingTime.ts';
 import type { SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 type Notification = {
@@ -73,6 +79,13 @@ async function resolvePref(supabase: SupabaseClient, n: Notification): Promise<P
 // Delivers one claimed (already 'processing') notification and records the
 // outcome. Returns the terminal status for the batch summary.
 async function deliver(supabase: SupabaseClient, n: Notification): Promise<string> {
+  // A meeting reminder held back (quiet hours, a retry) is useless once the
+  // meeting has begun: the in-app row stays, the push is dropped.
+  if (meetingStarted(n)) {
+    await supabase.rpc('finish_notification_delivery', { p_id: n.id, p_status: 'skipped', p_error: 'expired', p_increment: false });
+    return 'skipped';
+  }
+
   const pref = await resolvePref(supabase, n);
 
   // Push disabled for this type → nothing to send (the in-app row still stands).
@@ -140,6 +153,37 @@ async function deliver(supabase: SupabaseClient, n: Notification): Promise<strin
   return 'skipped';
 }
 
+function meetingStarted(n: Notification, now = Date.now()): boolean {
+  if (n.type !== 'prayer_meeting') return false;
+  const startsAt = Date.parse(String(n.metadata?.starts_at || ''));
+  return Number.isFinite(startsAt) && startsAt <= now;
+}
+
+// Queue a reminder for every group meeting that starts within the reminder
+// window, returning how many members were reminded. Only timing columns are
+// read — a meeting's details are ciphertext the server cannot open.
+// Failure-soft: a bad row never blocks delivery.
+async function queueMeetingReminders(supabase: SupabaseClient, now = new Date()): Promise<number> {
+  const { data: meetings, error } = await supabase
+    .from('group_meetings')
+    .select('id, schedule, start_time, timezone');
+  if (error || !meetings) return 0;
+  let queued = 0;
+  for (const meeting of meetings as MeetingTiming[]) {
+    try {
+      for (const { key, startsAt } of remindersDue(meeting, now)) {
+        const { data: members, error: rpcError } = await supabase.rpc('queue_group_meeting_reminder', {
+          p_meeting: meeting.id, p_occurrence: key, p_starts_at: startsAt.toISOString(),
+        });
+        if (!rpcError) queued += Number(members) || 0;
+      }
+    } catch {
+      // An unreadable schedule or timezone: skip this meeting only.
+    }
+  }
+  return queued;
+}
+
 // Digest run: for each recipient with pending digest notifications, send ONE
 // summary push (respecting quiet hours) instead of the individual pushes that
 // were deferred by deliver(). Claiming stamps digested_at so rows are never
@@ -194,11 +238,15 @@ Deno.serve(async (req) => {
     const singleId: string | null = body?.notificationId || body?.record?.id || body?.id || null;
 
     let claimed: Notification[] = [];
+    let meetingReminders = 0;
     if (singleId) {
       const { data } = await supabase.rpc('claim_notification', { p_id: singleId });
       claimed = data || [];
     } else {
-      const limit = Number.isFinite(body?.limit) ? body.limit : 20;
+      meetingReminders = await queueMeetingReminders(supabase);
+      // Room for this run's meeting reminders on top of the usual batch, so a
+      // large group is reminded before its meeting rather than five minutes later.
+      const limit = (Number.isFinite(body?.limit) ? body.limit : 20) + Math.min(meetingReminders, 500);
       const { data } = await supabase.rpc('claim_notifications_for_delivery', { p_limit: limit });
       claimed = data || [];
     }
@@ -209,7 +257,7 @@ Deno.serve(async (req) => {
       summary[status] = (summary[status] || 0) + 1;
     }
 
-    return json({ claimed: claimed.length, ...summary });
+    return json({ claimed: claimed.length, meetingReminders, ...summary });
   } catch (e) {
     return json({ error: 'unhandled', message: String((e as Error)?.message || e) }, 500);
   }

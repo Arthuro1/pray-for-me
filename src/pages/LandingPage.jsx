@@ -166,8 +166,7 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
 
         <LandingTrust copy={copy} />
 
-        {/* The last invitation, in the deep violet of the place of prayer, and
-            the seven movements as the page's closing line. */}
+        {/* The last invitation, in the deep violet of the place of prayer. */}
         <section className="landing__final q-immersive" aria-labelledby="landing-final-title">
           <BrandMark size={56} />
           <h2 id="landing-final-title" className="landing__final-title">{c.ctaTitle}</h2>
@@ -178,7 +177,6 @@ export default function LandingPage({ onBeginPrayer, onSignIn }) {
               <span>{playStore.cta}</span>
             </a>
           </div>
-          <p className="landing__litany">{movements.join(' · ')}</p>
         </section>
       </main>
 

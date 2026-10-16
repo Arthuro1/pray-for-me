@@ -52,6 +52,8 @@ describe('client / server route parity', () => {
     ['plan_invitation', { plan_id: 'fast3' }],
     ['plan_invitation', { plan_id: 'fast3', group_id: GROUP }],
     ['community_update', { group_id: 'bad', community_prayer_id: 'bad' }],
+    ['prayer_meeting', { group_id: GROUP, meeting_id: GROUP }],
+    ['prayer_meeting', { group_id: 'bad' }],
   ];
   it('notificationRoute(client) === eventUrl(server) for every case', () => {
     for (const [type, metadata] of cases) {

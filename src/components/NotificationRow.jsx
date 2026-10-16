@@ -1,4 +1,4 @@
-import { UserPlus, Mail, MessageSquare, CheckCircle2, HandHeart, Plus, Sparkles, Users, Shield, Bell, CalendarPlus } from 'lucide-react';
+import { UserPlus, Mail, MessageSquare, CheckCircle2, HandHeart, Plus, Sparkles, Users, Shield, Bell, CalendarPlus, CalendarClock } from 'lucide-react';
 import { t, tp } from '../i18n';
 import { timeAgo } from '../utils/date';
 import Avatar from './shared/Avatar';
@@ -19,6 +19,7 @@ const TYPE_META = {
   membership_change: { icon: Users,         tone: 'teal',   labelKey: 'notifMembership' },
   role_change:       { icon: Shield,        tone: 'indigo', labelKey: 'notifRoleChange' },
   plan_invitation:   { icon: CalendarPlus,  tone: 'plum',   labelKey: 'notifPlanInvitation' },
+  prayer_meeting:    { icon: CalendarClock, tone: 'indigo', labelKey: 'notifPrayerMeeting' },
 };
 const GENERIC = { icon: Bell, tone: null, labelKey: 'notifGeneric' };
 

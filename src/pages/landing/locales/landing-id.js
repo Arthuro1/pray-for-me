@@ -85,10 +85,10 @@ export default {
     "nameBody": "Qetoret adalah kata Ibrani untuk ukupan yang dipersembahkan di hadapan Tuhan. Dalam Alkitab, asap ukupan yang naik menjadi gambaran doa-doa umat Tuhan. Nama Qetoret diambil dari gambaran ini: kehidupan doa yang terus-menerus dibawa ke hadapan Tuhan.",
     "christTitle": "Melalui Kristus",
     "christBody": "Qetoret hanyalah alat untuk berdoa, bukan perantara. Kita datang kepada Bapa melalui Yesus Kristus, Imam Besar Agung kita. Di dalam Dia, orang percaya disebut imamat yang rajani: diundang untuk mendekat, bersyafaat bagi sesama, dan hidup sebagai saksi-Nya — di bawah otoritas-Nya, tidak pernah di atas orang lain.",
-    "spiritTitle": "Di dalam Roh",
-    "spiritBody": "Oleh Kristus kita beroleh jalan masuk kepada Bapa dalam satu Roh. Roh Kudus menolong kita dalam kelemahan kita dan berdoa untuk kita ketika kita tidak tahu bagaimana seharusnya berdoa. Doa bukan teknik: doa lahir dari hadirat-Nya, dan Dialah yang membuatnya berbuah.",
+    "spiritTitle": "Dipimpin oleh Roh",
+    "spiritBody": "Berdoa berarti berbicara dengan Bapa kita, melalui Yesus, dengan pertolongan Roh Kudus. Ketika kita tidak tahu bagaimana harus berdoa, Roh sendiri berdoa untuk kita. Doa bukan metode yang harus dikuasai: Dialah yang mengajar kita berdoa dan menumbuhkan hidup kita bersama Allah.",
     "churchTitle": "Bersama Gereja",
-    "churchBody": "Qetoret tidak menggantikan gereja lokal Anda: aplikasi ini membantu Anda berdoa bersama gereja dan untuk gereja. Orang percaya mula-mula berdoa bersama, berbagi hidup, dan memecahkan roti sebagai satu keluarga. Doa pribadi dikuatkan oleh doa bersama: berkumpullah, dan saling menanggung beban."
+    "churchBody": "Qetoret tidak menggantikan gereja Anda: aplikasi ini membantu Anda berdoa untuk gereja dan bersama gereja. Sejak awal, orang Kristen berdoa bersama, memecahkan roti, dan saling memperhatikan. Doa pribadi Anda dikuatkan oleh persekutuan: berkumpullah dengan saudara-saudari seiman, dan saling mendoakan."
   },
   "bring": {
     "title": "Bawalah apa yang ada di hati Anda",
@@ -129,7 +129,8 @@ export default {
         "name": "Kerajaan dan misi",
         "desc": "Injil, keadilan, dan belas kasihan"
       }
-    ]
+    ],
+    "close": "Tutup"
   },
   "together": {
     "label": "Bersama",

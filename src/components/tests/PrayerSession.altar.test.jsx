@@ -107,7 +107,7 @@ describe('PrayerSession — Pray through my altar', () => {
     fireEvent.click(screen.getByText(t(lang, 'amenBtn'))); // the last prayer
     expect(screen.getByRole('heading', { name: t(lang, 'altarCarriedTitle') })).toBeTruthy();
     expect(document.body.textContent).not.toMatch(/\d+\s*\/\s*7/);
-    expect(screen.getByText(t(lang, 'remainWithGod'))).toBeTruthy();
+    expect(screen.getByText(t(lang, 'spiritPrayTitle'))).toBeTruthy();
   });
 
   it('keeps the order a walk began with — a change after the first step applies next time', () => {

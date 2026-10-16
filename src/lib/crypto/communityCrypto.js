@@ -14,12 +14,19 @@ export const COMMUNITY_ENCRYPTION_VERSION = 2;
 export const COMMUNITY_PRAYER_FIELDS = ['title', 'description', 'prayer_points'];
 export const COMMUNITY_UPDATE_FIELDS = ['text', 'attachments'];
 export const TESTIMONY_FIELDS = ['content', 'attachments'];
+// A group prayer meeting: what it is called, whether it is online or in person,
+// where, the call link (an access credential) and any notes. Only its timing
+// stays in plaintext columns, for the server's reminders.
+export const MEETING_FIELDS = ['title', 'mode', 'place', 'link', 'notes'];
 
 // Empty/redacted value per field: scalars → '' (the columns are NOT NULL text),
 // prayer_points → [] (jsonb[]). Used both as the encrypt-time default (when the
 // field is absent) and the plaintext-column redaction once the real value is
 // safe inside encrypted_payload.
-const EMPTY = { title: '', description: '', prayer_points: [], text: '', content: '', attachments: [] };
+const EMPTY = {
+  title: '', description: '', prayer_points: [], text: '', content: '', attachments: [],
+  mode: '', place: '', link: '', notes: '',
+};
 
 // Bundle `fields` of `row` into encrypted_payload under the group key, redact the
 // plaintext columns, and stamp the encryption + key version so a later fetch can
@@ -64,6 +71,11 @@ export function encryptCommunityUpdate(groupKey, row, groupId = row.group_id) {
 export function encryptCommunityTestimony(groupKey, row, groupId = row.group_id) {
   return encryptRow(groupKey, row, TESTIMONY_FIELDS, groupId, 'community-testimony');
 }
+// The meeting row has no plaintext columns for its details; callers persist
+// only encrypted_payload, encryption_version and key_version from the result.
+export function encryptGroupMeeting(groupKey, row, groupId = row.group_id) {
+  return encryptRow(groupKey, row, MEETING_FIELDS, groupId, 'group-meeting');
+}
 
 // True once a community row carries an encrypted payload (vs. legacy plaintext).
 export function isCommunityEncrypted(row) {
@@ -75,13 +87,14 @@ export function isCommunityEncrypted(row) {
 // key_version — or null when we can't obtain it (no wrapped key yet). Legacy
 // plaintext rows (no payload) pass through unchanged; an undecryptable row is
 // flagged `_locked` so the UI can show a placeholder rather than blank content.
-export async function decryptCommunityRow(resolveKey, row) {
+// `entityType` names a row whose kind its columns cannot reveal (a meeting).
+export async function decryptCommunityRow(resolveKey, row, entityType) {
   if (!isCommunityEncrypted(row)) return row;
   const gk = await resolveKey(row.key_version);
   if (!gk) return { ...row, _locked: true };
   try {
     const groupId = row.group_id || resolveKey.groupId || '';
-    const data = await decryptJson(gk.key, row.encrypted_payload, rowContext(row, groupId));
+    const data = await decryptJson(gk.key, row.encrypted_payload, rowContext(row, groupId, entityType));
     const rest = { ...row };
     delete rest.encrypted_payload;
     delete rest.encryption_version;
@@ -93,6 +106,6 @@ export async function decryptCommunityRow(resolveKey, row) {
 
 // Array convenience (fetch paths). Preserves order; joined aggregates on each row
 // (counts, group joins) pass through untouched.
-export function decryptCommunityRows(resolveKey, rows) {
-  return Promise.all((rows || []).map((r) => decryptCommunityRow(resolveKey, r)));
+export function decryptCommunityRows(resolveKey, rows, entityType) {
+  return Promise.all((rows || []).map((r) => decryptCommunityRow(resolveKey, r, entityType)));
 }

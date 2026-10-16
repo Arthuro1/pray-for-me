@@ -18,6 +18,7 @@ import {
   encryptCommunityPrayer,
   encryptCommunityUpdate,
   encryptCommunityTestimony,
+  encryptGroupMeeting,
   decryptCommunityRow,
   decryptCommunityRows,
   isCommunityEncrypted,
@@ -1229,6 +1230,65 @@ const useCommunityStore = create((set, get) => ({
       .on('postgres_changes', { event: '*', schema: 'public', table: 'group_plans', filter: `group_id=eq.${groupId}` },
         () => onChange?.())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'group_plan_members', filter: `group_id=eq.${groupId}` },
+        () => onChange?.())
+      .subscribe();
+    return () => supabase.removeChannel(channel);
+  },
+
+  // ── Group prayer meetings ───────────────────────────────────────────────────
+  // A group's "we pray together" time, in person or online. Its timing is plain
+  // (the server sends reminders from it); the title, place, call link and notes
+  // are encrypted under the group key and fail closed like every group write.
+  // Rows carry a client-generated id, so a retried create cannot duplicate.
+  fetchGroupMeetings: async (groupId) => {
+    const { data, error } = await supabase
+      .from('group_meetings')
+      .select('id, group_id, created_by, schedule, start_time, timezone, duration_minutes, encrypted_payload, encryption_version, key_version')
+      .eq('group_id', groupId);
+    if (error) return { error: error.message, meetings: [] };
+    const meetings = await decryptCommunityRows(groupKeyResolver(groupId), data, 'group-meeting');
+    return { meetings };
+  },
+
+  // details: { title, mode: 'online' | 'in_person', place, link, notes }.
+  saveGroupMeeting: async ({ id, isNew, groupId, userId, schedule, startTime, timezone, durationMinutes, details }) => {
+    const gk = await ensureGroupKey(groupId);
+    if (!gk) return encryptionUnavailable();
+    let sealed;
+    try {
+      sealed = await encryptGroupMeeting(gk, { id, group_id: groupId, ...details }, groupId);
+    } catch {
+      return encryptionUnavailable();
+    }
+    const columns = {
+      schedule,
+      start_time: startTime,
+      timezone,
+      duration_minutes: durationMinutes,
+      encrypted_payload: sealed.encrypted_payload,
+      encryption_version: sealed.encryption_version,
+      key_version: sealed.key_version,
+    };
+    if (isNew) {
+      const { error } = await supabase
+        .from('group_meetings')
+        .insert({ id, group_id: groupId, created_by: userId, ...columns });
+      // 23505: a retry after a lost acknowledgement — the meeting is already there.
+      return error && error.code !== '23505' ? toError(error) : {};
+    }
+    const { error } = await supabase.from('group_meetings').update(columns).eq('id', id);
+    return error ? toError(error) : {};
+  },
+
+  // RLS: the member who scheduled it or a group admin.
+  endGroupMeeting: async (id) => {
+    const { error } = await supabase.from('group_meetings').delete().eq('id', id);
+    return error ? toError(error) : {};
+  },
+
+  subscribeGroupMeetings: (groupId, onChange) => {
+    const channel = supabase.channel(`group-meetings-${groupId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'group_meetings', filter: `group_id=eq.${groupId}` },
         () => onChange?.())
       .subscribe();
     return () => supabase.removeChannel(channel);

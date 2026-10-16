@@ -20,6 +20,8 @@ import HomeTab from '../pages/HomeTab';
 import PrayersTab from '../pages/PrayersTab';
 import PrayerDetail from '../pages/PrayerDetail';
 import PrayerSession from '../components/PrayerSession';
+import PrayInTheSpirit from '../components/PrayInTheSpirit';
+import GroupMeetingForm from '../pages/community/GroupMeetingForm';
 import PrayerForm from '../components/PrayerForm';
 import TendAltar from '../components/TendAltar';
 import CarryButton from '../components/shared/CarryButton';
@@ -138,7 +140,7 @@ function seed() {
 
 const SCREENS = [
   'today', 'journal', 'detail', 'session', 'bring', 'circles', 'tend', 'carry', 'together', 'group', 'group-prayer',
-  'circle', 'bring-circle', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
+  'circle', 'bring-circle', 'spirit', 'meeting', 'plan-done', 'plans', 'plan', 'plan-day', 'plan-share', 'plan-tailor', 'grow', 'guide', 'more', 'about', 'settings', 'inbox', 'auth', 'auth-save', 'vault-lock', 'key-missing', 'vault-setup', 'privacy', 'feedback', 'donate', 'ai-consent', 'confirm', 'first-prayer', 'calendar', 'saved', 'labels', 'ai-preview',
 ];
 
 const hoursAgo = (h) => new Date(Date.now() - h * 3600e3).toISOString();
@@ -184,6 +186,25 @@ function seedTogether() {
     fetchGroupActivity: ok([]),
     fetchGroupMembers: ok({ members: [{ user_id: 'design-user', name: 'Arthur', role: 'admin' }, { user_id: 'u2', name: 'Sarah' }, { user_id: 'u3', name: 'Paul' }] }),
     fetchGroupPlans: ok({ plans: [{ id: 'gp1', plan_id: 'gratitude7', start_date: todayKey(), participantCount: 4, joinedByMe: false, added_by: 'u2' }] }),
+    // Two prayer meetings as members read them (already decrypted).
+    fetchGroupMeetings: ok({
+      meetings: [
+        {
+          id: 'gm1', group_id: 'g1', created_by: 'design-user', _locked: false,
+          schedule: { type: 'recurring', freq: 'weekly', weekDays: [2], startDate: '2026-01-06' },
+          start_time: '20:00:00', timezone: 'Europe/Paris', duration_minutes: 60,
+          title: 'Tuesday evening prayer', mode: 'online', link: 'https://meet.google.com/abc-defg-hij', place: '',
+          notes: 'Bring your requests; we begin with a time of worship.',
+        },
+        {
+          id: 'gm2', group_id: 'g1', created_by: 'u2', _locked: false,
+          schedule: { type: 'recurring', freq: 'monthly', dayOfMonth: 1, startDate: '2026-01-01' },
+          start_time: '09:30:00', timezone: 'Europe/Paris', duration_minutes: 90,
+          title: '', mode: 'in_person', link: '', place: 'At Sarah’s, 12 Church Street', notes: '',
+        },
+      ],
+    }),
+    subscribeGroupMeetings: () => () => {},
     fetchReactors: ok({ reactors: [] }),
     fetchMyCommitments: ok([]),
     subscribeGroupPrayers: () => () => {},
@@ -394,6 +415,8 @@ export default function DesignScreens({ screen }) {
   if (screen === 'first-prayer') return <GuestPrayerFlow lang={lang} onFinish={() => navigate('/__design')} onRequestSave={() => {}} />;
   if (screen === 'key-missing') return <AccountKeyRecoveryScreen lang={lang} onResolved={() => {}} />;
 
+  if (screen === 'spirit') return <PrayInTheSpirit lang={lang} onFinish={() => navigate('/__design/today')} />;
+
   if (screen === 'session') {
     return <PrayerSession prayers={usePrayerStore.getState().prayers.slice(0, 3)} categories={[]} lang={lang} tr={(text) => text} onClose={() => navigate('/__design/today')} />;
   }
@@ -415,7 +438,8 @@ export default function DesignScreens({ screen }) {
       {screen === 'guide' && guides[0] && (
         <GuideReader guide={guides[0]} lang={lang} onClose={() => navigate('/__design/grow')} onStarted={() => {}} onCompleted={() => {}} />
       )}
-      {(screen === 'together' || screen === 'group') && <TogetherPreview screen={screen} />}
+      {(screen === 'together' || screen === 'group' || screen === 'meeting') && <TogetherPreview screen={screen === 'meeting' ? 'group' : screen} />}
+      {screen === 'meeting' && <GroupMeetingForm lang={lang} onSave={async () => true} onClose={() => navigate('/__design/group')} />}
       {screen === 'circles' && <CirclesPreview lang={lang} />}
       {/* A circle page needs its :circleId — rendered at that location. */}
       {screen === 'circle' && (

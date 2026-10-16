@@ -271,7 +271,7 @@ Prayer is also ecclesial. The first believers devoted themselves together to pra
 Therefore Qetoret:
 
 - **never replaces the local church** and says so plainly;
-- points users back to their own congregation and small group (named privately, encrypted);
+- points users back to their own congregation (named privately, encrypted) and lets its many groups gather in Together, including real prayer meetings;
 - takes its rhythm from the Lord's day: preparing hearts for worship and receiving what was given;
 - sends testimony back to the body, not only into a private journal.
 

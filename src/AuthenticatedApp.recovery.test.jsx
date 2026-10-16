@@ -32,7 +32,8 @@ vi.mock('./lib/crypto/accountKey', () => ({
   ensureAccountCryptoReady: state.ensure, rememberAccountKey: state.remember,
   CRYPTO_STATUS: { READY: 'ready', LOCKED: 'locked', ORPHANED: 'orphaned', UNAVAILABLE: 'unavailable' },
 }));
-vi.mock('./lib/crypto/keyManager', () => ({ configureAccountContext: state.configure }));
+// isUnlocked: the church anchor loads once the vault opens; these tests keep it shut.
+vi.mock('./lib/crypto/keyManager', () => ({ configureAccountContext: state.configure, isUnlocked: () => false }));
 vi.mock('./lib/aiConsent', () => ({ hasAiConsent: () => false }));
 vi.mock('./lib/contentLang', () => ({ getContentLang: () => 'en', ensureContentLang: state.noop }));
 vi.mock('./lib/mutationQueue', () => ({ initQueue: state.noop, onMutationDropped: state.noop }));

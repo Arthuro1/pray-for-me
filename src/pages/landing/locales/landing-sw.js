@@ -85,10 +85,10 @@ export default {
     "nameBody": "Qetoret ni neno la Kiebrania linalomaanisha uvumba uliotolewa mbele za Mungu. Katika Maandiko, uvumba unaopanda unakuwa picha ya maombi ya watu wa Mungu. Jina Qetoret linatokana na picha hii: maisha ya maombi yanayoletwa mbele za Mungu daima.",
     "christTitle": "Kupitia Kristo",
     "christBody": "Qetoret ni chombo cha maombi tu, kamwe si mpatanishi. Tunamjia Baba kupitia Yesu Kristo, Kuhani wetu Mkuu. Ndani yake, waaminio wanaitwa ukuhani wa kifalme: wamealikwa kukaribia, kuwaombea wengine na kuishi kama mashahidi wake — chini ya mamlaka yake, kamwe si juu ya watu wengine.",
-    "spiritTitle": "Katika Roho",
-    "spiritBody": "Kwa njia ya Kristo tunapata kumkaribia Baba katika Roho mmoja. Roho Mtakatifu hutusaidia katika udhaifu wetu na hutuombea tusipojua kuomba ipasavyo. Maombi si mbinu: huzaliwa kutokana na uwepo wake, naye ndiye anayeyafanya yazae matunda.",
+    "spiritTitle": "Tukiongozwa na Roho",
+    "spiritBody": "Kuomba ni kuzungumza na Baba yetu, kupitia Yesu, kwa msaada wa Roho Mtakatifu. Tusipojua jinsi ya kuomba, Roho mwenyewe hutuombea. Maombi si mbinu ya kujifunza na kuimiliki: yeye ndiye anayetufundisha kuomba na kukuza maisha yetu pamoja na Mungu.",
     "churchTitle": "Pamoja na Kanisa",
-    "churchBody": "Qetoret haichukui nafasi ya kanisa lako la mahali: inakusaidia kuomba pamoja nalo na kwa ajili yake. Waumini wa kwanza waliomba pamoja, walishiriki maisha yao na kumega mkate kama familia moja. Maombi ya binafsi hulishwa na maombi ya pamoja: kusanyikeni, na mchukuliane mizigo."
+    "churchBody": "Qetoret haichukui nafasi ya kanisa lako: inakusaidia kuliombea na kuomba pamoja nalo. Tangu mwanzo, Wakristo waliomba pamoja, walimega mkate na kutunzana. Maombi yako ya binafsi hulishwa na ushirika: kutana na ndugu zako wa kiume na wa kike, na muombeane."
   },
   "bring": {
     "title": "Leta kilicho moyoni mwako",
@@ -129,7 +129,8 @@ export default {
         "name": "Ufalme na utume",
         "desc": "Injili, haki na rehema"
       }
-    ]
+    ],
+    "close": "Funga"
   },
   "together": {
     "label": "Pamoja",

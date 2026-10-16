@@ -104,24 +104,25 @@ describe('LandingCircles', () => {
     const onBeginPrayer = vi.fn();
     render(<LandingCircles lang="en" copy={copy} onBeginPrayer={onBeginPrayer} />);
     fireEvent.click(option(0));
-    // The current deep layer has Paul's explicit publication approval.
-    fireEvent.click(screen.getByRole('button', { name: CIRCLE_UI.explore.en }));
-    const foundations = await screen.findByRole('button', { name: /Seven foundations/ });
+    // The current deep layer has Paul's explicit publication approval: each
+    // theme is a card that opens its own sheet.
+    fireEvent.click(await screen.findByRole('button', { name: 'Communion with God' }));
     expect(screen.queryByText(CIRCLE_UI.draft.en)).toBeNull();
-    fireEvent.click(foundations);
-    fireEvent.click(screen.getByRole('button', { name: 'Communion with God' }));
+    const sheet = screen.getByRole('dialog', { name: 'Communion with God' });
     const prompt = 'Teach me to seek You before I seek answers.';
-    fireEvent.click(screen.getAllByRole('button', { name: CIRCLE_UI.prayThis.en })[0]);
+    fireEvent.click(within(sheet).getAllByRole('button', { name: CIRCLE_UI.prayThis.en })[0]);
     expect(onBeginPrayer).toHaveBeenCalledWith({ circle: 'self', prompt });
+    expect(screen.queryByRole('dialog', { name: 'Communion with God' })).toBeNull();
   });
 
-  it('offers the approved deep layer in a production build without review mode', () => {
+  it('offers the approved deep layer in a production build without review mode', async () => {
     vi.stubEnv('DEV', false);
     try {
       render(<LandingCircles lang="en" copy={copy} onBeginPrayer={vi.fn()} />);
       fireEvent.click(option(6));
       expect(screen.getByRole('heading', { name: heading('kingdom') })).toBeTruthy();
-      expect(screen.getByRole('button', { name: CIRCLE_UI.explore.en })).toBeTruthy();
+      const firstTheme = circleContent('kingdom').themes[0].title.en;
+      expect(await screen.findByRole('button', { name: firstTheme })).toBeTruthy();
     } finally {
       vi.unstubAllEnvs();
     }

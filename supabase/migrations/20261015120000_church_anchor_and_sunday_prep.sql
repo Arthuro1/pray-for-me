@@ -1,8 +1,8 @@
 -- The local church anchor and the Sunday preparation reminder.
 --
 -- private_payload holds account-level preferences that are personal enough to
--- stay end-to-end encrypted (today: the name of the user's church and small
--- group). The client encrypts it under the account key before writing; the
+-- stay end-to-end encrypted (today: the name of the user's church). The
+-- client encrypts it under the account key before writing; the
 -- server only ever stores ciphertext and never reads it.
 --
 -- sunday_prep_enabled is a plain opt-in read by send-daily-reminder: on a

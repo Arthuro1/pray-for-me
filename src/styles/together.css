@@ -295,3 +295,24 @@ button.together-row.q-card:hover { border-color: var(--q-border-strong); backgro
 .group-checklist__step:disabled { cursor: default; color: var(--q-text-tertiary); }
 .group-checklist__step:disabled svg { color: var(--q-text-tertiary); }
 .group-checklist__step:not(:disabled):hover { color: var(--q-royal-text); }
+
+/* ── Praying together: the group's prayer meetings ──────────────────────── */
+/* A meeting reads in full — when, where, a few notes — so its lines wrap
+   instead of truncating, and the join action drops below on a phone. */
+.together-meetings { margin-block-end: var(--q-space-8); }
+.meeting-card { flex-wrap: wrap; align-items: flex-start; }
+.meeting-card .together-row__body { flex: 1 1 0; }
+.meeting-card .together-row__name,
+.meeting-card .together-row__meta { white-space: normal; overflow-wrap: anywhere; }
+.meeting-card__locked { display: inline-flex; align-items: center; gap: var(--q-space-1); }
+.meeting-card__notes { display: block; margin-block-start: var(--q-space-2); color: var(--q-text-secondary); font-size: 0.875rem; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+.meeting-card__join { display: inline-flex; align-items: center; gap: var(--q-space-2); text-decoration: none; }
+@media (max-width: 520px) {
+  .meeting-card:has(.meeting-card__join) .together-row__actions { width: 100%; justify-content: flex-end; padding-inline-start: 48px; }
+  .meeting-card .together-row__actions > .meeting-card__join { flex: 1 1 auto; justify-content: center; }
+}
+
+.meeting-form { display: grid; gap: var(--q-space-4); }
+.meeting-form__short { max-width: 9rem; }
+.meeting-form__note { display: flex; align-items: flex-start; gap: var(--q-space-2); margin: 0; }
+.meeting-form__note > svg { flex: 0 0 auto; margin-block-start: 3px; }

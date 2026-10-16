@@ -1,8 +1,9 @@
-// The user's local church and small group: the names that let the Church
-// circle, the Sunday card and a testimony point back to a real gathered body
-// (docs/QETORET_IDENTITY.md — the app never replaces the local church).
+// The name of the user's local church: what lets the Church circle, the Sunday
+// card and a testimony point back to a real gathered body
+// (docs/QETORET_IDENTITY.md — the app never replaces the local church). The
+// many groups inside a church (home groups, youth, choir…) live in Together.
 //
-// The names are personal, so they live only inside user_settings.private_payload,
+// The name is personal, so they live only inside user_settings.private_payload,
 // encrypted under the account key and bound to the account (see e2ee.ts). They
 // are never written to localStorage, logs or analytics. Reads and writes need an
 // unlocked vault; while it is locked the anchor is simply unknown.
@@ -15,7 +16,7 @@ import { encryptJson, decryptJson, isEncryptedPayload } from './crypto/e2ee.ts';
 import { getMasterKey, isUnlocked } from './crypto/keyManager.ts';
 
 export const CHURCH_NAME_MAX = 80;
-export const EMPTY_ANCHOR = Object.freeze({ church: '', smallGroup: '' });
+export const EMPTY_ANCHOR = Object.freeze({ church: '' });
 
 function anchorContext(userId) {
   return {
@@ -28,9 +29,10 @@ function anchorContext(userId) {
 
 const clean = (value) => String(value || '').replace(/\s+/g, ' ').trim().slice(0, CHURCH_NAME_MAX);
 
-// The stored shape, trimmed and bounded. Unknown keys are dropped.
+// The stored shape, trimmed and bounded. Unknown keys are dropped — including
+// the small-group name an earlier version stored, so the next save forgets it.
 export function normalizeAnchor(value) {
-  return { church: clean(value?.church), smallGroup: clean(value?.smallGroup) };
+  return { church: clean(value?.church) };
 }
 
 export async function encryptAnchor(userId, anchor) {

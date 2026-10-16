@@ -71,6 +71,24 @@ describe('CirclePage', () => {
     expect(screen.queryByText('Vorläufige Übersetzung')).toBeNull();
   });
 
+  it('lays the circle out on one page: theme cards, then what it means, reflection and Scripture — no folds', async () => {
+    const onPrayInCircle = vi.fn();
+    renderCircle('church', { onPrayInCircle });
+    const unity = await screen.findByRole('button', { name: 'L’unité' });
+    for (const label of [CIRCLE_UI.prayFor.fr, CIRCLE_UI.meaning.fr, CIRCLE_UI.reflect.fr, CIRCLE_UI.scripture.fr]) {
+      expect(screen.getByRole('heading', { name: label })).toBeTruthy();
+    }
+    expect(screen.queryByRole('button', { name: CIRCLE_UI.explore.fr })).toBeNull();
+    expect(document.querySelector('[aria-expanded]:not(.scripture-ref)')).toBeNull();
+
+    fireEvent.click(unity);
+    const sheet = screen.getByRole('dialog', { name: 'L’unité' });
+    expect(within(sheet).getByRole('button', { name: t(lang, 'close') })).toBeTruthy();
+    fireEvent.click(within(sheet).getAllByRole('button', { name: CIRCLE_UI.prayThis.fr })[0]);
+    expect(onPrayInCircle).toHaveBeenCalledWith('church', { prompt: 'Rends ton Église une, en Christ et dans la vérité.' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
   it('offers all seven circles, marking the one on screen', () => {
     renderCircle('church');
     const nav = screen.getByRole('navigation', { name: t(lang, 'circlesNav') });

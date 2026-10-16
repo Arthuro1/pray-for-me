@@ -119,8 +119,10 @@ export default function LandingCircles({ lang, label, copy, onBeginPrayer }) {
             ui={teaching.ui}
             lang={teaching.lang}
             name={copy.items[shownIndex]?.name}
+            closeLabel={copy.close}
             ScriptureRef={ScriptureRefButton}
             onPray={pray(shown)}
+            layout="brief"
             className="landing__circle-teaching"
           />
         </div>

@@ -55,8 +55,8 @@ describe('LandingPage — the story', () => {
     await screen.findByRole('heading', { name: 'Come before God through Christ' });
     const steps = [...document.querySelectorAll('.landing-beat__label')].map((label) => label.textContent);
     expect(steps.slice(0, 6)).toEqual(['Come', 'Bring', 'Carry', 'Together', 'Return · Listen', 'Remember · Respond']);
-    // The seven movements close the page.
-    expect(screen.getByText('Come · Bring · Carry · Return · Listen · Respond · Remember')).toBeTruthy();
+    // The page ends on the invitation, not on a list of movements.
+    expect(screen.queryByText('Come · Bring · Carry · Return · Listen · Respond · Remember')).toBeNull();
   });
 
   it('comes before God through Christ: the name and the access, by reference only', async () => {

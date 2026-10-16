@@ -96,6 +96,7 @@ export default function CirclePage({ onPrayInCircle }) {
             ui={teaching.ui}
             lang={teaching.lang}
             name={name}
+            closeLabel={t(lang, 'close')}
             ScriptureRef={ScriptureRefButton}
             onPray={pray}
             headingLevel={1}

@@ -118,7 +118,7 @@ describe('HomeTab — remaining vs completed', () => {
     renderHome();
     const altar = screen.getByRole('region', { name: t(lang, 'todayCompleteTitle') });
     expect(within(altar).getByText(tp(lang, 'todayPrayedCount', 3))).toBeTruthy();
-    expect(within(altar).getByText(t(lang, 'remainWithGod'))).toBeTruthy();
+    expect(within(altar).getByText(t(lang, 'spiritPrayTitle'))).toBeTruthy();
     expect(within(altar).getByText(new RegExp(t(lang, 'nextReminder')))).toBeTruthy();
     // The reminder is said once, inside the card.
     expect(screen.getAllByText(new RegExp(t(lang, 'nextReminder')))).toHaveLength(1);
@@ -155,19 +155,24 @@ describe('HomeTab — remaining vs completed', () => {
     expect(screen.getByText(t(lang, 'beginPrayer'))).toBeTruthy();
   });
 
-  it('a completed day offers an optional "Remain with God" — stillness, not a reward', () => {
+  it('a completed day offers an optional time to pray in the Spirit — stillness, not a reward', () => {
     usePrayerStore.setState({ completions: { p1: [DAY], p2: [DAY], p3: [DAY] } });
     renderHome();
-    fireEvent.click(screen.getByText(t(lang, 'remainWithGod')));
-    const dialog = screen.getByRole('dialog', { name: t(lang, 'remainWithGod') });
+    fireEvent.click(screen.getByText(t(lang, 'spiritPrayTitle')));
+    const dialog = screen.getByRole('dialog', { name: t(lang, 'spiritPrayTitle') });
     // A choice of duration and a way out — nothing generated, nothing counted.
-    expect(within(dialog).getByText(t(lang, 'remain30s'))).toBeTruthy();
-    expect(within(dialog).getByText(t(lang, 'remain1m'))).toBeTruthy();
-    fireEvent.click(within(dialog).getByText(t(lang, 'remain30s')));
-    expect(within(dialog).getByText(t(lang, 'remainStill'))).toBeTruthy();
-    expect(dialog.textContent).not.toMatch(/\d+\s*(s|sec|%)/);
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'minutesShort', { n: 5 }) }));
+    fireEvent.click(within(dialog).getByRole('button', { name: t(lang, 'spiritBegin') }));
+    expect(within(dialog).getByText(t(lang, 'spiritPrayStill'))).toBeTruthy();
+    expect(dialog.textContent).not.toMatch(/\d+\s*(s|sec|%|min)/);
     fireEvent.click(within(dialog).getByText(t(lang, 'remainFinish')));
-    expect(screen.queryByRole('dialog', { name: t(lang, 'remainWithGod') })).toBeNull();
+    expect(screen.queryByRole('dialog', { name: t(lang, 'spiritPrayTitle') })).toBeNull();
+  });
+
+  it('no longer offers a separate "no words today" space beside Pray now', () => {
+    renderHome();
+    expect(screen.getByText(t(lang, 'beginPrayer'))).toBeTruthy();
+    expect(screen.queryByText(/Pas de mots/)).toBeNull();
   });
 
   it('a prayer added after the day was complete re-opens Today', () => {

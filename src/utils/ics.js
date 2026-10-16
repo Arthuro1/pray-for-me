@@ -65,3 +65,36 @@ export function buildICS(prayers = [], commitments = []) {
   lines.push('END:VCALENDAR');
   return lines.join('\r\n') + '\r\n';
 }
+
+// ── A group prayer meeting ────────────────────────────────────────────────
+// One timed event in the meeting's own timezone (TZID with the IANA name, which
+// Google, Apple and Outlook calendars resolve), repeating by the same RRULE the
+// prayer export uses. Built on the member's device from the decrypted details;
+// the file never passes through the server.
+const stampOf = (date) => date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+
+export function buildMeetingICS(meeting, { title, place, link, notes } = {}, now = new Date()) {
+  const s = meeting.schedule;
+  const day = s.type === 'once' ? s.date : s.startDate;
+  const time = `${meeting.start_time.slice(0, 5).replace(':', '')}00`;
+  const location = place || link;
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    `PRODID:-//${APP_NAME}//Prayer Meeting//EN`,
+    'CALSCALE:GREGORIAN',
+    'BEGIN:VEVENT',
+    `UID:meeting-${meeting.id}@praystead.com`,
+    `DTSTAMP:${stampOf(now)}`,
+    `DTSTART;TZID=${meeting.timezone}:${dayBasic(day)}T${time}`,
+    `DURATION:PT${meeting.duration_minutes || 60}M`,
+    `SUMMARY:${esc(`🙏 ${title}`)}`,
+  ];
+  if (location) lines.push(`LOCATION:${esc(location)}`);
+  if (link) lines.push(`URL:${link}`);
+  if (notes) lines.push(`DESCRIPTION:${esc(notes)}`);
+  const rrule = toRRule(s);
+  if (rrule) lines.push(`RRULE:${rrule}`);
+  lines.push('END:VEVENT', 'END:VCALENDAR');
+  return lines.join('\r\n') + '\r\n';
+}

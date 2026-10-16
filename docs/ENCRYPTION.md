@@ -198,8 +198,18 @@ v1 content remains readable and is upgraded on a later safe content rewrite.
 
 The binding covers personal prayers, updates, points and testimonies; guest
 drafts; prayer-session note drafts; identity private keys; attachment
-blobs/metadata; community prayers, updates and testimonies; and wrapped
-group-key envelope identity.
+blobs/metadata; community prayers, updates and testimonies; group prayer
+meetings; and wrapped group-key envelope identity.
+
+## Group prayer meetings
+
+A group's "we pray together" time (`group_meetings`) keeps only its timing in
+plaintext — the schedule, local start time, IANA timezone and length — because
+the server sends the reminder from it. The title, whether it is online or in
+person, the place, the call link (an access credential) and the notes are one
+`encrypted_payload` under the group key (entity `group-meeting`), written fail
+closed: without a group key nothing is stored, and the table refuses a row
+without ciphertext. The reminder push carries generic copy and identifiers only.
 
 A personal row this device cannot decrypt (`_locked`) is never re-encrypted —
 not by an edit, not by saved guidance, not by the device cache. Its fields in

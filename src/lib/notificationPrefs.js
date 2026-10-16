@@ -17,6 +17,7 @@ export const NOTIF_TYPES = [
   'reaction_bucket',
   'group_prayer_added',
   'testimony',
+  'prayer_meeting',
 ];
 
 // Type-aware default delivery mode — mirrors default_delivery_mode() in

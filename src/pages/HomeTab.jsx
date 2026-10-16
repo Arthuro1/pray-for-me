@@ -34,7 +34,7 @@ import ActivationNudge from '../components/ActivationNudge';
 import PwaInstallNudge from '../components/PwaInstallNudge';
 import { readActivationProgress } from '../lib/activationProgress';
 import { nextActivationStep, pwaInstallAllowed } from '../lib/activationPolicy';
-import RemainWithGod from '../components/RemainWithGod';
+import PrayInTheSpirit from '../components/PrayInTheSpirit';
 import SundayCard from '../components/SundayCard';
 
 const DAY_NAMES = {
@@ -109,8 +109,8 @@ export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
   // session open.
   const [session, setSession] = useState(null);
   const [catchUpOpen, setCatchUpOpen] = useState(false);
-  // The quiet space open over the page ('remain' | 'spirit' | 'noWords'), or null.
-  const [quietSpace, setQuietSpace] = useState(null);
+  // True while the quiet space ("Pray in the Spirit") is open over the page.
+  const [quietSpace, setQuietSpace] = useState(false);
   const [prayedOpen, setPrayedOpen] = useState(false);
   const lang = settings.language || 'fr';
   const dateLocale = DATE_LOCALES[lang] || fr;
@@ -206,7 +206,7 @@ export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
       {sharingVerse && verse && (
         <VerseShareModal verse={verse} lang={lang} dayKey={dayKey} onClose={() => setSharingVerse(false)} />
       )}
-      {quietSpace && <RemainWithGod lang={lang} variant={quietSpace} onFinish={() => setQuietSpace(null)} />}
+      {quietSpace && <PrayInTheSpirit lang={lang} onFinish={() => setQuietSpace(false)} />}
       {session && session.prayers.length > 0 && (
         <PrayerSession
           prayers={session.prayers}
@@ -255,27 +255,20 @@ export default function HomeTab({ onAdd, onEdit, onAddInCircle }) {
             <PrimaryButton onClick={() => openSession(remainingPrayers)} className="today-focus__begin">
               {t(lang, 'beginPrayer')}
             </PrimaryButton>
-            {/* When the words won't come, coming is still enough (Romans 8:26). */}
-            <QuietButton onClick={() => setQuietSpace('noWords')} className="today-no-words">
-              {t(lang, 'noWordsLink')}
-            </QuietButton>
             <TodayReminder reminder={reminder} lang={lang} className="today-focus__reminder" />
           </section>
         )}
 
         {/* All of today prayed: the same altar, now at rest — a calm status,
-            not a reward — and two optional ways to stay: be still, or walk the
-            day once more. */}
+            not a reward — and two optional ways to stay: pray in the Spirit, or
+            walk the day once more. */}
         {dayComplete && (
           <section className="today-focus today-focus--complete q-immersive" aria-labelledby="today-complete-title">
             <RiseMark motion="still" size={180} className="today-focus__rise" />
             <p className="today-focus__context">{tp(lang, 'todayPrayedCount', completedToday.length)}</p>
             <p id="today-complete-title" className="today-focus__title" role="status">{t(lang, 'todayCompleteTitle')}</p>
             <div className="today-focus__actions">
-              <SecondaryButton onClick={() => setQuietSpace('remain')}>
-                {t(lang, 'remainWithGod')}
-              </SecondaryButton>
-              <SecondaryButton onClick={() => setQuietSpace('spirit')}>
+              <SecondaryButton onClick={() => setQuietSpace(true)}>
                 {t(lang, 'spiritPrayTitle')}
               </SecondaryButton>
               {todayEntries.length > 0 && (

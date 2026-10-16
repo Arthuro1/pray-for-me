@@ -26,7 +26,7 @@ import { altarOrder, canPrayThroughAltar } from '../lib/altarSession';
 import { useCircleTeaching } from '../hooks/useCircleTeaching';
 import CircleGlyph from './shared/CircleGlyph';
 import Switch from './shared/Switch';
-import RemainWithGod from './RemainWithGod';
+import PrayInTheSpirit from './PrayInTheSpirit';
 import ScriptureRefButton from './circles/ScriptureRefButton';
 import usePrayerStore from '../store/prayerStore';
 import { canHoldPrivateMetadata } from '../lib/crypto/prayerCrypto';
@@ -130,10 +130,8 @@ export default function PrayerSession({ prayers: givenPrayers, categories, lang,
   // format mid-session resumes the requests from here instead of repeating them.
   const [requestsCompleted, setRequestsCompleted] = useState(0);
   const [done, setDone] = useState(false);
-  // The quiet space chosen after Amen ('remain' | 'spirit'), or null.
-  const [quietSpace, setQuietSpace] = useState(null);
-  // Read once as the session opens: a walk keeps the opening it began with.
-  const [spiritOpening] = useState(() => usePrayerStore.getState().settings?.spiritOpening !== false);
+  // True once the person chooses to stay in the quiet space after Amen.
+  const [quietSpace, setQuietSpace] = useState(false);
   const [showFormats, setShowFormats] = useState(false);
   // Set while an atomic leave-this-prayer step runs (finalising a recording,
   // writing the encrypted draft). It disables navigation so a fast double tap
@@ -535,7 +533,7 @@ export default function PrayerSession({ prayers: givenPrayers, categories, lang,
       : null;
     const saveNote = (text) => usePrayerStore.getState().addUpdate(noteTarget.id, text);
     return overlay(
-      <RemainWithGod lang={lang} variant={quietSpace} onFinish={handleClose} noteTarget={noteTarget} onSaveNote={saveNote} embedded />,
+      <PrayInTheSpirit lang={lang} onFinish={handleClose} noteTarget={noteTarget} onSaveNote={saveNote} embedded />,
     );
   }
 
@@ -554,10 +552,7 @@ export default function PrayerSession({ prayers: givenPrayers, categories, lang,
           <p className="q-meta mt-1.5">{tp(lang, 'notesSavedCount', notes.savedCount)}</p>
         )}
         <div className="prayer-session__done-actions">
-          <SecondaryButton onClick={() => setQuietSpace('remain')}>
-            {t(lang, 'remainWithGod')}
-          </SecondaryButton>
-          <SecondaryButton onClick={() => setQuietSpace('spirit')}>
+          <SecondaryButton onClick={() => setQuietSpace(true)}>
             {t(lang, 'spiritPrayTitle')}
           </SecondaryButton>
           <PrimaryButton onClick={handleClose}>
@@ -629,9 +624,9 @@ export default function PrayerSession({ prayers: givenPrayers, categories, lang,
         </div>
         <p className="prayer-session__progress"><span dir="ltr">{currentStep} / {totalSteps}</span></p>
       </div>
-      {/* Prayer begins in dependence: one quiet line on the first step, which
-          the person can hide in Settings. Never a gate, never repeated. */}
-      {spiritOpening && currentStep === 1 && (
+      {/* Prayer begins in dependence: one quiet line on the first step.
+          Never a gate, never repeated. */}
+      {currentStep === 1 && (
         <p className="prayer-session__opening">
           <span>{t(lang, 'spiritOpening')}</span>
           <ScriptureRefButton reference="Romans 8:26" lang={lang} />

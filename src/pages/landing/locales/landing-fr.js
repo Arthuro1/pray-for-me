@@ -85,10 +85,10 @@ export default {
     "nameBody": "Qetoret est le mot hébreu qui désigne l'encens offert devant Dieu. Dans l'Écriture, l'encens qui monte devient une image des prières du peuple de Dieu. Qetoret tire son nom de cette image : une vie de prière sans cesse présentée à Dieu.",
     "christTitle": "Par le Christ",
     "christBody": "Qetoret est un outil pour la prière, jamais un intermédiaire. Nous venons au Père par Jésus-Christ, notre grand-prêtre. En lui, les croyants sont appelés un sacerdoce royal : invités à s'approcher, à intercéder pour les autres et à vivre comme ses témoins — sous son autorité, jamais au-dessus des autres.",
-    "spiritTitle": "Dans l'Esprit",
-    "spiritBody": "Par le Christ, nous avons accès auprès du Père dans un même Esprit. Le Saint-Esprit nous aide dans notre faiblesse et intercède pour nous quand nous ne savons pas prier comme il faut. La prière n'est pas une technique : elle naît de sa présence, et c'est lui qui en produit le fruit.",
+    "spiritTitle": "Conduits par l'Esprit",
+    "spiritBody": "Prier, c'est parler à notre Père, grâce à Jésus, avec l'aide du Saint-Esprit. Quand nous ne savons pas comment prier, l'Esprit lui-même intercède pour nous. La prière n'est pas une méthode à maîtriser : c'est lui qui nous apprend à prier et qui fait grandir notre vie avec Dieu.",
     "churchTitle": "Avec l'Église",
-    "churchBody": "Qetoret ne remplace pas votre église locale : elle vous aide à prier avec elle et pour elle. Les premiers croyants priaient ensemble, partageaient leur vie et rompaient le pain comme une seule famille. La prière personnelle se nourrit de la prière commune : rassemblez-vous, et portez-vous les uns les autres."
+    "churchBody": "Qetoret ne remplace pas votre église : elle vous aide à prier pour elle et avec elle. Dès les débuts, les chrétiens priaient ensemble, partageaient le pain et prenaient soin les uns des autres. Votre prière personnelle se nourrit de la communion fraternelle : retrouvez vos frères et sœurs, et portez-vous les uns les autres dans la prière."
   },
   "bring": {
     "title": "Apportez ce que vous avez sur le cœur",
@@ -129,7 +129,8 @@ export default {
         "name": "Royaume et mission",
         "desc": "L'Évangile, la justice et la miséricorde"
       }
-    ]
+    ],
+    "close": "Fermer"
   },
   "together": {
     "label": "Ensemble",

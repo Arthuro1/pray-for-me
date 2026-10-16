@@ -85,10 +85,10 @@ export default {
     "nameBody": "Qetoret es la palabra hebrea para el incienso que se ofrecía delante de Dios. En la Escritura, el incienso que sube se convierte en una imagen de las oraciones del pueblo de Dios. Qetoret toma su nombre de esta imagen: una vida de oración presentada continuamente delante de Dios.",
     "christTitle": "Por medio de Cristo",
     "christBody": "Qetoret es una herramienta para la oración, nunca un intermediario. Venimos al Padre por medio de Jesucristo, nuestro gran sumo sacerdote. En él, los creyentes son llamados real sacerdocio: invitados a acercarse, a interceder por otros y a vivir como sus testigos — bajo su autoridad, nunca por encima de los demás.",
-    "spiritTitle": "En el Espíritu",
-    "spiritBody": "Por medio de Cristo tenemos acceso al Padre en un mismo Espíritu. El Espíritu Santo nos ayuda en nuestra debilidad e intercede por nosotros cuando no sabemos orar como conviene. La oración no es una técnica: nace de su presencia, y es él quien le da fruto.",
+    "spiritTitle": "Guiados por el Espíritu",
+    "spiritBody": "Orar es hablar con nuestro Padre, por medio de Jesús, con la ayuda del Espíritu Santo. Cuando no sabemos cómo orar, el Espíritu mismo intercede por nosotros. La oración no es un método que dominar: es él quien nos enseña a orar y hace crecer nuestra vida con Dios.",
     "churchTitle": "Con la Iglesia",
-    "churchBody": "Qetoret no reemplaza a tu iglesia local: te ayuda a orar con ella y por ella. Los primeros creyentes oraban juntos, compartían su vida y partían el pan como una sola familia. La oración personal se nutre de la oración en comunidad: reúnanse y sopórtense unos a otros en oración."
+    "churchBody": "Qetoret no reemplaza a tu iglesia: te ayuda a orar por ella y con ella. Desde el principio, los cristianos oraban juntos, partían el pan y se cuidaban unos a otros. Tu oración personal se nutre de la comunión fraterna: reúnete con tus hermanos y hermanas, y oren unos por otros."
   },
   "bring": {
     "title": "Presenta lo que hay en tu corazón",
@@ -129,7 +129,8 @@ export default {
         "name": "Reino y misión",
         "desc": "El evangelio, la justicia y la misericordia"
       }
-    ]
+    ],
+    "close": "Cerrar"
   },
   "together": {
     "label": "Juntos",

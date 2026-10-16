@@ -169,9 +169,6 @@
 .today-sunday__body { margin: 0; color: var(--q-text-secondary); line-height: 1.6; }
 .today-sunday__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--q-space-2) var(--q-space-4); }
 
-/* A quiet way in when there are no words. */
-.today-no-words { position: relative; align-self: flex-start; margin-block-start: var(--q-space-2); margin-inline-start: calc(-1 * var(--q-space-3)); }
-
 /* The verse of the day: Scripture on a card of its own, warmed with a trace
    of gold so it never reads as one more prayer. */
 .today-verse {
@@ -427,14 +424,46 @@
 
 .prayer-session__done {
   display: flex;
+  min-height: 0;
   flex: 1 1 auto;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   padding: var(--q-space-8);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   text-align: center;
   animation: q-rise-in var(--q-motion-reflective) var(--q-ease) both;
 }
+
+/* Centred while it fits, scrollable from its top when it does not (an opened
+   passage, a small phone): auto margins centre the content without pushing
+   its start out of reach the way `justify-content: center` does. */
+.prayer-session__done > :first-child { margin-block-start: auto; }
+.prayer-session__done > :last-child { margin-block-end: auto; }
+
+/* The quiet space: one line, a way to understand it, the passages, how long. */
+.quiet-space__sub { max-width: 32rem; margin: var(--q-space-4) auto 0; }
+.quiet-space__guide-link { margin-block-start: var(--q-space-2); }
+/* The passages sit in one centred row; an opened one takes a line of its own,
+   under its reference, and the screen scrolls if it needs to. */
+.quiet-space__refs { display: flex; width: 100%; max-width: 34rem; flex-wrap: wrap; justify-content: center; gap: 0 var(--q-space-5); margin-block-start: var(--q-space-2); }
+.quiet-space__refs > div { flex-basis: 100%; }
+.quiet-space__refs .scripture-panel { text-align: start; }
+.quiet-space__duration { display: flex; width: 100%; max-width: 30rem; flex-direction: column; align-items: center; gap: var(--q-space-2); margin-block-start: var(--q-space-8); }
+.quiet-space__chips { justify-content: center; }
+.quiet-space__custom { display: flex; align-items: center; justify-content: center; gap: var(--q-space-2); }
+.quiet-space__minutes { width: 5.5rem; text-align: center; }
+
+/* "What does it mean to pray in the Spirit?" — short answers, read like a page. */
+.spirit-guide { width: 100%; max-width: 34rem; text-align: start; }
+.spirit-guide__title { margin: 0 0 var(--q-space-4); color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 450; line-height: 1.2; text-wrap: balance; }
+.spirit-guide__item { margin-block-start: var(--q-space-6); }
+.spirit-guide__question { margin: 0 0 var(--q-space-2); color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.25rem; font-weight: 500; line-height: 1.3; }
+.spirit-guide__answer { margin: 0; color: var(--q-text-secondary); font-size: 1rem; line-height: 1.65; }
+.spirit-guide__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-5); margin: var(--q-space-1) 0 0; padding: 0; list-style: none; }
+.spirit-guide__refs > li:has(> div) { flex-basis: 100%; }
+.spirit-guide__plan { margin-block-start: var(--q-space-8); }
+.spirit-guide__back { margin-block-start: var(--q-space-6); }
 
 .prayer-session__done-title {
   max-width: 30rem;

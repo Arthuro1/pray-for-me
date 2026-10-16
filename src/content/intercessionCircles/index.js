@@ -54,7 +54,7 @@ export const CIRCLE_UI = Object.freeze({
   draftTranslation: { en: 'Draft translation', fr: 'Traduction provisoire' },
   explore: { en: 'Explore this circle', fr: 'Explorer ce cercle' },
   exploreLess: { en: 'Show less', fr: 'Réduire' },
-  meaning: { en: 'What this means', fr: 'Ce que cela veut dire' },
+  meaning: { en: 'What this means', fr: 'Comprendre' },
   reflect: { en: 'Reflect', fr: 'Pour réfléchir' },
   prayThis: { en: 'Pray this', fr: 'Prier ainsi' },
   draft: { en: 'Draft · review pending', fr: 'Brouillon · relecture en attente' },

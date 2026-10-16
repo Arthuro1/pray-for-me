@@ -603,9 +603,32 @@
 .circle-teaching__summary { margin: 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: 1.1875rem; line-height: 1.6; }
 .circle-teaching__sub { margin-block: var(--q-space-6) var(--q-space-2); }
 
-/* The themes, as one quiet line of words separated by a middle dot. */
-.circle-teaching__themes { display: flex; flex-wrap: wrap; gap: var(--q-space-1) 0; margin: 0; padding: 0; color: var(--q-text-secondary); font-size: 0.9375rem; line-height: 1.6; list-style: none; }
-.circle-teaching__themes > li:not(:last-child)::after { content: '·'; margin-inline: var(--q-space-2); color: var(--q-gold-text); }
+/* What to pray for: one soft card per theme, two to a row. A card opens its
+   theme in a sheet; without a deep layer it is a plain tile. */
+.circle-themes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--q-space-2); margin: 0; padding: 0; list-style: none; }
+@media (max-width: 360px) {
+  .circle-themes { grid-template-columns: minmax(0, 1fr); }
+}
+.circle-themes > li { display: flex; min-width: 0; }
+.circle-theme {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--q-space-2);
+  padding: var(--q-space-3) var(--q-space-4);
+  border: 1px solid var(--q-border);
+  border-radius: var(--q-radius-surface);
+  background: var(--q-surface);
+  color: var(--q-text);
+  text-align: start;
+}
+button.circle-theme { cursor: pointer; }
+button.circle-theme:hover { border-color: color-mix(in srgb, var(--q-gold) 45%, var(--q-border)); }
+.circle-theme--plain { background: transparent; }
+.circle-theme__title { min-width: 0; font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.3; overflow-wrap: anywhere; }
+.circle-theme__chevron { flex: 0 0 auto; color: var(--q-gold-text); }
 
 .circle-teaching__refs { display: flex; flex-wrap: wrap; gap: 0 var(--q-space-5); margin: 0; padding: 0; list-style: none; }
 .circle-teaching__refs > li { min-width: 0; }
@@ -616,20 +639,16 @@
   .circle-teaching__actions > * { flex: 1 1 100%; }
 }
 
-/* The deep layer: one section open at a time, hairlines between. */
-.circle-deep { margin-block-start: var(--q-space-8); border-block-start: 1px solid var(--q-border); }
-.circle-deep__draft { display: inline-flex; margin-block: var(--q-space-4) var(--q-space-1); }
+/* The deep layer, read as plain sections of the page and in a theme's sheet. */
+.circle-deep__draft { display: inline-flex; margin-block: 0 var(--q-space-3); }
 .circle-teaching__draft { display: inline-flex; margin-block-start: var(--q-space-3); }
-.circle-deep__section { border-block-end: 1px solid var(--q-border); }
-.circle-deep__toggle-heading { margin: 0; font: inherit; }
-.circle-deep__toggle-heading > .q-disclosure { width: 100%; }
-.circle-deep__panel { padding-block: var(--q-space-1) var(--q-space-6); }
 .circle-deep__body { margin: 0 0 var(--q-space-3); color: var(--q-text-secondary); font-size: 1rem; line-height: 1.7; }
 .circle-deep__note { margin: 0 0 var(--q-space-4); color: var(--q-text-tertiary); font-size: var(--q-type-meta); font-style: italic; line-height: 1.6; }
 
-.circle-deep__themes { margin: 0; padding: 0; border-block-start: 1px solid var(--q-border); list-style: none; }
-.circle-deep__themes > li { border-block-end: 1px solid var(--q-border); }
-.circle-deep__theme { padding-block: var(--q-space-1) var(--q-space-5); padding-inline-start: var(--q-space-4); border-inline-start: 2px solid var(--q-gold); }
+/* One theme in its sheet: the circle's name, the theme, a close control. */
+.circle-sheet__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--q-space-3); margin-block-end: var(--q-space-4); }
+.circle-sheet__title { margin: var(--q-space-1) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(1.5rem, 4vw, 1.875rem); font-weight: 450; line-height: 1.2; text-wrap: balance; }
+.circle-sheet__refs { margin-block: var(--q-space-2) var(--q-space-2); }
 
 .circle-deep__prompts { display: grid; gap: var(--q-space-1); margin: var(--q-space-3) 0 0; padding: 0; list-style: none; }
 .circle-deep__prompts > li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 var(--q-space-3); }

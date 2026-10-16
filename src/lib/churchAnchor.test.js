@@ -32,15 +32,22 @@ beforeEach(() => {
 });
 
 describe('church anchor', () => {
-  it('trims, collapses spaces and bounds each name', () => {
-    expect(normalizeAnchor({ church: '  Église   de la Grâce ', smallGroup: 'x'.repeat(200), extra: 'drop' }))
-      .toEqual({ church: 'Église de la Grâce', smallGroup: 'x'.repeat(CHURCH_NAME_MAX) });
+  it('trims, collapses spaces and bounds the name', () => {
+    expect(normalizeAnchor({ church: '  Église   de la Grâce ', extra: 'drop' })).toEqual({ church: 'Église de la Grâce' });
+    expect(normalizeAnchor({ church: 'x'.repeat(200) })).toEqual({ church: 'x'.repeat(CHURCH_NAME_MAX) });
+  });
+
+  it('forgets the small-group name an earlier version stored', async () => {
+    const payload = await encryptAnchor(USER, { church: 'Grace Chapel' });
+    mocks.row = { private_payload: payload };
+    expect(await fetchChurchAnchor(USER)).toEqual({ church: 'Grace Chapel' });
+    expect(normalizeAnchor({ church: 'Grace Chapel', smallGroup: 'Tuesday group' })).toEqual({ church: 'Grace Chapel' });
   });
 
   it('round-trips under the account key and is bound to its owner', async () => {
-    const payload = await encryptAnchor(USER, { church: 'Grace Chapel', smallGroup: 'Tuesday group' });
+    const payload = await encryptAnchor(USER, { church: 'Grace Chapel' });
     expect(JSON.stringify(payload)).not.toContain('Grace');
-    expect(await decryptAnchor(USER, payload)).toEqual({ church: 'Grace Chapel', smallGroup: 'Tuesday group' });
+    expect(await decryptAnchor(USER, payload)).toEqual({ church: 'Grace Chapel' });
     await expect(decryptAnchor(OTHER, payload)).rejects.toThrow();
   });
 
@@ -48,12 +55,12 @@ describe('church anchor', () => {
     expect(await saveChurchAnchor(USER, { church: 'Grace Chapel' })).toBe(true);
     expect(Object.keys(mocks.upserts[0]).sort()).toEqual(['private_payload', 'updated_at', 'user_id']);
     expect(JSON.stringify(mocks.upserts[0])).not.toContain('Grace');
-    expect(await fetchChurchAnchor(USER)).toEqual({ church: 'Grace Chapel', smallGroup: '' });
+    expect(await fetchChurchAnchor(USER)).toEqual({ church: 'Grace Chapel' });
   });
 
   it('reads an account with no anchor as empty', async () => {
     mocks.row = { private_payload: null };
-    expect(await fetchChurchAnchor(USER)).toEqual({ church: '', smallGroup: '' });
+    expect(await fetchChurchAnchor(USER)).toEqual({ church: '' });
   });
 
   it('neither reads nor writes while the vault is locked', async () => {

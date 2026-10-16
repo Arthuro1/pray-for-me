@@ -85,10 +85,10 @@ export default {
     "nameBody": "Qetoret é a palavra hebraica para o incenso oferecido diante de Deus. Nas Escrituras, o incenso que sobe se torna uma imagem das orações do povo de Deus. O Qetoret recebe seu nome dessa imagem: uma vida de oração apresentada continuamente diante de Deus.",
     "christTitle": "Por meio de Cristo",
     "christBody": "O Qetoret é uma ferramenta para a oração, nunca um intermediário. Chegamos ao Pai por meio de Jesus Cristo, nosso grande sumo sacerdote. Nele, os crentes são chamados sacerdócio real: convidados a se aproximar, a interceder pelos outros e a viver como suas testemunhas — sob a autoridade dele, nunca acima dos outros.",
-    "spiritTitle": "No Espírito",
-    "spiritBody": "Por meio de Cristo temos acesso ao Pai em um só Espírito. O Espírito Santo nos ajuda em nossa fraqueza e intercede por nós quando não sabemos orar como convém. A oração não é uma técnica: ela nasce da sua presença, e é ele quem a faz dar fruto.",
+    "spiritTitle": "Guiados pelo Espírito",
+    "spiritBody": "Orar é falar com nosso Pai, por meio de Jesus, com a ajuda do Espírito Santo. Quando não sabemos como orar, o próprio Espírito intercede por nós. A oração não é um método a ser dominado: é ele quem nos ensina a orar e faz crescer a nossa vida com Deus.",
     "churchTitle": "Com a Igreja",
-    "churchBody": "O Qetoret não substitui a sua igreja local: ele ajuda você a orar com ela e por ela. Os primeiros cristãos oravam juntos, partilhavam a vida e partiam o pão como uma só família. A oração pessoal se alimenta da oração em comunidade: reúnam-se e carreguem uns aos outros em oração."
+    "churchBody": "O Qetoret não substitui a sua igreja: ele ajuda você a orar por ela e com ela. Desde o início, os cristãos oravam juntos, partiam o pão e cuidavam uns dos outros. A sua oração pessoal se alimenta da comunhão: reúna-se com seus irmãos e irmãs, e orem uns pelos outros."
   },
   "bring": {
     "title": "Apresente o que está no seu coração",
@@ -129,7 +129,8 @@ export default {
         "name": "Reino e missão",
         "desc": "O evangelho, a justiça e a misericórdia"
       }
-    ]
+    ],
+    "close": "Fechar"
   },
   "together": {
     "label": "Juntos",

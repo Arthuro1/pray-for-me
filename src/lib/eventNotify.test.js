@@ -56,6 +56,14 @@ describe('eventUrl builds safe internal routes from validated ids only', () => {
     expect(eventUrl('group_invitation', { group_id: GROUP })).toBe('/community');
   });
 
+  it('sends a meeting reminder to its group page, tagged per meeting', () => {
+    expect(eventUrl('prayer_meeting', { group_id: GROUP, meeting_id: PRAYER })).toBe(`/community/group/${GROUP}`);
+    expect(eventTag('prayer_meeting', { group_id: GROUP, meeting_id: PRAYER })).toBe(`prayer_meeting:${PRAYER}`);
+    // The reminder never names the meeting, its place or its link.
+    const p = JSON.parse(eventPayload('prayer_meeting', 'fr', { group_id: GROUP, meeting_id: PRAYER, link: 'https://zoom.us/j/1' }));
+    expect(JSON.stringify(p)).not.toContain('zoom');
+  });
+
   it('falls back safely when ids are missing or malformed', () => {
     expect(eventUrl('community_update', { group_id: 'not-a-uuid', community_prayer_id: 'x' })).toBe('/community');
     expect(eventUrl('community_update', { group_id: GROUP, community_prayer_id: 'bad' })).toBe(`/community/group/${GROUP}`);

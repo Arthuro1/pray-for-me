@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import { Users, Plus, Loader2, ArrowLeft, Settings, SlidersHorizontal, Trash2, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, DoorOpen, UsersRound, UserPlus, CalendarPlus, ChevronRight, Paperclip } from 'lucide-react';
+import { Users, Plus, Loader2, ArrowLeft, Settings, SlidersHorizontal, Trash2, LogOut, Search, Share2, QrCode, ShieldCheck, ShieldOff, DoorOpen, UsersRound, UserPlus, CalendarPlus, CalendarClock, ChevronRight, Paperclip } from 'lucide-react';
 import { useShallow } from 'zustand/react/shallow';
 import OverflowMenu from '../components/shared/OverflowMenu';
 import useCommunityStore from '../store/communityStore';
@@ -40,6 +40,9 @@ import RiseMark from '../components/shared/RiseMark';
 import { Modal, CreateGroupModal, JoinGroupModal, AddFriendModal } from './community/GroupFriendModals';
 import useCommunityHubData from './community/useCommunityHubData';
 import useGroupPlans from './community/useGroupPlans';
+import useGroupMeetings from './community/useGroupMeetings';
+import GroupMeetingCard from './community/GroupMeetingCard';
+import GroupMeetingForm from './community/GroupMeetingForm';
 import useGroupWall from './community/useGroupWall';
 import GroupPrayerRow from './community/GroupPrayerRow';
 // Back to Together — the arrow follows the reading direction.
@@ -654,6 +657,14 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
     busyPlanId,
     handleJoinGroupPlan, handleLeaveGroupPlan, handleEndGroupPlan, handleAdoptGroupPlan,
   } = useGroupPlans({ groupId, user, lang });
+  // The group's prayer meetings ("we pray together" times), in person or online.
+  const {
+    meetings,
+    editingMeeting, setEditingMeeting, closeMeetingForm,
+    confirmEndMeeting, setConfirmEndMeeting,
+    busyMeetingId,
+    handleSaveMeeting, handleEndMeeting,
+  } = useGroupMeetings({ groupId, user, lang });
 
   // An invitation genuinely went out (link shared/copied, QR shown, friend
   // invited) — only then does the checklist's Invite step record itself.
@@ -697,6 +708,7 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
           triggerClassName="icon-button pressable -me-2"
           items={[
             { key: 'members', icon: Users, label: t(lang, 'members'), onClick: () => setShowMembers(true) },
+            { key: 'meeting', icon: CalendarClock, label: t(lang, 'meetingMenuSchedule'), onClick: () => setEditingMeeting('new') },
             { key: 'journey', icon: CalendarPlus, label: t(lang, 'groupJourneyStartCta'), onClick: () => setShowPlanPicker(true) },
             { key: 'settings', icon: SlidersHorizontal, label: t(lang, 'groupSettings'), onClick: () => setShowSettings(true) },
             { key: 'manage', icon: Settings, label: t(lang, 'manageGroup'), onClick: () => setShowAdmin(true), hidden: !isAdmin },
@@ -809,6 +821,28 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
         />
       )}
 
+      {editingMeeting && (
+        <GroupMeetingForm
+          lang={lang}
+          meeting={editingMeeting === 'new' ? null : editingMeeting}
+          onSave={handleSaveMeeting}
+          onClose={closeMeetingForm}
+        />
+      )}
+
+      {confirmEndMeeting && (
+        <ConfirmDialog
+          title={t(lang, 'meetingEnd')}
+          message={t(lang, 'meetingEndConfirm')}
+          confirmLabel={t(lang, 'delete')}
+          cancelLabel={t(lang, 'cancel')}
+          danger
+          loading={busyMeetingId === confirmEndMeeting.id}
+          onConfirm={() => handleEndMeeting(confirmEndMeeting)}
+          onCancel={() => setConfirmEndMeeting(null)}
+        />
+      )}
+
       <div className="phase-content">
         <header className="together-group-header">
           <Avatar kind="group" name={group?.name || ''} avatar={avatarConfigFrom(group)} size={56} />
@@ -860,6 +894,28 @@ function GroupView({ lang, user, groupId, onBack, onOpenPrayer }) {
               if (prayers[0]) onOpenPrayer(prayers[0].id);
             }}
           />
+        )}
+
+        {/* Praying together, in person or online — the group's meeting times.
+            The app keeps the time, the place or the call link, and reminds
+            everyone; the meeting itself happens together. */}
+        {meetings.length > 0 && (
+          <section className="together-meetings" aria-labelledby="together-meetings-title">
+            <h2 id="together-meetings-title" className="section-label mb-2">{t(lang, 'meetingsHeading')}</h2>
+            <ul className="together-list together-list--cards">
+              {meetings.map(({ meeting, next }) => (
+                <GroupMeetingCard
+                  key={meeting.id}
+                  meeting={meeting}
+                  next={next}
+                  lang={lang}
+                  canManage={meeting.created_by === user.id || isAdmin}
+                  onEdit={() => setEditingMeeting(meeting)}
+                  onEnd={() => setConfirmEndMeeting(meeting)}
+                />
+              ))}
+            </ul>
+          </section>
         )}
 
         {/* Praying together — plans the whole group is walking through. Persistent

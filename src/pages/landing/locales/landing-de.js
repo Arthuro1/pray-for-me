@@ -85,10 +85,10 @@ export default {
     "nameBody": "Qetoret ist das hebräische Wort für das Räucherwerk, das vor Gott dargebracht wurde. In der Bibel wird der aufsteigende Rauch zum Bild für die Gebete des Volkes Gottes. Qetoret ist nach diesem Bild benannt: ein Leben im Gebet, das immer wieder vor Gott gebracht wird.",
     "christTitle": "Durch Christus",
     "christBody": "Qetoret ist ein Werkzeug für das Gebet, nie ein Vermittler. Wir kommen zum Vater durch Jesus Christus, unseren großen Hohepriester. In ihm werden Gläubige eine königliche Priesterschaft genannt: eingeladen, nahe zu kommen, für andere einzutreten und als seine Zeugen zu leben — unter seiner Autorität, nie über anderen Menschen.",
-    "spiritTitle": "Im Geist",
-    "spiritBody": "Durch Christus haben wir in einem Geist Zugang zum Vater. Der Heilige Geist hilft unserer Schwachheit auf und tritt für uns ein, wenn wir nicht wissen, wie wir beten sollen. Gebet ist keine Technik: Es entsteht aus seiner Gegenwart, und er lässt es Frucht bringen.",
+    "spiritTitle": "Vom Geist geleitet",
+    "spiritBody": "Beten heißt, mit unserem Vater zu reden – durch Jesus, mit der Hilfe des Heiligen Geistes. Wenn wir nicht wissen, wie wir beten sollen, tritt der Geist selbst für uns ein. Gebet ist keine Methode, die man beherrschen muss: Er lehrt uns beten und lässt unser Leben mit Gott wachsen.",
     "churchTitle": "Mit der Gemeinde",
-    "churchBody": "Qetoret ersetzt nicht deine Ortsgemeinde: Es hilft dir, mit ihr und für sie zu beten. Die ersten Christen beteten gemeinsam, teilten ihr Leben und brachen das Brot wie eine Familie. Persönliches Gebet lebt vom gemeinsamen Gebet: Kommt zusammen und tragt einander."
+    "churchBody": "Qetoret ersetzt nicht deine Gemeinde: Es hilft dir, für sie und mit ihr zu beten. Von Anfang an beteten die Christen gemeinsam, brachen das Brot und sorgten füreinander. Dein persönliches Gebet lebt von der Gemeinschaft: Triff dich mit deinen Geschwistern und tragt einander im Gebet."
   },
   "bring": {
     "title": "Bring, was dir auf dem Herzen liegt",
@@ -129,7 +129,8 @@ export default {
         "name": "Reich Gottes & Mission",
         "desc": "Evangelium, Gerechtigkeit und Barmherzigkeit"
       }
-    ]
+    ],
+    "close": "Schließen"
   },
   "together": {
     "label": "Gemeinsam",

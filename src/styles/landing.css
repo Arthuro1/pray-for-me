@@ -355,7 +355,6 @@ html.landing-root body { background: var(--q-canvas); }
   text-align: center;
 }
 .landing__final-title { max-width: 40rem; margin: var(--q-space-5) 0 0; color: var(--q-text); font-family: var(--q-font-editorial); font-size: clamp(2rem, 5vw, 2.75rem); font-weight: 450; letter-spacing: -0.02em; line-height: 1.1; text-wrap: balance; }
-.landing__litany { max-width: 40rem; margin: var(--q-space-10) 0 0; color: var(--q-gold-text); font-family: var(--q-font-editorial); font-size: 1.0625rem; line-height: 1.6; }
 
 .landing__footer { display: flex; max-width: 64rem; flex-direction: column; align-items: center; gap: var(--q-space-3); margin-inline: auto; padding: var(--q-space-8) var(--q-space-6); text-align: center; }
 
