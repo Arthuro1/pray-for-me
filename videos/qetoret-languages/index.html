@@ -1,0 +1,1076 @@
+<!doctype html>
+<html
+  lang="en"
+  data-composition-variables='[{"id":"lang","type":"enum","label":"Language","default":"en","options":[{"value":"en","label":"English"},{"value":"de","label":"Deutsch"},{"value":"fr","label":"Français"}]}]'
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Qetoret — Why 16 languages</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      /* Newsreader (SIL OFL 1.1, assets/fonts/OFL.txt) — the app's editorial serif. */
+      @font-face {
+        font-family: "Newsreader";
+        font-style: normal;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-opsz-normal.woff2") format("woff2-variations");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: "Newsreader";
+        font-style: normal;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-ext-opsz-normal.woff2") format("woff2-variations");
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+A720-A7FF;
+      }
+      @font-face {
+        font-family: "Newsreader";
+        font-style: italic;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-wght-italic.woff2") format("woff2-variations");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: "Newsreader";
+        font-style: italic;
+        font-weight: 200 800;
+        src: url("assets/fonts/newsreader-latin-ext-wght-italic.woff2") format("woff2-variations");
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20AB, U+20AD-20C0, U+A720-A7FF;
+      }
+
+      :root {
+        --deep: #29213f;
+        --deeper: #1b1529;
+        --cream: #f7f5ef;
+        --muted: #cac5d2;
+        --dim: #a49cb5;
+        --gold: #c6a15c;
+        --serif: "Newsreader", Georgia, serif;
+        --sans: system-ui, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--deep);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--deep);
+        color: var(--cream);
+        font-family: var(--sans);
+      }
+      .clip {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* Ground: deep violet, a gold glow where the incense rises, three wisps. */
+      #bg {
+        background:
+          radial-gradient(90% 50% at 50% 100%, rgba(75, 58, 120, 0.55), transparent 75%),
+          linear-gradient(180deg, var(--deep) 0%, var(--deeper) 100%);
+      }
+      #glow {
+        position: absolute;
+        left: 90px;
+        top: -260px;
+        width: 900px;
+        height: 900px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(198, 161, 92, 0.2), transparent 100%);
+      }
+      #wisps {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 2200px;
+      }
+      #wisps path {
+        fill: none;
+        stroke: var(--gold);
+        stroke-linecap: round;
+      }
+
+      /* Shared type */
+      .center-stack {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .eyebrow {
+        display: block;
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 28px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--gold);
+      }
+      .eyebrow .of {
+        color: var(--dim);
+      }
+      .source {
+        display: block;
+        font-family: var(--sans);
+        font-size: 27px;
+        line-height: 1.3;
+        color: var(--dim);
+      }
+      /* Native language names: each carries its own lang/dir so the right
+         system font and direction are used. */
+      .chip {
+        display: inline-block;
+        padding: 16px 32px;
+        border-radius: 999px;
+        border: 2px solid rgba(247, 245, 239, 0.2);
+        background: rgba(247, 245, 239, 0.07);
+        font-family: var(--sans);
+        font-size: 40px;
+        line-height: 1.25;
+        color: var(--cream);
+        white-space: nowrap;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+
+      /* 1 · Hook */
+      .symbol {
+        display: block;
+        width: 150px;
+        height: auto;
+      }
+      .hook-title {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 116px;
+        line-height: 1.04;
+        margin-top: 40px;
+        text-wrap: balance;
+      }
+      .rule {
+        display: block;
+        width: 120px;
+        height: 3px;
+        background: var(--gold);
+        margin: 56px 0 60px;
+        border-radius: 2px;
+      }
+      #hook-chips {
+        justify-content: center;
+        max-width: 900px;
+      }
+
+      /* 2 · Verse */
+      .verse {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        font-size: 66px;
+        line-height: 1.22;
+        text-wrap: balance;
+      }
+      .verse-ref {
+        margin-top: 40px;
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 30px;
+        letter-spacing: 0.04em;
+        color: var(--gold);
+      }
+      .verse-line {
+        margin-top: 110px;
+        font-family: var(--sans);
+        font-size: 42px;
+        line-height: 1.32;
+        color: var(--muted);
+        text-wrap: balance;
+      }
+
+      /* 3–6 · Reasons: caption block anchored top-left */
+      .caption {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 150px;
+      }
+      .caption h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 80px;
+        line-height: 1.06;
+        margin-top: 22px;
+        text-wrap: balance;
+      }
+      .stat {
+        display: flex;
+        align-items: baseline;
+        margin-top: 46px;
+      }
+      .stat-num {
+        display: inline-block;
+        font-family: var(--serif);
+        font-weight: 500;
+        font-size: 176px;
+        line-height: 1;
+        color: var(--gold);
+        font-variant-numeric: tabular-nums;
+        transform-origin: 0% 80%;
+      }
+      .stat-unit {
+        display: inline-block;
+        margin-left: 22px;
+        font-family: var(--serif);
+        font-size: 72px;
+        line-height: 1;
+        color: var(--gold);
+      }
+      .stat-label {
+        display: block;
+        margin-top: 18px;
+        font-family: var(--sans);
+        font-size: 42px;
+        line-height: 1.3;
+        color: var(--cream);
+        text-wrap: pretty;
+      }
+      .caption .source {
+        margin-top: 18px;
+      }
+      .lead {
+        display: block;
+        margin-top: 64px;
+        margin-bottom: 26px;
+        font-family: var(--sans);
+        font-size: 36px;
+        color: var(--muted);
+      }
+
+      /* Persecution ranking */
+      .ranks {
+        margin-top: 64px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .rank-row {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        padding: 20px 30px;
+        border-radius: 28px;
+        background: rgba(247, 245, 239, 0.06);
+        border: 2px solid rgba(247, 245, 239, 0.12);
+      }
+      .rank-no {
+        flex: none;
+        width: 200px;
+        font-family: var(--serif);
+        font-size: 52px;
+        line-height: 1.1;
+        color: var(--gold);
+      }
+      .rank-country {
+        flex: 1;
+        font-family: var(--sans);
+        font-size: 42px;
+        line-height: 1.2;
+      }
+      .rank-row .chip {
+        font-size: 36px;
+        padding: 10px 26px;
+      }
+      .rank-more {
+        margin-top: 34px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 18px;
+      }
+      .rank-more-text {
+        font-family: var(--sans);
+        font-size: 38px;
+        line-height: 1.3;
+        color: var(--muted);
+      }
+
+      /* Shared-language grid */
+      .regions {
+        margin-top: 60px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .region {
+        padding: 30px 34px;
+        border-radius: 28px;
+        background: rgba(247, 245, 239, 0.06);
+        border: 2px solid rgba(247, 245, 239, 0.12);
+      }
+      .region-name {
+        display: block;
+        font-family: var(--sans);
+        font-size: 48px;
+        line-height: 1.25;
+        color: var(--cream);
+        white-space: nowrap;
+      }
+      .region-where {
+        display: block;
+        margin-top: 8px;
+        font-family: var(--sans);
+        font-size: 32px;
+        line-height: 1.25;
+        color: var(--muted);
+      }
+
+      /* 7 · Japanese */
+      .jp-word {
+        font-family: var(--sans);
+        font-weight: 500;
+        font-size: 190px;
+        line-height: 1.1;
+        color: var(--gold);
+      }
+      .jp-line {
+        margin-top: 44px;
+        font-family: var(--serif);
+        font-size: 68px;
+        line-height: 1.12;
+        text-wrap: balance;
+      }
+      .jp-count {
+        margin-top: 30px;
+        font-family: var(--sans);
+        font-size: 42px;
+        color: var(--muted);
+      }
+      #jp .source {
+        margin-top: 40px;
+      }
+
+      /* 8 · Call to native speakers */
+      .cta-top {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 150px;
+      }
+      .cta-top h2 {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 70px;
+        line-height: 1.08;
+        text-wrap: balance;
+      }
+      .cta-top p {
+        margin-top: 22px;
+        font-family: var(--sans);
+        font-size: 40px;
+        line-height: 1.3;
+        color: var(--muted);
+        text-wrap: pretty;
+      }
+      .cta-bottom {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 1440px;
+        text-align: center;
+      }
+      .cta-ask {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 62px;
+        line-height: 1.1;
+        color: var(--gold);
+        text-wrap: balance;
+      }
+      .cta-help {
+        margin-top: 22px;
+        font-family: var(--sans);
+        font-size: 38px;
+        line-height: 1.3;
+        color: var(--cream);
+        text-wrap: balance;
+      }
+
+      /* The phone with a real app screen */
+      .phone-wrap {
+        position: absolute;
+        width: 420px;
+        height: 884px;
+      }
+      .phone {
+        width: 420px;
+        height: 884px;
+        padding: 11px;
+        border-radius: 52px;
+        background: #0f0c18;
+        border: 2px solid rgba(247, 245, 239, 0.12);
+        box-shadow:
+          0 40px 100px rgba(0, 0, 0, 0.5),
+          0 0 0 8px rgba(198, 161, 92, 0.06);
+      }
+      .screen {
+        width: 398px;
+        height: 862px;
+        border-radius: 41px;
+        overflow: hidden;
+        background: #f7f5ef;
+      }
+      .screen img {
+        display: block;
+        width: 398px;
+        height: 862px;
+        object-fit: cover;
+      }
+      .phone-wrap--small {
+        width: 350px;
+        height: 737px;
+      }
+      .phone-wrap--small .phone {
+        width: 350px;
+        height: 737px;
+        padding: 9px;
+        border-radius: 44px;
+      }
+      .phone-wrap--small .screen {
+        width: 332px;
+        height: 719px;
+        border-radius: 35px;
+      }
+      .phone-wrap--small .screen img {
+        width: 332px;
+        height: 719px;
+      }
+      #phone-pt-wrap {
+        left: 365px;
+        top: 1110px;
+      }
+      #phone-am-wrap {
+        left: 330px;
+        top: 950px;
+      }
+      #phone-ar-wrap {
+        left: 365px;
+        top: 520px;
+      }
+
+      /* 9 · Outro */
+      .outro-symbol {
+        width: 150px;
+      }
+      .outro-head {
+        font-family: var(--serif);
+        font-weight: 400;
+        font-size: 80px;
+        line-height: 1.1;
+        margin-top: 44px;
+        text-wrap: balance;
+      }
+      .ways {
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+        width: 900px;
+        margin-top: 64px;
+      }
+      .way {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+        padding: 34px 40px;
+        border-radius: 36px;
+        border: 2px solid rgba(247, 245, 239, 0.14);
+        background: rgba(247, 245, 239, 0.06);
+        text-align: left;
+      }
+      .way-icon {
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 104px;
+        height: 104px;
+        border-radius: 28px;
+        background: rgba(198, 161, 92, 0.16);
+      }
+      .way-icon svg {
+        width: 56px;
+        height: 56px;
+        fill: none;
+        stroke: var(--gold);
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .way-label {
+        display: block;
+        font-family: var(--sans);
+        font-weight: 600;
+        font-size: 30px;
+        letter-spacing: 0.03em;
+        color: var(--gold);
+      }
+      .way-text {
+        display: block;
+        margin-top: 10px;
+        font-family: var(--sans);
+        font-size: 40px;
+        line-height: 1.28;
+        color: var(--cream);
+      }
+      .tagline {
+        font-family: var(--serif);
+        font-style: italic;
+        font-weight: 400;
+        font-size: 58px;
+        color: var(--gold);
+        margin-top: 72px;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-zshp"
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="45"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Ground + rising incense -->
+      <div data-hf-id="hf-cmyc" id="bg" class="clip" data-start="0" data-duration="45" data-track-index="0">
+        <div data-hf-id="hf-27c6" id="glow"></div>
+        <svg data-hf-id="hf-rx8d" id="wisps" viewBox="0 0 1080 2200" aria-hidden="true">
+          <path data-hf-id="hf-8wwh" id="wisp-a" d="M180 2200 C 120 1900, 260 1700, 190 1450 S 140 1000, 230 760 S 210 300, 160 0" stroke-width="3" opacity="0.13" />
+          <path data-hf-id="hf-f4wq" id="wisp-b" d="M900 2200 C 960 1950, 820 1750, 890 1500 S 950 1050, 850 820 S 880 360, 940 0" stroke-width="2.5" opacity="0.1" />
+          <path data-hf-id="hf-vorp" id="wisp-c" d="M560 2200 C 500 2000, 620 1850, 560 1650 S 470 1300, 540 1100" stroke-width="2" opacity="0.08" />
+        </svg>
+      </div>
+
+      <!-- 0–3.8 · Hook: the question, then the 16 names -->
+      <section data-hf-id="hf-3osw" id="hook" class="clip" data-start="0" data-duration="3.9" data-track-index="1">
+        <div data-hf-id="hf-c7ms" id="hook-stack" class="center-stack">
+          <img data-hf-id="hf-ehtb" id="hook-symbol" class="symbol" src="assets/brand/qetoret-symbol-dark.svg" alt="" />
+          <h1 data-hf-id="hf-1595" id="hook-title" class="hook-title" data-t="hookTitle">Why these 16 languages?</h1>
+          <span data-hf-id="hf-exwj" id="hook-rule" class="rule"></span>
+          <div data-hf-id="hf-546w" id="hook-chips" class="chips">
+            <span data-hf-id="hf-l4s7" class="chip hook-chip" lang="en">English</span>
+            <span data-hf-id="hf-fni7" class="chip hook-chip" lang="fr">Français</span>
+            <span data-hf-id="hf-lcgn" class="chip hook-chip" lang="de">Deutsch</span>
+            <span data-hf-id="hf-kgq5" class="chip hook-chip" lang="es">Español</span>
+            <span data-hf-id="hf-fzkp" class="chip hook-chip" lang="pt">Português</span>
+            <span data-hf-id="hf-bbbf" class="chip hook-chip" lang="zh-Hans">中文</span>
+            <span data-hf-id="hf-wx3c" class="chip hook-chip" lang="ja">日本語</span>
+            <span data-hf-id="hf-fkdj" class="chip hook-chip" lang="ko">한국어</span>
+            <span data-hf-id="hf-h9wd" class="chip hook-chip" lang="ru">Русский</span>
+            <span data-hf-id="hf-lm1t" class="chip hook-chip" lang="ar" dir="rtl">العربية</span>
+            <span data-hf-id="hf-g9nh" class="chip hook-chip" lang="fa" dir="rtl">فارسی</span>
+            <span data-hf-id="hf-zdc0" class="chip hook-chip" lang="hi">हिन्दी</span>
+            <span data-hf-id="hf-9sar" class="chip hook-chip" lang="sw">Kiswahili</span>
+            <span data-hf-id="hf-osvf" class="chip hook-chip" lang="am">አማርኛ</span>
+            <span data-hf-id="hf-0atn" class="chip hook-chip" lang="id">Bahasa Indonesia</span>
+            <span data-hf-id="hf-lb2r" class="chip hook-chip" lang="tl">Tagalog</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3.6–9.0 · Revelation 7:9, quoted from a public-domain Bible -->
+      <section data-hf-id="hf-4con" id="verse" class="clip" data-start="3.6" data-duration="5.4" data-track-index="2">
+        <div data-hf-id="hf-gobo" class="center-stack">
+          <p data-hf-id="hf-awdh" id="verse-text" class="verse" data-t="verseText"></p>
+          <p data-hf-id="hf-tq3v" id="verse-ref" class="verse-ref" data-t="verseRef"></p>
+          <p data-hf-id="hf-6yk0" id="verse-line" class="verse-line" data-t="verseLine"></p>
+        </div>
+      </section>
+
+      <!-- 8.8–14.4 · 1. Large Christian communities -->
+      <section data-hf-id="hf-y69d" id="r1" class="clip" data-start="8.8" data-duration="5.6" data-track-index="1">
+        <div data-hf-id="hf-gsc6" class="caption">
+          <span data-hf-id="hf-m8ne" id="r1-eyebrow" class="eyebrow">01 <span data-hf-id="hf-agx1" class="of">/ 04</span></span>
+          <h2 data-hf-id="hf-dpnz" id="r1-title" data-t="r1Title"></h2>
+          <div data-hf-id="hf-vtga" id="r1-stat" class="stat">
+            <span data-hf-id="hf-4hev" id="r1-num" class="stat-num">2.3</span><span data-hf-id="hf-jvuv" id="r1-unit" class="stat-unit" data-t="r1Unit"></span>
+          </div>
+          <span data-hf-id="hf-6t7j" id="r1-label" class="stat-label" data-t="r1Label"></span>
+          <span data-hf-id="hf-22h9" id="r1-source" class="source" data-t="r1Source"></span>
+          <span data-hf-id="hf-vr7g" id="r1-lead" class="lead" data-t="r1Lead"></span>
+          <div data-hf-id="hf-exrd" class="chips">
+            <span data-hf-id="hf-hak3" class="chip r1-chip" lang="es">Español</span>
+            <span data-hf-id="hf-aplj" class="chip r1-chip" lang="pt">Português</span>
+            <span data-hf-id="hf-x1jt" class="chip r1-chip" lang="en">English</span>
+            <span data-hf-id="hf-f36p" class="chip r1-chip" lang="tl">Tagalog</span>
+            <span data-hf-id="hf-nk5v" class="chip r1-chip" lang="ru">Русский</span>
+            <span data-hf-id="hf-x9ft" class="chip r1-chip" lang="de">Deutsch</span>
+          </div>
+        </div>
+        <div data-hf-id="hf-2yor" id="phone-pt-wrap" class="phone-wrap phone-wrap--small">
+          <div data-hf-id="hf-kda4" class="phone">
+            <div data-hf-id="hf-cdmk" class="screen"><img data-hf-id="hf-lbc9" src="assets/screens/pt-circles.png" alt="" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14.2–20.2 · 2. Where the church is growing (+ the app in Amharic) -->
+      <section data-hf-id="hf-9r9p" id="r2" class="clip" data-start="14.2" data-duration="6" data-track-index="2">
+        <div data-hf-id="hf-0o2i" class="caption">
+          <span data-hf-id="hf-ed8g" id="r2-eyebrow" class="eyebrow">02 <span data-hf-id="hf-i6bd" class="of">/ 04</span></span>
+          <h2 data-hf-id="hf-53s9" id="r2-title" data-t="r2Title"></h2>
+          <div data-hf-id="hf-525j" id="r2-stat" class="stat">
+            <span data-hf-id="hf-rhc1" id="r2-num" class="stat-num">31</span><span data-hf-id="hf-mcf7" id="r2-unit" class="stat-unit" style="margin-left: 4px" data-t="r2Unit"></span>
+          </div>
+          <span data-hf-id="hf-mjpl" id="r2-label" class="stat-label" data-t="r2Label"></span>
+          <span data-hf-id="hf-j1zl" id="r2-source" class="source" data-t="r2Source"></span>
+          <div data-hf-id="hf-9xcp" class="chips" style="margin-top: 44px">
+            <span data-hf-id="hf-071u" class="chip r2-chip" lang="sw">Kiswahili</span>
+            <span data-hf-id="hf-3vqk" class="chip r2-chip" lang="am">አማርኛ</span>
+            <span data-hf-id="hf-bwdk" class="chip r2-chip" lang="fr">Français</span>
+            <span data-hf-id="hf-n4lg" class="chip r2-chip" lang="fa" dir="rtl">فارسی</span>
+          </div>
+        </div>
+        <div data-hf-id="hf-ec6h" id="phone-am-wrap" class="phone-wrap">
+          <div data-hf-id="hf-3kj8" class="phone">
+            <div data-hf-id="hf-0hv8" class="screen"><img data-hf-id="hf-60s5" src="assets/screens/am-spirit.png" alt="" /></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 20.0–26.6 · 3. Where believers are persecuted -->
+      <section data-hf-id="hf-cpf8" id="r3" class="clip" data-start="20" data-duration="6.6" data-track-index="1">
+        <div data-hf-id="hf-12dj" class="caption">
+          <span data-hf-id="hf-e2fy" id="r3-eyebrow" class="eyebrow">03 <span data-hf-id="hf-jd8g" class="of">/ 04</span></span>
+          <h2 data-hf-id="hf-8ref" id="r3-title" data-t="r3Title"></h2>
+          <div data-hf-id="hf-fqjs" id="r3-stat" class="stat">
+            <span data-hf-id="hf-mrp9" id="r3-num" class="stat-num">388</span><span data-hf-id="hf-niar" id="r3-unit" class="stat-unit" data-t="r3Unit"></span>
+          </div>
+          <span data-hf-id="hf-zsbv" id="r3-label" class="stat-label" data-t="r3Label"></span>
+          <span data-hf-id="hf-e81h" id="r3-source" class="source" data-t="r3Source"></span>
+          <div data-hf-id="hf-f3kd" class="ranks">
+            <div data-hf-id="hf-tiv1" class="rank-row">
+              <span data-hf-id="hf-g5ya" class="rank-no" data-t="rank1"></span>
+              <span data-hf-id="hf-2iry" class="rank-country" data-t="cNorthKorea"></span>
+              <span data-hf-id="hf-phbj" class="chip" lang="ko">한국어</span>
+            </div>
+            <div data-hf-id="hf-23td" class="rank-row">
+              <span data-hf-id="hf-ioeu" class="rank-no" data-t="rank10"></span>
+              <span data-hf-id="hf-sber" class="rank-country" data-t="cIran"></span>
+              <span data-hf-id="hf-u2j9" class="chip" lang="fa" dir="rtl">فارسی</span>
+            </div>
+            <div data-hf-id="hf-3aqg" class="rank-row">
+              <span data-hf-id="hf-dyn0" class="rank-no" data-t="rank12"></span>
+              <span data-hf-id="hf-c6fc" class="rank-country" data-t="cIndia"></span>
+              <span data-hf-id="hf-eovs" class="chip" lang="hi">हिन्दी</span>
+            </div>
+            <div data-hf-id="hf-2wff" class="rank-row">
+              <span data-hf-id="hf-rcap" class="rank-no" data-t="rank17"></span>
+              <span data-hf-id="hf-yj7g" class="rank-country" data-t="cChina"></span>
+              <span data-hf-id="hf-5eqb" class="chip" lang="zh-Hans">中文</span>
+            </div>
+          </div>
+          <div data-hf-id="hf-j5nf" id="r3-more" class="rank-more">
+            <span data-hf-id="hf-tmah" class="rank-more-text" data-t="r3More"></span>
+            <span data-hf-id="hf-jnd5" class="chip" lang="ar" dir="rtl">العربية</span>
+            <span data-hf-id="hf-midx" class="chip" lang="ru">Русский</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 26.4–32.4 · 4. Languages that cross borders -->
+      <section data-hf-id="hf-u1ns" id="r4" class="clip" data-start="26.4" data-duration="6" data-track-index="2">
+        <div data-hf-id="hf-5ino" class="caption">
+          <span data-hf-id="hf-pngg" id="r4-eyebrow" class="eyebrow">04 <span data-hf-id="hf-iyxf" class="of">/ 04</span></span>
+          <h2 data-hf-id="hf-j7yl" id="r4-title" data-t="r4Title"></h2>
+          <div data-hf-id="hf-d87p" id="r4-stat" class="stat">
+            <span data-hf-id="hf-crsr" id="r4-num" class="stat-num">200</span><span data-hf-id="hf-x6ef" id="r4-unit" class="stat-unit" data-t="r4Unit"></span>
+          </div>
+          <span data-hf-id="hf-6n2p" id="r4-label" class="stat-label" data-t="r4Label"></span>
+          <span data-hf-id="hf-5dbp" id="r4-source" class="source">UNESCO</span>
+          <div data-hf-id="hf-3vvz" class="regions">
+            <div data-hf-id="hf-w4z8" class="region"><span data-hf-id="hf-hdxl" class="region-name" lang="ar" dir="rtl">العربية</span><span data-hf-id="hf-yg8s" class="region-where" data-t="wArab"></span></div>
+            <div data-hf-id="hf-dnpo" class="region"><span data-hf-id="hf-0vvv" class="region-name" lang="sw">Kiswahili</span><span data-hf-id="hf-fex9" class="region-where" data-t="wEastAfrica"></span></div>
+            <div data-hf-id="hf-cgsl" class="region"><span data-hf-id="hf-mzw7" class="region-name" lang="fr">Français</span><span data-hf-id="hf-jy73" class="region-where" data-t="wWestAfrica"></span></div>
+            <div data-hf-id="hf-cv3m" class="region"><span data-hf-id="hf-gyid" class="region-name" lang="es">Español</span><span data-hf-id="hf-00nq" class="region-where" data-t="wLatinAmerica"></span></div>
+            <div data-hf-id="hf-eumr" class="region"><span data-hf-id="hf-5ql1" class="region-name" lang="ru">Русский</span><span data-hf-id="hf-ug6h" class="region-where" data-t="wCentralAsia"></span></div>
+            <div data-hf-id="hf-f8xs" class="region"><span data-hf-id="hf-46yb" class="region-name" lang="id">Bahasa Indonesia</span><span data-hf-id="hf-ne3u" class="region-where" data-t="wIndonesia"></span></div>
+            <div data-hf-id="hf-e20p" class="region"><span data-hf-id="hf-6vug" class="region-name" lang="hi">हिन्दी</span><span data-hf-id="hf-ow46" class="region-where" data-t="wNorthIndia"></span></div>
+            <div data-hf-id="hf-egbq" class="region"><span data-hf-id="hf-5lxr" class="region-name" lang="en">English</span><span data-hf-id="hf-c04s" class="region-where" data-t="wWorld"></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 32.2–35.2 · And Japanese -->
+      <section data-hf-id="hf-hur7" id="jp" class="clip" data-start="32.2" data-duration="3" data-track-index="1">
+        <div data-hf-id="hf-ib33" id="jp-stack" class="center-stack">
+          <p data-hf-id="hf-nrs4" id="jp-word" class="jp-word" lang="ja">日本語</p>
+          <p data-hf-id="hf-5qg9" id="jp-line" class="jp-line" data-t="jpLine"></p>
+          <p data-hf-id="hf-67py" id="jp-count" class="jp-count" data-t="jpCount"></p>
+          <span data-hf-id="hf-6pep" id="jp-source" class="source" data-t="jpSource"></span>
+        </div>
+      </section>
+
+      <!-- 35.0–40.0 · Honest line + call to native speakers (+ the app in Arabic) -->
+      <section data-hf-id="hf-e1h1" id="cta" class="clip" data-start="35" data-duration="5" data-track-index="2">
+        <div data-hf-id="hf-ci30" class="cta-top">
+          <h2 data-hf-id="hf-4da9" id="cta-title" data-t="ctaTitle"></h2>
+          <p data-hf-id="hf-lykh" id="cta-sub" data-t="ctaSub"></p>
+        </div>
+        <div data-hf-id="hf-vc3s" id="phone-ar-wrap" class="phone-wrap phone-wrap--small">
+          <div data-hf-id="hf-2dm5" class="phone">
+            <div data-hf-id="hf-zay5" class="screen"><img data-hf-id="hf-f9ip" src="assets/screens/ar-first-prayer.png" alt="" /></div>
+          </div>
+        </div>
+        <div data-hf-id="hf-4hvy" class="cta-bottom">
+          <p data-hf-id="hf-rt28" id="cta-ask" class="cta-ask" data-t="ctaAsk"></p>
+          <p data-hf-id="hf-95p6" id="cta-help" class="cta-help" data-t="ctaHelp"></p>
+        </div>
+      </section>
+
+      <!-- 39.8–45 · Outro -->
+      <section data-hf-id="hf-i3q5" id="outro" class="clip" data-start="39.8" data-duration="5.2" data-track-index="1">
+        <div data-hf-id="hf-g9uk" class="center-stack">
+          <img data-hf-id="hf-gmwp" id="outro-symbol" class="symbol outro-symbol" src="assets/brand/qetoret-symbol-dark.svg" alt="" />
+          <p data-hf-id="hf-lw1i" id="outro-head" class="outro-head" data-t="outroHead"></p>
+          <div data-hf-id="hf-0quk" class="ways">
+            <div data-hf-id="hf-rq9y" id="way-android" class="way">
+              <span data-hf-id="hf-wmt7" class="way-icon" aria-hidden="true">
+                <!-- A phone with a download arrow -->
+                <svg data-hf-id="hf-ulu9" viewBox="0 0 24 24">
+                  <rect data-hf-id="hf-qr8u" x="5" y="2" width="14" height="20" rx="2.5" />
+                  <path data-hf-id="hf-s64k" d="M12 7v7" />
+                  <path data-hf-id="hf-eao2" d="M9 11.5l3 3 3-3" />
+                  <path data-hf-id="hf-kz4m" d="M10.5 18.5h3" />
+                </svg>
+              </span>
+              <span data-hf-id="hf-uckh">
+                <span data-hf-id="hf-my4i" class="way-label">Android</span>
+                <span data-hf-id="hf-xrw0" class="way-text" data-t="androidText"></span>
+              </span>
+            </div>
+            <div data-hf-id="hf-vc7t" id="way-web" class="way">
+              <span data-hf-id="hf-6jp7" class="way-icon" aria-hidden="true">
+                <!-- A globe -->
+                <svg data-hf-id="hf-1tol" viewBox="0 0 24 24">
+                  <circle data-hf-id="hf-m1lh" cx="12" cy="12" r="10" />
+                  <path data-hf-id="hf-x1dn" d="M12 2a14.5 14.5 0 0 0 0 20a14.5 14.5 0 0 0 0-20" />
+                  <path data-hf-id="hf-0zqy" d="M2 12h20" />
+                </svg>
+              </span>
+              <span data-hf-id="hf-l73p">
+                <span data-hf-id="hf-k8tl" class="way-label" data-t="webLabel"></span>
+                <span data-hf-id="hf-tjvr" class="way-text" data-t="webText"></span>
+              </span>
+            </div>
+          </div>
+          <p data-hf-id="hf-e1ma" id="outro-tag" class="tagline" data-t="outroTag"></p>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Copy per language. Figures and their sources are in BRIEF.md. Verse
+      // text is copied word for word from bolls.life, the source of the app's
+      // own verse bundle (WEB, FRLSG = Louis Segond 1910, ELB = Elberfelder
+      // 1871; German uses Elberfelder because Luther 1912 reads "Heiden").
+      // French keeps a non-breaking space before ; : ? ! and inside « ».
+      const NB = " ";
+      const NNB = " ";
+      const COPY = {
+        en: {
+          locale: "en-US",
+          hookTitle: "Why these 16 languages?",
+          verseText: "“…a great multitude, which no man could count, out of every nation and of all tribes, peoples, and languages…”",
+          verseRef: "Revelation 7:9 · World English Bible",
+          verseLine: "So prayer can rise in the languages of the nations.",
+          r1Title: "Large Christian communities",
+          r1Unit: "billion",
+          r1Label: "Christians in the world",
+          r1Source: "Source: Pew Research Center, 2025",
+          r1Lead: "Many of them pray in these languages:",
+          r2Title: "Where the church is growing",
+          r2Unit: "%",
+          r2Label: "of all Christians now live in sub-Saharan Africa, more than in any other region",
+          r2Source: "Source: Pew Research Center, 2025",
+          r3Title: "Where believers are persecuted",
+          r3Unit: "million",
+          r3Label: "Christians face high levels of persecution and discrimination",
+          r3Source: "Source: Open Doors, World Watch List 2026",
+          rank1: "No. 1",
+          rank10: "No. 10",
+          rank12: "No. 12",
+          rank17: "No. 17",
+          cNorthKorea: "North Korea",
+          cIran: "Iran",
+          cIndia: "India",
+          cChina: "China",
+          r3More: "And across the Arab world and Central Asia",
+          r4Title: "Languages that cross borders",
+          r4Unit: "million+",
+          r4Label: "people speak Kiswahili",
+          wArab: "the Arab world",
+          wEastAfrica: "East Africa",
+          wWestAfrica: "West and Central Africa",
+          wLatinAmerica: "Latin America",
+          wCentralAsia: "Central Asia",
+          wIndonesia: "Indonesia’s islands",
+          wNorthIndia: "North India",
+          wWorld: "around the world",
+          jpLine: "One of the world’s most spoken languages",
+          jpCount: "About 123 million speakers",
+          jpSource: "Source: Britannica, Ethnologue data",
+          ctaTitle: "The translation work is still growing.",
+          ctaSub: "Some texts still need a check by native speakers.",
+          ctaAsk: "Do you speak one of these languages?",
+          ctaHelp: "Help us check the texts. Details in the message below.",
+          outroHead: "Pray in your language",
+          androidText: `Install or update the app on Google${NB}Play`,
+          webLabel: "iPhone · computer",
+          webText: "Open qetoret.com in your browser",
+          outroTag: "Let your prayers rise.",
+        },
+        de: {
+          locale: "de-DE",
+          hookTitle: "Warum diese 16 Sprachen?",
+          verseText: "„…eine große Volksmenge, welche niemand zählen konnte, aus jeder Nation und aus Stämmen und Völkern und Sprachen…“",
+          verseRef: "Offenbarung 7,9 · Elberfelder 1871",
+          verseLine: "Damit Gebet in den Sprachen der Völker aufsteigen kann.",
+          r1Title: "Große christliche Gemeinschaften",
+          r1Unit: "Milliarden",
+          r1Label: "Christen weltweit",
+          r1Source: "Quelle: Pew Research Center, 2025",
+          r1Lead: "Viele von ihnen beten in diesen Sprachen:",
+          r2Title: "Wo die Kirche wächst",
+          r2Unit: `${NB}%`,
+          r2Label: "aller Christen leben heute in Subsahara-Afrika, mehr als in jeder anderen Region",
+          r2Source: "Quelle: Pew Research Center, 2025",
+          r3Title: "Wo Gläubige verfolgt werden",
+          r3Unit: "Millionen",
+          r3Label: "Christen sind starker Verfolgung und Diskriminierung ausgesetzt",
+          r3Source: "Quelle: Open Doors, Weltverfolgungsindex 2026",
+          rank1: "Platz 1",
+          rank10: "Platz 10",
+          rank12: "Platz 12",
+          rank17: "Platz 17",
+          cNorthKorea: "Nordkorea",
+          cIran: "Iran",
+          cIndia: "Indien",
+          cChina: "China",
+          r3More: "Und in der arabischen Welt und Zentralasien",
+          r4Title: "Sprachen über Grenzen hinweg",
+          r4Unit: "Millionen+",
+          r4Label: "Menschen sprechen Kiswahili",
+          wArab: "die arabische Welt",
+          wEastAfrica: "Ostafrika",
+          wWestAfrica: "West- und Zentralafrika",
+          wLatinAmerica: "Lateinamerika",
+          wCentralAsia: "Zentralasien",
+          wIndonesia: "Indonesiens Inseln",
+          wNorthIndia: "Nordindien",
+          wWorld: "weltweit",
+          jpLine: "Eine der meistgesprochenen Sprachen der Welt",
+          jpCount: "Rund 123 Millionen Sprecher",
+          jpSource: "Quelle: Britannica, Daten von Ethnologue",
+          ctaTitle: "Die Übersetzungsarbeit wächst noch.",
+          ctaSub: "Manche Texte müssen noch von Muttersprachlern geprüft werden.",
+          ctaAsk: "Sprichst du eine dieser Sprachen?",
+          ctaHelp: "Hilf uns, die Texte zu prüfen. Mehr dazu in der Nachricht unten.",
+          outroHead: "Bete in deiner Sprache",
+          androidText: `Installiere oder aktualisiere die App bei Google${NB}Play`,
+          webLabel: "iPhone · Computer",
+          webText: "Öffne qetoret.com in deinem Browser",
+          outroTag: "Lass deine Gebete aufsteigen.",
+        },
+        fr: {
+          locale: "fr-FR",
+          hookTitle: `Pourquoi ces 16${NB}langues${NB}?`,
+          verseText: `«${NB}…une grande foule, que personne ne pouvait compter, de toute nation, de toute tribu, de tout peuple, et de toute langue.${NB}»`,
+          verseRef: "Apocalypse 7:9 · Louis Segond 1910",
+          verseLine: "Pour que la prière s’élève dans les langues des nations.",
+          r1Title: "Grandes communautés chrétiennes",
+          r1Unit: "milliards",
+          r1Label: "de chrétiens dans le monde",
+          r1Source: `Source${NB}: Pew Research Center, 2025`,
+          r1Lead: `Beaucoup prient dans ces langues${NB}:`,
+          r2Title: "Là où l’Église grandit",
+          r2Unit: `${NNB}%`,
+          r2Label: "des chrétiens vivent aujourd’hui en Afrique subsaharienne, plus que dans toute autre région",
+          r2Source: `Source${NB}: Pew Research Center, 2025`,
+          r3Title: "Là où les croyants sont persécutés",
+          r3Unit: "millions",
+          r3Label: "de chrétiens subissent un niveau élevé de persécution et de discrimination",
+          r3Source: `Source${NB}: Portes Ouvertes, Index mondial de persécution des chrétiens 2026`,
+          rank1: "1er",
+          rank10: "10e",
+          rank12: "12e",
+          rank17: "17e",
+          cNorthKorea: "Corée du Nord",
+          cIran: "Iran",
+          cIndia: "Inde",
+          cChina: "Chine",
+          r3More: "Et dans le monde arabe et en Asie centrale",
+          r4Title: "Des langues qui traversent les frontières",
+          r4Unit: "millions+",
+          r4Label: "de personnes parlent le kiswahili",
+          wArab: "le monde arabe",
+          wEastAfrica: "Afrique de l’Est",
+          wWestAfrica: "Afrique de l’Ouest et centrale",
+          wLatinAmerica: "Amérique latine",
+          wCentralAsia: "Asie centrale",
+          wIndonesia: "les îles d’Indonésie",
+          wNorthIndia: "le nord de l’Inde",
+          wWorld: "le monde entier",
+          jpLine: "L’une des langues les plus parlées au monde",
+          jpCount: "Environ 123 millions de locuteurs",
+          jpSource: `Source${NB}: Britannica, données Ethnologue`,
+          ctaTitle: "Le travail de traduction continue de grandir.",
+          ctaSub: "Certains textes doivent encore être relus par des locuteurs natifs.",
+          ctaAsk: `Parlez-vous l’une de ces langues${NB}?`,
+          ctaHelp: "Aidez-nous à relire les textes. Les détails sont dans le message ci-dessous.",
+          outroHead: "Priez dans votre langue",
+          androidText: `Installez ou mettez à jour l’application sur Google${NB}Play`,
+          webLabel: "iPhone · ordinateur",
+          webText: "Ouvrez qetoret.com dans votre navigateur",
+          outroTag: "Que vos prières s’élèvent.",
+        },
+      };
+
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      const lang = COPY[vars.lang] ? vars.lang : "en";
+      const copy = COPY[lang];
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-t]").forEach((el) => {
+        el.textContent = copy[el.dataset.t];
+      });
+
+      const tl = gsap.timeline({ paused: true });
+      const calm = "power2.out";
+      const glide = "power2.inOut";
+      const lift = "power3.out";
+
+      // Incense drifting upward and a slow breathing glow, the whole video.
+      tl.fromTo("#wisps", { y: 0 }, { y: -300, duration: 45, ease: "none" }, 0);
+      tl.fromTo("#wisp-a", { x: 0 }, { x: 36, duration: 5.5, ease: "sine.inOut", yoyo: true, repeat: 7 }, 0);
+      tl.fromTo("#wisp-b", { x: 0 }, { x: -30, duration: 6.6, ease: "sine.inOut", yoyo: true, repeat: 5 }, 0);
+      tl.fromTo("#wisp-c", { x: 0 }, { x: 22, duration: 4.4, ease: "sine.inOut", yoyo: true, repeat: 9 }, 0);
+      tl.fromTo("#glow", { scale: 1, opacity: 0.85 }, { scale: 1.12, opacity: 1, duration: 7.5, ease: "sine.inOut", yoyo: true, repeat: 5 }, 0);
+
+      // A group leaves upward before the next scene arrives.
+      function leave(targets, at) {
+        tl.to(targets, { opacity: 0, y: -26, duration: 0.4, ease: "power1.in", stagger: 0.03 }, at);
+      }
+      function rise(target, at, dist = 24, dur = 0.7, ease = calm) {
+        tl.fromTo(target, { opacity: 0, y: dist }, { opacity: 1, y: 0, duration: dur, ease }, at);
+      }
+      // Count a stat up from zero while it grows to its final size.
+      function countUp(id, to, decimals, at, dur = 1.3) {
+        const el = document.getElementById(id);
+        const state = { value: 0 };
+        const fmt = (v) => v.toLocaleString(copy.locale, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        el.textContent = fmt(to);
+        tl.fromTo(
+          state,
+          { value: 0 },
+          { value: to, duration: dur, ease: "power3.out", immediateRender: false, onUpdate: () => (el.textContent = fmt(state.value)) },
+          at,
+        );
+        tl.fromTo(el, { scale: 0.72, opacity: 0 }, { scale: 1, opacity: 1, duration: dur, ease: "power3.out" }, at);
+      }
+
+      // 0–3.9 · Hook: symbol and question are on frame 0 (the WhatsApp thumbnail).
+      tl.fromTo("#hook-symbol", { y: 14, scale: 0.97 }, { y: 0, scale: 1, duration: 1.4, ease: calm }, 0);
+      tl.fromTo("#hook-title", { y: 18 }, { y: 0, duration: 1.2, ease: calm }, 0);
+      tl.fromTo("#hook-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: glide }, 0.3);
+      tl.fromTo(".hook-chip", { opacity: 0, y: 22, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.075 }, 0.55);
+      tl.to("#hook-stack", { opacity: 0, y: -60, duration: 0.55, ease: "power2.in" }, 3.3);
+
+      // 3.6–9.0 · Verse, reference, then our line.
+      rise("#verse-text", 3.75, 30, 1.0);
+      rise("#verse-ref", 4.4, 16, 0.7);
+      rise("#verse-line", 6.2, 20, 0.8);
+      leave(["#verse-text", "#verse-ref", "#verse-line"], 8.45);
+
+      // Shared opening of a reason: eyebrow, title, stat count-up, label, source.
+      function reasonOpen(n, start, to, decimals) {
+        rise(`#r${n}-eyebrow`, start + 0.05, 16, 0.6);
+        rise(`#r${n}-title`, start + 0.15, 28, 0.8);
+        countUp(`r${n}-num`, to, decimals, start + 0.45);
+        rise(`#r${n}-unit`, start + 1.45, 14, 0.5, "back.out(1.8)");
+        rise(`#r${n}-label`, start + 0.9, 18, 0.7);
+        rise(`#r${n}-source`, start + 1.3, 12, 0.6);
+      }
+
+      // 8.8–14.4 · 1. Large Christian communities.
+      reasonOpen(1, 8.8, 2.3, 1);
+      rise("#r1-lead", 10.6, 16, 0.6);
+      tl.fromTo(".r1-chip", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.55, ease: lift, stagger: 0.08 }, 10.9);
+      tl.fromTo("#phone-pt-wrap", { opacity: 0, y: 180 }, { opacity: 1, y: 0, duration: 1.0, ease: lift }, 11.3);
+      tl.to("#phone-pt-wrap", { opacity: 0, y: 150, duration: 0.5, ease: "power2.in" }, 13.85);
+      leave("#r1 .caption > *", 13.9);
+
+      // 14.2–20.2 · 2. Where the church is growing, with the app in Amharic.
+      reasonOpen(2, 14.2, 31, 0);
+      tl.fromTo(".r2-chip", { opacity: 0, y: 20, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.6)", stagger: 0.08 }, 15.9);
+      tl.fromTo("#phone-am-wrap", { opacity: 0, y: 200 }, { opacity: 1, y: 0, duration: 1.1, ease: lift }, 16.3);
+      tl.to("#phone-am-wrap", { opacity: 0, y: 160, duration: 0.55, ease: "power2.in" }, 19.65);
+      leave("#r2 .caption > *", 19.7);
+
+      // 20.0–26.6 · 3. Where believers are persecuted.
+      reasonOpen(3, 20, 388, 0);
+      tl.fromTo("#r3 .rank-row", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.55, ease: lift, stagger: 0.12 }, 21.8);
+      rise("#r3-more", 23.2, 18, 0.7);
+      leave("#r3 .caption > *", 26.1);
+
+      // 26.4–32.4 · 4. Languages that cross borders.
+      reasonOpen(4, 26.4, 200, 0);
+      tl.fromTo("#r4 .region", { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: calm, stagger: 0.06 }, 28.1);
+      leave("#r4 .caption > *", 31.75);
+
+      // 32.2–35.2 · And Japanese.
+      tl.fromTo("#jp-word", { opacity: 0, scale: 0.88 }, { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 32.3);
+      rise("#jp-line", 32.65, 22, 0.7);
+      rise("#jp-count", 33.0, 16, 0.6);
+      rise("#jp-source", 33.25, 12, 0.6);
+      tl.to("#jp-stack", { opacity: 0, y: -40, duration: 0.45, ease: "power2.in" }, 34.7);
+
+      // 35.0–40.0 · Honest line, the app in Arabic, the call to native speakers.
+      rise("#cta-title", 35.1, 28, 0.8);
+      rise("#cta-sub", 35.5, 18, 0.7);
+      tl.fromTo("#phone-ar-wrap", { opacity: 0, y: 160 }, { opacity: 1, y: 0, duration: 1.0, ease: lift }, 35.7);
+      rise("#cta-ask", 36.9, 22, 0.7);
+      rise("#cta-help", 37.3, 16, 0.6);
+      tl.to("#phone-ar-wrap", { opacity: 0, y: 140, duration: 0.5, ease: "power2.in" }, 39.45);
+      leave(["#cta-title", "#cta-sub", "#cta-ask", "#cta-help"], 39.4);
+
+      // 39.8–45 · Outro.
+      rise("#outro-symbol", 39.95, 24, 0.9);
+      rise("#outro-head", 40.2, 26, 0.9);
+      rise("#way-android", 40.7, 30, 0.8);
+      rise("#way-web", 41.15, 30, 0.8);
+      rise("#outro-tag", 42.0, 18, 0.9);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
